@@ -1,0 +1,17 @@
+node_modules
+
+.env
+
+dist
+target
+
+resources/mri
+resources/mri-ui5
+resources/portal
+resources/ui5
+resources/superadmin
+resources/flow
+
+**/*-dbg*.js
+**/*-preload*.js
+**/library-parameters.json

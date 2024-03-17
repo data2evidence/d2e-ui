@@ -1,0 +1,55 @@
+<!-- For local development only -->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <script nonce="__NONCE__">
+      window.ENV_DATA = __ENV_DATA__
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/oidc-client-ts@latest/dist/browser/oidc-client-ts.min.js"></script>
+    <script type="text/javascript" src="authenticate.js"></script>
+
+    <% for (key in htmlWebpackPlugin.files.css) { %>
+    <link href="<%= htmlWebpackPlugin.files.css[key] %>" rel="stylesheet" />
+    <% } %>
+  </head>
+  <body>
+    <button
+      id="mriBtnLogout"
+      onclick="logoutfn()"
+      style="float: left; position: absolute; top: 0; right: 0; z-index: 100"
+    >
+      logout
+    </button>
+
+    <div class="vue-main"></div>
+    <span class="plugin-container"></span>
+
+    <script>
+      document.querySelector('.plugin-container').portalAPI = {
+        qeSvcUrl: 'https://localhost:41100',
+        studyId: '42adb18d-b19c-4f40-b51d-261e6371b51e', // Change to your dev studyID
+        async getToken() {
+          return localStorage.getItem('msaltoken')
+        },
+        isLocal: true,
+        userId: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX', // Change to your user management ID
+      }
+    </script>
+
+    <script
+      id="sap-ui-bootstrap"
+      src="/ui/sap-ui-core.js"
+      data-sap-ui-theme="sap_belize"
+      data-sap-ui-libs="sap.m"
+      data-sap-ui-compatVersion="edge"
+      data-sap-ui-preload="async"
+      data-sap-ui-resourceroots='{"sap.hc": "/sap/hc","hc.mri":"/hc/mri","hc.hph":"hc/hph"}'
+    ></script>
+
+    <% for (key in htmlWebpackPlugin.files.js) { %>
+    <script type="text/javascript" src="<%= htmlWebpackPlugin.files.js[key] %>"></script>
+    <% } %>
+  </body>
+</html>

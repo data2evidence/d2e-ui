@@ -1,0 +1,122 @@
+@import './mri-variables';
+div.app-checkbox {
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  flex-shrink: 0;
+  font-size: 16px;
+  height: 32px;
+  line-height: 32px;
+  margin-left: 8px;
+  padding-bottom: 0px;
+  padding-left: 32px;
+  padding-right: 0px;
+  padding-top: 0px;
+  position: relative;
+  text-align: left;
+  text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 0px;
+  user-select: none;
+  visibility: visible;
+  white-space: normal;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-user-drag: none;
+  div.app-checkbox-container {
+    border: 2px solid $CheckboxBorder;
+    cursor: pointer;
+    display: block;
+
+    font-size: 10px;
+    height: 18px;
+    left: 8px;
+    line-height: 14px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    position: absolute;
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 0px;
+    top: 8px;
+    user-select: none;
+    visibility: visible;
+    white-space: normal;
+    width: 18px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-user-drag: none;
+    input {
+      background-color: rgba(0, 0, 0, 0);
+      border-bottom-color: rgb(0, 0, 0);
+      border-bottom-style: none;
+      border-bottom-width: 0px;
+      border-image-outset: 0px;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+      border-left-color: rgb(0, 0, 0);
+      border-left-style: none;
+      border-left-width: 0px;
+      border-right-color: rgb(0, 0, 0);
+      border-right-style: none;
+      border-right-width: 0px;
+      border-top-color: rgb(0, 0, 0);
+      border-top-style: none;
+      border-top-width: 0px;
+      box-sizing: border-box;
+      color: rgb(0, 0, 0);
+      cursor: auto;
+      display: inline-block;
+      font-family: Arial;
+      font-size: 10px;
+      font-stretch: normal;
+      font-style: normal;
+      font-variant-caps: normal;
+      font-variant-ligatures: normal;
+      font-variant-numeric: normal;
+      font-weight: normal;
+      height: 0px;
+      left: 0px;
+      letter-spacing: normal;
+      line-height: normal;
+      margin-bottom: 3px;
+      margin-left: 4px;
+      margin-right: 3px;
+      margin-top: 3px;
+      padding-bottom: 0px;
+      padding-left: 0px;
+      padding-right: 0px;
+      padding-top: 0px;
+      text-align: start;
+      text-indent: 0px;
+      text-rendering: auto;
+      text-shadow: none;
+      text-transform: none;
+      user-select: text;
+      visibility: hidden;
+      white-space: normal;
+      width: 0px;
+      word-spacing: 0px;
+      writing-mode: horizontal-tb;
+      -webkit-appearance: none;
+      -webkit-rtl-ordering: logical;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      -webkit-user-drag: none;
+      -webkit-border-image: none;
+      border-image: none;
+    }
+  }
+  div.app-checkbox-container:focus {
+    outline: 1px dotted $UiFocus;
+  }
+  .app-checkbox-checked:before {
+    content: '\e05b';
+    font-family: 'app-icons';
+    color: #007cc0;
+    font-size: 12px;
+  }
+  .app-label {
+    display: inline-block;
+    line-height: normal;
+    text-shadow: none;
+  }
+}

@@ -1,0 +1,61 @@
+.header {
+  color: var(--color-primary);
+  border-bottom: 1px solid lightgray;
+
+  .header__content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    &_title {
+      display: flex;
+      align-items: center;
+      margin-left: 1rem;
+    }
+  }
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem;
+  }
+
+  .new-delete-button {
+    display: flex;
+    padding-left: 15px;
+  }
+
+  .title-edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .buttons {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 0px;
+    padding: 5px;
+    .button--disabled {
+      background-color: transparent !important;
+      span {
+        color: lightgray;
+      }
+    }
+  }
+
+  .buttons:hover {
+    background-color: transparent;
+    color: var(--color-primary);
+  }
+
+  .alp-checkbox__container {
+    margin-bottom: 0px;
+    margin-right: 10px;
+  }
+
+  .sc-d4l-checkbox-s {
+    color: var(--color-primary);
+    font-weight: 500;
+    font-size: 15px;
+  }
+}

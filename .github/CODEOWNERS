@@ -1,0 +1,6 @@
+*            @alp/sg-app
+
+/.github     @alp/sg-devops
+
+# No Codeowners for submodule pointers
+/alp-libs

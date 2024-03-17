@@ -1,0 +1,35 @@
+{
+	"configTypes": [
+		{
+			"key": "HC/HPH/PATIENT",
+			"name": "HPH_CFG_ASSIGN_CONFIG_TYPE_PV"
+		},
+		{
+			"key": "HC/MRI/PA",
+			"name": "HPH_CFG_ASSIGN_CONFIG_TYPE_PA"
+		},
+		{
+			"key": "HC/HPH/CDW",
+			"name": "HPH_CFG_ASSIGN_CONFIG_TYPE_CDM"
+		}		
+	],
+	"configurations": [],
+	"entityTypes": [
+		{
+			"key": "O",
+			"name": "HPH_CFG_ASSIGN_ADD_ASSIGNMENT_DIALOG_FIELD_ENTITY_TYPE_ORG"
+		},
+		{
+			"key": "U",
+			"name": "HPH_CFG_ASSIGN_ADD_ASSIGNMENT_DIALOG_FIELD_ENTITY_TYPE_USER"
+		},
+		{
+			"key": "Z",
+			"name": "HPH_CFG_ASSIGN_ADD_ASSIGNMENT_DIALOG_FIELD_ENTITY_TYPE_DEFAULT"
+		},
+		{
+			"key": "G",
+			"name": "HPH_CFG_ASSIGN_ADD_ASSIGNMENT_DIALOG_FIELD_ENTITY_TYPE_GROUP"
+		}
+	]
+}

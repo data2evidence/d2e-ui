@@ -1,0 +1,16 @@
+@import './mri-variables';
+.alert-info {
+    color: $MriLightestText;
+    background-color: $MriContrast;
+    border-color: $MriLightestText;
+}
+.alert-error {
+    background-color: $MriErrorColor;
+}
+.alert-information {
+    background-color: $MriInfoColor;
+}
+.alert-warning {
+    background-color: $MriWarningColor;
+}
+

@@ -1,0 +1,22 @@
+.concept-sets {
+  padding-left: 24px;
+  padding-right: 24px;
+
+  &__header {
+    display: flex;
+  }
+
+  &__search {
+    flex: 1;
+  }
+
+  &__table {
+    margin-top: 24px;
+    .MuiTable-root {
+      border: 1px solid #dad7d7;
+    }
+    .MuiTableRow-root {
+      border: 1px solid #dad7d7;
+    }
+  }
+}

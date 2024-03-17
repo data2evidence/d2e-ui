@@ -1,0 +1,110 @@
+
+.systemoverviewplugin {
+  margin: 24px 41px;
+}
+
+.systemoverviewplugin__list {
+  //Subrows refers to the rowSpan used
+  .systemoverviewplugin__subrows {
+    .MuiTableCell-root {
+      overflow-wrap: break-word;
+      color: #000080;
+      height: 0px;
+      border-bottom: none;
+      padding-bottom: 4px;
+    }
+  }
+  //rows refers to the normal rows
+  .systemoverviewplugin__rows {
+    .MuiTableCell-root{
+      border-bottom: none;
+      overflow-wrap: break-word;
+      color: #000080;
+      padding: 0px 10px 0px 16px;
+      height: 55px;
+    }
+    table-layout: fixed;
+    // Table Body
+    .MuiTableBody-root{
+      .MuiTableRow-root {
+        margin: 63px 1px 0 0;
+      }
+      .MuiTableCell-root {
+        border-bottom: none;
+        overflow-wrap: break-word;
+        color: #000080;
+        padding: 0px 10px 0px 16px;
+        height: 55px;
+      }
+    }
+  }
+
+  /**
+   Default CSS for other
+  */
+
+  //table header
+  .MuiTableHead-root{
+    .MuiTableCell-root{
+      background-color: #ebf1f8;
+      width:50px;
+      color: #000080;
+      height: 41px;
+      line-height:1;
+      padding: 0px 10px 0px 16px;
+    }
+  } 
+  .MuiTable-root{
+    border: 1px solid #dad7d7;
+  }
+  .MuiButton-text{
+    padding: 7px 8px;
+  }
+
+  .table-button-container{
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.systemoverviewplugin__header {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 24px 0 15px;
+}
+
+.systemoverviewplugin {
+  &__actions {
+    display: flex;
+    align-items: center;
+
+    .systemoverviewplugin__actions-title {
+      flex: 1;
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+
+  &__content {
+    margin-bottom: 24px;
+  }
+  
+  .col-action {
+    justify-items: flex;
+    button {
+      margin-right: 8px;
+    }
+  }
+
+  .title {
+    font-size: 24px;
+    margin-top: 40px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .systemoverviewplugin {
+    max-width: none;
+  }
+}

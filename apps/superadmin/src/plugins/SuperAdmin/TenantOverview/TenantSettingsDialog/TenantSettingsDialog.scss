@@ -1,0 +1,37 @@
+.tenant-settings-dialog {
+  &__content {
+    color: var(--color-primary);
+    min-height: 200px;
+    margin: 20px 5px 16px 25px;
+    overflow: auto;
+    .u-padding-vertical--normal {
+      padding-right:20px;
+    }
+  }
+
+  .features__title {
+    font-weight: 500;
+    color: var(--color-primary);
+    margin-bottom: 16px;
+  }
+
+  .textbox-ctrl {
+    display: flex;
+    margin-bottom: 1.75em
+  }
+
+  .button-group-actions {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0;
+
+    button {
+      margin: 16px 10px;
+      margin: 0 15px;
+      width: 247px;
+      height: 40px;
+      margin: 0 0 0 8px;
+      padding: 8px 16px;
+    }
+  }
+}

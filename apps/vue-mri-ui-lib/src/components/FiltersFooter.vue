@@ -1,0 +1,286 @@
+<template>
+  <div class="filters-footer d-flex justify-content-center">
+    <div class="d-flex align-items-center" style="justify-content: space-between; width: 100%">
+      <div>
+        <d4l-button
+          class="unicode-icon"
+          :text="getRefreshUnicodeCharacter()"
+          :title="getText('MRI_PA_TOOLTIP_RESET_FILTERS')"
+          @click="openResetDialog"
+          style="--border-radius-button: 9999px; margin-left: 8px; margin-right: 8px"
+        />
+      </div>
+      <div class="d-flex justify-content-center align-items-center">
+        <b-dropdown variant="link" size="sm" no-caret style="margin-left: 8px">
+          <template v-slot:button-content>
+            <d4l-button
+              v-if="!splitAddButton"
+              :text="getText('MRI_PA_VB_CREATE_FILTERS')"
+              :title="getText('MRI_PA_TOOLTIP_CREATE_FILTERS')"
+            />
+            <d4l-button
+              v-else
+              :text="getText('MRI_PA_VB_CREATE_FILTERS_INCLUDED')"
+              :title="getText('MRI_PA_TOOLTIP_CREATE_FILTERS_INCLUDED')"
+            />
+          </template>
+          <div class="dropdown-scroll">
+            <template v-for="item in getFilterCardMenu" :key="item">
+              <b-dropdown-item-button :data-key="item.key" @click="onAddFilterCardMenuItemSelected(item.key)">{{
+                item.text
+              }}</b-dropdown-item-button>
+            </template>
+          </div>
+        </b-dropdown>
+        <b-dropdown v-if="splitAddButton" variant="link" size="sm" no-caret dropup>
+          <template v-slot:button-content>
+            <d4l-button
+              :text="getText('MRI_PA_VB_CREATE_FILTERS_EXCLUDED')"
+              :title="getText('MRI_PA_TOOLTIP_CREATE_FILTERS_INCLUDED')"
+              style="margin-left: 8px"
+            />
+          </template>
+          <div class="dropdown-scroll">
+            <template v-for="item in getFilterCardMenu" :key="item">
+              <b-dropdown-item-button :data-key="item.key" @click="onAddFilterCardMenuItemSelected(item.key, true)">{{
+                item.text
+              }}</b-dropdown-item-button>
+            </template>
+          </div>
+        </b-dropdown>
+        <d4l-button
+          v-if="isNonInteractiveMode"
+          :text="getText('MRI_PA_BMK_VIEW_CHART')"
+          :title="getText('MRI_PA_BMK_VIEW_CHART')"
+          style="margin-left: 8px"
+          @click="showChart"
+        />
+        <d4l-button
+          v-if="isNonInteractiveMode"
+          :text="getText('MRI_PA_BMK_VIEW_LIST')"
+          :title="getText('MRI_PA_BMK_VIEW_LIST')"
+          style="margin-left: 8px"
+          @click="showPatientList"
+        />
+      </div>
+      <div>
+        <d4l-button
+          ref="saveBookmarkButton"
+          :disabled="!hasChanges"
+          :text="getText('MRI_PA_BUTTON_SAVE')"
+          :title="getText('MRI_PA_BUTTON_SAVE')"
+          @click="openSaveBookmark"
+          style="margin-left: 8px; margin-right: 8px"
+        />
+      </div>
+    </div>
+    <dialogBox
+      v-if="showSaveBookmark"
+      :position="showSaveBookmarkLocation"
+      :dialogWidth="saveDialogWidth + 'px'"
+      @close="closeSaveBookmark"
+    >
+      <template v-slot:header>{{ getText('MRI_PA_TITLE_SAVE_BOOKMARK') }}</template>
+      <template v-slot:body>
+        <div class="save-bookmark">
+          <div class="form-group">
+            <appCheckbox
+              v-model="shareBookmark"
+              :text="getText('MRI_PA_BMK_SHARED_BOOKMARK_TEXT')"
+              :title="getText('MRI_PA_BMK_SHARED_BOOKMARK_TITLE')"
+            ></appCheckbox>
+          </div>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <div class="flex-spacer"></div>
+        <appButton
+          :click="saveBookmark"
+          :text="getText('MRI_PA_BUTTON_SAVE')"
+          :tooltip="getText('MRI_PA_BUTTON_SAVE')"
+        ></appButton>
+        <appButton
+          :click="closeSaveBookmark"
+          :text="getText('MRI_PA_BUTTON_CANCEL')"
+          :tooltip="getText('MRI_PA_BUTTON_CANCEL')"
+        ></appButton>
+      </template>
+    </dialogBox>
+    <messageBox dim="true" dialogWidth="400px" v-if="showResetDialog" @close="closeResetDialog">
+      <template v-slot:header>{{ getText('MRI_PA_RESET_FILTERS_TITLE') }}</template>
+      <template v-slot:body>
+        <div>
+          <div class="div-reset-text">{{ getText('MRI_PA_TXT_RESET_FILTERS') }}</div>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <div class="flex-spacer"></div>
+        <appButton
+          :click="reset"
+          :text="getText('MRI_PA_RESET_FILTERS_OK')"
+          :tooltip="getText('MRI_PA_RESET_FILTERS_OK')"
+          v-focus
+        ></appButton>
+        <appButton
+          :click="closeResetDialog"
+          :text="getText('MRI_PA_BUTTON_CANCEL')"
+          :tooltip="getText('MRI_PA_BUTTON_CANCEL')"
+        ></appButton>
+      </template>
+    </messageBox>
+  </div>
+</template>
+
+<script lang="ts">
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+import appButton from '../lib/ui/app-button.vue'
+import appCheckbox from '../lib/ui/app-checkbox.vue'
+import * as types from '../store/mutation-types'
+import DialogBox from './DialogBox.vue'
+import messageBox from './MessageBox.vue'
+import { getPortalAPI } from '../utils/PortalUtils'
+
+export default {
+  name: 'filtersFooter',
+  props: {
+    splitAddButton: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      showSaveBookmark: false,
+      showSaveBookmarkLocation: {
+        left: '130px',
+        bottom: '40px',
+      },
+      bookmarkName: '',
+      shareBookmark: false,
+      showResetDialog: false,
+      saveDialogWidth: 260,
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'getFilterCardMenu',
+      'getText',
+      'getBookmarksData',
+      'getBookmarks',
+      'getMriFrontendConfig',
+      'getActiveBookmark',
+      'getCurrentBookmarkHasChanges',
+      'getBookmark',
+      'getBookmarkByNameAndUserId',
+    ]),
+    isNonInteractiveMode() {
+      return this.getMriFrontendConfig.isNonInteractiveMode()
+    },
+    hasChanges() {
+      return this.getActiveBookmark.isNew || this.getCurrentBookmarkHasChanges
+    },
+    shareBookmark: {
+      get() {
+        return this.getActiveBookmark.shared || false
+      },
+      set(value) {
+        this.shareBookmark = value
+      },
+    },
+  },
+  methods: {
+    ...mapActions(['fireBookmarkQuery', 'resetChartProperties', 'loadbookmarkToState']),
+    ...mapMutations([types.CONFIG_SET_HAS_ASSIGNED, types.SET_ACTIVE_BOOKMARK]),
+    onAddFilterCardMenuItemSelected(configPath, isExclusion = false) {
+      this.$emit('add', {
+        configPath,
+        isExclusion,
+        boolFilterContainerId: null,
+      })
+    },
+    openSaveBookmark() {
+      this.bookmarkName = ''
+      const left = this.$refs.saveBookmarkButton.getBoundingClientRect().left
+      if (this.splitAddButton) {
+        this.showSaveBookmarkLocation.left = 'auto'
+        this.showSaveBookmarkLocation.bottom = '60px'
+      } else {
+        this.showSaveBookmarkLocation.left = left < 8 ? '8px' : `${left}px`
+      }
+      this.showSaveBookmark = true
+    },
+    closeSaveBookmark() {
+      this.showSaveBookmark = false
+    },
+    closeResetDialog() {
+      this.showResetDialog = false
+    },
+    openResetDialog() {
+      this.showResetDialog = true
+    },
+    async saveBookmark() {
+      if (this.hasChanges) {
+        await this.fireBookmarkQuery({
+          params: { cmd: 'loadAll' },
+          method: 'get',
+        })
+        const bookmark = this.getBookmarksData
+        const activeBookmark = this.getActiveBookmark
+        const isNewBookmark = activeBookmark.isNew || false
+        const userId = getPortalAPI().userId
+
+        if (isNewBookmark) {
+          const params = {
+            cmd: 'insert',
+            bookmarkname: activeBookmark.bookmarkname,
+            shareBookmark: this.shareBookmark,
+            bookmark: JSON.stringify(bookmark),
+          }
+          await this.fireBookmarkQuery({ params, method: 'post' })
+        } else {
+          const request = {
+            cmd: 'update',
+            bookmark: JSON.stringify(bookmark),
+            shareBookmark: this.shareBookmark,
+          }
+          await this.fireBookmarkQuery({
+            method: 'put',
+            params: request,
+            bookmarkId: activeBookmark.bmkId,
+          })
+        }
+        await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
+        const savedBookmark = this.getBookmarkByNameAndUserId(activeBookmark.bookmarkname, userId)
+        this[types.SET_ACTIVE_BOOKMARK](savedBookmark)
+        this.closeSaveBookmark()
+      }
+    },
+    reset() {
+      this[types.CONFIG_SET_HAS_ASSIGNED](false)
+      this.$nextTick(() => {
+        this.resetChartProperties()
+        this[types.CONFIG_SET_HAS_ASSIGNED](true)
+        this.closeResetDialog()
+      })
+    },
+    getRefreshUnicodeCharacter() {
+      const charSpan = document.createElement('textarea')
+      charSpan.innerHTML = '&#8634;'
+      return charSpan.value
+    },
+    showChart() {
+      this.$emit('showChart')
+    },
+    showPatientList() {
+      this.$emit('showPatientList')
+    },
+  },
+  components: {
+    appButton,
+    appCheckbox,
+    DialogBox,
+    messageBox,
+  },
+}
+</script>

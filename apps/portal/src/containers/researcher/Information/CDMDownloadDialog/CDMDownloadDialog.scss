@@ -1,0 +1,26 @@
+.cdm-download-dialog {
+    &__content {
+      margin-left: 25em;
+      margin-right: 25em;
+    }
+    
+    .cdm-download-text{
+      justify-content: center;
+      text-align: center;
+      word-wrap: break-word;
+      color: var(--color-primary);
+      padding-bottom: 4em;
+      font-weight: 500;
+    }
+  
+    .button-group-actions {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1em;
+  
+      button {
+        width: 30em;
+      }
+    }
+  }
+  

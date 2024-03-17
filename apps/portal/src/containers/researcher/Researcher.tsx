@@ -1,0 +1,123 @@
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { Snackbar, ErrorBoundary } from "@portal/components";
+import { Header } from "../../components";
+import { useFeedback } from "../../hooks";
+import { IPluginItem, PluginDropdown } from "../../types";
+import { Overview } from "./Overview/Overview";
+import { Information } from "./Information/Information";
+import { Account } from "../shared/Account/Account";
+import { getPluginChildPath, loadPlugins, sortPluginsByType } from "../../utils";
+import { PluginDropdownItem, SubFeatureFlags } from "@portal/plugin";
+import { ResearcherStudyPluginRenderer } from "../../plugins/core/ResearcherStudyPluginRenderer";
+import { useEnabledFeatures } from "../../hooks";
+import "./Researcher.scss";
+
+const plugins = loadPlugins();
+
+const ROUTES = {
+  overview: "overview",
+  account: "account",
+  info: "information",
+  legal: "legal",
+  logout: "/logout",
+};
+
+interface StateProps {
+  studyId: string;
+  tab: string;
+  tenantId: string;
+}
+
+export const Researcher: FC = () => {
+  const { clearFeedback, getFeedback } = useFeedback();
+  const feedback = getFeedback();
+
+  const location = useLocation();
+  const state = location.state as StateProps;
+
+  const [pluginDropdown, setPluginDropdown] = useState<PluginDropdown>({});
+  const [activeTenantId, setActiveTenantId] = useState<string>(state?.tenantId || "");
+  const [activeStudyId, setActiveStudyId] = useState<string>(state?.studyId || "");
+  const featureFlags = useEnabledFeatures();
+
+  useEffect(() => {
+    if ((feedback?.autoClose || 0) > 0) setTimeout(() => clearFeedback(), feedback?.autoClose);
+  }, [feedback, clearFeedback]);
+
+  useEffect(() => {
+    if (state) {
+      setActiveStudyId(state.studyId);
+      setActiveTenantId(state.tenantId);
+    }
+  }, [state]);
+
+  const featureFlagsDict = useMemo(() => {
+    // Convert to dictionary of { [featureFlag]: { [subFeatureFlag]: enabledBoolean } }
+    const result: { [featureFlag: string]: SubFeatureFlags } = {};
+    plugins.researcher?.forEach((plugin: IPluginItem) => {
+      if (plugin.featureFlag && plugin.subFeatureFlags && plugin.subFeatureFlags.length > 0) {
+        const subFeatureFlags = plugin.subFeatureFlags.map((f: string) => ({
+          featureFlag: f,
+          enabled: featureFlags.includes(f),
+        }));
+
+        result[plugin.featureFlag] = Object.fromEntries(subFeatureFlags.map((f) => [f.featureFlag, f.enabled]));
+      }
+    });
+    return result;
+  }, [featureFlags]);
+
+  const onFetchMenus = useCallback((route: string, menus: PluginDropdownItem[]) => {
+    setPluginDropdown((current: any) => ({ ...current, [route]: menus }));
+  }, []);
+
+  const sortedResearcherPlugins = useMemo(() => sortPluginsByType(plugins.researcher), []);
+  const sortedPlugins = JSON.parse(JSON.stringify(plugins));
+  sortedPlugins.researcher = sortedResearcherPlugins;
+
+  return (
+    <div className="researcher__container">
+      <Header portalType="researcher" plugins={sortedPlugins} />
+      <main>
+        <Snackbar
+          type={feedback?.type}
+          handleClose={clearFeedback}
+          message={feedback?.message}
+          description={feedback?.description}
+          visible={feedback?.message != null}
+        />
+        <Routes>
+          <Route path="/">
+            <Route index element={<Overview />} />
+            <Route path={ROUTES.overview} element={<Overview />} />
+            <Route path={ROUTES.info} element={<Information />} />
+            <Route path={ROUTES.account} element={<Account />} />
+            {plugins.researcher.map((item: IPluginItem) => {
+              const subFeatureFlags = item.featureFlag ? featureFlagsDict[item.featureFlag] : {};
+              return (
+                <Route
+                  key={item.name}
+                  path={getPluginChildPath(item)}
+                  element={
+                    <ErrorBoundary name={item.name} key={item.route}>
+                      <ResearcherStudyPluginRenderer
+                        key={item.route}
+                        path={item.pluginPath}
+                        tenantId={activeTenantId}
+                        studyId={activeStudyId || ""}
+                        data={item?.data}
+                        fetchMenu={onFetchMenus}
+                        subFeatureFlags={subFeatureFlags}
+                      />
+                    </ErrorBoundary>
+                  }
+                />
+              );
+            })}
+          </Route>
+        </Routes>
+      </main>
+    </div>
+  );
+};

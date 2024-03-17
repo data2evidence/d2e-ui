@@ -1,0 +1,141 @@
+name: CI Docker image UI
+
+on:
+  workflow_dispatch:
+  push:
+
+# Run only one job per branch
+concurrency: 
+  group: ${{ github.ref }}-docker-ui-ci # Run the latest push except for develop
+  cancel-in-progress: ${{ github.ref_name != 'develop' }} # Cancel in progress except for develop branch
+
+jobs:
+  check_pr_draft:
+    runs-on: ubuntu-20.04
+    outputs:
+      pr_found: ${{ steps.PR.outputs.pr_found }}
+      pr_draft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }}
+    steps:
+      - uses: 8BitJonny/gh-get-current-pr@2.2.0
+        id: PR
+      - run: |
+          echo "PR ${prNumber} is draft - ${isPRDraft}"
+          echo "pr_draft=${isPRDraft}" >> $GITHUB_OUTPUT
+        if: steps.PR.outputs.pr_found == 'true'
+        env:
+          # JSON object with the full PR object
+          isPRDraft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }}
+          # Direct access to common PR properties
+          prNumber: ${{ steps.PR.outputs.number }}
+
+  build-docker-ui:
+    environment: development
+    runs-on: ubuntu-20.04
+    needs: check_pr_draft
+    if: (github.ref_name == 'develop' ||  contains('release', github.ref_name) || github.event_name == 'workflow_dispatch') || (needs.check_pr_draft.outputs.pr_found == 'true') && (needs.check_pr_draft.outputs.pr_draft == 'false') # Should run if branch is develop/release/workflow_dispatch and doesnt have a PR
+    strategy:
+      matrix:
+        include:
+          - name: alp-data-node/alp-local-ui-file-server
+            directory: .
+            context: .
+            fileName: Dockerfile
+            platforms: linux/amd64
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: |
+            ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
+            ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
+
+    - uses: azure/docker-login@v1
+      with:
+        login-server: alpcr.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    - name: Get docker tag name
+      id: docker_tag
+      shell: bash
+      run: |
+          echo ${{ github.ref_name }}
+          echo ${{ github.head_ref }}
+          echo ${{ github.ref }}
+          echo ${{ github.sha }} 
+
+          if [[ ${{ github.ref_name == 'develop' }} == true ]]; then
+              echo "is_push=true" >> $GITHUB_OUTPUT
+          elif [ $GITHUB_EVENT_NAME = "workflow_dispatch" ]; then
+            echo "workflow_dispatch"
+            echo "is_push=true" >> $GITHUB_OUTPUT
+          else
+              echo "is_push=false" >> $GITHUB_OUTPUT
+          fi
+
+    - name: Collect Git and SSH config files in a directory that is part of the Docker build context
+      run: |
+        cp -r ~/.gitconfig  ~/.ssh .github/
+        cd .github/
+        sed 's|/home/runner|/root|g' -i.bak .ssh/config
+  
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      id: builder
+
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      id: build_push
+      continue-on-error: false
+      with:
+        builder: ${{ steps.builder.outputs.name }}
+        # cache-from: type=gha
+        # cache-to: type=gha,mode=max
+        ulimit: nofile=1048576:1048576
+        platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
+        context: ${{ matrix.context }}
+        file:  ${{ matrix.directory }}/${{ matrix.fileName }}
+        push: ${{ steps.docker_tag.outputs.is_push }}
+        tags: alpcr.azurecr.io/${{ matrix.name }}:${{ steps.docker_tag.outputs.tag_name || github.ref_name }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
+        ssh: |
+          default=${{ env.SSH_AUTH_SOCK }}
+        build-args: |
+          docker_image_prefix=alpcr.azurecr.io
+          GIT_COMMIT_ARG=${{ github.sha }}
+    
+    - name: Delete images older than 14 days
+      id: delete_old_images
+      if: false # ${{ github.event_name != 'workflow_dispatch' && github.ref_name == 'develop' }}
+      shell: bash
+      env:
+        REGISTRY: alpcr
+        REPOSITORY: alp-data-node/alp-local-ui-file-server
+        AZ_SP__CLIENT_ID: ${{ secrets.AZ__CDN__CLIENT_ID }}
+        AZ_SP__CLIENT_SECRET: ${{ secrets.AZ__CDN__CLIENT_SECRET }}
+        AZ_TENANT_NAME: data4life.care
+        AZ_UI_LOCAL_FILE_SERVER_USERNAME: ${{ secrets.AZ_UI_LOCAL_FILE_SERVER_USERNAME }}
+        AZ_UI_LOCAL_FILE_SERVER_PASSWORD: ${{ secrets.AZ_UI_LOCAL_FILE_SERVER_PASSWORD }}
+        AZ__EXCLUDE_DOCKER_TAG__PATTERN: project # TODO: Use another name | only single value.
+        AZ__ENABLE_DELETE: false # Can enable/disable if needed
+        NUMBER_OF_DAYS: 14
+      run: |
+        TODAY=$(date +%Y-%m-%d)
+        TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
+        
+        az login --service-principal -u ${AZ_SP__CLIENT_ID} \
+        -p ${AZ_SP__CLIENT_SECRET} --tenant ${AZ_TENANT_NAME}
+        
+        echo "Listing images if available.."
+        az acr manifest list-metadata --name ${REPOSITORY} --registry ${REGISTRY} \
+        --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && tags[? !(contains(@, '${AZ__EXCLUDE_DOCKER_TAG__PATTERN}'))]]" -u ${AZ_UI_LOCAL_FILE_SERVER_USERNAME} -p ${AZ_UI_LOCAL_FILE_SERVER_PASSWORD}
+        
+        if [ "${AZ__ENABLE_DELETE}" = false ]; then
+          echo "Images not deleted.."
+        else
+          echo "Images to be deleted.."
+          az acr manifest list-metadata --name ${REPOSITORY} --registry ${REGISTRY} \
+          --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && tags[? !(contains(@, '${AZ__EXCLUDE_DOCKER_TAG__PATTERN}'))]].digest" -o tsv -u ${AZ_UI_LOCAL_FILE_SERVER_USERNAME} -p ${AZ_UI_LOCAL_FILE_SERVER_PASSWORD} | xargs -I% az acr repository delete -u ${AZ_UI_LOCAL_FILE_SERVER_USERNAME} -p ${AZ_UI_LOCAL_FILE_SERVER_PASSWORD} --name ${REGISTRY} --image $REPOSITORY@% --yes
+        fi
+

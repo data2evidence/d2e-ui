@@ -1,0 +1,10 @@
+-r requirements.txt
+mypy==0.761
+pre-commit==1.20.0
+tox==3.14.5
+liccheck==0.4.7
+autopep8==1.5.4
+pycodestyle==2.6.0
+pytest-mock==3.3.1
+pytest==6.0.2
+OpenSSL==3.0.12

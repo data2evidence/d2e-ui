@@ -1,0 +1,45 @@
+.studyoverview__container {
+  margin: 24px 41px;
+}
+
+.studyoverview__list {
+  .MuiTable-root{
+    border: 1px solid #dad7d7;
+  }
+
+  //table header
+  .MuiTableHead-root{
+    .MuiTableCell-root{
+      background-color: #ebf1f8;
+      color: #000080;
+      height: 41px;
+      line-height:1;
+      padding: 0 1% 0 23px;
+    }
+  } 
+
+  // Table Body
+  .MuiTableBody-root{
+    .MuiTableRow-root {
+      margin: 63px 1px 0 0;
+      border: 1px solid #dad7d7;
+    }
+    .MuiTableCell-root {
+      overflow-wrap: anywhere;
+      color: #000080;
+      padding-left: 23px;
+      max-width: 100px;
+    }
+    .MuiButton-text{
+      padding: 7px 8px;
+    }
+  }
+
+}
+
+@media (max-width: 600px) {
+  .studyoverview__container {
+    max-width: none;
+  }
+}
+

@@ -1,0 +1,233 @@
+.information__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+
+  .information__studies {
+    .config_title {
+      display: flex;
+
+      .MuiListItemIcon-root {
+        min-width: 48px;
+        padding: 8px 0px 8px 20px;
+      }
+
+      .MuiListItemText-root {
+        padding: 8px 0px 8px 20px;
+      }
+
+      .MuiListItem-gutters {
+        padding: 0px;
+      }
+
+      .config_list_external {
+        display: none;
+        border-left: 1px solid rgba(168, 187, 209, 0.4);
+
+        .MuiButton-startIcon {
+          margin: 0;
+        }
+        .MuiButton-root {
+          min-width: 0;
+          min-height: 48px;
+        }
+        &__is-active {
+          display: block;
+        }
+      }
+      &:hover {
+        .config_list_external {
+          display: block;
+        }
+      }
+    }
+    .config_list {
+      position: relative;
+      left: 45px;
+
+      .config_list_item {
+        width: 80%;
+        border-radius: 6px;
+        margin: 3px 0;
+
+        .config_list_span {
+          text-align: left;
+          font-size: 18px;
+          font-weight: 500;
+          position: relative;
+          right: 5px;
+        }
+      }
+    }
+
+    .MuiTouchRipple-root {
+      color: transparent;
+    }
+
+    .MuiDrawer-docked {
+      height: 100%;
+    }
+
+    .MuiDrawer-paper {
+      z-index: 0;
+      position: relative;
+      height: 100%;
+      overflow-x: hidden;
+      color: var(--color-primary);
+    }
+
+    .MuiListItemIcon-root {
+      min-width: 48px;
+    }
+
+    .MuiList-padding {
+      padding: 0;
+    }
+  }
+  .information__study_content {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    min-width: 1050px;
+  }
+  .tab__content {
+    margin: 0;
+    flex: auto;
+
+    &__container {
+      margin: 24px 41px;
+    }
+
+    &__study-name {
+      font-size: 18px;
+      letter-spacing: 0.3px;
+      color: var(--color-neutral);
+    }
+
+    &__title {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-primary);
+    }
+
+    &__info {
+      width: 70%;
+      color: grey;
+    }
+
+    &__subtitle {
+      height: 24px;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-primary);
+      margin: 2em 0px 1em;
+    }
+  }
+}
+
+.dataset__info {
+  &__tab {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2px;
+    margin-top: 5px;
+  }
+
+  &__dropdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5em;
+    width: 100%;
+    border-bottom: solid 1px rgba(172, 171, 168, 0.5);
+    .alp-title {
+      margin: 1.2em 0 1.2em 0;
+    }
+    .alp-title--subtitle {
+      font-size: 16px;
+    }
+  }
+}
+
+.button__request {
+  button {
+    min-width: 300px;
+  }
+}
+
+.button__progress {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: white;
+  margin-top: -16px;
+  margin-left: -16px;
+}
+
+.button-keygen__container {
+  width: 70em;
+  padding-bottom: 3em;
+  max-width: 40em;
+  padding-top: 36px;
+  .button-keygen__block {
+    float: right;
+    display: inline;
+    width: 30em;
+  }
+  .keygen__title {
+    margin: 0;
+    font-weight: 500;
+    color: var(--color-neutral);
+    line-height: 2em;
+    float: left;
+    display: inline;
+  }
+}
+
+.metadata_tags_files__container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .metadata_tags__container {
+    .tags__content {
+      width: 100%;
+      .tag__list {
+        display: flex;
+        margin-top: 0;
+        border: 1px solid #c1c3d2;
+        list-style: none;
+        padding: 13px;
+        .MuiChip-root {
+          color: white;
+          background-color: var(--color-primary);
+          border-radius: 0.5em;
+          font-weight: bold;
+          margin: 3px;
+        }
+      }
+    }
+
+    .metadata__content {
+      width: 100%;
+      .study-metadata {
+        .MuiTableHead-root .MuiTableCell-root {
+          background-color: #ebf1f8;
+        }
+        .MuiTableCell-root {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+  .MuiTable-root {
+    border: 1px solid #dad7d7;
+  }
+  .MuiTableRow-root {
+    border: 1px solid #dad7d7;
+  }
+}

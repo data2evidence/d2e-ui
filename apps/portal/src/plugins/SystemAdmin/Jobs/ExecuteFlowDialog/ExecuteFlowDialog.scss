@@ -1,0 +1,27 @@
+.execute-flow-dialog {
+  .execute-flow-dialog__content {
+    min-height: 100px;
+    margin: 16px 32px 0;
+    color: var(--color-primary);
+  }
+
+  .subheader {
+    size: 18px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+
+  .button-group-actions {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0;
+
+    button {
+      margin: 0 15px;
+      width: 247px;
+      height: 40px;
+      margin: 0 0 0 8px;
+      padding: 8px 16px;
+    }
+  }
+}

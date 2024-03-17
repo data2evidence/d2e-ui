@@ -1,0 +1,20 @@
+.dataset-delete-resource-dialog {
+  &__content {
+    min-height: 100px;
+    margin: 40px 25px 0;
+    text-align: center;
+    color: var(--color-primary);
+  }
+
+  .button-group-actions {
+    display: flex;
+    justify-content: center;
+    margin: 1.5em 0;
+
+    button {
+      margin: 4px 10px;
+      width: 247px;
+    }
+  }
+}
+  

@@ -1,0 +1,20 @@
+.update-schema-dialog {
+    &__content {
+      min-height: 100px;
+      margin: 40px 25px 0;
+      text-align: center;
+      color: var(--color-primary);
+    }
+  
+    .button-group-actions {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+  
+      button {
+        margin: 16px 10px;
+        width: 235px;
+      }
+    }
+  }
+  

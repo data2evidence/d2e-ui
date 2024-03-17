@@ -1,0 +1,33 @@
+{
+  "name": "@d4l/alp-ui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build-all": "npx nx run-many --targets=build --projects=@portal/components,@portal/plugin && npx nx run-many --targets=build,build-mri --exclude @portal/components,@portal/plugin && yarn build-ui5",
+    "build-all-skip-cache": "npx nx run-many --targets=build --projects=@portal/components,@portal/plugin --skip-nx-cache && npx nx run-many --targets=build,build-mri --exclude @portal/components,@portal/plugin --skip-nx-cache && yarn build-ui5",
+    "build-ui5": "yarn ui5 build -a --clean-dest --dest ./resources/ui5",
+    "mri-vue": "yarn; nx build vue-mri",
+    "portal-ui": "yarn; nx build @portal/plugin; nx build @portal/components; nx build portal; nx build-mri portal",
+    "superadmin-ui": "yarn; nx build @portal/plugin; nx build @portal/components; nx build superadmin",
+    "flow": "yarn; nx build @portal/plugin; nx build @portal/components; nx build flow",
+    "base:ui": "REPO_RELATIVE_PATH='../alp' && GIT_HEAD_COMMIT_ALP_UI_REPO=$(git rev-parse HEAD) docker compose --file ${REPO_RELATIVE_PATH}/docker-compose.yml --file ${REPO_RELATIVE_PATH}/docker-compose-local.yml",
+    "az:start:ui": "yarn base:ui up alp-local-ui-file-server",
+    "start:ui": "yarn az:start:ui",
+    "build:start:ui": "yarn base:ui --file docker-compose-ui.yml up alp-local-ui-file-server",
+    "build:ui": "yarn base:ui --file docker-compose-ui.yml build alp-local-ui-file-server"
+  },
+  "workspaces": {
+    "packages": [
+      "libs/*",
+      "apps/*"
+    ],
+    "nohoist": [
+      "**/@vue",
+      "**/@vue/**"
+    ]
+  },
+  "devDependencies": {
+    "@ui5/cli": "^2.12.0",
+    "nx": "^16.2.2"
+  }
+}

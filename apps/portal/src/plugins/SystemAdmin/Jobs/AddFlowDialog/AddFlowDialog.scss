@@ -1,0 +1,58 @@
+.add-flow-dialog {
+  .add-flow-dialog__content {
+    min-height: 100px;
+    margin: 16px 32px 0;
+    color: var(--color-primary);
+  }
+
+  &__files {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__no-files {
+    display: flex;
+    flex-direction: column;
+
+    span {
+      margin-bottom: 1rem;
+    }
+
+    .alp-button__container {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .MuiTable-root {
+    border: 1px solid #dad7d7;
+  }
+
+  .button-group-actions {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0;
+
+    button {
+      margin: 0 15px;
+      width: 247px;
+      height: 40px;
+      margin: 0 0 0 8px;
+      padding: 8px 16px;
+    }
+  }
+
+  .snapshotlocation__radiogroup {
+    margin-top: 2em;
+    margin-left : 2em;
+    color: var(--color-primary);
+    .MuiFormLabel-root {
+      color: var(--color-primary);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+    .MuiIconButton-label {
+      color: var(--color-primary);
+    }
+  }
+}

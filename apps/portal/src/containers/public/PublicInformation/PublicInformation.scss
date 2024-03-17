@@ -1,0 +1,122 @@
+.public-information__container {
+  display: flex;
+  height: 100%;
+
+  .public-information__studies {
+    .config_list {
+      position: relative;
+      left: 45px;
+
+      .config_list_item{
+        width: 80%;
+        border-radius: 6px;
+        margin: 3px 0;
+        
+        .config_list_span{
+          text-align: left;
+          font-size: 18px;
+          font-weight: 500;
+          position: relative;
+          right:5px;
+        }
+      }
+    }
+
+    .MuiTouchRipple-root {
+      color: transparent;
+    }
+
+    .MuiDrawer-docked {
+      height: 100%;
+    }
+
+    .MuiDrawer-paper {
+      z-index: 0;
+      position: relative;
+      height: 100%;
+      overflow-x: hidden;
+      color: var(--color-primary);
+    }
+
+    .MuiListItemIcon-root {
+      min-width: 48px;
+    }
+
+    .MuiList-padding {
+      padding: 0;
+    }
+  }
+
+  .public-information__study_content {
+    border-left: 1px solid var(--color-neutral-lighter);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tab__content {
+    margin: 0;
+
+    &__container {
+      margin: 24px 41px;
+    }
+
+    &__study-name {
+      font-size: 18px;
+      letter-spacing: 0.3px;
+      color: var(--color-neutral);
+    }
+
+    &__title {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-primary);
+    }
+
+    &__info {
+      width: 70%;
+    }
+  }
+}
+
+.metadata_tags__container {
+  min-width: 100%;
+
+  .tags__content {
+    width: 50%;
+    
+    .tag__list {
+      display: flex;
+      margin-top: 0;
+      border: 1px solid #c1c3d2;
+      list-style: none;
+      padding: 13px;
+
+      .MuiChip-root {
+        color: white;
+        background-color: var(--color-primary);
+        border-radius: 0.5em;
+        font-weight: bold;
+        margin: 3px;
+      }
+    }
+  }
+
+  .metadata__content {
+    width: 50%;
+    .study-metadata {
+      .MuiTable-root {
+        border: 1px solid #dad7d7;
+      }
+      .MuiTableHead-root .MuiTableCell-root {
+        background-color: #ebf1f8;
+      }
+      .MuiTableRow-root {
+        border: 1px solid #dad7d7;
+      }
+    }
+  }
+}

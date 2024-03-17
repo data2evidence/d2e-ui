@@ -1,0 +1,14 @@
+.job-dialog {
+  &__content {
+    padding: 1.5em;
+    overflow: auto;
+  }
+
+  .button-group-actions {
+    padding: 1.5em;
+  }
+
+  .button-group-actions > * {
+    padding: 6px 0;
+  }
+}

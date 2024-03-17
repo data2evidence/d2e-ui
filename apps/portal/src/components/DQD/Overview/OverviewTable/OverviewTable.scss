@@ -1,0 +1,57 @@
+.dqd__container {
+  margin: 24px 41px;
+  width: auto;
+  display: grid;
+}
+
+.tablePrimaryHeader {
+  border-width: 2px;
+  border-color: #dadbde;
+  border-style: solid;
+  background-color: #e4eef9;
+}
+
+.tableSecondaryHeader {
+  border-right-width: 2px;
+  border-left-width: 2px;
+  border-bottom-width: 2px;
+  border-color: #dadbde;
+  border-style: solid;
+  background-color: #edf2f7;
+}
+
+.tableCell {
+  border-right-width: 2px;
+  border-left-width: 2px;
+  border-bottom-width: 2px;
+  border-color: #dadbde;
+  border-style: solid;
+  color: #050080;
+}
+
+.tableCellFail {
+  border-right-width: 2px;
+  border-left-width: 2px;
+  border-bottom-width: 2px;
+  border-color: #dadbde;
+  border-style: solid;
+  color: #d53939;
+}
+
+.tableTopLeft {
+  border-top: 2px;
+  border-right-width: 2px;
+  border-left-width: 2px;
+  border-style: solid;
+  border-bottom-width: 0;
+  border-color: #dadbde;
+}
+
+.overview-text-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-text-container > * {
+  margin: 1px 9px;
+}

@@ -1,0 +1,536 @@
+import React, { FC, useCallback, useEffect, useState, ChangeEvent, SetStateAction } from "react";
+import Autocomplete from "@mui/material/Autocomplete";
+import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import FormHelperText from "@mui/material/FormHelperText";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import { SxProps } from "@mui/system";
+import SimpleMdeReact from "react-simplemde-editor";
+import { AddSquareIcon, Box, Button, Checkbox, Dialog, Feedback, IconButton } from "@portal/components";
+import { api } from "../../../../axios/api";
+import {
+  NewStudyMetadataInput,
+  CloseDialogType,
+  UpdateStudyMetadataInput,
+  DatasetDashboard,
+  Study,
+} from "../../../../types";
+import { usePaConfigs, useDatasetTagConfigs, useDatasetAttributeConfigs } from "../../../../hooks";
+import MetadataForm from "./MetadataForm/MetadataForm";
+import {
+  DashboardForm,
+  DashboardFormError,
+  EMPTY_DASHBOARD_FORM_DATA,
+  EMPTY_DASHBOARD_FORM_ERROR,
+} from "./DashboardForm/DashboardForm";
+import "./UpdateStudyDialog.scss";
+
+interface UpdateStudyDialogProps {
+  dataset: Study;
+  open: boolean;
+  onClose?: (type: CloseDialogType) => void;
+}
+
+const mdeOptions = {
+  hideIcons: ["side-by-side", "fullscreen"],
+  maxHeight: "150px",
+};
+
+interface FormData {
+  id: string;
+  tokenStudyCode: string;
+  type: string;
+  name: string;
+  summary: string;
+  showRequestAccess: boolean;
+  description: string;
+  paConfigId: string;
+  visibilityStatus: string;
+}
+
+interface FormError {
+  tokenStudyCode: {
+    required: boolean;
+    valid: boolean;
+  };
+  paConfigId: {
+    required: boolean;
+  };
+  name: {
+    required: boolean;
+  };
+}
+
+const EMPTY_FORM_ERROR: FormError = {
+  tokenStudyCode: { required: false, valid: false },
+  paConfigId: { required: false },
+  name: { required: false },
+};
+
+const EMPTY_FORM_DATA: FormData = {
+  id: "",
+  type: "",
+  tokenStudyCode: "",
+  name: "",
+  summary: "",
+  showRequestAccess: false,
+  description: "",
+  paConfigId: "",
+  visibilityStatus: "DEFAULT",
+};
+
+const styles: SxProps = {
+  ".MuiInputLabel-root": {
+    color: "#000080",
+    "&.MuiInputLabel-shrink, &.Mui-focused": {
+      color: "var(--color-neutral)",
+    },
+  },
+  ".MuiInput-input:focus": {
+    backgroundColor: "transparent",
+    color: "#000080",
+  },
+  ".MuiInput-root": {
+    color: "var(--color-neutral)",
+    "&::after, &:hover:not(.Mui-disabled)::before": {
+      borderBottom: "2px solid #000080",
+    },
+  },
+};
+
+const EMPTY_STUDY_METADATA: NewStudyMetadataInput = { attributeId: "", value: "" };
+
+const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose }) => {
+  const datasetId = dataset.id;
+  const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
+  const [formError, setFormError] = useState<FormError>(EMPTY_FORM_ERROR);
+  const [paConfigs] = usePaConfigs();
+  const [tagConfigs] = useDatasetTagConfigs();
+  const [attributeConfigs] = useDatasetAttributeConfigs();
+  const [studyMetadata, setStudyMetadata] = useState<NewStudyMetadataInput[]>([EMPTY_STUDY_METADATA]);
+  const [studyTagsData, setStudyTagsData] = useState<Array<string>>([]);
+  const [dashboards, setDashboards] = useState<DatasetDashboard[]>([]);
+  const [updating, setUpdating] = useState(false);
+
+  const [feedback, setFeedback] = useState<Feedback>({});
+  const [formMetadataErrorIndex, setFormMetadataErrorIndex] = useState<Array<Number>>([]);
+  const [dashboardErrorIndex, setDashboardErrorIndex] = useState<Record<number, DashboardFormError>>({});
+
+  useEffect(() => {
+    setFormMetadataErrorIndex([]);
+    setDashboardErrorIndex([]);
+
+    if (dataset) {
+      setFormData({
+        id: dataset.id,
+        tokenStudyCode: dataset.tokenStudyCode,
+        type: dataset.type,
+        paConfigId: dataset.paConfigId,
+        name: dataset.studyDetail?.name || "",
+        summary: dataset.studyDetail?.summary || "",
+        showRequestAccess: dataset.studyDetail?.showRequestAccess || false,
+        description: dataset.studyDetail?.description || "",
+        visibilityStatus: dataset.visibilityStatus,
+      });
+    } else {
+      setFormData(EMPTY_FORM_DATA);
+    }
+    dataset?.tags && setStudyTagsData(dataset?.tags?.map((tag) => tag.name));
+    if (dataset?.attributes && dataset?.attributes?.length > 0) {
+      setStudyMetadata(
+        dataset?.attributes?.map((attribute) => ({
+          attributeId: attribute.attributeId,
+          value: attribute.value,
+        }))
+      );
+    } else {
+      setStudyMetadata([EMPTY_STUDY_METADATA]);
+    }
+    setDashboards(dataset?.dashboards || []);
+  }, [dataset, open]);
+
+  const handleClose = useCallback(
+    (type: CloseDialogType) => {
+      setFeedback({});
+      setFormData(EMPTY_FORM_DATA);
+      setFormError(EMPTY_FORM_ERROR);
+      setStudyMetadata([]);
+      setDashboards([]);
+
+      typeof onClose === "function" && onClose(type);
+    },
+    [onClose, setFeedback]
+  );
+
+  const handleFormDataChange = useCallback((changes: { [field: string]: any }) => {
+    setFormData((formData) => ({ ...formData, ...changes }));
+  }, []);
+
+  const tokenIsValid = useCallback((token: string) => {
+    const tokenFormat = /^[a-zA-Z0-9_]{1,80}$/;
+    if (token.match(tokenFormat)) {
+      return true;
+    }
+  }, []);
+
+  const isFormError = useCallback(() => {
+    const { tokenStudyCode, paConfigId, name } = formData;
+
+    let formError: FormError | {} = {};
+    if (!tokenStudyCode) {
+      formError = { ...formError, tokenStudyCode: { required: true } };
+    }
+
+    if (tokenStudyCode && !tokenIsValid(tokenStudyCode)) {
+      formError = { ...formError, tokenStudyCode: { valid: true } };
+    }
+
+    if (!paConfigId) {
+      formError = { ...formError, paConfigId: { required: true } };
+    }
+
+    if (!name) {
+      formError = { ...formError, name: { required: true } };
+    }
+
+    if (Object.keys(formError).length > 0) {
+      setFormError({ ...EMPTY_FORM_ERROR, ...(formError as FormError) });
+      return true;
+    }
+    return false;
+  }, [formData, tokenIsValid]);
+
+  const isFormMetadataError = useCallback(() => {
+    const indexError: Number[] = [];
+    studyMetadata.forEach((metadata, index) => {
+      if (!metadata.value && metadata.attributeId) {
+        indexError.push(index);
+      }
+    });
+
+    setFormMetadataErrorIndex(indexError);
+    return indexError.length > 0;
+  }, [studyMetadata]);
+
+  const isDashboardError = useCallback(() => {
+    const formError: Record<number, DashboardFormError> = {};
+
+    let hasError = false;
+    dashboards.forEach((dashboard, index) => {
+      formError[index] = EMPTY_DASHBOARD_FORM_ERROR;
+      if (!dashboard.name && dashboard.url) {
+        formError[index] = { ...formError[index], name: { required: true } };
+        hasError = true;
+      }
+      if (!dashboard.url && dashboard.name) {
+        formError[index] = { ...formError[index], url: { required: true } };
+        hasError = true;
+      }
+    });
+
+    setDashboardErrorIndex(formError);
+    return hasError;
+  }, [dashboards]);
+
+  const handleSubmit = useCallback(async () => {
+    if (isFormError() || isFormMetadataError() || isDashboardError()) {
+      return;
+    }
+
+    setFeedback({});
+    setFormError(EMPTY_FORM_ERROR);
+
+    const { type, tokenStudyCode, name, summary, showRequestAccess, description, paConfigId, visibilityStatus } =
+      formData;
+
+    try {
+      const data: UpdateStudyMetadataInput = {
+        id: datasetId,
+        detail: {
+          name,
+          summary,
+          description,
+          showRequestAccess,
+        },
+        type,
+        tokenDatasetCode: tokenStudyCode,
+        paConfigId,
+        visibilityStatus,
+        attributes: studyMetadata.filter((info) => info.attributeId !== ""),
+        tags: studyTagsData?.map((tagName) => tagName),
+        dashboards: dashboards.filter((dashboard) => dashboard.name !== ""),
+      };
+      setUpdating(true);
+      await api.systemPortal.updateDataset(data);
+      handleClose("success");
+    } catch (err: any) {
+      setFeedback({
+        type: "error",
+        message: err.data?.message || err.data,
+      });
+      console.error("err", err.data);
+    } finally {
+      setUpdating(false);
+    }
+  }, [
+    formData,
+    datasetId,
+    studyTagsData,
+    studyMetadata,
+    dashboards,
+    isFormMetadataError,
+    isDashboardError,
+    isFormError,
+    handleClose,
+  ]);
+
+  const handleRemoveLine = useCallback(
+    <T extends {}>(index: number, state: Array<T>, setState: (value: SetStateAction<T[]>) => void) => {
+      const copyLine = [...state];
+      copyLine.splice(index, 1);
+      setState(copyLine);
+    },
+    []
+  );
+
+  const handleAddMetadataForm = useCallback(() => {
+    setStudyMetadata([...studyMetadata, EMPTY_STUDY_METADATA]);
+  }, [studyMetadata]);
+
+  const handleMetadataChange = useCallback(
+    (attributeId: string, valueNew: string, index: number) => {
+      const newMetadata = { attributeId: attributeId, value: valueNew };
+      const currentMetadata = [...studyMetadata];
+      currentMetadata[index] = newMetadata;
+      setStudyMetadata(currentMetadata);
+    },
+    [studyMetadata]
+  );
+
+  const handleTagChange = useCallback((event: any, value: string[]) => {
+    setStudyTagsData(value);
+  }, []);
+
+  return (
+    <Dialog
+      className="update-study-dialog"
+      title="Update dataset"
+      closable
+      fullWidth
+      maxWidth="md"
+      open={open}
+      onClose={() => handleClose("cancelled")}
+      feedback={feedback}
+    >
+      <Divider />
+      <div className="update-study-dialog__content">
+        <Box mt={4} fontWeight="bold">
+          Dataset info configuration
+        </Box>
+        <Box mb={4}>
+          <TextField
+            fullWidth
+            variant="standard"
+            label="Dataset name - Displayed on buttons and headers"
+            value={formData.name}
+            onChange={(event) => handleFormDataChange({ name: event.target.value })}
+            error={formError.name.required}
+          />
+          {formError.name.required && <FormHelperText error={true}>This is required</FormHelperText>}
+        </Box>
+        <Box mb={4}>
+          <TextField
+            fullWidth
+            variant="standard"
+            label="Dataset summary"
+            value={formData.summary}
+            onChange={(event) => handleFormDataChange({ summary: event.target.value })}
+          />
+        </Box>
+        <div>
+          <Checkbox
+            checked={formData.showRequestAccess}
+            checkbox-id="request-access"
+            label="Show request access button"
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              handleFormDataChange({ showRequestAccess: event.target.checked });
+            }}
+          />
+        </div>
+        <div>Description</div>
+        <SimpleMdeReact
+          value={formData.description}
+          onChange={(value) => handleFormDataChange({ description: value })}
+          options={mdeOptions}
+          style={{ marginTop: "11px" }}
+        />
+
+        <Box mb={4}>
+          <TextField
+            fullWidth
+            variant="standard"
+            label="Type"
+            value={formData.type}
+            onChange={(event) => handleFormDataChange({ type: event.target.value })}
+          />
+        </Box>
+
+        <Box mb={4}>
+          <TextField
+            fullWidth
+            variant="standard"
+            label="Token dataset code"
+            value={formData.tokenStudyCode}
+            onChange={(event) => handleFormDataChange({ tokenStudyCode: event.target.value })}
+            error={formError.tokenStudyCode.required || formError.tokenStudyCode.valid}
+          />
+          {formError.tokenStudyCode.required && <FormHelperText error={true}>This is required</FormHelperText>}
+          {formError.tokenStudyCode.valid && (
+            <FormHelperText error={true}>Please enter a valid Token dataset code</FormHelperText>
+          )}
+          <FormHelperText>Should only contain letters, numbers, and underscores</FormHelperText>
+        </Box>
+
+        <Box mb={4}>
+          <FormControl
+            sx={styles}
+            className="select"
+            variant="standard"
+            fullWidth
+            {...(formError.paConfigId.required ? { error: true } : {})}
+          >
+            <InputLabel htmlFor="pa-config-option">PA Config</InputLabel>
+            <Select
+              sx={styles}
+              value={formData.paConfigId}
+              onChange={(event: SelectChangeEvent<string>) => handleFormDataChange({ paConfigId: event.target.value })}
+              inputProps={{
+                name: "paConfigOption",
+                id: "pa-config-option",
+              }}
+            >
+              <MenuItem sx={styles} value="">
+                &nbsp;
+              </MenuItem>
+              {paConfigs?.map((config) => (
+                <MenuItem sx={styles} key={config.configId} value={config.configId}>
+                  {config.configName}
+                </MenuItem>
+              ))}
+            </Select>
+            {formError.paConfigId.required && <FormHelperText>This is required</FormHelperText>}
+          </FormControl>
+        </Box>
+
+        <Box mb={4}>
+          <Box fontWeight="bold">Metadata</Box>
+          {attributeConfigs.length !== 0 &&
+            studyMetadata.map((data, index) => (
+              <MetadataForm
+                key={index}
+                studyMetadata={data}
+                index={index}
+                attributeConfigs={attributeConfigs}
+                handleRemoveMetadata={() => handleRemoveLine(index, studyMetadata, setStudyMetadata)}
+                handleMetadataChange={handleMetadataChange}
+                error={formMetadataErrorIndex.includes(index)}
+              />
+            ))}
+          <IconButton startIcon={<AddSquareIcon />} title="add metadata" onClick={handleAddMetadataForm} />
+        </Box>
+
+        <Box fontWeight="bold">Tags</Box>
+        <Box mb={4}>
+          <Autocomplete
+            multiple
+            sx={styles}
+            id="autocomplete-tags"
+            options={tagConfigs}
+            renderTags={(value: string[], getTagProps) =>
+              value.map((option: string, index: number) => (
+                <Chip variant="outlined" label={option} {...getTagProps({ index })} key={option} />
+              ))
+            }
+            renderInput={(params) => <TextField {...params} label="Tags" variant="standard" />}
+            value={studyTagsData}
+            onChange={handleTagChange}
+          />
+        </Box>
+
+        <Box mb={4}>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Dataset Visibility</FormLabel>
+            <RadioGroup
+              name="visibilityStatusGroup"
+              value={formData.visibilityStatus}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleFormDataChange({ visibilityStatus: event.target.value });
+              }}
+            >
+              <FormControlLabel value="PUBLIC" control={<Radio />} label="Public" />
+              <FormControlLabel value="DEFAULT" control={<Radio />} label="Private (only users from the tenant)" />
+              <FormControlLabel
+                value="HIDDEN"
+                control={<Radio />}
+                label="Hidden (only researchers and the tenant admin)"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Box>
+
+        <Box mb={4}>
+          <Box fontWeight="bold" mb={1}>
+            Dashboard
+          </Box>
+          {dashboards.length !== 0 &&
+            dashboards.map((data, index) => (
+              <DashboardForm
+                key={index}
+                index={index}
+                dashboard={data}
+                onRemove={() =>
+                  setDashboards([...dashboards.slice(0, index), ...dashboards.slice(index + 1, dashboards.length)])
+                }
+                onChange={(name: string, url: string, basePath: string) =>
+                  setDashboards([
+                    ...dashboards.slice(0, index),
+                    {
+                      ...dashboards[index],
+                      name,
+                      url,
+                      basePath,
+                    },
+                    ...dashboards.slice(index + 1, dashboards.length),
+                  ])
+                }
+                error={dashboardErrorIndex[index]}
+              />
+            ))}
+          <Box mt={2}>
+            <IconButton
+              startIcon={<AddSquareIcon />}
+              title="add dashboard"
+              onClick={() => setDashboards([...dashboards, EMPTY_DASHBOARD_FORM_DATA])}
+            />
+          </Box>
+        </Box>
+      </div>
+
+      <Divider />
+      <div className="button-group-actions">
+        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={updating} />
+        <Button text="Save" onClick={handleSubmit} block loading={updating} />
+      </div>
+    </Dialog>
+  );
+};
+
+export default UpdateStudyDialog;

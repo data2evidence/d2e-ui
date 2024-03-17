@@ -1,0 +1,813 @@
+<template>
+  <div class="bookmark-container">
+    <messageBox dim="true" dialogWidth="400px" v-if="showRenameDialog" @close="closeRenameBookmark">
+      <template v-slot:header>{{ getText('MRI_PA_BOOKMARK_RENAME_DIALOG_TITLE') }}</template>
+      <template v-slot:body>
+        <div>
+          <div class="div-bookmark-dialog">
+            <span>{{ getText('MRI_PA_BOOKMARK_RENAME_DIALOG_TEXT') }}</span>
+            <div class="input-container">
+              <input v-model="renamedBookmark" v-focus />
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <div class="flex-spacer"></div>
+        <appButton :click="confirmRenameBookmark" :text="getText('MRI_PA_BUTTON_SAVE')"></appButton>
+        <appButton :click="closeRenameBookmark" :text="getText('MRI_PA_BUTTON_CANCEL')"></appButton>
+      </template>
+    </messageBox>
+    <messageBox
+      messageType="warning"
+      dim="true"
+      dialogWidth="400px"
+      v-if="showDeleteDialog"
+      @close="closeDeleteBookmark"
+    >
+      <template v-slot:header>{{ getText('MRI_PA_BOOKMARK_DELETE_DIALOG_TITLE') }}</template>
+      <template v-slot:body>
+        <div>
+          <div class="div-bookmark-dialog">
+            <div>{{ getText('MRI_PA_BOOKMARK_DELETE_DIALOG_TEXT') }}</div>
+            <div>{{ getText('MRI_PA_BOOKMARK_DELETE_DIALOG_QUESTION_TEXT') }}</div>
+          </div>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <div class="flex-spacer"></div>
+        <appButton :click="confirmDeleteBookmark" :text="getText('MRI_PA_BUTTON_DELETE')" v-focus></appButton>
+        <appButton :click="closeDeleteBookmark" :text="getText('MRI_PA_BUTTON_CANCEL')"></appButton>
+      </template>
+    </messageBox>
+
+    <messageBox v-if="getShowAddNewCohortDialog" dim="true" @close="closeAddNewCohort">
+      <template v-slot:header>{{ getText('MRI_PA_COHORT_ADD_TEXT') }}</template>
+      <template v-slot:body>
+        <div>
+          <div class="add-cohort-dialog">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-4 form-check col-form-label">
+                  <label class="form-check-label">{{ getText('MRI_PA_COLL_COHORT_NAME') }}</label>
+                </div>
+                <div class="col-sm-8">
+                  <input
+                    class="form-control"
+                    :class="{ 'is-invalid': isInvalidName }"
+                    :placeholder="getText('MRI_PA_COLL_ENTER_NAME')"
+                    v-model="cohortName"
+                    tabindex="0"
+                    v-focus
+                    required
+                    maxlength="40"
+                  />
+                  <div class="invalid-feedback" v-bind:style="[isInvalidName && 'display: block;']">
+                    Please enter another name
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <div class="flex-spacer"></div>
+        <appButton :click="addNewCohort" :text="getText('MRI_PA_BUTTON_CONTINUE')"></appButton>
+        <appButton :click="closeAddNewCohort" :text="getText('MRI_PA_BUTTON_CANCEL')"></appButton>
+      </template>
+    </messageBox>
+
+    <messageBox
+      messageType="warning"
+      dim="true"
+      dialogWidth="400px"
+      v-if="showSaveOrDiscardDialog"
+      @close="closeSaveOrDiscardDialog"
+    >
+      <template v-slot:header>{{ getText('MRI_PA_BOOKMARK_UNSAVED_DIALOG_TITLE') }}</template>
+      <template v-slot:body>
+        <div>
+          <div class="div-bookmark-dialog">
+            <div>{{ getText('MRI_PA_BOOKMARK_UNSAVED_DIALOG_TEXT') }}</div>
+            <div>{{ getText('MRI_PA_BOOKMARK_UNSAVED_DIALOG_QUESTION_TEXT') }}</div>
+          </div>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <div class="flex-spacer"></div>
+        <appButton :click="discardCohortChanges" :text="getText('MRI_PA_BUTTON_DISCARD')" v-focus></appButton>
+        <appButton :click="saveCohortChanges" :text="getText('MRI_PA_BUTTON_SAVE')"></appButton>
+      </template>
+    </messageBox>
+
+    <div class="bookmark-content">
+      <div class="m-3">
+        <d4l-button
+          :text="getText('MRI_PA_COHORT_ADD_TEXT')"
+          :title="getText('MRI_PA_COHORT_ADD_TEXT')"
+          classes="button--block"
+          @click="openAddNewCohort"
+        />
+      </div>
+
+      <div v-if="!bookmarksDisplay || bookmarksDisplay.length === 0" class="bookmark-noContent">
+        {{ getText('MRI_PA_NO_BOOKMARKS_TEXT') }}
+      </div>
+
+      <ul class="bookmark-list">
+        <template v-for="bookmark in bookmarksDisplay" :key="bookmark.name">
+          <li class="bookmark-item" ref="bookmarkItem">
+            <div class="bookmark-item-container" ref="bookmarkItemContainer">
+              <table class="bookmark-item-table">
+                <tr>
+                  <td>
+                    <div class="bookmark-item-header">
+                      <appCheckbox
+                        v-model="bookmark.selected"
+                        @checkEv="onSelectBookmark(bookmark)"
+                        :text="bookmark.name"
+                      ></appCheckbox>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="bookmark-item-content">
+                      <table>
+                        <tr class="bookmark-item-info">
+                          <td class="bookmark-filtercard">
+                            <div style="display: block">
+                              <span class="bookmark-headelement bookmark-element">By:</span>
+                              {{ bookmark.userId }}
+                            </div>
+                            <div style="display: block margin-right: 16px">
+                              <span class="bookmark-headelement bookmark-element">Version</span>
+                              {{ bookmark.version }}
+                            </div>
+                            <div style="display: block">
+                              <span class="bookmark-headelement bookmark-element">Date:</span>
+                              {{ bookmark.dateModified }}
+                            </div>
+                            <div style="display: block margin-right: 16px">
+                              <span class="bookmark-headelement bookmark-element">Time:</span>
+                              {{ bookmark.timeModified }}
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="bookmark-item-content" v-on:click="loadBookmarkCheck(bookmark.id, bookmark.chartType)">
+                      <table class="bookmark-item-cards">
+                        <thead>
+                          <th style="width: 25px"></th>
+                          <th></th>
+                        </thead>
+                        <template
+                          v-for="container in getCardsFormatted(bookmark.filterCardData)"
+                          :key="container.content"
+                        >
+                          <tr>
+                            <td class="bookmark-item-cards-items" colspan="2">
+                              <div>
+                                <template v-for="filterCard in container.content" :key="filterCard.name">
+                                  <div class="bookmark-filtercard">
+                                    <span class="bookmark-headelement bookmark-element">{{ filterCard.name }}</span>
+                                    <template v-for="attribute in filterCard.visibleAttributes" :key="attribute.name">
+                                      <span class="bookmark-element">{{ attribute.name }}</span>
+                                      <span
+                                        class="bookmark-element bookmark-constraint"
+                                        :key="constraint"
+                                        v-for="constraint in attribute.visibleConstraints"
+                                        >{{ getConstraint(constraint) }}</span
+                                      >
+                                      <span class="bookmark-element">;</span>
+                                    </template>
+                                  </div>
+                                </template>
+                              </div>
+                            </td>
+                          </tr>
+                        </template>
+                        <tr>
+                          <td colspan="2">
+                            <div class="bookmark-row-separator"></div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span
+                              class="icon"
+                              v-bind:style="'font-family:' + getChartInfo(bookmark.chartType, 'iconGroup')"
+                              >{{ getChartInfo(bookmark.chartType, 'icon') }}</span
+                            >
+                          </td>
+                          <td>
+                            <div>{{ getText(getChartInfo(bookmark.chartType, 'tooltip')) }}</div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top">
+                            <span class="icon" style="font-family: app-icons"></span>
+                          </td>
+                          <td>
+                            <div class="bookmark-item-axes">
+                              <template
+                                v-for="axis in getAxisFormatted(bookmark.axisInfo, bookmark.chartType)"
+                                :key="axis.name"
+                              >
+                                <div>
+                                  <label style="display: flex; align-items: top">
+                                    <span
+                                      v-if="bookmark.chartType !== 'list'"
+                                      class="icon"
+                                      :style="`font-family: ${axis.iconGroup}; margin-top: 0`"
+                                      >{{ axis.icon }}</span
+                                    >
+                                    <span>{{ axis.name }}</span>
+                                  </label>
+                                </div>
+                              </template>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <icon icon="puzzle"></icon>
+                          </td>
+                          <td>
+                            <div class="bookmark-extension-container">
+                              <div>{{ getText('MRI_PA_EXTENSION_EXPORT_HEADER') }}</div>
+                              <div></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="bookmark-item-footer">
+                      <table class="bookmark-item-buttons">
+                        <tr>
+                          <td colspan="3">
+                            <button
+                              :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
+                              class="bookmark-button"
+                              v-on:click.stop="this.openCohortListDialog(bookmark)"
+                            >
+                              Show Cohorts
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <button
+                              v-on:click.stop="renameBookmark(bookmark)"
+                              :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
+                              class="bookmark-button"
+                              :disabled="bookmark.disableUpdate"
+                            >
+                              <span class="icon"></span>
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              v-on:click.stop="deleteBookmark(bookmark)"
+                              :title="getText('MRI_PA_TOOLTIP_DELETE_BOOKMARK')"
+                              class="bookmark-button"
+                              :disabled="bookmark.disableUpdate"
+                            >
+                              <span class="icon"></span>
+                            </button>
+                          </td>
+                          <td v-if="enableAddToCohort">
+                            <button
+                              v-on:click.stop="addCohort(bookmark)"
+                              :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
+                              class="bookmark-button"
+                            >
+                              <span class="icon" style="font-family: app-icons"> </span>
+                            </button>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </li>
+        </template>
+      </ul>
+    </div>
+    <!-- Bookmark Footer -->
+    <div class="bookmarkFooter">
+      <!-- Footer Button  -->
+      <div class="d-flex">
+        <appCheckbox
+          v-model="showSharedBookmarks"
+          :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_BOOKMARKS_TEXT')"
+          :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_BOOKMARKS_TITLE')"
+        ></appCheckbox>
+        <appButton
+          :text="getText('MRI_COMP_COHORT_BUTTON')"
+          :click="openCompareDialog"
+          :disabled="!showCohortCompareBtn"
+          :title="getText('MRI_COMP_COHORT_TOOLTIP_BTN')"
+        ></appButton>
+      </div>
+    </div>
+
+    <cohortComparisonDialog
+      v-bind:bookmarkList="aSelBookmarkList"
+      :openCompareDialog="showCohortCompareDialog"
+      @closeEv="showCohortCompareDialog = false"
+    >
+    </cohortComparisonDialog>
+
+    <cohortListDialog
+      :openListDialog="showCohortListDialog"
+      :bookmarkId="this.selectedBookmark.id"
+      :bookmarkName="this.selectedBookmark.name"
+      @closeEv="showCohortListDialog = false"
+    >
+    </cohortListDialog>
+
+    <addCohort
+      :openAddDialog="showAddCohortDialog"
+      :bookmarkId="this.selectedBookmark.id"
+      :bookmarkName="this.selectedBookmark.name"
+      @closeEv="showAddCohortDialog = false"
+    >
+    </addCohort>
+
+    <messageBox
+      dim="true"
+      messageType="error"
+      dialogWidth="400px"
+      v-if="showIncompatibleMessage"
+      @close="closeIncompatibleMessage"
+    >
+      <template v-slot:header>{{ getText('MRI_PA_NOTIFICATION_ERROR') }}</template>
+      <template v-slot:body>
+        <div>
+          <div class="div-reset-text">{{ getText('MRI_PA_BMK_COMPATIBLE_ERROR') }}</div>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <div class="flex-spacer"></div>
+        <appButton :click="closeIncompatibleMessage" :text="getText('MRI_PA_CLOSE_BUTTON')"></appButton>
+      </template>
+    </messageBox>
+  </div>
+</template>
+
+<script lang="ts">
+declare var sap
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+import appButton from '../lib/ui/app-button.vue'
+import appCheckbox from '../lib/ui/app-checkbox.vue'
+import icon from '../lib/ui/app-icon.vue'
+import appLabel from '../lib/ui/app-label.vue'
+import appLink from '../lib/ui/app-link.vue'
+import Constants from '../utils/Constants'
+import cohortComparisonDialog from './CohortComparisonDialog.vue'
+import messageBox from './MessageBox.vue'
+import addCohort from './AddCohort.vue'
+import cohortListDialog from './CohortListDialog.vue'
+import { getPortalAPI } from '../utils/PortalUtils'
+import formatBookmarkDisplay from '../utils/BookmarkUtils'
+import * as types from '../store/mutation-types'
+
+export default {
+  name: 'bookmark',
+  props: ['unloadBookmarkEv', 'initBookmarkId', 'hideEv'],
+  data() {
+    return {
+      selectedBookmark: {},
+      renamedBookmark: '',
+      schemaName: '',
+      viewName: '',
+      showRenameDialog: false,
+      showDeleteDialog: false,
+      showSharedBookmarks: false,
+      showCopyExtensionDialog: false,
+      aSelBookmarkList: [],
+      initBookmarkId: this.initBookmarkId,
+      showCohortCompareDialog: false,
+      showCohortListDialog: false,
+      showAddCohortDialog: false,
+      showIncompatibleMessage: false,
+      enableAddToCohort: false,
+      cohortName: '',
+      isInvalidName: false,
+      showSaveOrDiscardDialog: false,
+      isAddNewCohort: false,
+      selectedBmkId: '',
+      selectedChartType: '',
+    }
+  },
+  created() {
+    this.enableAddToCohort = this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts
+  },
+  watch: {
+    initBookmarkId() {
+      if (this.initBookmarkId !== '') {
+        this.loadBookmark(this.initBookmarkId, null)
+      }
+    },
+  },
+  computed: {
+    ...mapGetters([
+      'getMriFrontendConfig',
+      'getBookmarks',
+      'getSchemaName',
+      'getText',
+      'getAxis',
+      'getDomainValues',
+      'getActiveBookmark',
+      'getCurrentBookmarkHasChanges',
+      'getShowAddNewCohortDialog'
+    ]),
+    bookmarksDisplay() {
+      const bookmarkData = this.getBookmarks
+      const returnValue = []
+      const userId = getPortalAPI().userId
+      if (this.showSharedBookmarks) this.aSelBookmarkList = []
+      bookmarkData.forEach(element => {
+        const bookmarkObj = JSON.parse(element.bookmark)
+
+        if (bookmarkObj.filter && bookmarkObj.filter.cards) {
+          if (this.showSharedBookmarks) {
+            if (userId == element.user_id || element.shared) {
+              // user and shared
+              returnValue.push({
+                ...formatBookmarkDisplay(element, bookmarkObj),
+                disableUpdate: userId != element.user_id,
+              })
+            }
+          } else if (!this.showSharedBookmarks && userId == element.user_id) {
+            // only user
+            returnValue.push({
+              ...formatBookmarkDisplay(element, bookmarkObj),
+              disableUpdate: userId != element.user_id,
+            })
+          }
+        }
+      }, this)
+
+      return returnValue
+    },
+    hasChanges() {
+      return this.getActiveBookmark?.isNew || this.getCurrentBookmarkHasChanges
+    },
+    showCohortCompareBtn() {
+      return this.aSelBookmarkList.length > 1
+    },
+  },
+  methods: {
+    ...mapActions([
+      'fireBookmarkQuery',
+      'setToastMessage',
+      'loadbookmarkToState',
+      'toggleAddCohortDialog',
+      'toggleCohortListDialog',
+      'resetChartProperties',
+      'setShowAddNewCohortDialog'
+    ]),
+    ...mapMutations([types.SET_ACTIVE_BOOKMARK, types.CONFIG_SET_HAS_ASSIGNED]),
+    openCompareDialog() {
+      this.showCohortCompareDialog = true
+    },
+    openCohortListDialog(bookmark) {
+      this.selectedBookmark = bookmark
+      this.showCohortListDialog = true
+    },
+    getConstraint(constraint) {
+      try {
+        constraint = typeof JSON.parse(constraint) === 'object' ? JSON.parse(constraint).text : constraint
+      } catch (e) {
+        // cannot parse the constraint
+      }
+      return constraint
+    },
+    onSelectBookmark(bookmark) {
+      if (bookmark.selected) {
+        this.aSelBookmarkList.push(bookmark)
+      } else {
+        this.aSelBookmarkList.splice(this.aSelBookmarkList.indexOf(bookmark), 1)
+      }
+    },
+    unloadBookmark() {
+      this.$emit('unloadBookmarkEv')
+    },
+    getChartInfo(chart, type) {
+      if (Constants.chartInfo[chart]) {
+        return Constants.chartInfo[chart][type]
+      }
+      return ''
+    },
+    getCardsFormatted(boolContainers) {
+      const returnObj = []
+      for (let i = 0; i < boolContainers.length; i += 1) {
+        try {
+          if (boolContainers[i].content.length > 0) {
+            const content = []
+            for (let ii = 0; ii < boolContainers[i].content.length; ii += 1) {
+              const visibleAttributes = []
+              let attributes = boolContainers[i].content[ii].attributes
+              let filterCardName =
+                !boolContainers[i].content[ii].name && boolContainers[i].content[ii].instanceID === 'patient'
+                  ? this.getText('MRI_PA_FILTERCARD_TITLE_BASIC_DATA')
+                  : boolContainers[i].content[ii].name
+              if (boolContainers[i].content[ii].op && boolContainers[i].content[ii].op === 'NOT') {
+                // Excluded filtercard
+                attributes = boolContainers[i].content[ii].content[0].attributes
+                filterCardName = `${boolContainers[i].content[ii].content[0].name} (${this.getText(
+                  'MRI_PA_LABEL_EXCLUDED'
+                )})`
+              }
+              for (let iii = 0; iii < attributes.content.length; iii += 1) {
+                if (
+                  attributes.content[iii].constraints.content &&
+                  attributes.content[iii].constraints.content.length > 0
+                ) {
+                  const name = this.getAttributeName(attributes.content[iii].configPath, 'list')
+                  const isConceptSet = this.getAttributeType(attributes.content[iii].configPath) === 'conceptSet'
+                  const visibleConstraints = []
+                  const constraints = attributes.content[iii].constraints
+                  for (let iv = 0; iv < constraints.content.length; iv += 1) {
+                    if (constraints.content[iv].content) {
+                      for (let v = 0; v < constraints.content[iv].content.length; v += 1) {
+                        visibleConstraints.push(
+                          `${constraints.content[iv].content[v].operator}${constraints.content[iv].content[v].value}`
+                        )
+                      }
+                    } else if (constraints.content[iv].operator === '=') {
+                      if (isConceptSet) {
+                        const conceptSets = this.getDomainValues('conceptSets')
+                        const conceptSetName = conceptSets?.values?.find(
+                          set => set.value === constraints.content[iv].value
+                        )?.text
+                        visibleConstraints.push(conceptSetName || constraints.content[iv].value)
+                      } else {
+                        visibleConstraints.push(constraints.content[iv].value)
+                      }
+                    } else {
+                      visibleConstraints.push(`${constraints.content[iv].operator}${constraints.content[iv].value}`)
+                    }
+                  }
+                  const attributeObj = {
+                    name,
+                    visibleConstraints,
+                  }
+                  visibleAttributes.push(attributeObj)
+                }
+              }
+              const filterCardObj = {
+                visibleAttributes,
+                name: `${filterCardName}`,
+              }
+              content.push(filterCardObj)
+            }
+            const boolContainerObj = {
+              content,
+            }
+            returnObj.push(boolContainerObj)
+          }
+        } finally {
+          // Handle Incorrect Bookmark Formatting
+        }
+      }
+      return returnObj
+    },
+    getAxisFormatted(axis, type) {
+      const returnObj = []
+      if (type === 'list') {
+        const tempObject = {}
+        let count = 0
+        Object.keys(axis).forEach(key => {
+          tempObject[axis[key]] = key
+          count += 1
+        })
+        for (let i = 0; i < count; i += 1) {
+          returnObj.push({
+            name: this.getAttributeName(tempObject[i], type),
+          })
+        }
+      } else {
+        for (let i = 0; i < axis.length; i += 1) {
+          if (axis[i].attributeId !== 'n/a') {
+            const axisModel = this.getAxis(i)
+            returnObj.push({
+              name: `= ${this.getAttributeName(axis[i].attributeId, type)}`,
+              icon: axisModel.props.icon,
+              iconGroup: axisModel.props.iconFamily,
+            })
+          }
+        }
+      }
+      return returnObj
+    },
+    getAttributeName(attributeId, type) {
+      /* Note: This is the current Implementation of Bookmark Rendering. */
+      if (attributeId) {
+        const attributePath = attributeId.split('.')
+        if (attributePath.length > 3 && type !== 'list') {
+          const attributePathEnd1 = attributePath.pop()
+          const attributePathEnd2 = attributePath.pop()
+          attributePath.pop()
+          attributePath.push(attributePathEnd2)
+          attributePath.push(attributePathEnd1)
+        }
+        const attributeConfigPath = attributePath.join('.')
+        const mriFrontEndConfig = this.getMriFrontendConfig
+        const attribute = mriFrontEndConfig.getAttributeByPath(attributeConfigPath)
+        if (attribute && attribute.oInternalConfigAttribute && attribute.oInternalConfigAttribute.name) {
+          return attribute.oInternalConfigAttribute.name
+        }
+      }
+      return attributeId
+    },
+    getAttributeType(attributeId: string) {
+      return this.getMriFrontendConfig.getAttributeByPath(attributeId)?.oInternalConfigAttribute?.type
+    },
+    loadBookmarkCheck(bmkId, chartType) {
+      if (this.getActiveBookmark && bmkId === this.getActiveBookmark.bmkId) {
+        this.$emit('unloadBookmarkEv')
+      } else {
+        this.selectedBmkId = bmkId
+        this.selectedChartType = chartType
+        if (this.hasChanges) {
+          this.openSaveOrDiscardDialog()
+        } else {
+          this.loadBookmark()
+        }
+      }
+    },
+    loadBookmark() {
+      this.loadbookmarkToState({ bmkId: this.selectedBmkId, chartType: this.selectedChartType })
+        .then(() => {
+          this.$emit('unloadBookmarkEv')
+          this.selectedBmkId = ''
+          this.selectedChartType = ''
+        })
+        .catch(() => {
+          this.showIncompatibleMessage = true
+        })
+    },
+    closeRenameBookmark() {
+      this.showRenameDialog = false
+    },
+    renameBookmark(bookmark) {
+      if (bookmark) {
+        this.selectedBookmark = bookmark
+        this.renamedBookmark = bookmark.name
+        this.showRenameDialog = true
+      }
+    },
+    exportExtension(bookmark) {
+      if (bookmark) {
+        this.selectedBookmark = bookmark
+        this.renamedBookmark = bookmark.name
+        this.schemaName = this.getSchemaName
+        this.viewName = bookmark.viewName
+        this.showCopyExtensionDialog = true
+      }
+    },
+    closeCopyExtensionDialog() {
+      this.showCopyExtensionDialog = false
+    },
+    confirmRenameBookmark() {
+      const bookmark = this.selectedBookmark
+      const request = {
+        cmd: 'rename',
+        newName: this.renamedBookmark,
+      }
+      this.fireBookmarkQuery({
+        method: 'put',
+        params: request,
+        bookmarkId: bookmark.id,
+      }).then(() => {
+        this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
+        this.closeRenameBookmark()
+      })
+    },
+    addCohort(bookmark) {
+      this.selectedBookmark = bookmark
+      this.showAddCohortDialog = true
+    },
+    closeDeleteBookmark() {
+      this.showDeleteDialog = false
+    },
+    deleteBookmark(bookmark) {
+      if (bookmark) {
+        this.selectedBookmark = bookmark
+        this.showDeleteDialog = true
+      }
+    },
+    confirmDeleteBookmark() {
+      const activeBookmark = this.getActiveBookmark
+      const bookmark = this.selectedBookmark
+      const params = {
+        cmd: 'delete',
+      }
+
+      this.fireBookmarkQuery({
+        params,
+        method: 'delete',
+        bookmarkId: bookmark.id,
+      }).then(() => {
+        this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
+        this.closeDeleteBookmark()
+        if (activeBookmark && activeBookmark.bookmarkname === bookmark.name) {
+          this[types.SET_ACTIVE_BOOKMARK](null)
+        }
+      })
+    },
+    closeIncompatibleMessage() {
+      this.showIncompatibleMessage = false
+    },
+    async refreshBookmarks() {
+      await this.fireBookmarkQuery({
+        method: 'get',
+        params: { cmd: 'loadAll' },
+      })
+    },
+    openSaveOrDiscardDialog(isAddNewCohort = false) {
+      this.showSaveOrDiscardDialog = true
+      if (isAddNewCohort) this.isAddNewCohort = true
+    },
+    closeSaveOrDiscardDialog() {
+      this.showSaveOrDiscardDialog = false
+      this.isAddNewCohort = false
+    },
+    discardCohortChanges() {
+      this.showSaveOrDiscardDialog = false
+      if (this.isAddNewCohort) {
+        this.setShowAddNewCohortDialog( {showAddNewCohortDialog: true})
+      } else {
+        this.loadBookmark()
+      }
+    },
+    saveCohortChanges() {
+      this.showSaveOrDiscardDialog = false
+      this.$emit('unloadBookmarkEv')
+    },
+    openAddNewCohort() {      
+      if (this.hasChanges) {
+        this.openSaveOrDiscardDialog(true)
+      } else {
+        this.setShowAddNewCohortDialog( {showAddNewCohortDialog: true})
+      }
+    },
+    closeAddNewCohort() {
+      this.setShowAddNewCohortDialog( {showAddNewCohortDialog: false})
+      this.cohortName = ''
+      this.isInvalidName = false
+    },
+    addNewCohort() {
+      if (!this.cohortName) {
+        this.isInvalidName = true
+        return
+      }
+      const userId = getPortalAPI().userId
+      for (const bookmark of this.getBookmarks) {
+        if (userId === bookmark.user_id && bookmark.bookmarkname === this.cohortName) {
+          this.isInvalidName = true
+          return
+        }
+      }
+      this[types.SET_ACTIVE_BOOKMARK]({ bookmarkname: this.cohortName, isNew: true })
+      this.closeAddNewCohort()
+      this.$emit('unloadBookmarkEv')
+      this.reset()
+      this.$emit('hideEv')
+    },
+    reset() {
+      this[types.CONFIG_SET_HAS_ASSIGNED](false)
+      this.$nextTick(() => {
+        this.resetChartProperties()
+        this[types.CONFIG_SET_HAS_ASSIGNED](true)
+      })
+    },
+  },
+  components: {
+    messageBox,
+    appButton,
+    appCheckbox,
+    appLabel,
+    icon,
+    appLink,
+    cohortComparisonDialog,
+    addCohort,
+    cohortListDialog,
+  },
+}
+</script>

@@ -1,0 +1,13 @@
+<mvc:View controllerName="sap.hc.hph.config.assignment.ui.views.App" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" displayBlock="true">
+	<App id="appControl">
+		<Page title="{i18n>HPH_CFG_ASSIGN_TITLE_CONFIG_ASSIGNMENT}" navButtonPress="handleNavButtonPress">
+			<content>
+				<Panel width="auto" class="sapUiTinyMargin">
+					<content>
+						<mvc:XMLView viewName="sap.hc.hph.config.assignment.ui.views.AssignmentTable" />
+					</content>
+				</Panel>
+			</content>
+		</Page>
+	</App>
+</mvc:View>

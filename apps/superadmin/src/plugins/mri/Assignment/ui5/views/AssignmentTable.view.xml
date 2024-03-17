@@ -1,0 +1,54 @@
+<mvc:View controllerName="sap.hc.hph.config.assignment.ui.views.AssignmentTable"
+	xmlns:l="sap.ui.layout" xmlns:mvc="sap.ui.core.mvc" xmlns:m="sap.m"
+	xmlns="sap.ui.table" xmlns:c="sap.ui.core">
+
+	<Table id="idMAssignmentTable" selectionMode="None" rows="{/assignments}"
+		visibleRowCount="10" navigationMode="Paginator" >
+		<toolbar>
+			<m:Toolbar>
+				<m:content>
+					<m:Title text="{i18n>HPH_CFG_ASSIGN_ASSIGNMENTS_WORD} ({/assignments/length})" />
+					<m:ToolbarSpacer />
+					<m:SearchField width="20%" liveChange="onSearch"/>
+					<m:Button class="assignmenttablebutton" text="{i18n>HPH_CFG_ASSIGN_CREATE_ASSIGNMENT_BTN}" icon="sap-icon://add"
+						press="onCreateAssignment" />
+					<m:Button class="assignmenttablebutton" text="" icon="sap-icon://refresh" press="updateModel" />
+				</m:content>
+			</m:Toolbar>
+		</toolbar>
+		<columns>
+			<Column id="name" width="30%" sortProperty="assignmentName" filterProperty = "assignmentName">
+				<m:Label text="{i18n>HPH_CFG_ASSIGN_ASSIGNMENT_TABLE_COLUMN_ASSIGNMENT_NAME}" />
+				<template>
+					<m:Text text="{assignmentName}" />
+				</template>
+			</Column>
+			<Column id="type" width="30%" sortProperty = "configTypeAndNameConcatenated" filterProperty = "configTypeAndNameConcatenated">
+				<m:Label text="{i18n>HPH_CFG_ASSIGN_ASSIGNMENT_TABLE_COLUMN_CONFIG_TYPE} - {i18n>HPH_CFG_ASSIGN_ASSIGNMENT_TABLE_COLUMN_CONFIG_NAME}" />
+				<template>
+					<m:Text text="{configTypeAndNameConcatenated}"/>
+				</template>
+			</Column>
+			<Column id="entityValue" width="30%" sortProperty="entityValueText" filterProperty ="entityValueText">
+				<m:Label text="{i18n>HPH_CFG_ASSIGN_ASSIGNMENT_TABLE_COLUMN_ENTITY_VALUE}" />
+				<template>
+					<m:ObjectStatus text="{parts:[{path:'entityType'},{path:'entityValue'}],formatter: '.entityTextFormatter'}"
+						icon="{
+								path: 'entityType',
+								formatter: '.entityIconFormatter'
+							}" />
+				</template>
+			</Column>
+			<Column id="actions" width="10%">
+				<m:Label text="{i18n>HPH_CFG_ASSIGN_ASSIGNMENT_TABLE_COLUMN_ACTIONS}" />
+				<template>
+					<m:HBox>
+						<m:Button icon="sap-icon://edit" press="onEditPressed" type="Transparent"/>
+						<m:Button icon="sap-icon://delete" press="onDeletePressed" type="Transparent"/>
+					</m:HBox>
+				</template>
+				
+			</Column>
+		</columns>
+	</Table>
+</mvc:View>
