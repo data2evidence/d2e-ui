@@ -1,8 +1,8 @@
 name: Test vue
 
 on:
-  push:
-    branches-ignore: [develop]
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
