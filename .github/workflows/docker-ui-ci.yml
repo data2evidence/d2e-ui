@@ -2,7 +2,8 @@ name: CI Docker image UI
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 # Run only one job per branch
 concurrency: 
