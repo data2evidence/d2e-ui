@@ -1,6 +1,7 @@
 name: PyQE unit tests
 
-on: [push]
+on:
+  push:
 
 jobs:
   test-pyqe:
