@@ -1,7 +1,8 @@
 name: ALP Portal unit tests (Components Library)
 
 on:
-  pull_request
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   test-alp-portal-components:
