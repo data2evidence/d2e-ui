@@ -1,7 +1,7 @@
 name: ALP Portal unit tests (Frontend)
 
 on:
-  - pull_request
+  pull_request
 
 jobs:
   test-alp-portal-frontend:
