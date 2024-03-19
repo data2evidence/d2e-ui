@@ -44,17 +44,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: webfactory/ssh-agent@v0.8.0
-      with:
-        ssh-private-key: |
-            ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
-            ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
-
-    - uses: azure/docker-login@v1
-      with:
-        login-server: alpcr.azurecr.io
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
 
     - name: Get BRANCH_NAME
       shell: bash
@@ -67,12 +56,24 @@ jobs:
         [ $GITHUB_EVENT_NAME = "workflow_dispatch" ] && echo BRANCH_NAME=${{ github.ref_name }} | tee -a $GITHUB_ENV
         [ $GITHUB_EVENT_NAME = "pull_request" ] && echo BRANCH_NAME=${{ github.head_ref }} | tee -a $GITHUB_ENV
 
+    - uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: |
+            ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
+            ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
+
+    - uses: azure/docker-login@v1
+      with:
+        login-server: alpcr.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
     - name: Get docker tag name
       id: docker_tag
       shell: bash
       run: |
           if [[ ${{ env.BRANCH_NAME == 'develop' }} == true ]]; then
-              echo "is_push=true" >> $GITHUB_OUTPUT
+            echo "is_push=true" >> $GITHUB_OUTPUT
           elif [ $GITHUB_EVENT_NAME = "workflow_dispatch" ]; then
             echo "workflow_dispatch"
             echo "is_push=true" >> $GITHUB_OUTPUT
