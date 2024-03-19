@@ -24,6 +24,4 @@ dist
 **/*-preload*.js
 **/library-parameters.json
 
-
-
-
+**/*private*

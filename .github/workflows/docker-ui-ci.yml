@@ -36,7 +36,7 @@ jobs:
     environment: development
     runs-on: ubuntu-20.04
     needs: get-pr
-    if: needs.get-pr.outputs.pr_draft == 'false' || github.event_name == 'workflow_dispatch' || contains('release', needs.get-pr.outputs.branch_name)
+    if: needs.get-pr.outputs.pr_draft == 'false' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }})
     # (github.ref_name == 'develop' ||  contains('release', github.ref_name) || github.event_name == 'workflow_dispatch') || (needs.get-pr.outputs.pr_found == 'true') && (needs.get-pr.outputs.pr_draft == 'false') # Should run if branch is develop/release/workflow_dispatch and has a non-draft PR
     strategy:
       matrix:
@@ -54,7 +54,7 @@ jobs:
       shell: bash
       run: |
         echo pr_draft=${{ needs.get-pr.outputs.pr_draft }}
-        echo BRANCH_NAME=${{ needs.get-pr.outputs.branch_name }}
+        echo BRANCH_NAME=${{ github.head_ref || github.ref_name }}
         echo github.head_ref=${{ github.head_ref }} # pull_request only
         echo github.ref_name= ${{ github.ref_name }} # workflow_dispatch
         echo github.ref=${{ github.ref }} # workflow_dispatch
