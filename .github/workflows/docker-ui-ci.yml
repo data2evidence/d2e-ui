@@ -8,31 +8,30 @@ on:
 # Run only one job per branch
 concurrency: 
   group: ${{ github.ref }}-docker-ui-ci # Run the latest push except for develop
-  cancel-in-progress: ${{ github.ref_name != 'develop' }} # Cancel in progress except for develop branch
 
 jobs:
-  check_pr_draft:
-    runs-on: ubuntu-20.04
-    outputs:
-      pr_found: ${{ steps.PR.outputs.pr_found }}
-      pr_draft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }}
-    steps:
-      - uses: 8BitJonny/gh-get-current-pr@2.2.0
-        id: PR
-      - run: |
-          echo "PR ${prNumber} is draft - ${isPRDraft}"
-          echo "pr_draft=${isPRDraft}" >> $GITHUB_OUTPUT
-        if: steps.PR.outputs.pr_found == 'true'
-        env:
-          # JSON object with the full PR object
-          isPRDraft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }}
-          # Direct access to common PR properties
-          prNumber: ${{ steps.PR.outputs.number }}
+  # check_pr_draft:
+  #   runs-on: ubuntu-20.04
+  #   outputs:
+  #     pr_found: ${{ steps.PR.outputs.pr_found }}
+  #     pr_draft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }}
+  #   steps:
+  #     - uses: 8BitJonny/gh-get-current-pr@2.2.0
+  #       id: PR
+  #     - run: |
+  #         echo "PR ${prNumber} is draft - ${isPRDraft}"
+  #         echo "pr_draft=${isPRDraft}" >> $GITHUB_OUTPUT
+  #       if: steps.PR.outputs.pr_found == 'true'
+  #       env:
+  #         # JSON object with the full PR object
+  #         isPRDraft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }}
+  #         # Direct access to common PR properties
+  #         prNumber: ${{ steps.PR.outputs.number }}
 
   build-docker-ui:
     environment: development
     runs-on: ubuntu-20.04
-    needs: check_pr_draft
+    # needs: check_pr_draft
     # if: (github.ref_name == 'develop' ||  contains('release', github.ref_name) || github.event_name == 'workflow_dispatch') || (needs.check_pr_draft.outputs.pr_found == 'true') && (needs.check_pr_draft.outputs.pr_draft == 'false') # Should run if branch is develop/release/workflow_dispatch and doesnt have a PR
     strategy:
       matrix:
@@ -57,22 +56,28 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
+    - name: Get BRANCH_NAME
+      shell: bash
+      run: |
+        echo github.ref_name= ${{ github.ref_name }} # workflow_dispatch
+        echo github.ref=${{ github.ref }} # workflow_dispatch
+        echo github.sha=${{ github.sha }} # always
+        echo github.head_ref=${{ github.head_ref }} # pull_request
+
+        [ $GITHUB_EVENT_NAME = "workflow_dispatch" ] && echo BRANCH_NAME=${{ github.ref_name }} | tee -a $GITHUB_ENV
+        [ $GITHUB_EVENT_NAME = "pull_request" ] && echo BRANCH_NAME=${{ github.head_ref }} | tee -a $GITHUB_ENV
+
     - name: Get docker tag name
       id: docker_tag
       shell: bash
       run: |
-          echo github.ref_name= ${{ github.ref_name }}
-          echo github.head_ref=${{ github.head_ref }}
-          echo github.ref=${{ github.ref }}
-          echo github.sha=${{ github.sha }} 
-
-          if [[ ${{ github.ref_name == 'develop' }} == true ]]; then
+          if [[ ${{ env.BRANCH_NAME == 'develop' }} == true ]]; then
               echo "is_push=true" >> $GITHUB_OUTPUT
           elif [ $GITHUB_EVENT_NAME = "workflow_dispatch" ]; then
             echo "workflow_dispatch"
             echo "is_push=true" >> $GITHUB_OUTPUT
           else
-              echo "is_push=false" >> $GITHUB_OUTPUT
+            echo "is_push=false" >> $GITHUB_OUTPUT
           fi
 
     - name: Collect Git and SSH config files in a directory that is part of the Docker build context
@@ -80,7 +85,7 @@ jobs:
         cp -r ~/.gitconfig  ~/.ssh .github/
         cd .github/
         sed 's|/home/runner|/root|g' -i.bak .ssh/config
-  
+        echo BRANCH_NAME=$BRANCH_NAME
 
     # - name: Set up Docker Buildx
     #   uses: docker/setup-buildx-action@v3
