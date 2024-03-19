@@ -15,7 +15,7 @@ jobs:
     outputs:
       pr_found: ${{ steps.PR.outputs.pr_found }}
       pr_draft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }} 
-      branch_name: ${{ github.head_ref || github.ref_name }}
+      branch_name: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
     steps:
       - uses: 8BitJonny/gh-get-current-pr@3.0.0
         id: PR
