@@ -57,7 +57,7 @@ jobs:
           echo BRANCH_NAME=${{ github.head_ref }} | tee -a $GITHUB_ENV
         else
           echo BRANCH_NAME=${{ github.ref_name }} | tee -a $GITHUB_ENV
-        elif
+        fi
 
     # - name: Get docker tag name
     #   id: docker_tag
