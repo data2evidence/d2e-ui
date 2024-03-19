@@ -7,8 +7,8 @@ on:
 
 # Run only one job per branch
 concurrency: 
-  group: ${{ github.head_ref || github.ref_name }}-docker-ui-ci # Run the latest push except for develop
-  cancel-in-progress: ${{ (github.head_ref || github.ref_name) != 'develop' }} # Cancel in progress except for develop branch
+  group: ${{ github.head_ref || github.ref_name }}-docker-ui-ci # per branch build
+  cancel-in-progress: ${{ (github.head_ref || github.ref_name) != 'develop' }} # except for develop branch
 
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -37,8 +37,7 @@ jobs:
     environment: development
     runs-on: ubuntu-20.04
     needs: get-pr
-    if: needs.get-pr.outputs.pr_draft == 'false' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }})
-    # (github.ref_name == 'develop' ||  contains('release', github.ref_name) || github.event_name == 'workflow_dispatch') || (needs.get-pr.outputs.pr_found == 'true') && (needs.get-pr.outputs.pr_draft == 'false') # Should run if branch is develop/release/workflow_dispatch and has a non-draft PR
+    if: needs.get-pr.outputs.pr_draft == 'false' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }}) # runs if PR is not drafr /or/ workflow_dispatch /or/ release branch
     strategy:
       matrix:
         include:
