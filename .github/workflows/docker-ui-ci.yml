@@ -9,13 +9,15 @@ on:
 concurrency: 
   group: ${{ github.ref }}-docker-ui-ci # Run the latest push except for develop
 
+env:
+  BRANCH_NAME=${{ github.head_ref || github.ref_name }}
+
 jobs:
   get-pr:
     runs-on: ubuntu-20.04
     outputs:
       pr_found: ${{ steps.PR.outputs.pr_found }}
       pr_draft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }} 
-      branch_name: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
     steps:
       - uses: 8BitJonny/gh-get-current-pr@3.0.0
         id: PR
@@ -23,14 +25,12 @@ jobs:
       - run: |
           echo "PR ${prNumber} is draft - ${PRisDraft}"
           echo "pr_draft=${PRisDraft}" | tee -a $GITHUB_OUTPUT
-          echo branch_name=${{env.branch_name}} | tee -a $GITHUB_OUTPUT
         if: steps.PR.outputs.pr_found == 'true'
         env:
           # JSON object with the full PR object
           PRisDraft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }}
           # Direct access to common PR properties
           prNumber: ${{ steps.PR.outputs.number }}
-          branch_name: ${{ github.head_ref || github.ref_name }}
 
   build-docker-ui:
     environment: development
@@ -49,22 +49,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Get BRANCH_NAME
-      shell: bash
-      run: |
-        echo pr_draft=${{ needs.get-pr.outputs.pr_draft }}
-        echo BRANCH_NAME=${{ github.head_ref || github.ref_name }}
-        echo github.head_ref=${{ github.head_ref }} # pull_request only
-        echo github.ref_name= ${{ github.ref_name }} # workflow_dispatch
-        echo github.ref=${{ github.ref }} # workflow_dispatch
-        echo github.sha=${{ github.sha }} # always
-
-        if [ $GITHUB_EVENT_NAME = "pull_request" ]; then 
-          echo BRANCH_NAME=${{ github.head_ref }} | tee -a $GITHUB_ENV
-        else
-          echo BRANCH_NAME=${{ github.ref_name }} | tee -a $GITHUB_ENV
-        fi
 
     - name: Get docker tag name
       id: docker_tag
