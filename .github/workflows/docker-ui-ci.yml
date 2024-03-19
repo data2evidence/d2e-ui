@@ -63,47 +63,47 @@ jobs:
             echo "is_push=false" >> $GITHUB_OUTPUT
           fi
 
-    # - uses: webfactory/ssh-agent@v0.8.0
-    #   with:
-    #     ssh-private-key: |
-    #         ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
-    #         ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
+    - uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: |
+            ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
+            ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
 
-    # - uses: azure/docker-login@v1
-    #   with:
-    #     login-server: alpcr.azurecr.io
-    #     username: ${{ secrets.REGISTRY_USERNAME }}
-    #     password: ${{ secrets.REGISTRY_PASSWORD }}
+    - uses: azure/docker-login@v1.0.1
+      with:
+        login-server: alpcr.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
 
-    # - name: Collect Git and SSH config files in a directory that is part of the Docker build context
-    #   run: |
-    #     cp -r ~/.gitconfig  ~/.ssh .github/
-    #     cd .github/
-    #     sed 's|/home/runner|/root|g' -i.bak .ssh/config
+    - name: Collect Git and SSH config files in a directory that is part of the Docker build context
+      run: |
+        cp -r ~/.gitconfig  ~/.ssh .github/
+        cd .github/
+        sed 's|/home/runner|/root|g' -i.bak .ssh/config
 
-    # - name: Set up Docker Buildx
-    #   uses: docker/setup-buildx-action@v3
-    #   id: builder
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      id: builder
 
-    # - name: Build and push
-    #   uses: docker/build-push-action@v4
-    #   id: build_push
-    #   continue-on-error: false
-    #   with:
-    #     builder: ${{ steps.builder.outputs.name }}
-    #     # cache-from: type=gha
-    #     # cache-to: type=gha,mode=max
-    #     ulimit: nofile=1048576:1048576
-    #     platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
-    #     context: ${{ matrix.context }}
-    #     file:  ${{ matrix.directory }}/${{ matrix.fileName }}
-    #     push: ${{ steps.docker_tag.outputs.is_push }}
-    #     tags: alpcr.azurecr.io/${{ matrix.name }}:${{ steps.docker_tag.outputs.tag_name || github.ref_name }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
-    #     ssh: |
-    #       default=${{ env.SSH_AUTH_SOCK }}
-    #     build-args: |
-    #       docker_image_prefix=alpcr.azurecr.io
-    #       GIT_COMMIT_ARG=${{ github.sha }}
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      id: build_push
+      continue-on-error: false
+      with:
+        builder: ${{ steps.builder.outputs.name }}
+        # cache-from: type=gha
+        # cache-to: type=gha,mode=max
+        ulimit: nofile=1048576:1048576
+        platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
+        context: ${{ matrix.context }}
+        file:  ${{ matrix.directory }}/${{ matrix.fileName }}
+        push: ${{ steps.docker_tag.outputs.is_push }}
+        tags: alpcr.azurecr.io/${{ matrix.name }}:${{ steps.docker_tag.outputs.tag_name || github.ref_name }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
+        ssh: |
+          default=${{ env.SSH_AUTH_SOCK }}
+        build-args: |
+          docker_image_prefix=alpcr.azurecr.io
+          GIT_COMMIT_ARG=${{ github.sha }}
     
     # - name: Delete images older than 14 days
     #   id: delete_old_images
