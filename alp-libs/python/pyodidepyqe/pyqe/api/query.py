@@ -86,7 +86,7 @@ class Query(_AuthApi):
             self._study_config_version = str(meta['configVersion'])
             self._study_config_assigned_name = str(meta['assignmentName'])
             await self._build_entities()
-        return tuple(self._study_config_id, self._study_config_version,self._study_config_assigned_name)
+        return tuple([{ "config_id" : self._study_config_id}, { "config_version" : self._study_config_version}, { "config_assigned_name" : self._study_config_assigned_name}])
 
     async def get_study_list(self):
         """Print the list of assigned studies to the user in the format Study Name - Study Id"""

@@ -77,12 +77,20 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
     #     return self._get_stream('api/services/datastream/patient', params)
     ####################
 
-    async def download_dataframe(self, cohort: dict, filename: str = "__temp.csv", cohortid: int = None, limit: int or bool = False, offset: int = 0):
+    async def download_dataframe(self, cohort: dict, filename: str = "__temp.csv", cohortid: int = 0, limit: int or bool = False, offset: int = 0):
         """Download dataframe from MRI which fit the cohort request provided
 
         Args:
             cohort: request generated using :py:class:`Query <pyqe.api.query.Query>`
         """
+        if limit < 0:
+            raise ValueError(f'limit value: {limit} cannot be negative')
+
+        if offset < 0:
+            raise ValueError(f'offset value: {offset} cannot be negative')
+
+        cohort['cohortDefinition']['limit'] = limit
+        cohort['cohortDefinition']['offset'] = offset
 
         try:
 
@@ -90,8 +98,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
                 os.remove(filename)
                 
             if filename.endswith(".parquet"):
-                raw_response = await self.download_raw(cohort, "PARQUET", cohortid)
-                content = raw_response.content
+                content = await self.download_raw(cohort, "PARQUET", cohortId=str(cohortid))
 
                 if not content:
                     return pd.DataFrame(columns=[])
@@ -105,8 +112,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
 
                 return response
             else:
-                raw_response = await self.download_raw(cohort, "CSV", cohortid)
-                text = await raw_response.string()
+                text = await self.download_raw(cohort, "CSV", cohortId=str(cohortid))
 
                 if not text:
                     return pd.DataFrame(columns=[])
@@ -127,7 +133,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
             if os.path.exists(filename):
                 os.remove(filename)
 
-    async def download_patient_dataframe(self, entity_cohort: dict, cohortid: int = None):
+    async def download_patient_dataframe(self, entity_cohort: dict, cohortid: int = 0):
         """Download patient dataframe joined with related entities from MRI which fit the cohort request provided
 
         Args:
@@ -135,13 +141,13 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
         """
 
         patient_df = await self.download_dataframe(
-            entity_cohort["Patient"], "patient.csv", cohortid=cohortid)
+            entity_cohort["Patient"], "patient.csv", cohortid=str(cohortid))
 
         result = None
         for entity_name in entity_cohort.keys():
             if entity_name != "Patient":
                 result = patient_df.join(self.download_dataframe(
-                    entity_cohort[entity_name], f"{entity_name}.csv", cohortid=cohortid),
+                    entity_cohort[entity_name], f"{entity_name}.csv", cohortid=str(cohortid)),
                     lsuffix="_patient",
                     rsuffix=f"_{entity_name}",
                     how="left",
@@ -152,7 +158,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
 
         return result
 
-    async def download_all_entities_dataframe(self, entity_cohort: dict, cohortId: int = None):
+    async def download_all_entities_dataframe(self, entity_cohort: dict, cohortId: int = 0):
         """Download all entities into dataframes
 
         Args:
@@ -162,11 +168,11 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
         result = {}
         for entity_name in entity_cohort.keys():
             result[entity_name] = await self.download_dataframe(
-                entity_cohort[entity_name], f"{entity_name}.csv", cohortid=cohortId)
+                entity_cohort[entity_name], f"{entity_name}.csv", cohortid=str(cohortId))
 
         return result
 
-    async def download_raw(self, cohort: dict, dataFormat: str = "CSV", cohortId: int = None, getOnlyPatientCount: bool = False):
+    async def download_raw(self, cohort: dict, dataFormat: str = "CSV", cohortId: str = 0, getOnlyPatientCount: str = 'False'):
         """Download raw response from MRI which fit the cohort request provided
 
         Args:
@@ -185,11 +191,8 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
                 'cohortId': cohortId,
                 'returnOnlyPatientCount': getOnlyPatientCount
             }
-
-        request = await self._get('api/services/datastream/patient', params)
-        type(request)
-        return request
-
+        result = await self._get('api/services/datastream/patient', params)
+        return await result.string()
     def get_recontact_info(self, cohort: dict, filename: str):
         """Download encrypted data from MRI which fit the cohort request provided
 
