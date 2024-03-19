@@ -16,7 +16,7 @@ jobs:
       pr_found: ${{ steps.PR.outputs.pr_found }}
       pr_draft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }}
     steps:
-      - uses: 8BitJonny/gh-get-current-pr@2.2.0
+      - uses: 8BitJonny/gh-get-current-pr@3.0.0
         id: PR
 
       - run: |
@@ -55,7 +55,7 @@ jobs:
     - name: Get BRANCH_NAME
       shell: bash
       run: |
-        echo BRANCH_NAME=needs.get-pr.outputs.BRANCH_NAME
+        echo BRANCH_NAME=${{ needs.get-pr.outputs.BRANCH_NAME }}
         echo github.head_ref=${{ github.head_ref }} # pull_request
         echo github.ref_name= ${{ github.ref_name }} # workflow_dispatch
         echo github.ref=${{ github.ref }} # workflow_dispatch
