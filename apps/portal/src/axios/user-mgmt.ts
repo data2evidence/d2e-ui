@@ -71,19 +71,19 @@ export class UserMgmt {
     });
 
     // Group by username & tenant
-    const emails: { [username: string]: UserGroup[] } = {};
+    const usernames: { [username: string]: UserGroup[] } = {};
     for (const item of userOverview) {
       if (item.username) {
         const key = `${item.username}`;
-        if (!emails[key]) {
-          emails[key] = [];
+        if (!usernames[key]) {
+          usernames[key] = [];
         }
-        emails[key].push(item);
+        usernames[key].push(item);
       }
     }
 
     // Populate roles and other info
-    const result = Object.keys(emails)
+    const result = Object.keys(usernames)
       .map((key) => {
         const item: UserWithRolesInfo = {
           username: key,
@@ -95,7 +95,7 @@ export class UserMgmt {
           active: false,
         };
 
-        emails[key].forEach((user) => {
+        usernames[key].forEach((user) => {
           if (user.userId) {
             item.userId = user.userId;
             item.active = user.active;
@@ -110,7 +110,9 @@ export class UserMgmt {
           }
 
           item.roles = userOverview
-            .filter((u) => u.username === user.username && (u.tenantId === user.tenantId || !u.tenantId))
+            .filter(
+              (u) => u.username === user.username && (u.tenantId === user.tenantId || !u.tenantId || !user.tenantId)
+            )
             .map((u) => u.role && u.role);
         });
         return item;
