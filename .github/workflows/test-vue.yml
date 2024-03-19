@@ -1,8 +1,8 @@
 name: Test vue
 
 on:
-  push:
-    branches-ignore: [develop]
+  pull_request:
+    types: [opened, ready_for_review, reopened, synchronize]
   workflow_dispatch:
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v4
-    - uses: webfactory/ssh-agent@v0.8.0
+    - uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: |
             ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
@@ -36,7 +36,7 @@ jobs:
         echo "vue-mri-ui-lib changed: $hasDiff"
 
     - name: Setup node if vue files have changed
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       if: steps.check_vue_files_changed.outputs.vue_mri_ui_lib_changed == 'True'
       with:
         node-version: '18.14.0'
@@ -46,7 +46,7 @@ jobs:
       id: yarn-cache-dir-path
       run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-    - uses: actions/cache@v1
+    - uses: actions/cache@v4
       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
       if: steps.check_vue_files_changed.outputs.vue_mri_ui_lib_changed == 'True'
       with:
