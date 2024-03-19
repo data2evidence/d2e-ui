@@ -53,8 +53,11 @@ jobs:
         echo github.sha=${{ github.sha }} # always
         echo github.head_ref=${{ github.head_ref }} # pull_request
 
-        [ $GITHUB_EVENT_NAME = "workflow_dispatch" ] && echo BRANCH_NAME=${{ github.ref_name }} | tee -a $GITHUB_ENV
-        [ $GITHUB_EVENT_NAME = "pull_request" ] && echo BRANCH_NAME=${{ github.head_ref }} | tee -a $GITHUB_ENV
+        if [ $GITHUB_EVENT_NAME = "pull_request" ]; then 
+          echo BRANCH_NAME=${{ github.head_ref }} | tee -a $GITHUB_ENV
+        else
+          echo BRANCH_NAME=${{ github.ref_name }} | tee -a $GITHUB_ENV
+        elif
 
     # - name: Get docker tag name
     #   id: docker_tag
