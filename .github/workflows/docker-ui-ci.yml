@@ -8,7 +8,7 @@ on:
 # Run only one job per branch
 concurrency: 
   group: ${{ github.head_ref || github.ref_name }}-docker-ui-ci # Run the latest push except for develop
-  cancel-in-progress: ${{ github.ref_name != 'develop' }} # Cancel in progress except for develop branch
+  cancel-in-progress: ${{ github.head_ref || github.ref_name != 'develop' }} # Cancel in progress except for develop branch
 
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
