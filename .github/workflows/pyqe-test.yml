@@ -2,7 +2,7 @@ name: PyQE unit tests
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, ready_for_review , reopened, synchronize]
 
 jobs:
   test-pyqe:

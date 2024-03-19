@@ -2,7 +2,7 @@ name: Test vue
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, ready_for_review , reopened, synchronize]
   workflow_dispatch:
 
 jobs:
