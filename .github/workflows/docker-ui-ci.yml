@@ -56,37 +56,37 @@ jobs:
         [ $GITHUB_EVENT_NAME = "workflow_dispatch" ] && echo BRANCH_NAME=${{ github.ref_name }} | tee -a $GITHUB_ENV
         [ $GITHUB_EVENT_NAME = "pull_request" ] && echo BRANCH_NAME=${{ github.head_ref }} | tee -a $GITHUB_ENV
 
-    - uses: webfactory/ssh-agent@v0.8.0
-      with:
-        ssh-private-key: |
-            ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
-            ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
+    # - name: Get docker tag name
+    #   id: docker_tag
+    #   shell: bash
+    #   run: |
+    #       echo BRANCH_NAME=$BRANCH_NAME
+    #       if [ $BRANCH_NAME = "develop" ]; then
+    #         echo "is_push=true" >> $GITHUB_OUTPUT
+    #       elif [ $GITHUB_EVENT_NAME = "workflow_dispatch" ]; then
+    #         echo "workflow_dispatch"
+    #         echo "is_push=true" >> $GITHUB_OUTPUT
+    #       else
+    #         echo "is_push=false" >> $GITHUB_OUTPUT
+    #       fi
 
-    - uses: azure/docker-login@v1
-      with:
-        login-server: alpcr.azurecr.io
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
+    # - uses: webfactory/ssh-agent@v0.8.0
+    #   with:
+    #     ssh-private-key: |
+    #         ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
+    #         ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
 
-    - name: Get docker tag name
-      id: docker_tag
-      shell: bash
-      run: |
-          if [[ ${{ env.BRANCH_NAME == 'develop' }} == true ]]; then
-            echo "is_push=true" >> $GITHUB_OUTPUT
-          elif [ $GITHUB_EVENT_NAME = "workflow_dispatch" ]; then
-            echo "workflow_dispatch"
-            echo "is_push=true" >> $GITHUB_OUTPUT
-          else
-            echo "is_push=false" >> $GITHUB_OUTPUT
-          fi
+    # - uses: azure/docker-login@v1
+    #   with:
+    #     login-server: alpcr.azurecr.io
+    #     username: ${{ secrets.REGISTRY_USERNAME }}
+    #     password: ${{ secrets.REGISTRY_PASSWORD }}
 
-    - name: Collect Git and SSH config files in a directory that is part of the Docker build context
-      run: |
-        cp -r ~/.gitconfig  ~/.ssh .github/
-        cd .github/
-        sed 's|/home/runner|/root|g' -i.bak .ssh/config
-        echo BRANCH_NAME=$BRANCH_NAME
+    # - name: Collect Git and SSH config files in a directory that is part of the Docker build context
+    #   run: |
+    #     cp -r ~/.gitconfig  ~/.ssh .github/
+    #     cd .github/
+    #     sed 's|/home/runner|/root|g' -i.bak .ssh/config
 
     # - name: Set up Docker Buildx
     #   uses: docker/setup-buildx-action@v3
