@@ -70,9 +70,10 @@ jobs:
             ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
             ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
 
-    - uses: azure/docker-login@v1.0.1
+    - name: Login to ACR
+      uses: docker/login-action@v3.1.0
       with:
-        login-server: alpcr.azurecr.io
+        registry: alpcr.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
