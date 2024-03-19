@@ -16,7 +16,7 @@ jobs:
             ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
             ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
 
-    - uses: dorny/paths-filter@v2
+    - uses: dorny/paths-filter@v3
       id: check_file_changed
       with:
         filters: |
