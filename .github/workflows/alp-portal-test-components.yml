@@ -2,7 +2,7 @@ name: ALP Portal unit tests (Components Library)
 
 on:
   pull_request:
-    types: [opened, ready_for_review , reopened, synchronize]
+    types: [opened, ready_for_review, reopened, synchronize]
 
 jobs:
   test-alp-portal-components:
@@ -22,6 +22,7 @@ jobs:
         filters: |
           portal_components_changed:
             - 'libs/portal-components/**'
+
     - name: Setup node if files have changed
       uses: actions/setup-node@v4
       if: steps.check_file_changed.outputs.portal_components_changed == 'true'
