@@ -10,7 +10,7 @@ concurrency:
   group: ${{ github.ref }}-docker-ui-ci # Run the latest push except for develop
 
 jobs:
-  check_pr_draft:
+  get-pr:
     runs-on: ubuntu-20.04
     outputs:
       pr_found: ${{ steps.PR.outputs.pr_found }}
@@ -18,13 +18,14 @@ jobs:
     steps:
       - uses: 8BitJonny/gh-get-current-pr@2.2.0
         id: PR
+
       - run: |
           echo "PR ${prNumber} is draft - ${PRisDraft}"
           echo "pr_draft=${PRisDraft}" | tee -a $GITHUB_OUTPUT
           if [ $GITHUB_EVENT_NAME = "pull_request" ]; then 
-            echo BRANCH_NAME=${{ github.head_ref }} | tee -a $GITHUB_ENV
+            echo BRANCH_NAME=${{ github.head_ref }} | tee -a $GITHUB_OUTPUT
           else
-            echo BRANCH_NAME=${{ github.ref_name }} | tee -a $GITHUB_ENV
+            echo BRANCH_NAME=${{ github.ref_name }} | tee -a $GITHUB_OUTPUT
           fi
         if: steps.PR.outputs.pr_found == 'true'
         env:
@@ -36,9 +37,9 @@ jobs:
   build-docker-ui:
     environment: development
     runs-on: ubuntu-20.04
-    needs: check_pr_draft
-    # if: needs.check_pr_draft.outputs.pr_draft == 'false' || github.event_name == 'workflow_dispatch' || contains('release', github.ref_name)
-    # (github.ref_name == 'develop' ||  contains('release', github.ref_name) || github.event_name == 'workflow_dispatch') || (needs.check_pr_draft.outputs.pr_found == 'true') && (needs.check_pr_draft.outputs.pr_draft == 'false') # Should run if branch is develop/release/workflow_dispatch and has a non-draft PR
+    needs: get-pr
+    if: needs.get-pr.outputs.pr_draft == 'false' || github.event_name == 'workflow_dispatch' || contains('release', needs.get-pr.outputs.BRANCH_NAME)
+    # (github.ref_name == 'develop' ||  contains('release', github.ref_name) || github.event_name == 'workflow_dispatch') || (needs.get-pr.outputs.pr_found == 'true') && (needs.get-pr.outputs.pr_draft == 'false') # Should run if branch is develop/release/workflow_dispatch and has a non-draft PR
     strategy:
       matrix:
         include:
@@ -54,7 +55,7 @@ jobs:
     - name: Get BRANCH_NAME
       shell: bash
       run: |
-        echo BRANCH_NAME=$BRANCH_NAME
+        echo BRANCH_NAME=needs.get-pr.outputs.BRANCH_NAME
         echo github.head_ref=${{ github.head_ref }} # pull_request
         echo github.ref_name= ${{ github.ref_name }} # workflow_dispatch
         echo github.ref=${{ github.ref }} # workflow_dispatch
