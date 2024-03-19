@@ -10,7 +10,7 @@ concurrency:
   group: ${{ github.ref }}-docker-ui-ci # Run the latest push except for develop
 
 env:
-  BRANCH_NAME=${{ github.head_ref || github.ref_name }}
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 jobs:
   get-pr:
