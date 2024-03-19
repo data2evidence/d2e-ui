@@ -1,4 +1,4 @@
-name: CI Docker image build
+name: Build Docker Image
 
 on:
   workflow_dispatch:
@@ -63,7 +63,7 @@ jobs:
             echo "is_push=false" >> $GITHUB_OUTPUT
           fi
 
-    - uses: webfactory/ssh-agent@v0.8.0
+    - uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: |
             ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
@@ -86,7 +86,7 @@ jobs:
       id: builder
 
     - name: Build and push
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5.3.0
       id: build_push
       continue-on-error: false
       with:
@@ -98,7 +98,7 @@ jobs:
         context: ${{ matrix.context }}
         file:  ${{ matrix.directory }}/${{ matrix.fileName }}
         push: ${{ steps.docker_tag.outputs.is_push }}
-        tags: alpcr.azurecr.io/${{ matrix.name }}:${{ steps.docker_tag.outputs.tag_name || github.ref_name }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
+        tags: alpcr.azurecr.io/${{ matrix.name }}:${{ steps.docker_tag.outputs.tag_name || env.BRANCH_NAME }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
         ssh: |
           default=${{ env.SSH_AUTH_SOCK }}
         build-args: |
