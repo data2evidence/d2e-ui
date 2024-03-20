@@ -132,6 +132,7 @@ interface RenderDataQualityResultsTableProps {
 
 const RenderDataQualityResultsTable: FC<RenderDataQualityResultsTableProps> = ({ flowRunId, datasetName }) => {
   const [dqdResults, loadingDqdResults, errorDqdResults] = useDataQualityResultsFromId(flowRunId);
+  const [dqdOverview] = useDataQualityOverviewFromId(flowRunId);
 
   return (
     <>
@@ -142,7 +143,7 @@ const RenderDataQualityResultsTable: FC<RenderDataQualityResultsTableProps> = ({
       ) : (
         dqdResults && (
           <>
-            <DownloadDataButtons data={dqdResults} datasetName={datasetName} />
+            <DownloadDataButtons data={dqdResults} overviewData={dqdOverview} datasetName={datasetName} />
             <DQDTable data={dqdResults}></DQDTable>
           </>
         )

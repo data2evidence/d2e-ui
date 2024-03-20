@@ -1,5 +1,6 @@
 import { saveAs } from "file-saver";
 import { scanForCharsToEscapeAndSurroundQuotes } from "./EscapeAndSurroundQuotes";
+import { OverviewResults } from "../components/DQD/types";
 
 export interface DownloadColumn {
   header: string;
@@ -28,16 +29,8 @@ export const parseToCsv = (data: { [key: string]: string | number }[], columns: 
   return [headers.join(","), ...result].join("\n");
 };
 
-export const filterJSON = (data: { [key: string]: string | number }[], columns: DownloadColumn[], name: string) => {
-  const parseData = data.map((d) => {
-    // use in key/values specified in the columns
-    const result = columns.reduce((acc, col) => {
-      return { ...acc, [col.header]: d[col.accessor] };
-    }, {});
-
-    return result;
-  }, []);
-  return JSON.stringify({ [name]: parseData });
+export const filterJSON = (data: { [key: string]: string | number }[], overview: OverviewResults | undefined) => {
+  return JSON.stringify({ overview: overview, checkResults: data });
 };
 
 export const downloadFile = ({ data, fileName, fileType }: { data: any; fileName: string; fileType: string }) => {
