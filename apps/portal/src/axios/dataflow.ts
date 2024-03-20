@@ -34,6 +34,7 @@ export class Dataflow {
       method: "POST",
       data: { file },
       headers: { "Content-Type": "multipart/form-data" },
+      timeout: 600000,
     });
   }
 
@@ -43,6 +44,7 @@ export class Dataflow {
       url: `prefect/flow/git-deployment`,
       method: "POST",
       data: { url },
+      timeout: 600000,
     });
   }
 
