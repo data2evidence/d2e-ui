@@ -15,7 +15,10 @@ export const SetupOverview: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as LocationState;
-  const enabledPlugins = useMemo(() => plugins.setup?.filter((plugin: IPluginItem) => plugin.enabled) || [], []);
+  const enabledPlugins = useMemo(
+    () => plugins.setup?.filter((plugin: IPluginItem) => plugin.enabled === "true") || [],
+    []
+  );
   const state = useMemo(() => locationState || { state: { tab: "setup", subTab: null } }, [locationState]);
 
   const handleOpenPlugin = useCallback(
@@ -68,7 +71,7 @@ export const SetupOverview: FC = () => {
             </div>
           </>
         )}
-        {state.subTab &&
+        {state.subTab && (
           <div className="setup-overview__plugin-content">
             {enabledPlugins.map(
               (plugin: IPluginItem) =>
@@ -79,7 +82,7 @@ export const SetupOverview: FC = () => {
                 )
             )}
           </div>
-        }
+        )}
       </div>
     </div>
   );
