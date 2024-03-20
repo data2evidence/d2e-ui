@@ -41,43 +41,6 @@
       </template>
     </messageBox>
 
-    <messageBox v-if="getShowAddNewCohortDialog" dim="true" @close="closeAddNewCohort">
-      <template v-slot:header>{{ getText('MRI_PA_COHORT_ADD_TEXT') }}</template>
-      <template v-slot:body>
-        <div>
-          <div class="add-cohort-dialog">
-            <div class="form-group">
-              <div class="row">
-                <div class="col-sm-4 form-check col-form-label">
-                  <label class="form-check-label">{{ getText('MRI_PA_COLL_COHORT_NAME') }}</label>
-                </div>
-                <div class="col-sm-8">
-                  <input
-                    class="form-control"
-                    :class="{ 'is-invalid': isInvalidName }"
-                    :placeholder="getText('MRI_PA_COLL_ENTER_NAME')"
-                    v-model="cohortName"
-                    tabindex="0"
-                    v-focus
-                    required
-                    maxlength="40"
-                  />
-                  <div class="invalid-feedback" v-bind:style="[isInvalidName && 'display: block;']">
-                    Please enter another name
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
-      <template v-slot:footer>
-        <div class="flex-spacer"></div>
-        <appButton :click="addNewCohort" :text="getText('MRI_PA_BUTTON_CONTINUE')"></appButton>
-        <appButton :click="closeAddNewCohort" :text="getText('MRI_PA_BUTTON_CANCEL')"></appButton>
-      </template>
-    </messageBox>
-
     <messageBox
       messageType="warning"
       dim="true"
@@ -433,7 +396,6 @@ export default {
       'getDomainValues',
       'getActiveBookmark',
       'getCurrentBookmarkHasChanges',
-      'getShowAddNewCohortDialog'
     ]),
     bookmarksDisplay() {
       const bookmarkData = this.getBookmarks
@@ -479,7 +441,6 @@ export default {
       'toggleAddCohortDialog',
       'toggleCohortListDialog',
       'resetChartProperties',
-      'setShowAddNewCohortDialog'
     ]),
     ...mapMutations([types.SET_ACTIVE_BOOKMARK, types.CONFIG_SET_HAS_ASSIGNED]),
     openCompareDialog() {
@@ -751,7 +712,7 @@ export default {
     discardCohortChanges() {
       this.showSaveOrDiscardDialog = false
       if (this.isAddNewCohort) {
-        this.setShowAddNewCohortDialog( {showAddNewCohortDialog: true})
+        this.addNewCohort()
       } else {
         this.loadBookmark()
       }
@@ -764,12 +725,10 @@ export default {
       if (this.hasChanges) {
         this.openSaveOrDiscardDialog(true)
       } else {
-        // this.setShowAddNewCohortDialog( {showAddNewCohortDialog: true})
         this.addNewCohort()
       }
     },
     closeAddNewCohort() {
-      this.setShowAddNewCohortDialog( {showAddNewCohortDialog: false})
       this.cohortName = ''
       this.isInvalidName = false
     },

@@ -74,38 +74,56 @@
         />
       </div>
     </div>
-    <dialogBox
-      v-if="showSaveBookmark"
-      :position="showSaveBookmarkLocation"
-      :dialogWidth="saveDialogWidth + 'px'"
-      @close="closeSaveBookmark"
-    >
+
+    <messageBox v-if="showSaveBookmark" dim="true" @close="closeSaveBookmark">
       <template v-slot:header>{{ getText('MRI_PA_TITLE_SAVE_BOOKMARK') }}</template>
       <template v-slot:body>
-        <div class="save-bookmark">
-          <div class="form-group">
-            <appCheckbox
-              v-model="shareBookmark"
-              :text="getText('MRI_PA_BMK_SHARED_BOOKMARK_TEXT')"
-              :title="getText('MRI_PA_BMK_SHARED_BOOKMARK_TITLE')"
-            ></appCheckbox>
+        <div>
+          <div class="save-bookmark">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-12 form-check col-form-label">
+                  <label>
+                    Enter a new name if you would like to overwrite the current name ({{ this.getActiveBookmark.bookmarkname }}).
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <input
+                    class="form-control"
+                    :class="{ 'is-invalid': isInvalidName }"
+                    :placeholder="getText('MRI_PA_COLL_ENTER_NAME')"
+                    v-model="cohortName"
+                    tabindex="0"
+                    v-focus
+                    required
+                    maxlength="40"
+                  />
+                  <div class="invalid-feedback" v-bind:style="[isInvalidName && 'display: block;']">
+                    Please enter another name
+                  </div>
+                </div>
+              </div>
+
+              <div class="row row-checkbox">
+                <appCheckbox
+                  v-model="shareBookmark"
+                  :text="getText('MRI_PA_BMK_SHARED_BOOKMARK_TEXT')"
+                  :title="getText('MRI_PA_BMK_SHARED_BOOKMARK_TITLE')"
+                ></appCheckbox>
+              </div>
+            </div>
           </div>
         </div>
       </template>
       <template v-slot:footer>
         <div class="flex-spacer"></div>
-        <appButton
-          :click="saveBookmark"
-          :text="getText('MRI_PA_BUTTON_SAVE')"
-          :tooltip="getText('MRI_PA_BUTTON_SAVE')"
-        ></appButton>
-        <appButton
-          :click="closeSaveBookmark"
-          :text="getText('MRI_PA_BUTTON_CANCEL')"
-          :tooltip="getText('MRI_PA_BUTTON_CANCEL')"
-        ></appButton>
+        <appButton :click="saveBookmark" :text="getText('MRI_PA_BUTTON_SAVE')" :tooltip="getText('MRI_PA_BUTTON_SAVE')"></appButton>
+        <appButton :click="closeSaveBookmark" :text="getText('MRI_PA_BUTTON_CANCEL')" :tooltip="getText('MRI_PA_BUTTON_CANCEL')"></appButton>
       </template>
-    </dialogBox>
+    </messageBox>
+
     <messageBox dim="true" dialogWidth="400px" v-if="showResetDialog" @close="closeResetDialog">
       <template v-slot:header>{{ getText('MRI_PA_RESET_FILTERS_TITLE') }}</template>
       <template v-slot:body>
@@ -152,14 +170,11 @@ export default {
   data() {
     return {
       showSaveBookmark: false,
-      showSaveBookmarkLocation: {
-        left: '130px',
-        bottom: '40px',
-      },
-      bookmarkName: '',
       shareBookmark: false,
       showResetDialog: false,
       saveDialogWidth: 260,
+      isInvalidName: false,
+      cohortName: '',
     }
   },
   computed: {
@@ -200,14 +215,6 @@ export default {
       })
     },
     openSaveBookmark() {
-      this.bookmarkName = ''
-      const left = this.$refs.saveBookmarkButton.getBoundingClientRect().left
-      if (this.splitAddButton) {
-        this.showSaveBookmarkLocation.left = 'auto'
-        this.showSaveBookmarkLocation.bottom = '60px'
-      } else {
-        this.showSaveBookmarkLocation.left = left < 8 ? '8px' : `${left}px`
-      }
       this.showSaveBookmark = true
     },
     closeSaveBookmark() {
@@ -230,10 +237,19 @@ export default {
         const isNewBookmark = activeBookmark.isNew || false
         const userId = getPortalAPI().userId
 
+        for (const bookmark of this.getBookmarks) {
+          if (userId === bookmark.user_id && bookmark.bookmarkname === this.cohortName) {
+            this.isInvalidName = true
+            return
+          }
+        }
+
+        const bookmarkName = this.cohortName ? this.cohortName : activeBookmark.bookmarkname
+
         if (isNewBookmark) {
           const params = {
             cmd: 'insert',
-            bookmarkname: activeBookmark.bookmarkname,
+            bookmarkname: bookmarkName,
             shareBookmark: this.shareBookmark,
             bookmark: JSON.stringify(bookmark),
           }
