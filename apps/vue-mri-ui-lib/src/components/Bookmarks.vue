@@ -405,7 +405,7 @@ export default {
       showAddCohortDialog: false,
       showIncompatibleMessage: false,
       enableAddToCohort: false,
-      cohortName: '',
+      cohortName: 'New cohort',
       isInvalidName: false,
       showSaveOrDiscardDialog: false,
       isAddNewCohort: false,
@@ -764,7 +764,8 @@ export default {
       if (this.hasChanges) {
         this.openSaveOrDiscardDialog(true)
       } else {
-        this.setShowAddNewCohortDialog( {showAddNewCohortDialog: true})
+        // this.setShowAddNewCohortDialog( {showAddNewCohortDialog: true})
+        this.addNewCohort()
       }
     },
     closeAddNewCohort() {
@@ -773,22 +774,23 @@ export default {
       this.isInvalidName = false
     },
     addNewCohort() {
-      if (!this.cohortName) {
-        this.isInvalidName = true
-        return
-      }
-      const userId = getPortalAPI().userId
-      for (const bookmark of this.getBookmarks) {
-        if (userId === bookmark.user_id && bookmark.bookmarkname === this.cohortName) {
-          this.isInvalidName = true
-          return
-        }
-      }
+      this.cohortName = this.checkCohortName(this.cohortName)
+
       this[types.SET_ACTIVE_BOOKMARK]({ bookmarkname: this.cohortName, isNew: true })
       this.closeAddNewCohort()
       this.$emit('unloadBookmarkEv')
       this.reset()
       this.$emit('hideEv')
+    },
+    checkCohortName(bookmarkName, suffix = "") {
+      const userId = getPortalAPI().userId
+      let uniqueName = bookmarkName + (suffix ? ` ${suffix}` : '');
+      for (const bookmark of this.getBookmarks) {
+        if (userId === bookmark.user_id && bookmark.bookmarkname === uniqueName) {
+          return this.checkCohortName(bookmarkName, (suffix ? parseInt(suffix) + 1 : 1));
+        }
+      }
+    return uniqueName;
     },
     reset() {
       this[types.CONFIG_SET_HAS_ASSIGNED](false)
