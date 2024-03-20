@@ -378,7 +378,20 @@ export default {
   },
   created() {
     this.enableAddToCohort = this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts
-  },
+    this.unwatch = this.$store.watch(
+      (state, getters) => getters.getAddNewCohort,
+      (newValue, oldValue) => {
+        if (newValue) {
+          this.openAddNewCohort();
+          this.setAddNewCohort( {addNewCohort: false})
+        }
+      },
+      { immediate: true }
+    );
+ },
+ beforeDestroy() {
+    this.unwatch();
+ },
   watch: {
     initBookmarkId() {
       if (this.initBookmarkId !== '') {
@@ -396,6 +409,7 @@ export default {
       'getDomainValues',
       'getActiveBookmark',
       'getCurrentBookmarkHasChanges',
+      'getAddNewCohort'
     ]),
     bookmarksDisplay() {
       const bookmarkData = this.getBookmarks
@@ -441,6 +455,7 @@ export default {
       'toggleAddCohortDialog',
       'toggleCohortListDialog',
       'resetChartProperties',
+      'setAddNewCohort'
     ]),
     ...mapMutations([types.SET_ACTIVE_BOOKMARK, types.CONFIG_SET_HAS_ASSIGNED]),
     openCompareDialog() {

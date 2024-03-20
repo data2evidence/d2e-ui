@@ -13,7 +13,7 @@ const state = {
   filterSummaryVisible: false,
   schemaName: '',
   activeBookmark: null,
-  showAddNewCohortDialog: false,
+  addNewCohort: false,
 }
 
 const bookmarkURL = '/analytics-svc/api/services/bookmark'
@@ -23,7 +23,7 @@ const getters = {
   getBookmarks: modulestate => modulestate.bookmarks,
   getFilterSummaryVisibility: modulestate => modulestate.filterSummaryVisible,
   getSchemaName: modulestate => modulestate.schemaName,
-  getShowAddNewCohortDialog: modulestate => modulestate.showAddNewCohortDialog,
+  getAddNewCohort: modulestate => modulestate.addNewCohort,
   getBookmarksData: (modulestate, moduleGetters, rootState, rootGetters) => {
     let filter = JSON.parse(JSON.stringify(rootGetters.getBookmarkFromIFR))
 
@@ -125,8 +125,8 @@ const getters = {
 }
 
 const actions = {
-  setShowAddNewCohortDialog({ commit }, { showAddNewCohortDialog }) {
-    commit(types.SET_ADD_NEW_COHORT_DIALOG, { showAddNewCohortDialog })
+  setAddNewCohort({ commit }, { addNewCohort }) {
+    commit(types.SET_ADD_NEW_COHORT, { addNewCohort })
   },
   fireBookmarkQuery({ commit, dispatch, rootGetters }, { method = 'post', params, bookmarkId }) {
     if (cancel) {
@@ -295,8 +295,8 @@ const mutations = {
   [types.SET_ACTIVE_BOOKMARK](modulestate, bookmark) {
     modulestate.activeBookmark = bookmark
   },
-  [types.SET_ADD_NEW_COHORT_DIALOG](modulestate, { showAddNewCohortDialog }) {
-    modulestate.showAddNewCohortDialog = showAddNewCohortDialog
+  [types.SET_ADD_NEW_COHORT](modulestate, { addNewCohort }) {
+    modulestate.addNewCohort = addNewCohort
   },
 }
 
