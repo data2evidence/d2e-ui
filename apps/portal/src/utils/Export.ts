@@ -7,18 +7,26 @@ export interface DownloadColumn {
   accessor: string;
 }
 
-export const parseToCsv = (data: { [key: string]: string | number }[], columns: DownloadColumn[]) => {
-  const headers = columns.map((column) => column.header);
+// TODO: Concept mapping is using the same parseToCsv function, should decouple and separate
+export const parseToCsv = (data: { [key: string]: string | number }[], _columns: DownloadColumn[]) => {
+  const headers = data.reduce((keys: string[], obj) => {
+    Object.keys(obj).forEach((key) => {
+      if (!keys.includes(key)) {
+        keys.push(key);
+      }
+    });
+    return keys;
+  }, []);
 
   const separatorRegex = new RegExp(`${","}|${"\r\n"}|${"\n"}`, "g");
-
   const result: string[] = [];
+
   data.forEach((d) => {
     const arr: string[] = [];
-    columns.forEach((column) => {
+    headers.forEach((header) => {
       arr.push(
         scanForCharsToEscapeAndSurroundQuotes({
-          columnValue: d[column.accessor],
+          columnValue: d[header],
           separatorRegex,
           noValue: "NO VALUE",
         })
