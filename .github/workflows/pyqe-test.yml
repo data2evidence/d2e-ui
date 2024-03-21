@@ -3,7 +3,9 @@ name: PyQE unit tests
 on:
   pull_request:
     types: [opened, ready_for_review, reopened, synchronize]
-
+  push:
+    branches:
+      - develop
 jobs:
   test-pyqe:
     runs-on: ubuntu-latest

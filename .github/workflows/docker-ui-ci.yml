@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   pull_request:
     types: [opened, ready_for_review, reopened, synchronize]
+  push:
+    branches:
+      - develop
 
 # Run only one job per branch
 concurrency: 
@@ -11,33 +14,13 @@ concurrency:
   cancel-in-progress: ${{ (github.head_ref || github.ref_name) != 'develop' }} # except for develop branch
 
 env:
-  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  BRANCH_NAME: ${{ github.ref_name || github.head_ref }}
 
 jobs:
-  get-pr:
-    runs-on: ubuntu-20.04
-    outputs:
-      pr_found: ${{ steps.PR.outputs.pr_found }}
-      pr_draft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }} 
-    steps:
-      - uses: 8BitJonny/gh-get-current-pr@3.0.0
-        id: PR
-
-      - run: |
-          echo "PR ${prNumber} is draft - ${PRisDraft}"
-          echo "pr_draft=${PRisDraft}" | tee -a $GITHUB_OUTPUT
-        if: steps.PR.outputs.pr_found == 'true'
-        env:
-          # JSON object with the full PR object
-          PRisDraft: ${{ steps.PR.outputs.pr == '' && 'true' || fromJSON(steps.PR.outputs.pr).draft }}
-          # Direct access to common PR properties
-          prNumber: ${{ steps.PR.outputs.number }}
-
   build-docker-ui:
     environment: development
     runs-on: ubuntu-20.04
-    needs: get-pr
-    if: needs.get-pr.outputs.pr_draft == 'false' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }}) # runs if PR is not draft /or/ workflow_dispatch /or/ release branch
+    if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }}) || ( github.event_name == 'pull_request' && !github.event.pull_request.draft ) # runs if PR is not draft /or/ workflow_dispatch /or/ release branch
     strategy:
       matrix:
         include:
@@ -99,7 +82,7 @@ jobs:
         context: ${{ matrix.context }}
         file:  ${{ matrix.directory }}/${{ matrix.fileName }}
         push: ${{ steps.docker_tag.outputs.is_push }}
-        tags: alpcr.azurecr.io/${{ matrix.name }}:${{ steps.docker_tag.outputs.tag_name || env.BRANCH_NAME }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
+        tags: alpcr.azurecr.io/${{ matrix.name }}:${{ env.BRANCH_NAME }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
         ssh: |
           default=${{ env.SSH_AUTH_SOCK }}
         build-args: |
