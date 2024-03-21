@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Button } from "@portal/components";
-import { parseToCsv, filterJSON, downloadFile, DownloadColumn } from "../../../../utils/Export";
+import { dqdParseToCsv, filterJSON, downloadFile, DownloadColumn } from "../../../../utils/Export";
 import { CheckResults, OverviewResults } from "../../../../components/DQD/types";
 
 export const downloadColumns: DownloadColumn[] = [
@@ -30,10 +30,7 @@ const DownloadDataButtons: FC<DownloadDataButtonsProps> = ({ data, overviewData,
           <Button
             onClick={() =>
               downloadFile({
-                data: parseToCsv(
-                  data.map((d) => ({ ...d })),
-                  downloadColumns
-                ),
+                data: dqdParseToCsv(data.map((d) => ({ ...d }))),
                 fileName: datasetName,
                 fileType: "text/csv",
               })

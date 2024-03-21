@@ -7,8 +7,7 @@ export interface DownloadColumn {
   accessor: string;
 }
 
-// TODO: Concept mapping is using the same parseToCsv function, should decouple and separate
-export const parseToCsv = (data: { [key: string]: string | number }[], _columns: DownloadColumn[]) => {
+export const dqdParseToCsv = (data: { [key: string]: string | number }[]) => {
   const headers = data.reduce((keys: string[], obj) => {
     Object.keys(obj).forEach((key) => {
       if (!keys.includes(key)) {
@@ -27,6 +26,27 @@ export const parseToCsv = (data: { [key: string]: string | number }[], _columns:
       arr.push(
         scanForCharsToEscapeAndSurroundQuotes({
           columnValue: d[header],
+          separatorRegex,
+          noValue: "NO VALUE",
+        })
+      );
+    });
+    result.push(arr.join(","));
+  });
+  return [headers.join(","), ...result].join("\n");
+};
+
+export const parseToCsv = (data: { [key: string]: string | number }[], columns: DownloadColumn[]) => {
+  const headers = columns.map((column) => column.header);
+  const separatorRegex = new RegExp(`${","}|${"\r\n"}|${"\n"}`, "g");
+  const result: string[] = [];
+
+  data.forEach((d) => {
+    const arr: string[] = [];
+    columns.forEach((column) => {
+      arr.push(
+        scanForCharsToEscapeAndSurroundQuotes({
+          columnValue: d[column.accessor],
           separatorRegex,
           noValue: "NO VALUE",
         })
