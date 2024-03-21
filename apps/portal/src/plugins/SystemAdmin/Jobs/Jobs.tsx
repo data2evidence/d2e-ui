@@ -18,6 +18,8 @@ import env from "../../../env";
 import classNames from "classnames";
 import { useLocation } from "react-router-dom";
 import LogViewer from "./LogViewer/LogViewer";
+import { FeatureGate } from "../../../config/FeatureGate";
+import { FEATURE_DATAFLOW } from "../../../config";
 
 enum JobTabs {
   Runs = "Job Runs",
@@ -164,12 +166,14 @@ const Jobs: FC = () => {
                   <JobRunButtons datasetId={studyId} studyName={selectedStudy} handleGenerateJob={handleGenerateJob} />
                 </div>
                 <div className="jobs_selector__container">
-                  <Button
-                    className="jobs__button"
-                    text="Manage Dataflows"
-                    onClick={handleShowDataflow}
-                    disabled={!dataflowPlugin}
-                  ></Button>
+                  <FeatureGate featureFlags={[FEATURE_DATAFLOW]}>
+                    <Button
+                      className="jobs__button"
+                      text="Manage Dataflows"
+                      onClick={handleShowDataflow}
+                      disabled={!dataflowPlugin}
+                    />
+                  </FeatureGate>
                   <Button
                     className="jobs__button"
                     text="Upload Job"
@@ -194,14 +198,16 @@ const Jobs: FC = () => {
             )}
 
             {dataflowPlugin && showDataflow && (
-              <ErrorBoundary name={dataflowPlugin.name} key={dataflowPlugin.route}>
-                <SystemAdminPluginRenderer
-                  key={dataflowPlugin.route}
-                  path={dataflowPlugin.pluginPath}
-                  data={dataflowPlugin.data}
-                  system={CURRENT_SYSTEM}
-                />
-              </ErrorBoundary>
+              <FeatureGate featureFlags={[FEATURE_DATAFLOW]}>
+                <ErrorBoundary name={dataflowPlugin.name} key={dataflowPlugin.route}>
+                  <SystemAdminPluginRenderer
+                    key={dataflowPlugin.route}
+                    path={dataflowPlugin.pluginPath}
+                    data={dataflowPlugin.data}
+                    system={CURRENT_SYSTEM}
+                  />
+                </ErrorBoundary>
+              </FeatureGate>
             )}
           </div>
         </div>

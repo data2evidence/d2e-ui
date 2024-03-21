@@ -365,7 +365,7 @@ export default {
       'setActiveChart',
       'loadValuesForAttributePath',
       'loadbookmarkToState',
-      'setShowAddNewCohortDialog'
+      'setAddNewCohort'
     ]),
     loadDefaultFilters() {
       this.setIFRState({ ifr: this.getMriFrontendConfig.getInitialIFR() })
@@ -498,7 +498,7 @@ export default {
         this.toggleExpandedFilters(true)
       }
       if (menu === "createCohort") {
-        this.setShowAddNewCohortDialog( {showAddNewCohortDialog: true})
+        this.setAddNewCohort( {addNewCohort: true})
       }
     },
   },

@@ -48,7 +48,7 @@ export interface IPluginItem {
   featureFlag?: string;
   iconUrl?: string;
   iconSize?: number;
-  enabled?: boolean;
+  enabled?: string;
   requiredRoles?: string[];
   type?: string;
   proxySource?: string;

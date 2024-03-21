@@ -35,6 +35,9 @@ const FEATURES: Record<string, { name: string }> = {
   starboard: {
     name: "Notebooks",
   },
+  dataflow: {
+    name: "Dataflow",
+  },
 };
 
 export const Feature: FC = () => {
