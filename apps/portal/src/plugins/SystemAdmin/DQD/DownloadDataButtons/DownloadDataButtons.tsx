@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Button } from "@portal/components";
-import { parseToCsv, filterJSON, downloadFile, DownloadColumn } from "../../../../utils/Export";
-import { CheckResults } from "../../../../components/DQD/types";
+import { dqdParseToCsv, filterJSON, downloadFile, DownloadColumn } from "../../../../utils/Export";
+import { CheckResults, OverviewResults } from "../../../../components/DQD/types";
 
 export const downloadColumns: DownloadColumn[] = [
   { header: "STATUS", accessor: "failed" },
@@ -18,10 +18,11 @@ export const downloadColumns: DownloadColumn[] = [
 
 interface DownloadDataButtonsProps {
   data: CheckResults[];
+  overviewData: OverviewResults | undefined;
   datasetName: string;
 }
 
-const DownloadDataButtons: FC<DownloadDataButtonsProps> = ({ data, datasetName }) => {
+const DownloadDataButtons: FC<DownloadDataButtonsProps> = ({ data, overviewData, datasetName }) => {
   return (
     <div className="selector__button">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -29,10 +30,7 @@ const DownloadDataButtons: FC<DownloadDataButtonsProps> = ({ data, datasetName }
           <Button
             onClick={() =>
               downloadFile({
-                data: parseToCsv(
-                  data.map((d) => ({ ...d })),
-                  downloadColumns
-                ),
+                data: dqdParseToCsv(data.map((d) => ({ ...d }))),
                 fileName: datasetName,
                 fileType: "text/csv",
               })
@@ -44,8 +42,7 @@ const DownloadDataButtons: FC<DownloadDataButtonsProps> = ({ data, datasetName }
               downloadFile({
                 data: filterJSON(
                   data.map((d) => ({ ...d })),
-                  downloadColumns,
-                  "checkResults"
+                  overviewData
                 ),
                 fileName: `${datasetName}.json`,
                 fileType: "text/json",
