@@ -7,7 +7,7 @@ import { Loader } from "@portal/components";
 
 const SQLEDITOR__BASE_URL = `${env.REACT_APP_DN_BASE_URL}alp-sqleditor`;
 const SQLEDITOR__DB_DIALECT = "postgresql";
-const SQLEDITOR__STYLESHEET_PATH = "/portal/sqleditor.css";
+const SQLEDITOR__STYLESHEET_PATH = "/portal/assets/sqleditor.css";
 
 const Sqleditor: FC = () => {
   const [xhrNew, setXhrNew] = useState<boolean>(false);
