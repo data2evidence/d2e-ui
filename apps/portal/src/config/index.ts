@@ -49,12 +49,10 @@ export const ALP_ROLES: { [key: string]: string } = {
 
 export const ALP_SYSTEM_ADMIN = "ALP_SYSTEM_ADMIN";
 export const ALP_SQLEDITOR_ADMIN = "ALP_SQLEDITOR_ADMIN";
-export const ALP_NIFI_ADMIN = "ALP_NIFI_ADMIN";
 
 export const DATA_ADMIN_ROLES: { [key: string]: string } = {
   [ALP_SYSTEM_ADMIN]: "Admin",
   [ALP_SQLEDITOR_ADMIN]: "Sqleditor Admin",
-  [ALP_NIFI_ADMIN]: "NiFi Admin",
 };
 
 export const FEATURE_CDM_DOWNLOAD = "cdmDownload";
