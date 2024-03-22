@@ -4,7 +4,7 @@ services:
   alp-local-ui-file-server:
     image: alpcr.azurecr.io/alp-data-node/alp-local-ui-file-server:local # will build from local
     build:
-      context: ../alp-ui # Relative to alp repo!!
+      context: ../d2e-ui # Relative to d2e repo!!
       dockerfile: Dockerfile
       ssh:
         - default=${SSH_AUTH_SOCK}
