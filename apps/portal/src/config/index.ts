@@ -1,5 +1,4 @@
 interface Config {
-  APP_TITLE: string;
   ROUTES: {
     systemadmin: string;
     researcher: string;
@@ -16,7 +15,6 @@ const PUBLIC_PATH = "/public";
 const SYSTEM_ADMIN_PATH = "/systemadmin";
 
 export const config: Config = {
-  APP_TITLE: "Research",
   ROUTES: {
     systemadmin: SYSTEM_ADMIN_PATH,
     researcher: RESEARCHER_PATH,
