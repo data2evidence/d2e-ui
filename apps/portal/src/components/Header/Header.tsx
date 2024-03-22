@@ -34,7 +34,7 @@ export const Header: FC<HeaderProps> = ({ nav, portalType, plugins, systemAdminP
   return (
     <header className="portal__header" data-testid="header">
       <div className="header__logo-group header__menu-group">
-        <img alt="Data2Evidence" className="logo" src={`${env.PUBLIC_URL}/d2e.png`} height="30" />
+        <img alt="Data2Evidence" className="logo" src={`${env.PUBLIC_URL}/assets/d2e.png`} height="30" />
         {isAuth && <PortalSwitcher portalType={portalType} />}
       </div>
 
