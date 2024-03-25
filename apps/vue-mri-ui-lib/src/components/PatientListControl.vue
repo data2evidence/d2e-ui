@@ -73,7 +73,7 @@
                 :key="attribute.path"
                 :class="interactionCellBorderClass(index, item.children.length)"
               >
-                <div v-for="detail in row[attribute.parentPath]" :key="detail" class="cellContainer">
+              <div v-for="detail in row[attribute.parentPath]" :key="detail" class="cellContainer">
                   <div class="textContent row-item">
                     <div class="textContent row-item">
                     <patientListData
@@ -81,7 +81,7 @@
                       :meta="attribute"
                       v-on:openps="openPatientSummary"
                     />
-                  </div>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -164,7 +164,7 @@ export default {
           path,
           parentPath: this.getMriFrontendConfig.getInteractionInstancePath(path),
           text: this.getMriFrontendConfig.getAttributeByPath(path).getName(),
-          isLink: this.getMriFrontendConfig.getAttributeByPath(path).isLinkColumn(),
+          // isLink: this.getMriFrontendConfig.getAttributeByPath(path).isLinkColumn(),
         }))
         .reduce((dict, col) => {
           if (dict[col.parentPath]) {
@@ -192,7 +192,7 @@ export default {
           path,
           parentPath: this.getMriFrontendConfig.getInteractionInstancePath(path),
           text: this.getMriFrontendConfig.getAttributeByPath(path).getName(),
-          isLink: this.getMriFrontendConfig.getAttributeByPath(path).isLinkColumn(),
+          // isLink: this.getMriFrontendConfig.getAttributeByPath(path).isLinkColumn(),
         }))
     },
     tableRows() {
