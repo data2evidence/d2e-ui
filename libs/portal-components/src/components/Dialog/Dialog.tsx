@@ -35,7 +35,10 @@ export const Dialog: FC<DialogProps> = ({
       maxWidth="sm"
       onClose={onClose}
       PaperProps={{
-        style: { borderRadius: 32 },
+        style: {
+          borderRadius: 32,
+          overflow: "hidden", // scrollbar should be handled inside the children to retain fixed Header
+        },
       }}
       data-testid="dialog"
       {...props}
