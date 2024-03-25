@@ -81,29 +81,31 @@
         <div>
           <div class="save-bookmark">
             <div class="form-group">
-              <div class="row">
-                <div class="col-sm-12 form-check col-form-label">
-                  <label>
-                    Enter a new name if you would like to overwrite the current name ({{ this.getActiveBookmark.bookmarkname }}).
-                  </label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <input
-                    class="form-control"
-                    :class="{ 'is-invalid': isInvalidName }"
-                    :placeholder="getText('MRI_PA_COLL_ENTER_NAME')"
-                    v-model="cohortName"
-                    tabindex="0"
-                    v-focus
-                    required
-                    maxlength="40"
-                  />
-                  <div class="invalid-feedback" v-bind:style="[isInvalidName && 'display: block;']">
-                    Please enter another name
+              <div class="name" v-if="this.isNewCohort">
+                <div class="row">
+                  <div class="col-sm-12 form-check col-form-label">
+                    <label>
+                      Enter a new name if you would like to overwrite the current name ({{ this.getActiveBookmark.bookmarkname }}).
+                    </label>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col">
+                    <input
+                      class="form-control"
+                      :class="{ 'is-invalid': isInvalidName }"
+                      :placeholder="getText('MRI_PA_COLL_ENTER_NAME')"
+                      v-model="cohortName"
+                      tabindex="0"
+                      v-focus
+                      required
+                      maxlength="40"
+                    />
+                    <div class="invalid-feedback" v-bind:style="[isInvalidName && 'display: block;']">
+                      Please enter another name
+                    </div>
+                  </div>
+                </div>  
               </div>
 
               <div class="row row-checkbox">
@@ -203,6 +205,9 @@ export default {
         this.shareBookmark = value
       },
     },
+    isNewCohort() {
+      return this.getActiveBookmark.isNew
+    }
   },
   methods: {
     ...mapActions(['fireBookmarkQuery', 'resetChartProperties', 'loadbookmarkToState']),
@@ -267,7 +272,7 @@ export default {
           })
         }
         await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
-        const savedBookmark = this.getBookmarkByNameAndUserId(activeBookmark.bookmarkname, userId)
+        const savedBookmark = this.getBookmarkByNameAndUserId(bookmarkName, userId)        
         this[types.SET_ACTIVE_BOOKMARK](savedBookmark)
         this.closeSaveBookmark()
       }
