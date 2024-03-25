@@ -16,7 +16,7 @@ export const SetupOverview: FC = () => {
   const location = useLocation();
   const locationState = location.state as LocationState;
   const enabledPlugins = useMemo(
-    () => plugins.setup?.filter((plugin: IPluginItem) => plugin.enabled === "true") || [],
+    () => plugins.setup?.filter((plugin: IPluginItem) => plugin.enabled) || [],
     []
   );
   const state = useMemo(() => locationState || { state: { tab: "setup", subTab: null } }, [locationState]);
