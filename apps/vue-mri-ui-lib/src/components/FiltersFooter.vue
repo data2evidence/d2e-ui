@@ -272,7 +272,7 @@ export default {
           })
         }
         await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
-        const savedBookmark = this.getBookmarkByNameAndUserId(bookmarkName, userId)        
+        const savedBookmark = this.getBookmarkByNameAndUserId(bookmarkName, userId)
         this[types.SET_ACTIVE_BOOKMARK](savedBookmark)
         this.closeSaveBookmark()
       }
