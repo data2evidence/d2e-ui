@@ -20,7 +20,6 @@ export interface UserClaims {
 type RoleTypeOf<T, Boolean> = {
   ALP_USER_ADMIN: Boolean;
   ALP_SYSTEM_ADMIN: Boolean;
-  ALP_NIFI_ADMIN: Boolean;
   ALP_DASHBOARD_VIEWER: Boolean;
   TENANT_VIEWER: T;
   STUDY_MANAGER: T;
@@ -39,7 +38,6 @@ export interface UserGroupMetadata {
   alp_role_tenant_viewer: string[]; // list of tenant ids
   alp_role_user_admin: boolean; // alp user admin
   alp_role_system_admin: boolean; // alp system admin
-  alp_role_nifi_admin: boolean; // alp nifi admin
   alp_role_dashboard_viewer: boolean; // dashboard viewer
 }
 
@@ -75,7 +73,6 @@ export const EMPTY_USER_GROUP: UserGroupMetadata = {
   alpRoleMap: {
     ALP_USER_ADMIN: false,
     ALP_SYSTEM_ADMIN: false,
-    ALP_NIFI_ADMIN: false,
     ALP_DASHBOARD_VIEWER: false,
     TENANT_VIEWER: [],
     STUDY_MANAGER: [],
@@ -87,7 +84,6 @@ export const EMPTY_USER_GROUP: UserGroupMetadata = {
   alp_role_tenant_viewer: [],
   alp_role_user_admin: false,
   alp_role_system_admin: false,
-  alp_role_nifi_admin: false,
   alp_role_dashboard_viewer: false,
 };
 

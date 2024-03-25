@@ -1,5 +1,4 @@
 interface Config {
-  APP_TITLE: string;
   ROUTES: {
     systemadmin: string;
     researcher: string;
@@ -16,7 +15,6 @@ const PUBLIC_PATH = "/public";
 const SYSTEM_ADMIN_PATH = "/systemadmin";
 
 export const config: Config = {
-  APP_TITLE: "Research",
   ROUTES: {
     systemadmin: SYSTEM_ADMIN_PATH,
     researcher: RESEARCHER_PATH,
@@ -51,14 +49,13 @@ export const ALP_ROLES: { [key: string]: string } = {
 
 export const ALP_SYSTEM_ADMIN = "ALP_SYSTEM_ADMIN";
 export const ALP_SQLEDITOR_ADMIN = "ALP_SQLEDITOR_ADMIN";
-export const ALP_NIFI_ADMIN = "ALP_NIFI_ADMIN";
 
 export const DATA_ADMIN_ROLES: { [key: string]: string } = {
   [ALP_SYSTEM_ADMIN]: "Admin",
   [ALP_SQLEDITOR_ADMIN]: "Sqleditor Admin",
-  [ALP_NIFI_ADMIN]: "NiFi Admin",
 };
 
 export const FEATURE_CDM_DOWNLOAD = "cdmDownload";
+export const FEATURE_DATAFLOW = "dataflow";
 export const FEATURE_DISABLE_JUPYTER_CELL = "disableJupyterCell";
 export const FEATURE_DATASET_FILTER = "datasetFilter";

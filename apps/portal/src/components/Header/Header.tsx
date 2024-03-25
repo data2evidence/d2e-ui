@@ -1,6 +1,5 @@
 import React, { FC, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { config } from "../../config";
 import { IPlugin, NavLink, Plugins } from "../../types";
 import PortalSwitcher from "./PortalSwitcher/PortalSwitcher";
 import MenuTab from "./MenuTab/MenuTab";
@@ -8,6 +7,7 @@ import PublicStudyOverviewNav from "./PublicStudyOverviewNav/PublicStudyOverview
 import MenuNav, { MenuType } from "./MenuNav/MenuNav";
 import { isAuthenticated } from "../../containers/auth";
 import AccountTab from "./AccountTab/AccountTab";
+import env from "../../env";
 import "./Header.scss";
 
 interface HeaderProps {
@@ -34,7 +34,7 @@ export const Header: FC<HeaderProps> = ({ nav, portalType, plugins, systemAdminP
   return (
     <header className="portal__header" data-testid="header">
       <div className="header__logo-group header__menu-group">
-      <div className="header__title"> {config.APP_TITLE} </div>
+        <img alt="Data2Evidence" className="logo" src={`${env.PUBLIC_URL}/assets/d2e.png`} height="30" />
         {isAuth && <PortalSwitcher portalType={portalType} />}
       </div>
 

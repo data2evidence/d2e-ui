@@ -9,7 +9,7 @@ import {
   HybridSearchConfig,
 } from "../plugins/SystemAdmin/Terminology/utils/types";
 
-const TERMINOLOGY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}gateway/api/terminology`;
+const TERMINOLOGY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}terminology`;
 
 export class Terminology {
   public getTerminologies(
