@@ -110,11 +110,16 @@ const ActionSelector: FC<ActionSelectorProps> = ({
     ]
   );
 
-  const disableUpdateSelect = useCallback(
+  const isDisabled = useCallback(
     (actionVal: string) => {
       if (actionVal !== "update" || isSchemaUpdatable) {
         if (actionVal === "permissions" && !isUserAdmin) {
           return true;
+        }
+        if (study.dialect === "postgres") {
+          if (actionVal === "release" || actionVal === "version") {
+            return true;
+          }
         }
         return false;
       }
@@ -135,7 +140,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
             key={action.value}
             sx={styles}
             disableRipple
-            disabled={disableUpdateSelect(action.value)}
+            disabled={isDisabled(action.value)}
           >
             {action.name}
           </MenuItem>
