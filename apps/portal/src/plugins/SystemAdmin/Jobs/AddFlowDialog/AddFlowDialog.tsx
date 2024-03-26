@@ -66,7 +66,7 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
           message: "Zip/tgz file upload should not have git url provided",
         });
         return;
-      } else if (!fileType.endsWith("zip")) {
+      } else if (!(fileType.endsWith("zip") || fileType.endsWith("x-zip-compressed"))) {
         setFeedback({
           type: "error",
           message: "Uploaded file type not supported",
