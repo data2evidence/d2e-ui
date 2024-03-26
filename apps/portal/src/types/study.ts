@@ -231,6 +231,7 @@ export interface UpdateSchemaInput {
   dataModel: string;
   databaseCode: string;
   dialect: string;
+  vocabSchemaValue: string;
 }
 
 interface FailedSchemas {
