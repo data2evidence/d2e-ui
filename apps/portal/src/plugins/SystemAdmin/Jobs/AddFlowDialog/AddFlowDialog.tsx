@@ -31,6 +31,8 @@ enum FlowUploadMethod {
 
 const EMPTY_FORM_DATA: FormData = { name: "", method: "FILE" };
 
+const ALLOWED_FILE_TYPES: string[] = ["application/zip", "application/x-zip-compressed"];
+
 const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [loading, setLoading] = useState(false);
@@ -60,13 +62,13 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
     if (name == null || (selectedFile == null && url == null)) return;
     if (selectedFile) {
       const fileType = selectedFile.type;
-      if (fileType.endsWith("zip") && url) {
+      if (ALLOWED_FILE_TYPES.includes(fileType) && url) {
         setFeedback({
           type: "error",
           message: "Zip/tgz file upload should not have git url provided",
         });
         return;
-      } else if (!(fileType.endsWith("zip") || fileType.endsWith("x-zip-compressed"))) {
+      } else if (!ALLOWED_FILE_TYPES.includes(fileType)) {
         setFeedback({
           type: "error",
           message: "Uploaded file type not supported",
