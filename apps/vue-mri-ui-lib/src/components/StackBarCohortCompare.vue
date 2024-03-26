@@ -173,6 +173,7 @@ export default {
       })
 
       this.chartData = this.dataToTraces(data)
+      this.layout.xaxis.type = this.chartData.axisType
       Plotly.react(barCompareChart, this.chartData.traces, this.layout, this.config)
     },
     getLowerAxisProperties() {
