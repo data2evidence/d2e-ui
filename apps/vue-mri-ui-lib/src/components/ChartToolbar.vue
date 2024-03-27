@@ -149,6 +149,11 @@ export default {
     this.patientTotalRequested = false
     this.patientListTotalRequested = false
     this.refreshPatientCount()
+    this.loadValuesForAttributePath({
+      attributePathUid: 'conceptSets',
+      searchQuery: '',
+      attributeType: 'conceptSet',
+    })
   },
   beforeDestroy() {
     window.removeEventListener('click', this.closeSubMenu)
@@ -264,13 +269,6 @@ export default {
       this.firePatientCountQuery({
         type: 'total',
         params: bm,
-      })
-
-      // Get concept sets when dataset changes
-      this.loadValuesForAttributePath({
-        attributePathUid: 'conceptSets',
-        searchQuery: '',
-        attributeType: 'conceptSet',
       })
     },
     openSettingsConfig() {
