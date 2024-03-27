@@ -42,9 +42,9 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
         Args:
             filter: request generated using :py:class:`Query <pyqe.api.query.Query>`
         """
-        raw_response =  await self.download_raw(cohort, cohortId=cohortid, getOnlyPatientCount=True)
-        if raw_response.ok:
-            patient_count = json.loads(raw_response.text)['rowCount']
+        raw_response =  await self.download_raw(cohort, cohortId=cohortid, getOnlyPatientCount='True')
+        if raw_response != None:
+            patient_count = json.loads(raw_response)['rowCount']
             
         logger.debug(
             f'Total number of patients based on the filter: {patient_count}')
@@ -172,7 +172,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
 
         return result
 
-    async def download_raw(self, cohort: dict, dataFormat: str = "CSV", cohortId: str = 0, getOnlyPatientCount: str = 'False'):
+    async def download_raw(self, cohort: dict, dataFormat: str = "CSV", cohortId: int = 0, getOnlyPatientCount: str = 'False'):
         """Download raw response from MRI which fit the cohort request provided
 
         Args:
@@ -182,17 +182,22 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
             params = {
                 'mriquery': self._encode_query_string(cohort).decode('ascii'),
                 'dataFormat': "PARQUET",
-                'cohortId': cohortId,
-                'returnOnlyPatientCount': getOnlyPatientCount
+                'cohortId':  cohortId,
+                'returnOnlyPatientCount': str(getOnlyPatientCount)
                 }
         else:
             params = {
                 'mriquery': self._encode_query_string(cohort).decode('ascii'),
                 'cohortId': cohortId,
-                'returnOnlyPatientCount': getOnlyPatientCount
+                'returnOnlyPatientCount': str(getOnlyPatientCount)
             }
         result = await self._get('api/services/datastream/patient', params)
-        return await result.string()
+        if (getOnlyPatientCount == 'True' or result == None): 
+            return result
+        else:
+            return await result.string()
+    
+    
     def get_recontact_info(self, cohort: dict, filename: str):
         """Download encrypted data from MRI which fit the cohort request provided
 
