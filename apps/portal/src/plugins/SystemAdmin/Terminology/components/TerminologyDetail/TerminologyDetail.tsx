@@ -26,7 +26,7 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
             const terminologyApi = new Terminology();
             const fhirResponse = await terminologyApi.getTerminologyConnections(conceptId, datasetId);
             const response: TerminologyDetailsList = {
-              details: fhirResponse.group[0].element[0].valueSet.expansion.contains[0],
+              details: fhirResponse.group[0]?.element?.[0]?.valueSet.expansion.contains[0],
               connections: [],
             };
             for (const item of fhirResponse.group) {
@@ -112,29 +112,29 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
                 </TableRow>
                 <TableRow>
                   <TableCell width="40%">Domain ID</TableCell>
-                  <TableCell>{data.details.domainId}</TableCell>
+                  <TableCell>{data?.details?.domainId ?? ""}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell width="40%">Concept Class ID</TableCell>
-                  <TableCell>{data.details.conceptClassId}</TableCell>
+                  <TableCell>{data?.details?.conceptClassId ?? ""}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell width="40%">Vocabulary ID</TableCell>
                   <TableCell>
-                    <div>{data.details.system}</div>
+                    <div>{data?.details?.system ?? ""}</div>
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell width="40%">Concept ID</TableCell>
-                  <TableCell>{data.details.conceptId}</TableCell>
+                  <TableCell>{data?.details?.conceptId ?? ""}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell width="40%">Concept code</TableCell>
-                  <TableCell>{data.details.code}</TableCell>
+                  <TableCell>{data?.details?.code ?? ""}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell width="40%">Validity</TableCell>
-                  <TableCell>{data.details.validity}</TableCell>
+                  <TableCell>{data?.details?.validity ?? ""}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
