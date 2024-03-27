@@ -34,6 +34,8 @@ const JobDialog: FC<JobDialogProps> = ({
   const [comment, setComment] = useState("");
   const { setFeedback } = useFeedback();
 
+  const datasetDialect = studies.find((s) => s.id === datasetId)?.dialect;
+
   const runJob = async () => {
     setIsLoading(true);
     const vocabSchemaName = studies.find((s) => s.id === datasetId)?.vocabSchemaName || "";
@@ -71,6 +73,8 @@ const JobDialog: FC<JobDialogProps> = ({
   };
 
   const handleClose = useCallback(() => {
+    setReleaseId("");
+    setComment("");
     typeof onClose === "function" && onClose();
   }, [onClose]);
 
@@ -82,7 +86,9 @@ const JobDialog: FC<JobDialogProps> = ({
     <Dialog className="job-dialog" title={title} closable open={open} onClose={handleClose} maxWidth="xl">
       <Divider />
       <div className="job-dialog__content">
-        <ReleaseSelector datasetId={datasetId} handleReleaseSelect={handleReleaseSelect} />
+        {datasetDialect === "hana" ? (
+          <ReleaseSelector datasetId={datasetId} handleReleaseSelect={handleReleaseSelect} />
+        ) : null}
         <div className="job-dialog__edit-input u-padding-vertical--normal">
           {/* @ts-ignore */}
           <d4l-input
