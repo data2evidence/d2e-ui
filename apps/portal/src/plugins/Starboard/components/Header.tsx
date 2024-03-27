@@ -20,7 +20,7 @@ interface HeaderProps {
   metadata: any;
   notebooks: StarboardNotebook[] | undefined;
   activeNotebook: StarboardNotebook | undefined;
-  setActiveNotebook: React.Dispatch<React.SetStateAction<StarboardNotebook | undefined>>;
+  updateActiveNotebook: (notebook?: StarboardNotebook) => void;
   currentContent: () => any;
   createNotebook: () => void;
   fetchNotebooks: (runInBackground?: boolean) => Promise<void>;
@@ -33,7 +33,7 @@ export const Header: FC<HeaderProps> = ({
   metadata,
   notebooks,
   activeNotebook,
-  setActiveNotebook,
+  updateActiveNotebook,
   currentContent,
   createNotebook,
   fetchNotebooks,
@@ -78,7 +78,7 @@ export const Header: FC<HeaderProps> = ({
           !!isShared
         );
         fetchNotebooks(true);
-        setActiveNotebook(newNotebook);
+        updateActiveNotebook(newNotebook);
         setFeedback({
           type: "success",
           message: "Changes saved",
@@ -91,7 +91,7 @@ export const Header: FC<HeaderProps> = ({
         message: "An error has occured while saving notebook",
       });
     }
-  }, [currentContent, activeNotebook, fetchNotebooks, setActiveNotebook, setFeedback]);
+  }, [currentContent, activeNotebook, fetchNotebooks, updateActiveNotebook, setFeedback, isShared]);
 
   // Rename activeNotebook Name
   const renameNotebookName = useCallback(
@@ -105,7 +105,7 @@ export const Header: FC<HeaderProps> = ({
             !!isShared
           );
           fetchNotebooks(true);
-          setActiveNotebook(newNotebook);
+          updateActiveNotebook(newNotebook);
           setFeedback({
             type: "success",
             message: "Changes saved",
@@ -119,7 +119,7 @@ export const Header: FC<HeaderProps> = ({
         });
       }
     },
-    [activeNotebook, fetchNotebooks, setActiveNotebook, setFeedback]
+    [activeNotebook, fetchNotebooks, updateActiveNotebook, setFeedback, isShared]
   );
 
   const setNotebookShared = useCallback(
@@ -172,7 +172,7 @@ export const Header: FC<HeaderProps> = ({
       const jupyterSbSource = notebookContentToText(starboardNotebook);
       const newNotebook = await api.studyNotebook.createNotebook(notebookName, jupyterSbSource);
       fetchNotebooks(true);
-      setActiveNotebook(newNotebook);
+      updateActiveNotebook(newNotebook);
       setIsShared(newNotebook.isShared);
     } catch (err) {
       setFeedback({
@@ -209,7 +209,7 @@ export const Header: FC<HeaderProps> = ({
           <NotebookSelect
             notebooks={notebooks}
             activeNotebook={activeNotebook}
-            setActiveNotebook={setActiveNotebook}
+            updateActiveNotebook={updateActiveNotebook}
             setIsShared={setIsShared}
           />
           <IconButton startIcon={<EditIcon />} onClick={handleEditTitle} />

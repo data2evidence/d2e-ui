@@ -9,7 +9,7 @@ import { StarboardNotebook } from "../../utils/notebook";
 interface NotebookSelectProps {
   notebooks: StarboardNotebook[] | undefined;
   activeNotebook: StarboardNotebook | undefined;
-  setActiveNotebook: React.Dispatch<React.SetStateAction<StarboardNotebook | undefined>>;
+  updateActiveNotebook: (notebook?: StarboardNotebook) => void;
   setIsShared: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }
 
@@ -35,14 +35,14 @@ const styles: SxProps = {
   },
 };
 
-const NotebookSelect: FC<NotebookSelectProps> = ({ notebooks, activeNotebook, setActiveNotebook, setIsShared }) => {
+const NotebookSelect: FC<NotebookSelectProps> = ({ notebooks, activeNotebook, updateActiveNotebook, setIsShared }) => {
   const handleNotebookChange = useCallback(
     (event: SelectChangeEvent<string>) => {
       const findNb = notebooks && notebooks.find((nb) => nb.id === event.target.value);
-      setActiveNotebook(findNb);
+      updateActiveNotebook(findNb);
       setIsShared(findNb?.isShared);
     },
-    [notebooks, setActiveNotebook]
+    [notebooks, updateActiveNotebook]
   );
 
   return (

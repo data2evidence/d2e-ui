@@ -30,13 +30,18 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
   const [activeNotebook, setActiveNotebook] = useState<StarboardNotebook | undefined>();
   const [isShared, setIsShared] = useState<boolean | undefined>();
 
+  const updateActiveNotebook = useCallback((notebook?: StarboardNotebook) => {
+    setActiveNotebook(notebook);
+    setIsShared(notebook?.isShared ?? false);
+  }, []);
+
   const fetchNotebooks = useCallback(
     async (runInBackground?: boolean) => {
       try {
         if (!runInBackground) setLoading(true);
         const notebooks = await api.studyNotebook.getNotebookList();
-        if (notebooks.length === 0) setActiveNotebook(undefined);
-        if (!runInBackground) setActiveNotebook(notebooks[0]);
+        if (notebooks.length === 0) updateActiveNotebook(undefined);
+        if (!runInBackground) updateActiveNotebook(notebooks[0]);
         setNotebooks(notebooks);
       } catch (err) {
         console.error(err);
@@ -99,7 +104,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
     try {
       const newNotebook: StarboardNotebook = await api.studyNotebook.createNotebook("Untitled", "");
       fetchNotebooks(true);
-      setActiveNotebook(newNotebook);
+      updateActiveNotebook(newNotebook);
     } catch (err) {
       console.error(err);
       setFeedback({
@@ -146,7 +151,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
       const notebookContent = notebookContentToText(starboardNotebook);
       const newNotebook: StarboardNotebook = await api.studyNotebook.createNotebook(notebookName, notebookContent);
       fetchNotebooks(true);
-      setActiveNotebook(newNotebook);
+      updateActiveNotebook(newNotebook);
     } catch (err) {
       console.error(err);
       setFeedback({
@@ -170,7 +175,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
         metadata={metadata}
         notebooks={notebooks}
         activeNotebook={activeNotebook}
-        setActiveNotebook={setActiveNotebook}
+        updateActiveNotebook={updateActiveNotebook}
         currentContent={handleReadContent}
         createNotebook={createNotebook}
         fetchNotebooks={fetchNotebooks}
