@@ -52,6 +52,7 @@
         ></chartToolbar>
         <div class="d-flex pane-right-content">
           <chartController
+            :showLeftPane="!hideLeftPane"
             @drilldown="onDrilldown"
             :class="{ 'has-filtercard-summary': displayFilterCardSummary }"
             :shouldRerenderChart="shouldRerenderChart"
