@@ -294,11 +294,6 @@ export default {
     })
     })
     this.isLocal = 'isLocal' in getPortalAPI()
-    this.loadValuesForAttributePath({
-      attributePathUid: 'conceptSets',
-      searchQuery: '',
-      attributeType: 'conceptSet',
-    })
   },
   beforeDestroy() {
     window.removeEventListener('menuClicked', (e: CustomEvent) => {
@@ -364,7 +359,6 @@ export default {
       'drilldown',
       'changePage',
       'setActiveChart',
-      'loadValuesForAttributePath',
       'loadbookmarkToState',
       'setAddNewCohort'
     ]),
