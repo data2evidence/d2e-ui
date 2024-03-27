@@ -25,6 +25,7 @@
           @fireRequest="setFireRequest"
           @goPage="goPage"
           :pageSize="this.pageSize"
+          :showLeftPane="showLeftPane"
         ></patientListControl>
       </div>
       <div>
@@ -55,7 +56,7 @@ import { createZip } from './helpers/createZip'
 
 export default {
   name: 'patientListChart',
-  props: ['busyEv'],
+  props: ['busyEv', 'showLeftPane'],
   data() {
     return {
       errorMessage: '',

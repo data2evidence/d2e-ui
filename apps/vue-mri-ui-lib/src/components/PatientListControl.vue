@@ -123,6 +123,9 @@ export default {
       type: Number,
       default: 20,
     },
+    showLeftPane: {
+      type: Boolean,
+    },
   },
   mounted() {
     this.renderWidths()
@@ -146,6 +149,9 @@ export default {
     }
   },
   watch: {
+    showLeftPane() {
+      this.renderWidths()
+    },
     columns() {
       // when columns are added, set widths
       this.populateColumnMenu()
@@ -219,7 +225,7 @@ export default {
     ...mapActions(['populateColumnMenu', 'setColumnWidths']),
     ...mapMutations([types.PL_REMOVE_SELECTED_ATTRIBUTE]),
     renderWidths() {
-      const columnWidths = this.computeInitialWidth(this.tableColumns)
+      const columnWidths = this.computeBaseWidth(this.tableColumns)
       this.setContainerWidth(this.computeContainerWidth(columnWidths))
       this.setColumnWidths({
         ...columnWidths,
@@ -347,8 +353,8 @@ export default {
         return sum + columnWidths[header.path]
       }, 0)
     },
-    computeInitialWidth(columns) {
-      const containerWidth = this.$refs.tableContainerRef.getBoundingClientRect().width - 20
+    computeBaseWidth(columns) {
+      const containerWidth = this.$refs.tableContainerRef.parentElement.getBoundingClientRect().width - 20
       const widths = { ...this.getColumnWidths }
       let colWidth = containerWidth / columns.length
       colWidth = colWidth < this.minColumnWidth ? this.minColumnWidth : colWidth
