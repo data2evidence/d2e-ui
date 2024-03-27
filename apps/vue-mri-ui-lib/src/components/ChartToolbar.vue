@@ -197,6 +197,7 @@ export default {
       'setDatasetVersion',
       'setDataset',
       'requestDatasetVersions',
+      'loadValuesForAttributePath',
     ]),
     refreshPatientCount() {
       if (!this.patientListTotalRequested) {
@@ -263,6 +264,13 @@ export default {
       this.firePatientCountQuery({
         type: 'total',
         params: bm,
+      })
+
+      // Get concept sets when dataset changes
+      this.loadValuesForAttributePath({
+        attributePathUid: 'conceptSets',
+        searchQuery: '',
+        attributeType: 'conceptSet',
       })
     },
     openSettingsConfig() {
