@@ -149,6 +149,11 @@ export default {
     this.patientTotalRequested = false
     this.patientListTotalRequested = false
     this.refreshPatientCount()
+    this.loadValuesForAttributePath({
+      attributePathUid: 'conceptSets',
+      searchQuery: '',
+      attributeType: 'conceptSet',
+    })
   },
   beforeDestroy() {
     window.removeEventListener('click', this.closeSubMenu)
@@ -197,6 +202,7 @@ export default {
       'setDatasetVersion',
       'setDataset',
       'requestDatasetVersions',
+      'loadValuesForAttributePath',
     ]),
     refreshPatientCount() {
       if (!this.patientListTotalRequested) {

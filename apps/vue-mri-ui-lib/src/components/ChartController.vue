@@ -23,7 +23,11 @@
           :shouldRerenderChart="shouldRerenderChart"
         ></stackBarChart>
         <!-- <variantBrowser v-if="getActiveChart === 'vb'" :response="response" @busyEv="setChartBusy"></variantBrowser> -->
-        <patientListContainer v-if="getActiveChart === 'list'" @busyEv="setChartBusy"></patientListContainer>
+        <patientListContainer
+          v-if="getActiveChart === 'list'"
+          @busyEv="setChartBusy"
+          :showLeftPane="showLeftPane"
+        ></patientListContainer>
       </div>
     </div>
   </div>
@@ -47,7 +51,7 @@ import patientCount from './PatientCount.vue'
 
 export default {
   name: 'chartController',
-  props: ['shouldRerenderChart'],
+  props: ['shouldRerenderChart', 'showLeftPane'],
   data() {
     return {
       chartBusy: false,

@@ -52,6 +52,7 @@
         ></chartToolbar>
         <div class="d-flex pane-right-content">
           <chartController
+            :showLeftPane="!hideLeftPane"
             @drilldown="onDrilldown"
             :class="{ 'has-filtercard-summary': displayFilterCardSummary }"
             :shouldRerenderChart="shouldRerenderChart"
@@ -293,11 +294,6 @@ export default {
     })
     })
     this.isLocal = 'isLocal' in getPortalAPI()
-    this.loadValuesForAttributePath({
-      attributePathUid: 'conceptSets',
-      searchQuery: '',
-      attributeType: 'conceptSet',
-    })
   },
   beforeDestroy() {
     window.removeEventListener('menuClicked', (e: CustomEvent) => {
@@ -363,7 +359,6 @@ export default {
       'drilldown',
       'changePage',
       'setActiveChart',
-      'loadValuesForAttributePath',
       'loadbookmarkToState',
       'setAddNewCohort'
     ]),
