@@ -42,7 +42,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
         Args:
             filter: request generated using :py:class:`Query <pyqe.api.query.Query>`
         """
-        raw_response =  await self.get_patientCount_by_cohortId(cohort, cohortId=cohortid)
+        raw_response =  await self.get_patientCount_api(cohort, cohortId=cohortid)
         patient_count = 0
         if raw_response != None:
             patient_count = json.loads(raw_response)['rowCount']
@@ -195,7 +195,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
         result = await self._get('api/services/datastream/patient', params)
         return await result.string()
     
-    async def get_patientCount_by_cohortId(self, cohort: dict, cohortId: int = 0):
+    async def get_patientCount_api(self, cohort: dict, cohortId: int = 0):
         """Get count of patients from MRI which fit the cohort request provided
 
         Args:
