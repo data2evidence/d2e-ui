@@ -43,6 +43,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
             filter: request generated using :py:class:`Query <pyqe.api.query.Query>`
         """
         raw_response =  await self.download_raw(cohort, cohortId=cohortid, getOnlyPatientCount='True')
+        patient_count = 0
         if raw_response != None:
             patient_count = json.loads(raw_response)['rowCount']
             
@@ -182,17 +183,17 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
             params = {
                 'mriquery': self._encode_query_string(cohort).decode('ascii'),
                 'dataFormat': "PARQUET",
-                'cohortId':  cohortId,
+                'cohortId':  str(cohortId),
                 'returnOnlyPatientCount': str(getOnlyPatientCount)
                 }
         else:
             params = {
                 'mriquery': self._encode_query_string(cohort).decode('ascii'),
-                'cohortId': cohortId,
+                'cohortId': str(cohortId),
                 'returnOnlyPatientCount': str(getOnlyPatientCount)
             }
         result = await self._get('api/services/datastream/patient', params)
-        if (getOnlyPatientCount == 'True' or result == None): 
+        if (getOnlyPatientCount == 'False' or result == None): 
             return result
         else:
             return await result.string()
