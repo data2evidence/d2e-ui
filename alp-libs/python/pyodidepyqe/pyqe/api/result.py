@@ -99,7 +99,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
                 os.remove(filename)
                 
             if filename.endswith(".parquet"):
-                content = await self.download_raw(cohort, "PARQUET", cohortId=str(cohortid))
+                content = await self.download_raw(cohort, "PARQUET", cohortId=cohortid)
 
                 if not content:
                     return pd.DataFrame(columns=[])
@@ -113,7 +113,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
 
                 return response
             else:
-                text = await self.download_raw(cohort, "CSV", cohortId=str(cohortid))
+                text = await self.download_raw(cohort, "CSV", cohortId=cohortid)
 
                 if not text:
                     return pd.DataFrame(columns=[])
@@ -142,13 +142,13 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
         """
 
         patient_df = await self.download_dataframe(
-            entity_cohort["Patient"], "patient.csv", cohortid=str(cohortid))
+            entity_cohort["Patient"], "patient.csv", cohortid=cohortid)
 
         result = None
         for entity_name in entity_cohort.keys():
             if entity_name != "Patient":
-                result = patient_df.join(self.download_dataframe(
-                    entity_cohort[entity_name], f"{entity_name}.csv", cohortid=str(cohortid)),
+                result = patient_df.join(await self.download_dataframe(
+                    entity_cohort[entity_name], f"{entity_name}.csv", cohortid=cohortid),
                     lsuffix="_patient",
                     rsuffix=f"_{entity_name}",
                     how="left",
@@ -169,7 +169,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
         result = {}
         for entity_name in entity_cohort.keys():
             result[entity_name] = await self.download_dataframe(
-                entity_cohort[entity_name], f"{entity_name}.csv", cohortid=str(cohortId))
+                entity_cohort[entity_name], f"{entity_name}.csv", cohortid=cohortId)
 
         return result
 
