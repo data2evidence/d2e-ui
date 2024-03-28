@@ -114,7 +114,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
                 return response
             else:
                 text = await self.download_raw(cohort, "CSV", cohortId=str(cohortid))
-                text
+
                 if not text:
                     return pd.DataFrame(columns=[])
 
