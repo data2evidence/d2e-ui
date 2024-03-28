@@ -7,4 +7,3 @@ autopep8==1.5.4
 pycodestyle==2.6.0
 pytest-mock==3.3.1
 pytest==6.0.2
-OpenSSL==3.0.12
