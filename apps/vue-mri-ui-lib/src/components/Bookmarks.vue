@@ -7,14 +7,14 @@
           <div class="div-bookmark-dialog">
             <span>{{ getText('MRI_PA_BOOKMARK_RENAME_DIALOG_TEXT') }}</span>
             <div class="input-container">
-              <input v-model="renamedBookmark" v-focus />
+              <input class="form-control" v-focus required maxlength="40" v-model="renamedBookmark" />
             </div>
           </div>
         </div>
       </template>
       <template v-slot:footer>
         <div class="flex-spacer"></div>
-        <appButton :click="confirmRenameBookmark" :text="getText('MRI_PA_BUTTON_SAVE')"></appButton>
+        <appButton :click="confirmRenameBookmark" :text="getText('MRI_PA_BUTTON_SAVE')" :disabled="this.hasExceededLength"></appButton>
         <appButton :click="closeRenameBookmark" :text="getText('MRI_PA_BUTTON_CANCEL')"></appButton>
       </template>
     </messageBox>
@@ -353,6 +353,7 @@ export default {
   props: ['unloadBookmarkEv', 'initBookmarkId', 'hideEv'],
   data() {
     return {
+      maxLength: 40,
       selectedBookmark: {},
       renamedBookmark: '',
       schemaName: '',
@@ -382,16 +383,16 @@ export default {
       (state, getters) => getters.getAddNewCohort,
       (newValue, oldValue) => {
         if (newValue) {
-          this.openAddNewCohort();
-          this.setAddNewCohort( {addNewCohort: false})
+          this.openAddNewCohort()
+          this.setAddNewCohort({ addNewCohort: false })
         }
       },
       { immediate: true }
-    );
- },
- beforeDestroy() {
-    this.unwatch();
- },
+    )
+  },
+  beforeDestroy() {
+    this.unwatch()
+  },
   watch: {
     initBookmarkId() {
       if (this.initBookmarkId !== '') {
@@ -409,7 +410,7 @@ export default {
       'getDomainValues',
       'getActiveBookmark',
       'getCurrentBookmarkHasChanges',
-      'getAddNewCohort'
+      'getAddNewCohort',
     ]),
     bookmarksDisplay() {
       const bookmarkData = this.getBookmarks
@@ -446,6 +447,9 @@ export default {
     showCohortCompareBtn() {
       return this.aSelBookmarkList.length > 1
     },
+    hasExceededLength() {
+      return this.renamedBookmark.length == this.maxLength
+    },
   },
   methods: {
     ...mapActions([
@@ -455,7 +459,7 @@ export default {
       'toggleAddCohortDialog',
       'toggleCohortListDialog',
       'resetChartProperties',
-      'setAddNewCohort'
+      'setAddNewCohort',
     ]),
     ...mapMutations([types.SET_ACTIVE_BOOKMARK, types.CONFIG_SET_HAS_ASSIGNED]),
     openCompareDialog() {
@@ -736,7 +740,7 @@ export default {
       this.showSaveOrDiscardDialog = false
       this.$emit('unloadBookmarkEv')
     },
-    openAddNewCohort() {      
+    openAddNewCohort() {
       if (this.hasChanges) {
         this.openSaveOrDiscardDialog(true)
       } else {
@@ -756,15 +760,15 @@ export default {
       this.reset()
       this.$emit('hideEv')
     },
-    checkCohortName(bookmarkName, suffix = "") {
+    checkCohortName(bookmarkName, suffix = '') {
       const userId = getPortalAPI().userId
-      let uniqueName = bookmarkName + (suffix ? ` ${suffix}` : '');
+      let uniqueName = bookmarkName + (suffix ? ` ${suffix}` : '')
       for (const bookmark of this.getBookmarks) {
         if (userId === bookmark.user_id && bookmark.bookmarkname === uniqueName) {
-          return this.checkCohortName(bookmarkName, (suffix ? parseInt(suffix) + 1 : 1));
+          return this.checkCohortName(bookmarkName, suffix ? parseInt(suffix) + 1 : 1)
         }
       }
-    return uniqueName;
+      return uniqueName
     },
     reset() {
       this[types.CONFIG_SET_HAS_ASSIGNED](false)
