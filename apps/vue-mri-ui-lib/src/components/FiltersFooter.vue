@@ -104,6 +104,9 @@
                     <div class="invalid-feedback" v-bind:style="[isInvalidName && 'display: block;']">
                       Please enter another name
                     </div>
+                    <div class="invalid-feedback" v-bind:style="[hasExceededLength && 'display: block;']">
+                      Filter name must not exceed 40 characters
+                    </div>
                   </div>
                 </div>  
               </div>
@@ -121,7 +124,7 @@
       </template>
       <template v-slot:footer>
         <div class="flex-spacer"></div>
-        <appButton :click="saveBookmark" :text="getText('MRI_PA_BUTTON_SAVE')" :tooltip="getText('MRI_PA_BUTTON_SAVE')"></appButton>
+        <appButton :click="saveBookmark" :text="getText('MRI_PA_BUTTON_SAVE')" :tooltip="getText('MRI_PA_BUTTON_SAVE')" :disabled="this.hasExceededLength"></appButton>
         <appButton :click="closeSaveBookmark" :text="getText('MRI_PA_BUTTON_CANCEL')" :tooltip="getText('MRI_PA_BUTTON_CANCEL')"></appButton>
       </template>
     </messageBox>
@@ -177,6 +180,7 @@ export default {
       saveDialogWidth: 260,
       isInvalidName: false,
       cohortName: '',
+      maxLength: 40
     }
   },
   computed: {
@@ -207,6 +211,9 @@ export default {
     },
     isNewCohort() {
       return this.getActiveBookmark.isNew
+    },
+    hasExceededLength() {
+      return this.cohortName.length == this.maxLength
     }
   },
   methods: {
