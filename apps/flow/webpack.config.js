@@ -10,7 +10,7 @@ module.exports = (env, argv) => {
   const isBuild = env.build
 
   const entryFile = isBuild ? 'module.ts' : 'index.tsx'
-  const externals = isBuild ? ['react'] : []
+  const externals = isBuild ? ['react','@alp-os/alp-starboard-wrap'] : []
 
   return {
     mode: argv.mode,
