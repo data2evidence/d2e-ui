@@ -62,3 +62,8 @@ export interface IDatabaseCredentialsUpdate
   id: string;
   credentials: IDbCredentialAdd[];
 }
+
+export interface IDatabaseUpdate extends Omit<IDatabase, "code" | "host" | "port" | "name" | "dialect" | "extra"> {
+  id: string;
+  vocabSchemas: string[];
+}
