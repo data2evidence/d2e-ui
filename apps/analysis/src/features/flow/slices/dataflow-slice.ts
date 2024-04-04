@@ -23,7 +23,7 @@ export const dataflowApiSlice = createApi({
   tagTypes: ["Dataflow", "DataflowRevision", "DataflowResult", "DataflowState"],
   endpoints: (builder) => ({
     getDataflows: builder.query<DataflowDto[], void>({
-      query: () => "dataflow/list",
+      query: () => "analysisflow/list",
       providesTags: (result) =>
         result
           ? [
@@ -33,7 +33,7 @@ export const dataflowApiSlice = createApi({
           : [{ type: "Dataflow", id: "LIST" }],
     }),
     getLatestDataflowById: builder.query<LatestDataflowItemDto, string>({
-      query: (id) => `dataflow/${id}/latest`,
+      query: (id) => `analysisflow/${id}/latest`,
       providesTags: (result, error, id) => [
         { type: "Dataflow", id },
         { type: "Dataflow", id: "LIST" },
@@ -41,12 +41,12 @@ export const dataflowApiSlice = createApi({
     }),
     // Get dataflow with all the revisions
     getDataflowById: builder.query<DataflowItemDto, string>({
-      query: (id) => `dataflow/${id}`,
+      query: (id) => `analysisflow/${id}`,
       providesTags: (result, error, id) => [{ type: "DataflowRevision", id }],
     }),
     getFlowRunResultsById: builder.query<NodeResultDto[], string>({
       query: (dataflowId) => {
-        return `dataflow/${dataflowId}/flow-run-results`;
+        return `analysisflow/${dataflowId}/flow-run-results`;
       },
       providesTags: (result) =>
         result
@@ -61,7 +61,7 @@ export const dataflowApiSlice = createApi({
     }),
     saveDataflow: builder.mutation<SaveDataflowResponseDto, SaveDataflowDto>({
       query: (dataflow) => ({
-        url: "dataflow",
+        url: "analysisflow",
         method: "POST",
         body: dataflow,
       }),
@@ -97,7 +97,7 @@ export const dataflowApiSlice = createApi({
       DuplicateDataflowDto
     >({
       query: ({ id, revisionId, name }) => ({
-        url: `dataflow/duplicate/${id}/${revisionId}`,
+        url: `analysisflow/duplicate/${id}/${revisionId}`,
         method: "POST",
         body: { name },
       }),
@@ -110,7 +110,7 @@ export const dataflowApiSlice = createApi({
       DeleteDataflowDto
     >({
       query: ({ id }) => ({
-        url: `dataflow/${id}`,
+        url: `analysisflow/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: (result, error, { id }) => [{ type: "Dataflow", id }],
@@ -120,7 +120,7 @@ export const dataflowApiSlice = createApi({
       DeleteDataflowRevisionDto
     >({
       query: ({ id, revisionId }) => ({
-        url: `dataflow/${id}/${revisionId}`,
+        url: `analysisflow/${id}/${revisionId}`,
         method: "DELETE",
       }),
       invalidatesTags: (result, error, { id }) => [
