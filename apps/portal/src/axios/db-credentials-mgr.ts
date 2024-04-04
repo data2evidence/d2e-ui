@@ -39,7 +39,7 @@ export class DbCredentialsMgr {
     });
   }
 
-  public updateDb(db: IDatabaseUpdate) {
+  public updateDbDetails(db: IDatabaseUpdate) {
     return request({
       baseURL: DB_CRED_MGR_BASE_URL,
       url: "db",
