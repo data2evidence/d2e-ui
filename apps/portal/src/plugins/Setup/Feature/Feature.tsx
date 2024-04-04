@@ -20,9 +20,6 @@ const FEATURES: Record<string, { name: string }> = {
   terminology: {
     name: "Terminology",
   },
-  cdmDownload: {
-    name: "CDM Download",
-  },
   pa: {
     name: "Patient Analytics",
   },
@@ -89,6 +86,7 @@ export const Feature: FC = () => {
           </div>
           <div className="feature__content">
             {formData.features
+              .filter((f) => Object.keys(FEATURES).includes(f.feature))
               .sort((a, b) => Object.keys(FEATURES).indexOf(a.feature) - Object.keys(FEATURES).indexOf(b.feature))
               .map((feat) => (
                 <Box key={feat.feature} className="feature__item">

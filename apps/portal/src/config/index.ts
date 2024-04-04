@@ -55,7 +55,6 @@ export const DATA_ADMIN_ROLES: { [key: string]: string } = {
   [ALP_SQLEDITOR_ADMIN]: "Sqleditor Admin",
 };
 
-export const FEATURE_CDM_DOWNLOAD = "cdmDownload";
 export const FEATURE_DATAFLOW = "dataflow";
 export const FEATURE_DISABLE_JUPYTER_CELL = "disableJupyterCell";
 export const FEATURE_DATASET_FILTER = "datasetFilter";
