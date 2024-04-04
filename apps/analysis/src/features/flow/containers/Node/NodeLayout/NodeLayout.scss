@@ -42,24 +42,37 @@
       display: flex;
       justify-content: flex-end;
     }
-
-    .react-flow__handle {
-      background: var(--color-primary);
-      width: 18px;
-      height: 18px;
-
-      &.connectionindicator {
-        cursor: pointer;
-      }
-
-      &-left {
-        left: -9px;
-      }
-
-      &-right {
-        right: -9px;
-      }
+    .purple-handle {
+      background: purple;
+      border-radius: 3px;
+      width: 14px;
+      height: 210px;
     }
+    .blue-handle {
+      background: var(--color-primary);
+      border-radius: 3px;
+      width: 14px;
+      height: 30px;
+    }
+    
+
+    // .react-flow__handle {
+    //   background: var(--color-primary);
+    //   width: 14px;
+    //   height: 30px;
+
+    //   &.connectionindicator {
+    //     cursor: pointer;
+    //   }
+
+    //   &-left {
+    //     left: -9px;
+    //   }
+
+    //   &-right {
+    //     right: -9px;
+    //   }
+    // }
 
     &__content {
       padding: 1.5em;

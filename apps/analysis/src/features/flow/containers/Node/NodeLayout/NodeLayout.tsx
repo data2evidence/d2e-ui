@@ -7,6 +7,7 @@ import {
   DragIndicatorIcon,
   Button,
 } from "@portal/components";
+import { CustomHandle, CustomHandleProps } from "./NodeHandle/CustomHandle";
 import { NodeDataState } from "../../../types";
 import "./NodeLayout.scss";
 
@@ -49,18 +50,56 @@ export const NodeLayout = <T extends NodeDataState>({
   return (
     <div className={classes}>
       {!INPUT_NODES.includes(node.type) && (
-        <Handle
-          type="source"
-          position={node.sourcePosition || Position.Right}
-          onConnect={handleConnectSource}
-        />
+        <div>
+          <CustomHandle
+            name={"Outcome of Interest"}
+            color={"green"}
+            type={"target"}
+            node={node}
+            position={Position.Left}
+            style={{
+              top: "33%",
+              display: "flex",
+              alignItems: "center",
+            }}
+            onConnect={handleConnectTarget}
+          />
+          <CustomHandle
+            name={"Exposures"}
+            color={"blue"}
+            type={"target"}
+            node={node}
+            position={Position.Left}
+            style={{
+              top: "55%",
+              display: "flex",
+              alignItems: "center",
+            }}
+            onConnect={handleConnectTarget}
+          />
+          <CustomHandle
+            name={"Study Population"}
+            color={"pink"}
+            type={"target"}
+            node={node}
+            position={Position.Left}
+            style={{
+              top: "77%",
+              display: "flex",
+              alignItems: "center",
+            }}
+            onConnect={handleConnectTarget}
+          />
+        </div>
       )}
 
       {!OUTPUT_NODES.includes(node.type) && (
         <Handle
-          type="target"
-          position={node.targetPosition || Position.Left}
-          onConnect={handleConnectTarget}
+          className="purple-handle"
+          type="source"
+          id={`${node.id}_out`}
+          position={node.sourcePosition || Position.Right}
+          onConnect={handleConnectSource}
         />
       )}
 
@@ -82,7 +121,7 @@ export const NodeLayout = <T extends NodeDataState>({
           )}
         </Box>
       </div>
-      <div className="node__content">{children}</div>
+      {/* <div className="node__content">{children}</div> */}
       {typeof onResultClick === "function" && (
         <div className="node__footer">
           <Button
