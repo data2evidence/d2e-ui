@@ -1,6 +1,6 @@
 import env from "../env";
 import request from "./request";
-import { DbDialect, IDatabase, IDatabaseCredentialsUpdate, INewDatabase, IDatabaseUpdate } from "../types";
+import { DbDialect, IDatabase, IDatabaseCredentialsUpdate, INewDatabase, IDatabaseDetailsUpdate } from "../types";
 
 const DB_CRED_MGR_BASE_URL = `${env.REACT_APP_DN_BASE_URL}db-credentials/`;
 
@@ -39,7 +39,7 @@ export class DbCredentialsMgr {
     });
   }
 
-  public updateDbDetails(db: IDatabaseUpdate) {
+  public updateDbDetails(db: IDatabaseDetailsUpdate) {
     return request({
       baseURL: DB_CRED_MGR_BASE_URL,
       url: "db",
