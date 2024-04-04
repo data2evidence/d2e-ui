@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import ReactFlow, {
-  Node,
   addEdge,
   applyEdgeChanges,
   applyNodeChanges,
@@ -33,7 +32,6 @@ import {
   replaceNodes,
   selectEdges,
   setAddNodeTypeDialog,
-  setAddGroupDialog,
   setEdge,
   setNode,
 } from "../../../reducers";
@@ -60,7 +58,6 @@ const fitViewOptions: FitViewOptions = { minZoom: MIN_ZOOM, maxZoom: MAX_ZOOM };
 const snapGrid: [number, number] = [10, 10];
 const flowStyles: CSSProperties = { backgroundColor: "#faf8f8" };
 const defaultPosition = { startX: 100, startY: 100, gapX: 100, gapY: 100 };
-const GROUP_NODE = "subflow";
 
 export const FlowPanel: FC<FlowPanelProps> = () => {
   const dataflowId = useSelector((state: RootState) => state.flow.dataflowId);
@@ -72,15 +69,12 @@ export const FlowPanel: FC<FlowPanelProps> = () => {
   );
 
   const [position, setPosition] = useState<XYPosition>();
-  const [target, setTarget] = useState(null);
   const nodes = useSelector(selectFlowNodes);
   const edges = useSelector(selectEdges);
   const lastNode = useSelector(selectLastNode);
   const reactFlowWrapper = useRef<any>(null);
   const connectingNodeId = useRef<string | null>(null);
-  const dragRef = useRef<any>(null);
-  const { setCenter, setViewport, getViewport, project, isNodeIntersecting } =
-    useReactFlow();
+  const { setCenter, setViewport, getViewport, project } = useReactFlow();
 
   const centerViewport = useCallback(
     (nodes: NodeState[], overrideZoom?: number) => {
