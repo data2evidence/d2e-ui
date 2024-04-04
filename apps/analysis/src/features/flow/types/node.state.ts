@@ -16,11 +16,6 @@ export interface NodeState<TData extends NodeDataState = NodeDataState>
 export interface AddNodeTypeDialogState {
   visible: boolean;
 }
-
-export interface AddGroupDialogState {
-  visible: boolean;
-}
-
 export interface ExecutorOptions {
   executorType: string;
   executorAddress: ExecutorAddress;

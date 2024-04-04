@@ -269,11 +269,7 @@ export const FlowPanel: FC<FlowPanelProps> = () => {
         return acc;
       }, {});
 
-      return (
-        isDifferentNode &&
-        !isCircular(routes, source, target) &&
-        !isNested(nodes, source, target)
-      );
+      return isDifferentNode && !isCircular(routes, source, target);
     },
     [edges]
   );

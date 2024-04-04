@@ -6,7 +6,6 @@ import {
 import { RootState } from "../../store";
 import {
   AddNodeTypeDialogState,
-  AddGroupDialogState,
   EdgeState,
   FlowRootState,
   FlowRunState,
@@ -27,7 +26,6 @@ const initialState: FlowRootState = {
   dataflowId: undefined,
   revisionId: undefined,
   addNodeTypeDialog: { visible: false },
-  addGroupDialog: { visible: false },
   saveFlowDialog: { visible: false, dataflowId: null },
   isTestMode: false,
 
@@ -55,12 +53,6 @@ const flowSlice = createSlice({
       action: PayloadAction<AddNodeTypeDialogState>
     ) => {
       state.addNodeTypeDialog = action.payload;
-    },
-    setAddGroupDialog: (
-      state,
-      action: PayloadAction<AddGroupDialogState>
-    ) => {
-      state.addGroupDialog = action.payload;
     },
     setSaveFlowDialog: (state, action: PayloadAction<SaveFlowDialogState>) => {
       state.saveFlowDialog = action.payload;
@@ -114,7 +106,6 @@ export const {
   setRevisionId,
   clearRevisionId,
   setAddNodeTypeDialog,
-  setAddGroupDialog,
   setSaveFlowDialog,
   setIsTestMode,
 
