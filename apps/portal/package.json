@@ -41,7 +41,6 @@
     "easymde": "^2.16.1",
     "echarts": "^5.4.2",
     "echarts-for-react": "^3.0.2",
-    "fflate": "0.7.4",
     "file-saver": "^2.0.5",
     "gethue": "^5.0.0",
     "graphql": "^16.8.1",
@@ -57,7 +56,6 @@
     "react-markdown": "^8.0.3",
     "react-router-dom": "^6.3.0",
     "react-simplemde-editor": "^5.0.2",
-    "streamsaver": "2.0.6",
     "systemjs": "0.21.6"
   },
   "devDependencies": {
@@ -76,7 +74,6 @@
     "@types/react": "^18.0.0",
     "@types/react-csv": "^1.1.2",
     "@types/react-dom": "^18.0.0",
-    "@types/streamsaver": "2.0.1",
     "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
