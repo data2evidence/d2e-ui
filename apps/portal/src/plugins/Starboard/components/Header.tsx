@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback } from "react";
+import React, { ChangeEvent, FC, useCallback, useMemo } from "react";
 import { useDialogHelper, useFeedback } from "../../../hooks";
 import { Button, EditIcon, IconButton, Checkbox, DownloadIcon, Tooltip } from "@portal/components";
 import DeleteNotebookDialog from "./DeleteNotebookDialog/DeleteNotebookDialog";
@@ -42,6 +42,7 @@ export const Header: FC<HeaderProps> = ({
   setIsShared,
 }) => {
   const { user } = useUserInfo();
+  const isNotUserNotebook = useMemo(() => user.idpUserId !== activeNotebook?.userId, [activeNotebook]);
   const { setFeedback } = useFeedback();
   const [showEditTitleDialog, openEditTitleDialog, closeEditTitleDialog] = useDialogHelper(false);
   const [showDeleteNotebookDialog, openDeleteNotebookDialog, closeDeleteNotebookDialog] = useDialogHelper(false);
@@ -212,7 +213,7 @@ export const Header: FC<HeaderProps> = ({
             updateActiveNotebook={updateActiveNotebook}
             setIsShared={setIsShared}
           />
-          <IconButton startIcon={<EditIcon />} onClick={handleEditTitle} />
+          <IconButton startIcon={<EditIcon />} onClick={handleEditTitle} disabled={isNotUserNotebook} />
         </div>
         <div className="title-edit-button">
           <Checkbox
@@ -221,7 +222,7 @@ export const Header: FC<HeaderProps> = ({
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               setNotebookShared(event.target.checked);
             }}
-            disabled={user.idpUserId !== activeNotebook?.userId}
+            disabled={isNotUserNotebook}
           />
           <Button className="buttons" text="Export Notebook" onClick={exportJupyterNb} />
           <Button className="buttons" text="Import Notebook" type="file" onClick={handleJupyterInput} />
@@ -234,12 +235,7 @@ export const Header: FC<HeaderProps> = ({
           />
           <Button className="buttons" text="New Notebook" onClick={createNotebook} />
           <Button className="buttons" text="Save" onClick={saveNotebook} />
-          <Button
-            className="buttons"
-            text="Delete"
-            onClick={handleDeleteNotebook}
-            disabled={user.idpUserId !== activeNotebook?.userId}
-          />
+          <Button className="buttons" text="Delete" onClick={handleDeleteNotebook} disabled={isNotUserNotebook} />
           <Tooltip title="Download source code">
             <div>
               <IconButton startIcon={<DownloadIcon />} onClick={() => window.open(zipUrl, "_blank")} />
