@@ -11,7 +11,6 @@ const FEATURE_PERMISSIONS = "permissions";
 const FEATURE_CONFIGURATION = "configuration";
 
 // Non plugin features
-const FEATURE_CDM_DOWNLOAD = "cdmDownload";
 const FEATURE_DISPLAY_CONTACTS = "displayContacts";
 const FEATURE_DISABLE_JUPYTER_CELL = "disableJupyterCell";
 const FEATURE_DATASET_FILTER = "datasetFilter";
@@ -23,7 +22,6 @@ interface IFeatureFlag {
 // Prefix "sub:" indicate indentation in the Tenant Settings dialog
 const FEATURES: IFeatureFlag = {
   [FEATURE_DATASET_FILTER]: "Display filter in dataset overview",
-  [FEATURE_CDM_DOWNLOAD]: "Display CDM Download button",
   [FEATURE_DISPLAY_CONTACTS]: "Display contact persons",
   [FEATURE_DISABLE_JUPYTER_CELL]: "sub:Disable Jupyter cells",
 };
@@ -42,7 +40,6 @@ const FEATURE_FLAG_SEQUENCE = [
 
   FEATURE_PERMISSIONS,
   FEATURE_CONFIGURATION,
-  FEATURE_CDM_DOWNLOAD,
   FEATURE_DISPLAY_CONTACTS,
 ];
 export const getFeatureFlagsWithChildren = (): { [key: string]: string[] } => {

@@ -2,9 +2,11 @@ import React, { FC, useState, useCallback, useEffect } from "react";
 import TermsOfUse from "../LegalPages/TermsOfUse";
 import PrivacyPolicy from "../LegalPages/PrivacyPolicy";
 import Imprint from "../LegalPages/Imprint";
-import { Card, Tab, Tabs, Title } from "@portal/components";
+import { Button, Card, Tab, Tabs, Title } from "@portal/components";
 import { User } from "../../../types";
 import { useMsalInfo } from "../../../contexts/UserContext";
+import DeleteAccountDialog from "./DeleteAccountDialog/DeleteAccountDialog";
+import { useDialogHelper } from "../../../hooks";
 import env from "../../../env";
 import "./Account.scss";
 
@@ -18,6 +20,7 @@ export const Account: FC = () => {
   const { claims } = useMsalInfo();
   const [tabValue, setTabValue] = useState(0);
   const [myUser, setMyUser] = useState(EMPTY_MY_USER);
+  const [showDeleteAccount, openDeleteAccount, closeDeleteAccount] = useDialogHelper(false);
 
   useEffect(() => {
     if (claims) {
@@ -63,6 +66,9 @@ export const Account: FC = () => {
                   <span>Email</span>
                   <span>{claims.email || "-"}</span>
                 </div>
+                <div>
+                  <Button variant="secondary" text="Delete my account" onClick={openDeleteAccount} />
+                </div>
               </div>
             </Card>
           </div>
@@ -92,6 +98,7 @@ export const Account: FC = () => {
           </div>
         </div>
       </div>
+      <DeleteAccountDialog open={showDeleteAccount} onClose={closeDeleteAccount} />
     </div>
   );
 };

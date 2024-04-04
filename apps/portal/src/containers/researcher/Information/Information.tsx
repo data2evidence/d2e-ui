@@ -15,17 +15,7 @@ import { SxProps } from "@mui/system";
 import { Button, Loader, TableCell, TableRow, SubTitle, IconButton, DownloadIcon } from "@portal/components";
 import { useUserInfo } from "../../../contexts/UserContext";
 import { StudyAttribute, StudyTag, DatasetResource } from "../../../types";
-import {
-  useDialogHelper,
-  useFeedback,
-  useDatasetResources,
-  useDataset,
-  useDatasetDashboards,
-  useDatasetReleases,
-} from "../../../hooks";
-import { CDMDownloadDialog } from "./CDMDownloadDialog/CDMDownloadDialog";
-import { FeatureGate } from "../../../config/FeatureGate";
-import { FEATURE_CDM_DOWNLOAD } from "../../../config";
+import { useFeedback, useDatasetResources, useDataset, useDatasetDashboards, useDatasetReleases } from "../../../hooks";
 import webComponentWrapper from "../../../webcomponents/webComponentWrapper";
 import { DQDJobResults } from "../../../plugins/SystemAdmin/DQD/DQDJobResults/DQDJobResults";
 import DataQualityHistory from "./DataQualityHistory/DataQualityHistory";
@@ -110,7 +100,6 @@ export const Information: FC = () => {
   const [downloading, setDownloading] = useState<string>();
   const [accessRequests, setAccessRequests] = useState<StudyAccessRequest[]>([]);
 
-  const [showCDMDownloadDialog, openCDMDownload, closeCDMDownload] = useDialogHelper(false);
   const [study, loading, error] = useDataset(activeStudyId);
   const [dashboards] = useDatasetDashboards(activeStudyId);
   const [resources, resourcesLoading, resourcesError] = useDatasetResources(activeStudyId);
@@ -408,29 +397,6 @@ export const Information: FC = () => {
                     </TableContainer>
                   </div>
                 </div>
-                {(user.isStudyResearcher(activeStudyId) || user.isStudyManager(activeStudyId)) && (
-                  <>
-                    <FeatureGate featureFlags={[FEATURE_CDM_DOWNLOAD]}>
-                      <div className="button-keygen__container">
-                        <h3 className="keygen__title">Patient Data</h3>
-                        <Button
-                          className="button-keygen__block"
-                          text="Download CDM Data"
-                          block
-                          onClick={openCDMDownload}
-                          loading={showCDMDownloadDialog}
-                        />
-                      </div>
-                    </FeatureGate>
-                    {showCDMDownloadDialog && (
-                      <CDMDownloadDialog
-                        open={showCDMDownloadDialog}
-                        onClose={closeCDMDownload}
-                        studyId={activeStudyId}
-                      />
-                    )}
-                  </>
-                )}
 
                 {study?.studyDetail?.showRequestAccess && [Access.None, Access.Pending].includes(getAccess()) && (
                   <>
