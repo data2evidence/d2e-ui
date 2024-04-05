@@ -32,39 +32,21 @@ export const CustomHandle = ({
         ...style,
       }}
     >
-      {type === "target" ? (
-        <Handle
-          className="custom-handle"
-          type={type}
-          id={`${node.id}_${name}_handle`}
-          position={position}
-          style={{
-            position: "absolute",
-            background: color,
-            borderRadius: "3px",
-            width: "14px",
-            height: "100%",
-            left: "-10px",
-          }}
-          onConnect={onConnect}
-        ></Handle>
-      ) : (
-        <Handle
-          className="custom-handle"
-          type={type}
-          id={`${node.id}_${name}_handle`}
-          position={position}
-          style={{
-            position: "absolute",
-            background: color,
-            borderRadius: "3px",
-            width: "14px",
-            height: "100%",
-            left: "-10px",
-          }}
-          onConnect={onConnect}
-        ></Handle>
-      )}
+      <Handle
+        className="custom-handle"
+        type={type}
+        id={`${node.id}_${name}_handle`}
+        position={position}
+        style={{
+          position: "absolute",
+          background: color,
+          borderRadius: "3px",
+          width: "14px",
+          height: "100%",
+          left: "-10px",
+        }}
+        onConnect={onConnect}
+      ></Handle>
       <span style={{ marginRight: "5px", marginLeft: "5px" }}>
         <IconButton startIcon={<AddIcon />} />
       </span>{" "}
