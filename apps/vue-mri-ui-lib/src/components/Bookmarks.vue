@@ -233,22 +233,20 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td v-if="!bookmark.disableUpdate">
                             <button
                               v-on:click.stop="renameBookmark(bookmark)"
                               :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
                               class="bookmark-button"
-                              :disabled="bookmark.disableUpdate"
                             >
                               <span class="icon"></span>
                             </button>
                           </td>
-                          <td>
+                          <td v-if="!bookmark.disableUpdate">
                             <button
                               v-on:click.stop="deleteBookmark(bookmark)"
                               :title="getText('MRI_PA_TOOLTIP_DELETE_BOOKMARK')"
                               class="bookmark-button"
-                              :disabled="bookmark.disableUpdate"
                             >
                               <span class="icon"></span>
                             </button>
