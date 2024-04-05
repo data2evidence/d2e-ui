@@ -17,8 +17,8 @@
     border-radius: 0.25em;
     border: 1px solid $border-color;
     background-color: #fff;
-    width: 350px;
-    height: 210px;
+    width: 455px;
+    height: 273px;
     display: flex;
     flex-direction: column;
     box-shadow:
@@ -42,19 +42,6 @@
       display: flex;
       justify-content: flex-end;
     }
-    .purple-handle {
-      background: purple;
-      border-radius: 3px;
-      width: 14px;
-      height: 210px;
-    }
-    .blue-handle {
-      background: var(--color-primary);
-      border-radius: 3px;
-      width: 14px;
-      height: 30px;
-    }
-    
 
     // .react-flow__handle {
     //   background: var(--color-primary);

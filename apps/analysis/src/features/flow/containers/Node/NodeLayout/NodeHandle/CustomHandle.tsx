@@ -25,7 +25,6 @@ export const CustomHandle = ({
     <div
       style={{
         position: "absolute",
-        padding: "5px",
         border: "1px solid #999fcb",
         borderRadius: "5px", // Rounded corners
         textAlign: "center",
