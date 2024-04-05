@@ -93,7 +93,7 @@
                       <appCheckbox
                         v-model="bookmark.selected"
                         @checkEv="onSelectBookmark(bookmark)"
-                        :text="bookmark.name"
+                        :text="`${bookmark.name} ${bookmark.shared ? '(Shared)' : ''}`"
                       ></appCheckbox>
                     </div>
                   </td>
@@ -440,7 +440,7 @@ export default {
           }
         }
       }, this)
-
+      
       return returnValue
     },
     hasChanges() {
