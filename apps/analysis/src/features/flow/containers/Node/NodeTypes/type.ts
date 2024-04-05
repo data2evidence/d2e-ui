@@ -32,6 +32,16 @@ export interface NodeChoiceAttr {
   defaultData?: Record<string, any>;
 }
 
+export type StrategusNodeAttributes = {
+  name: string;
+  connector_list: NodeConnector[];
+};
+
+export type NodeConnector = {
+  name: string;
+  type: string;
+};
+
 export const ZERO_INCIDENCE_NODE = [
   "cohort_diagnostic_node",
   "cohort_generator_node",

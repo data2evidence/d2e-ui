@@ -19,6 +19,7 @@ import {
   NODE_CONNECTOR_MAPPING,
   OUTBOUND_CONNECTOR_STYLE,
   INBOUND_CONNECTOR_STYLES,
+  NodeConnector,
 } from "../NodeTypes";
 import "./NodeLayout.scss";
 
@@ -80,7 +81,7 @@ export const NodeLayout = <T extends NodeDataState>({
   return (
     <div className={classes}>
       {NODE_CONNECTOR_MAPPING[node.type].connector_list.map(
-        (c, index: number) => {
+        (c: NodeConnector, index: number) => {
           return (
             <CustomHandle
               name={c.name}
