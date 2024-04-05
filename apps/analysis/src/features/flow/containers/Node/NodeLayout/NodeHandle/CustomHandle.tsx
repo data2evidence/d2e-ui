@@ -26,7 +26,7 @@ export const CustomHandle = ({
       style={{
         position: "absolute",
         padding: "5px",
-        border: "2px solid #999fcb",
+        border: "1px solid #999fcb",
         borderRadius: "5px", // Rounded corners
         textAlign: "center",
         ...style,
@@ -37,7 +37,7 @@ export const CustomHandle = ({
           className="custom-handle"
           type={type}
           id={`${node.id}_${name}_handle`}
-          position={node.sourcePosition || position}
+          position={position}
           style={{
             position: "absolute",
             background: color,
@@ -53,7 +53,7 @@ export const CustomHandle = ({
           className="custom-handle"
           type={type}
           id={`${node.id}_${name}_handle`}
-          position={node.sourcePosition || position}
+          position={position}
           style={{
             position: "absolute",
             background: color,

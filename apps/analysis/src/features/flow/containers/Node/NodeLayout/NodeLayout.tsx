@@ -58,7 +58,7 @@ export const NodeLayout = <T extends NodeDataState>({
             node={node}
             position={Position.Left}
             style={{
-              top: "33%",
+              top: "25%",
               display: "flex",
               alignItems: "center",
             }}
@@ -71,7 +71,7 @@ export const NodeLayout = <T extends NodeDataState>({
             node={node}
             position={Position.Left}
             style={{
-              top: "55%",
+              top: "50%",
               display: "flex",
               alignItems: "center",
             }}
@@ -84,7 +84,7 @@ export const NodeLayout = <T extends NodeDataState>({
             node={node}
             position={Position.Left}
             style={{
-              top: "77%",
+              top: "75%",
               display: "flex",
               alignItems: "center",
             }}
@@ -98,7 +98,7 @@ export const NodeLayout = <T extends NodeDataState>({
           className="purple-handle"
           type="source"
           id={`${node.id}_out`}
-          position={node.sourcePosition || Position.Right}
+          position={Position.Right}
           onConnect={handleConnectSource}
         />
       )}
