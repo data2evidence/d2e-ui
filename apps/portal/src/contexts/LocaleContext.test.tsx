@@ -54,6 +54,7 @@ test("TestApp shows value when context is updated", () => {
 
 test("replaceParams works for templated phrases", () => {
   expect(replaceParams("hey")).toBe("hey");
+  expect(replaceParams("hey", [])).toBe("hey");
   expect(replaceParams("hey", ["param0"])).toBe("hey");
   expect(replaceParams("{0}")).toBe("{0}");
   expect(replaceParams("{0}", ["param0"])).toBe("param0");
