@@ -25,7 +25,13 @@ const edgesInitialState = edgesAdapter.getInitialState();
 const initialState: FlowRootState = {
   dataflowId: undefined,
   revisionId: undefined,
-  addNodeTypeDialog: { visible: false },
+  addNodeTypeDialog: {
+    visible: false,
+    nodeType: null,
+    selectedNodeId: null,
+    selectedNodeClassifier: null,
+  },
+
   saveFlowDialog: { visible: false, dataflowId: null },
   isTestMode: false,
 

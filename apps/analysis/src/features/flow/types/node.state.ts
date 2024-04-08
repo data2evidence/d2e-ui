@@ -14,4 +14,7 @@ export interface NodeState<TData extends NodeDataState = NodeDataState>
 
 export interface AddNodeTypeDialogState {
   visible: boolean;
+  nodeType?: string;
+  selectedNodeId?: string;
+  selectedNodeClassifier?: string;
 }

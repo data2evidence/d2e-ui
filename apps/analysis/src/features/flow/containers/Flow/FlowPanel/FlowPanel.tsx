@@ -205,7 +205,6 @@ export const FlowPanel: FC<FlowPanelProps> = () => {
   const handleCloseDialog = useCallback(
     (type?: NodeTypeChoice) => {
       dispatch(setAddNodeTypeDialog({ visible: false }));
-
       if (!type) {
         console.warn("Unable to add node. Node type is empty");
         return;
@@ -228,11 +227,14 @@ export const FlowPanel: FC<FlowPanelProps> = () => {
       dispatch(setNode(newNode));
 
       let edge: EdgeState | undefined;
-      if (newNode.id && connectingNodeId.current) {
+
+      if (newNode.id && addNodeTypeDialog.selectedNodeId) {
         edge = {
           id: uuidv4(),
-          source: connectingNodeId.current!,
-          target: newNode.id,
+          source: newNode.id,
+          target: addNodeTypeDialog.selectedNodeId,
+          sourceHandle: `${newNode.id}_source_${addNodeTypeDialog.nodeType}`,
+          targetHandle: `${addNodeTypeDialog.selectedNodeId}_target_${addNodeTypeDialog.selectedNodeClassifier}_${addNodeTypeDialog.nodeType}`,
         };
         dispatch(setEdge(edge));
       }
@@ -250,7 +252,7 @@ export const FlowPanel: FC<FlowPanelProps> = () => {
       // reset
       connectingNodeId.current = null;
     },
-    [position, createNode, setCenter, getViewport, lastNode]
+    [position, createNode, setCenter, getViewport, lastNode, addNodeTypeDialog]
   );
 
   const isValidConnection = useCallback(
@@ -323,6 +325,7 @@ export const FlowPanel: FC<FlowPanelProps> = () => {
       <SelectNodeTypesDialog
         open={addNodeTypeDialog.visible}
         onClose={handleCloseDialog}
+        connectorType={addNodeTypeDialog.nodeType}
       />
     </div>
   );

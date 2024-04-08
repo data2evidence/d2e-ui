@@ -1,7 +1,7 @@
 import React from "react";
 import { Connection, Handle, NodeProps, Position } from "reactflow";
-import { IconButton, AddIcon } from "@portal/components";
 import { HandleType } from "reactflow";
+import { AddNodeButton } from "./AddNodeButton/AddNodeButton";
 import "./CustomHandle.scss";
 
 export interface CustomHandleProps {
@@ -50,7 +50,11 @@ export const CustomHandle = ({
         onConnect={onConnect}
       ></Handle>
       <span style={{ marginRight: "5px", marginLeft: "5px" }}>
-        <IconButton startIcon={<AddIcon />} />
+        <AddNodeButton
+          nodeId={node.id}
+          nodeClassifier={classifier}
+          type={color}
+        />
       </span>{" "}
       <span style={{ marginRight: "5px" }}>{name}</span>
     </div>
