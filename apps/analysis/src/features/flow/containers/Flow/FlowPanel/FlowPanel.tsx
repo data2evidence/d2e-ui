@@ -38,7 +38,7 @@ import {
 import { dispatch, RootState } from "../../../../../store";
 import { selectFlowNodes, selectLastNode } from "../../../selectors";
 import { useGetLatestDataflowByIdQuery } from "../../../slices";
-import { EdgeState, NodeState, ExecutorOptions } from "../../../types";
+import { EdgeState, NodeState } from "../../../types";
 import {
   getNodeClassName,
   getNodeColors,
