@@ -7,7 +7,6 @@ export interface NodeDataState {
   error?: boolean;
   errorMessage?: string;
   resultDate?: string;
-  executorOptions?: ExecutorOptions;
 }
 
 export interface NodeState<TData extends NodeDataState = NodeDataState>
@@ -15,14 +14,4 @@ export interface NodeState<TData extends NodeDataState = NodeDataState>
 
 export interface AddNodeTypeDialogState {
   visible: boolean;
-}
-export interface ExecutorOptions {
-  executorType: string;
-  executorAddress: ExecutorAddress;
-}
-
-interface ExecutorAddress {
-  host: string;
-  port: number;
-  ssl: boolean;
 }

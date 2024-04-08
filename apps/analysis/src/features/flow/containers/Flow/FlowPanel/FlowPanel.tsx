@@ -175,7 +175,7 @@ export const FlowPanel: FC<FlowPanelProps> = () => {
           y: event.clientY - top,
         });
         setPosition(position);
-        dispatch(setAddNodeTypeDialog({ visible: true }));
+        // dispatch(setAddNodeTypeDialog({ visible: true }));
       }
     },
     [project]
