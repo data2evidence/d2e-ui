@@ -10,13 +10,13 @@ export const TestApp: FC = () => {
 };
 
 const LanguageApp = () => {
-  const { locale, changeLocale, i18nText } = useLocale();
+  const { locale, changeLocale, getText, i18nKeys } = useLocale();
   return (
     <div>
       <div onClick={() => changeLocale("en")}>English</div>
       <div onClick={() => changeLocale("es")}>Spanish</div>
       <div onClick={() => changeLocale("fr")}>French</div>
-      <div style={{ fontSize: 30 }}>{i18nText.greeting}</div>
+      <div style={{ fontSize: 30 }}>{getText(i18nKeys.greeting)}</div>
     </div>
   );
 };

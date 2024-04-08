@@ -1,12 +1,6 @@
-export const i18n = {
-  en: {
-    greeting: "Hello",
-  },
-  es: {
-    greeting: "Hola",
-  },
-  fr: {
-    greeting: "Bonjour",
+export const i18nDefault = {
+  default: {
+    greeting: "default",
   },
 };
 
@@ -23,4 +17,4 @@ function getKeyMap<T extends object>(obj: T) {
 // Exposing the default key map so that getText('MRI_PA_FILTERCARD_SELECTION_NONE')
 // can be getText(i18nKeys.MRI_PA_FILTERCARD_SELECTION_NONE)
 // to prevent typos with the values
-export const i18nKeys = getKeyMap(i18n.en);
+export const i18nKeys = getKeyMap(i18nDefault.default);
