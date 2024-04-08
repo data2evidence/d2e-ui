@@ -1,7 +1,6 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
+import React, { createContext, useState, useContext, ReactNode } from "react";
 import { i18nDefault, i18nKeys } from "../utils/i18n";
 
-type Locale = keyof typeof i18nDefault;
 type LanguageMappings = {
   [key in keyof typeof i18nKeys]: string;
 };
@@ -11,7 +10,21 @@ interface LocaleContextType {
   changeLocale: (newLocale: string) => void;
   getText: (phraseKey: keyof LanguageMappings, params?: string[]) => string;
   i18nKeys: typeof i18nKeys;
+  addTranslation(localeName: string, translation: { [key: string]: string }): Promise<void>;
 }
+
+export const replaceParams = (phrase: string, params?: string[]) => {
+  if (!params?.length) {
+    return phrase;
+  }
+  let text = phrase;
+  if (Array.isArray(params)) {
+    for (let i = 0; i < params.length; i += 1) {
+      text = text.replace(`{${i}}`, params[i]);
+    }
+  }
+  return text;
+};
 
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
@@ -23,7 +36,7 @@ const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setLocale(newLocale);
   };
 
-  const addTranslation = async (localeName: string, translation: { [key: string]: string }) => {
+  const addTranslation = async (localeName: string, translation: { [key: string]: string }): Promise<void> => {
     // TODO: Do api call to get translations
     const newTranslation = { ...i18nDefault.default, ...translation };
     const updatedTranslations = JSON.parse(JSON.stringify(translations)) as typeof translations;
@@ -34,11 +47,14 @@ const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const getText = (phraseKey: keyof LanguageMappings, params?: string[]) => {
     const values = translations?.[locale] ?? translations.default;
     const phrase = values[phraseKey] ?? translations.default[phraseKey] ?? phraseKey;
-    return phrase;
+    const text = replaceParams(phrase, params);
+    return text;
   };
 
   return (
-    <LocaleContext.Provider value={{ locale, changeLocale, getText, i18nKeys }}>{children}</LocaleContext.Provider>
+    <LocaleContext.Provider value={{ locale, changeLocale, getText, i18nKeys, addTranslation }}>
+      {children}
+    </LocaleContext.Provider>
   );
 };
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { LocaleProvider, useLocale } from "./LocaleContext";
+import { LocaleProvider, replaceParams, useLocale } from "./LocaleContext";
 
 export const TestApp = (): JSX.Element => {
   return (
@@ -41,4 +41,15 @@ test("TestApp shows value when context is updated", () => {
   fireEvent.click(screen.getByText("Spanish"));
   expect(screen.getByText(/^TEST_VALUE:/)).toHaveTextContent("TEST_VALUE: default");
   expect(screen.getByText(/^TEST_LOCALE:/)).toHaveTextContent("TEST_LOCALE: es");
+});
+
+test("replaceParams works for templated phrases", () => {
+  expect(replaceParams("hey")).toBe("hey");
+  expect(replaceParams("hey", ["param0"])).toBe("hey");
+  expect(replaceParams("{0}")).toBe("{0}");
+  expect(replaceParams("{0}", ["param0"])).toBe("param0");
+  expect(replaceParams("{0} and {1}", ["param0"])).toBe("param0 and {1}");
+  expect(replaceParams("{0} and {1}", ["param0", "param1"])).toBe("param0 and param1");
+  expect(replaceParams("{1} and {0}", ["param0", "param1"])).toBe("param1 and param0");
+  expect(replaceParams("{2}, {1} and {0}", ["param0", "param1", "param2"])).toBe("param2, param1 and param0");
 });
