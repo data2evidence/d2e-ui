@@ -1,18 +1,15 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { CohortMgmt } from "../../../../axios/cohort-mgmt";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import { Button, IconButton, Loader, TableCell, TableRow, TablePaginationActions, TrashIcon } from "@portal/components";
-
-import { useFeedback } from "../../../../hooks";
-
-import { CohortMapping } from "../../../../types/cohort";
+import { useFeedback } from "../../../../contexts";
+import { CohortMapping } from "../../../../types";
+import { CohortMgmt } from "../../../../axios/cohort-mgmt";
 import "./CohortDefinitionList.scss";
 
 interface CohortDefinitionListProps {

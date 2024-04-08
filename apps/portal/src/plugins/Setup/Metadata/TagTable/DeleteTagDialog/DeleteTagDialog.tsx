@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useState } from "react";
 import Divider from "@mui/material/Divider";
-import { api } from "../../../../../axios/api";
-import { useFeedback } from "../../../../../hooks";
 import { Box, Button, Dialog } from "@portal/components";
+import { api } from "../../../../../axios/api";
+import { useFeedback } from "../../../../../contexts";
 import { CloseDialogType } from "../../../../../types";
 import "./DeleteTagDialog.scss";
 

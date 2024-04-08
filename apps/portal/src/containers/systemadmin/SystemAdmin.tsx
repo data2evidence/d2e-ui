@@ -2,7 +2,7 @@ import React, { FC, useEffect, useMemo, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Snackbar, ErrorBoundary } from "@portal/components";
 import { Header } from "../../components";
-import { useFeedback } from "../../hooks";
+import { useFeedback } from "../../contexts";
 import { Plugins } from "../../types";
 import { loadPlugins, sortPluginsByType, getPluginChildPath } from "../../utils";
 import { SystemAdminPluginRenderer } from "../../plugins/core/SystemAdminPluginRenderer";

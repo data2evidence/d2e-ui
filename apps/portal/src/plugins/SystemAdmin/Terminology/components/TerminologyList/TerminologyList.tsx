@@ -1,18 +1,14 @@
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableHead from "@mui/material/TableHead";
-import TableContainer from "@mui/material/TableContainer";
+import Checkbox from "@mui/material/Checkbox";
 import TablePagination from "@mui/material/TablePagination";
 import { MaterialReactTable, MRT_ColumnDef, useMaterialReactTable } from "material-react-table";
-import { Loader, TableCell, TablePaginationActions, TableRow, AddIcon, RemoveIcon } from "@portal/components";
-import { useFeedback } from "../../../../../hooks";
-import "./TerminologyList.scss";
+import { TablePaginationActions, AddIcon, RemoveIcon } from "@portal/components";
+import { useFeedback } from "../../../../../contexts";
 import { FilterOptions, TabName, FhirValueSetExpansionContainsWithExt, TerminologyResult } from "../../utils/types";
 import { Terminology } from "../../../../../axios/terminology";
-import SearchBar from "../SearchBar/SearchBar";
 import { tabNames } from "../../utils/constants";
-import { Checkbox } from "@mui/material";
+import SearchBar from "../SearchBar/SearchBar";
+import "./TerminologyList.scss";
 
 interface TerminologyListProps {
   userId?: string;
