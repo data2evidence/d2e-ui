@@ -58,7 +58,7 @@ const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   );
 };
 
-const useLocale = () => {
+const TranslationContext = () => {
   const context = useContext(LocaleContext);
   if (context === undefined) {
     throw new Error("useLocale must be used within a LocaleProvider");
@@ -66,4 +66,4 @@ const useLocale = () => {
   return context;
 };
 
-export { LocaleProvider, useLocale };
+export { LocaleProvider, TranslationContext };

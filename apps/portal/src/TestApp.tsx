@@ -1,17 +1,14 @@
 import React, { FC } from "react";
-import { LocaleProvider, useLocale } from "./contexts/LocaleContext";
+import { LocaleProvider, TranslationContext } from "./contexts/TranslationContext";
 import { api } from "./axios/api";
 
 export const TestApp: FC = () => {
-  return (
-    <LocaleProvider>
-      <LanguageApp />
-    </LocaleProvider>
-  );
+  return <LanguageApp />;
 };
 
+
 const LanguageApp = () => {
-  const { locale, changeLocale, getText, i18nKeys, addTranslation } = useLocale();
+  const { locale, changeLocale, getText, i18nKeys, addTranslation } = TranslationContext();
 
   const onClickLocale = async (locale: string) => {
     const newTranslation = await api.translation.getTranslation(locale);

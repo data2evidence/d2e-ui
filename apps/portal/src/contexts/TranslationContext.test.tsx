@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { LocaleProvider, replaceParams, useLocale } from "./LocaleContext";
+import { LocaleProvider, replaceParams, TranslationContext } from "./TranslationContext";
 
 export const TestApp = (): JSX.Element => {
   return (
@@ -12,7 +12,7 @@ export const TestApp = (): JSX.Element => {
 };
 
 const TestComponent = (): JSX.Element => {
-  const { locale, changeLocale, getText, i18nKeys, addTranslation } = useLocale();
+  const { locale, changeLocale, getText, i18nKeys, addTranslation } = TranslationContext();
 
   const onClickLocale = async (locale: string) => {
     if (locale === "es") {

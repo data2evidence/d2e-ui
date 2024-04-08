@@ -1,5 +1,6 @@
 export const i18nDefault = {
   default: {
+    STUDY_CARD__DATASET_INFORMATION: "Dataset information",
     greeting: "default",
   },
 };
