@@ -2,6 +2,7 @@ import { ComponentType } from "react";
 import { Node, NodeProps } from "reactflow";
 import { NodeDataState } from "../../../types";
 import { RNode } from "./RNode/RNode";
+// import { CohortIncidentNode } from "./CohortIncidentNode/CohortIncidentNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -30,24 +31,24 @@ export const NODE_TYPES: {
 export const NODE_COLORS: {
   [key in NodeType]: string;
 } = {
-  cohort_generator_node: "#999fcb",
-  cohort_diagnostic_node: "#999fcb",
-  negative_control_outcome_cohort_node: "#999fcb",
-  cohort_incidence_node: "#999fcb",
-  cohort_incidence_target_cohorts_node: "#999fcb",
-  time_at_risk_node: "#999fcb",
-  covariate_settings_node: "#999fcb",
-  characterization_node: "#999fcb",
-  target_compartor_outcomes_node: "#999fcb",
-  cohort_method_analysis_node: "#999fc",
-  cohort_method_node: "#999fcb",
-  era_covariate_settings_node: "#999fcb",
-  calendar_time_covariate_settings_node: "#999fcb",
-  seasonality_covariate_settings_node: "#999fcb",
-  self_controlled_case_series_analysis_node: "#999fcb",
-  self_controlled_case_series_node: "#999fcb",
-  patient_level_prediction_node: "#999fcb",
-  study_poplulation_settings_node: "#999fcb",
+  cohort_generator_node: "lightgrey",
+  cohort_diagnostic_node: "grey",
+  negative_control_outcome_cohort_node: "lime",
+  cohort_incidence_node: "cyan",
+  cohort_incidence_target_cohorts_node: "aquamarine",
+  time_at_risk_node: "wheat",
+  covariate_settings_node: "darkgreen",
+  characterization_node: "darkgreen",
+  target_compartor_outcomes_node: "indigo",
+  cohort_method_analysis_node: "lavender",
+  cohort_method_node: "mediumpurple",
+  era_covariate_settings_node: "chocolate",
+  calendar_time_covariate_settings_node: "chocolate",
+  seasonality_covariate_settings_node: "chocolate",
+  self_controlled_case_series_analysis_node: "red",
+  self_controlled_case_series_node: "darkred",
+  patient_level_prediction_node: "magenta",
+  study_poplulation_settings_node: "lightpink",
 };
 
 export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {

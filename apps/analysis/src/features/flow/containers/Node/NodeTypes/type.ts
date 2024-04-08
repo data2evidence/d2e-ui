@@ -70,7 +70,7 @@ export const FOUR_INCIDENCE_NODE = ["self_controlled_case_series_node"];
 export const FIVE_INCIDENCE_NODE = ["target_compartor_outcomes_node"];
 
 export const NODE_CONNECTOR_MAPPING = {
-  cohort_generator_node: { type: "grey", connector_list: [] },
+  cohort_generator_node: { type: "lightgrey", connector_list: [] },
   cohort_diagnostic_node: { type: "grey", connector_list: [] },
   negative_control_outcome_cohort_node: {
     type: "lime",
@@ -81,26 +81,26 @@ export const NODE_CONNECTOR_MAPPING = {
     type: "cyan",
     connector_list: [
       { name: "Target Cohorts", type: "blue" },
-      { name: "Cohort Incident Target Cohorts", type: "cyan" },
-      { name: "Time At Risk", type: "grey" },
+      { name: "Cohort Incident Target Cohorts", type: "aquamarine" },
+      { name: "Time At Risk", type: "wheat" },
     ],
   },
   cohort_incidence_target_cohorts_node: {
-    type: "cyan",
-    connector_list: [{ name: "Outcomes", type: "lime" }],
+    type: "aquamarine",
+    connector_list: [{ name: "Outcomes", type: "green" }],
   },
-  time_at_risk_node: { type: "grey", connector_list: [] },
+  time_at_risk_node: { type: "wheat", connector_list: [] },
   covariate_settings_node: {
-    type: "green",
+    type: "darkgreen",
     connector_list: [
       { name: "Target Cohort", type: "blue" },
-      { name: "Outcomes", type: "lime" },
-      { name: "Time At Risk", type: "grey" },
+      { name: "Outcomes", type: "green" },
+      { name: "Time At Risk", type: "wheat" },
     ],
   },
   characterization_node: {
-    type: "green",
-    connector_list: [{ name: "Covariate Settings", type: "green" }],
+    type: "darkgreen",
+    connector_list: [{ name: "Covariate Settings", type: "darkgreen" }],
   },
   target_compartor_outcomes_node: {
     type: "indigo",
