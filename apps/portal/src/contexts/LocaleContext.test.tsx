@@ -12,12 +12,21 @@ export const TestApp = (): JSX.Element => {
 };
 
 const TestComponent = (): JSX.Element => {
-  const { locale, changeLocale, getText, i18nKeys } = useLocale();
+  const { locale, changeLocale, getText, i18nKeys, addTranslation } = useLocale();
+
+  const onClickLocale = async (locale: string) => {
+    if (locale === "es") {
+      addTranslation(locale, { greeting: "es greeting" });
+    } else if (locale === "fr") {
+      addTranslation(locale, { greeting: "fr greeting" });
+    }
+    changeLocale(locale);
+  };
   return (
     <div>
-      <div onClick={() => changeLocale("en")}>English</div>
-      <div onClick={() => changeLocale("es")}>Spanish</div>
-      <div onClick={() => changeLocale("fr")}>French</div>
+      <div onClick={() => onClickLocale("en")}>English</div>
+      <div onClick={() => onClickLocale("es")}>Spanish</div>
+      <div onClick={() => onClickLocale("fr")}>French</div>
       <div>TEST_VALUE: {getText(i18nKeys.greeting)}</div>
       <div>TEST_LOCALE: {locale}</div>
     </div>
@@ -37,9 +46,9 @@ test("TestApp shows value when context is updated", () => {
   const providerProps = {};
   customRender(<TestApp />, { providerProps });
   fireEvent.click(screen.getByText("French"));
-  expect(screen.getByText(/^TEST_VALUE:/)).toHaveTextContent("TEST_VALUE: default");
+  expect(screen.getByText(/^TEST_VALUE:/)).toHaveTextContent("TEST_VALUE: fr greeting");
   fireEvent.click(screen.getByText("Spanish"));
-  expect(screen.getByText(/^TEST_VALUE:/)).toHaveTextContent("TEST_VALUE: default");
+  expect(screen.getByText(/^TEST_VALUE:/)).toHaveTextContent("TEST_VALUE: es greeting");
   expect(screen.getByText(/^TEST_LOCALE:/)).toHaveTextContent("TEST_LOCALE: es");
 });
 
