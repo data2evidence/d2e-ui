@@ -161,7 +161,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
             selectedConcepts.map((selectedConcept) => selectedConcept.conceptId),
             datasetId
           );
-          setConceptsResult(response);
+          setConceptsResult({ count: response.length, data: response });
         }
       } catch (e) {
         console.error(e);
