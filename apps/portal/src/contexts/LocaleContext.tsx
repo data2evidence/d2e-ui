@@ -6,11 +6,11 @@ type LanguageMappings = {
 };
 
 interface LocaleContextType {
+  i18nKeys: typeof i18nKeys;
   locale: string;
+  addTranslation(localeName: string, translation: { [key: string]: string }): Promise<void>;
   changeLocale: (newLocale: string) => void;
   getText: (phraseKey: keyof LanguageMappings, params?: string[]) => string;
-  i18nKeys: typeof i18nKeys;
-  addTranslation(localeName: string, translation: { [key: string]: string }): Promise<void>;
 }
 
 export const replaceParams = (phrase: string, params?: string[]) => {

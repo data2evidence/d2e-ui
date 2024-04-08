@@ -5,6 +5,7 @@ import { Dataflow } from "./dataflow";
 import { Terminology } from "./terminology";
 import { DbCredentialsMgr } from "./db-credentials-mgr";
 import { Gateway } from "./gateway";
+import { Translation } from "./translation";
 
 export const api = {
   userMgmt: new UserMgmt(),
@@ -14,4 +15,5 @@ export const api = {
   terminology: new Terminology(),
   dbCredentialsMgr: new DbCredentialsMgr(),
   gateway: new Gateway(),
+  translation: new Translation(),
 };
