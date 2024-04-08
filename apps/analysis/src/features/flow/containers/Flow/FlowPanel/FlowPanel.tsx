@@ -25,7 +25,7 @@ import ReactFlow, {
 } from "reactflow";
 import { v4 as uuidv4 } from "uuid";
 import { Box } from "@portal/components";
-import { isCircular, isNested } from "~/utils";
+import { isCircular } from "~/utils";
 import {
   markStatusAsDraft,
   replaceEdges,
@@ -269,9 +269,21 @@ export const FlowPanel: FC<FlowPanelProps> = () => {
         return acc;
       }, {});
 
-      return isDifferentNode && !isCircular(routes, source, target);
+      // HandleId is defined as NODEID_TYPE_CLASSIFIER_COLOR, compare the last portion
+      const getHandleColor = (handleId: string) => {
+        const arr = handleId.split("_");
+        return arr[arr.length - 1];
+      };
+      const sourceHandleType = getHandleColor(connection.sourceHandle);
+      const targetHandleType = getHandleColor(connection.targetHandle);
+
+      const isSameNodeType = sourceHandleType === targetHandleType;
+
+      return (
+        isDifferentNode && !isCircular(routes, source, target) && isSameNodeType
+      );
     },
-    [edges]
+    [edges, nodes]
   );
   return (
     <div ref={reactFlowWrapper} className="flow-panel">

@@ -40,6 +40,7 @@ export type StrategusNodeAttributes = {
 export type NodeConnector = {
   name: string;
   type: string;
+  classifier: string;
 };
 
 export const ZERO_INCIDENCE_NODE = [
@@ -74,53 +75,89 @@ export const NODE_CONNECTOR_MAPPING = {
   cohort_diagnostic_node: { type: "grey", connector_list: [] },
   negative_control_outcome_cohort_node: {
     type: "lime",
-    connector_list: [{ name: "negativeControlOutcomeCohortSet", type: "blue" }],
+    connector_list: [
+      {
+        name: "negativeControlOutcomeCohortSet",
+        type: "blue",
+        classifier: "negative_control_outcome_cohort_set",
+      },
+    ],
   },
   // check if Cohort Incident and Cohort Incident Target Cohort are the same color
   cohort_incidence_node: {
     type: "cyan",
     connector_list: [
-      { name: "Target Cohorts", type: "blue" },
-      { name: "Cohort Incident Target Cohorts", type: "aquamarine" },
-      { name: "Time At Risk", type: "wheat" },
+      { name: "Target Cohorts", type: "blue", classifier: "target_cohort" },
+      {
+        name: "Cohort Incident Target Cohorts",
+        type: "aquamarine",
+        classifier: "cohort_incident_target_cohort",
+      },
+      { name: "Time At Risk", type: "wheat", classifier: "time_at_risk" },
     ],
   },
   cohort_incidence_target_cohorts_node: {
     type: "aquamarine",
-    connector_list: [{ name: "Outcomes", type: "green" }],
+    connector_list: [
+      { name: "Outcomes", type: "green", classifier: "outcomes" },
+    ],
   },
   time_at_risk_node: { type: "wheat", connector_list: [] },
   covariate_settings_node: {
     type: "darkgreen",
     connector_list: [
-      { name: "Target Cohort", type: "blue" },
-      { name: "Outcomes", type: "green" },
-      { name: "Time At Risk", type: "wheat" },
+      { name: "Target Cohort", type: "blue", classifier: "target_cohort" },
+      { name: "Outcomes", type: "green", classifier: "outcomes" },
+      { name: "Time At Risk", type: "wheat", classifier: "time_at_risk" },
     ],
   },
   characterization_node: {
     type: "darkgreen",
-    connector_list: [{ name: "Covariate Settings", type: "darkgreen" }],
+    connector_list: [
+      {
+        name: "Covariate Settings",
+        type: "darkgreen",
+        classifier: "covariate_settings",
+      },
+    ],
   },
   target_compartor_outcomes_node: {
     type: "indigo",
     connector_list: [
-      { name: "Negative Control Outcomes", type: "lime" },
-      { name: "Outcome of Interest", type: "green" },
-      { name: "Target", type: "blue" },
-      { name: "Comparator", type: "blue" },
-      { name: "Exclude", type: "orange" },
+      {
+        name: "Negative Control Outcomes",
+        type: "lime",
+        classifier: "negative_control_outcomes",
+      },
+      {
+        name: "Outcome of Interest",
+        type: "green",
+        classifier: "outcome_of_interest",
+      },
+      { name: "Target", type: "blue", classifier: "target" },
+      { name: "Comparator", type: "blue", classifier: "comparator" },
+      { name: "Exclude", type: "orange", classifier: "exclude" },
     ],
   },
   cohort_method_analysis_node: {
     type: "lavender",
-    connector_list: [{ name: "Study Population", type: "lightpink" }],
+    connector_list: [
+      {
+        name: "Study Population",
+        type: "lightpink",
+        classifier: "study_population",
+      },
+    ],
   },
   cohort_method_node: {
     type: "mediumpurple",
     connector_list: [
-      { name: "Target Comparator Outcomes", type: "indigo" },
-      { name: "CM Analysis", type: "lavender" },
+      {
+        name: "Target Comparator Outcomes",
+        type: "indigo",
+        classifier: "target_comparator_outcomes",
+      },
+      { name: "CM Analysis", type: "lavender", classifier: "cm_analysis" },
     ],
   },
   era_covariate_settings_node: { type: "chocolate", connector_list: [] },
@@ -135,25 +172,49 @@ export const NODE_CONNECTOR_MAPPING = {
   self_controlled_case_series_analysis_node: {
     type: "red",
     connector_list: [
-      { name: "Covariate Settings", type: "chocolate" },
-      { name: "Study Population", type: "lightpink" },
+      {
+        name: "Covariate Settings",
+        type: "chocolate",
+        classifier: "covariate_settings",
+      },
+      {
+        name: "Study Population",
+        type: "lightpink",
+        classifier: "study_population",
+      },
     ],
   },
   self_controlled_case_series_node: {
     type: "darkred",
     connector_list: [
-      { name: "Negative Control Outcomes", type: "lime" },
-      { name: "Outcome of Interest", type: "green" },
-      { name: "Exposures", type: "blue" },
-      { name: "SCCS Analysis", type: "red" },
+      {
+        name: "Negative Control Outcomes",
+        type: "lime",
+        classifier: "negative_control_outcomes",
+      },
+      {
+        name: "Outcome of Interest",
+        type: "green",
+        classifier: "outcome_of_interest",
+      },
+      { name: "Exposures", type: "blue", classifier: "exposures" },
+      { name: "SCCS Analysis", type: "red", classifier: "scss_analysis" },
     ],
   },
   patient_level_prediction_node: {
     type: "magenta",
     connector_list: [
-      { name: "Outcome of Interest", type: "green" },
-      { name: "Exposures", type: "blue" },
-      { name: "Study Population", type: "lightpink" },
+      {
+        name: "Outcome of Interest",
+        type: "green",
+        classifier: "outcome_of_interest",
+      },
+      { name: "Exposures", type: "blue", classifier: "exposures" },
+      {
+        name: "Study Population",
+        type: "lightpink",
+        classifier: "study_population",
+      },
     ],
   },
   study_poplulation_settings_node: { type: "lightpink", connector_list: [] },

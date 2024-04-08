@@ -49,6 +49,8 @@ export const NodeLayout = <T extends NodeDataState>({
   const [sourceConnected, setSourceConnected] = useState<string | null>(null);
   const [targetConnected, setTargetConnected] = useState<string | null>(null);
 
+  const NODE_COLOR = NODE_CONNECTOR_MAPPING[node.type].type;
+
   const getIncidenceNumber = (type: string) => {
     switch (true) {
       case ZERO_INCIDENCE_NODE.includes(type):
@@ -81,12 +83,13 @@ export const NodeLayout = <T extends NodeDataState>({
   return (
     <div className={classes}>
       {NODE_CONNECTOR_MAPPING[node.type].connector_list.map(
-        (c: NodeConnector, index: number) => {
+        (connector: NodeConnector, index: number) => {
           return (
             <CustomHandle
-              name={c.name}
-              color={c.type}
+              name={connector.name}
+              color={connector.type}
               type={"target"}
+              classifier={connector.classifier}
               node={node}
               position={Position.Left}
               style={{
@@ -101,9 +104,9 @@ export const NodeLayout = <T extends NodeDataState>({
       )}
       <Handle
         type="source"
-        id={`${node.id}_out`}
+        id={`${node.id}_source_${NODE_COLOR}`}
         style={{
-          background: NODE_CONNECTOR_MAPPING[node.type].type,
+          background: NODE_COLOR,
           ...OUTBOUND_CONNECTOR_STYLE,
         }}
         position={Position.Right}

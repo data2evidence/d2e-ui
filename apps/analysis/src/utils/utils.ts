@@ -33,24 +33,3 @@ export const isCircular = (routes, source, target): boolean => {
   }
   return isCyclic;
 };
-
-// prevent subflow from connecting to its children
-export const isNested = (nodes, source, target): boolean => {
-  let isNested = false;
-  const node = nodes.find((n) => n.id === source);
-  if (node.parentNode) {
-    isNested = node.parentNode === target;
-  } else {
-    if (node.type === "subflow") {
-      // find all children
-      const children = nodes.filter((n) => n.parentNode === source);
-      for (var child of children) {
-        if (child.id === target) {
-          isNested = true;
-          break;
-        }
-      }
-    }
-  }
-  return isNested;
-};

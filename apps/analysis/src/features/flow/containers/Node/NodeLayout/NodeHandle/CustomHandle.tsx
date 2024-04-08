@@ -1,14 +1,16 @@
 import React from "react";
 import { Connection, Handle, NodeProps, Position } from "reactflow";
 import { IconButton, AddIcon } from "@portal/components";
+import { HandleType } from "reactflow";
 import "./CustomHandle.scss";
 
-export interface CustomHandleProps<T> {
+export interface CustomHandleProps {
   name: string;
   color: string;
-  type: string;
-  node: NodeProps<T>;
-  postion: Position;
+  type: HandleType;
+  classifier: string;
+  node: NodeProps<any>;
+  position: Position;
   style: object;
   onConnect: (connection: Connection) => void;
 }
@@ -16,11 +18,12 @@ export const CustomHandle = ({
   name,
   color,
   type,
+  classifier,
   node,
   position,
   style,
   onConnect,
-}) => {
+}: CustomHandleProps) => {
   return (
     <div
       style={{
@@ -34,7 +37,7 @@ export const CustomHandle = ({
       <Handle
         className="custom-handle"
         type={type}
-        id={`${node.id}_${name}_handle`}
+        id={`${node.id}_target_${classifier}_${color}`}
         position={position}
         style={{
           position: "absolute",
