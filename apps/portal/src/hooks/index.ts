@@ -10,7 +10,6 @@ export * from "./useDbs";
 export * from "./useDialogHelper";
 export * from "./useEnabledFeatures";
 export * from "./useFeatures";
-export * from "./useFeedback";
 export * from "./useGroupCleanUp";
 export * from "./useMenuAnchor";
 export * from "./usePaConfigs";

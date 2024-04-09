@@ -1,8 +1,9 @@
 import React, { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
 import { Box, Button, Checkbox, Loader, TextField, Title } from "@portal/components";
 import { api } from "../../../axios/api";
+import { useHybridSearchConfigs } from "../../../hooks";
+import { useFeedback } from "../../../contexts";
 import "./HybridSearch.scss";
-import { useHybridSearchConfigs, useFeedback } from "../../../hooks";
 
 interface FormData {
   id: number;

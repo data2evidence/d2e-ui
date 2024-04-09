@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from "react";
-import { useFeedback } from "../../../../../hooks";
 import { Table, TableBody, TableHead } from "@mui/material";
-import "./TerminologyDetail.scss";
 import { TableRow, TableCell, Loader } from "@portal/components";
+import { useFeedback } from "../../../../../contexts";
 import { TerminologyDetailsList } from "../../utils/types";
 import { Terminology } from "../../../../../axios/terminology";
+import "./TerminologyDetail.scss";
 
 interface TerminologyDetailProps {
   userId?: string;

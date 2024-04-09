@@ -1,9 +1,9 @@
 import React, { FC, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../../axios/api";
 import { Button, Dialog } from "@portal/components";
+import { api } from "../../../../axios/api";
 import { config } from "../../../../config";
-import { useFeedback } from "../../../../hooks";
+import { useFeedback } from "../../../../contexts";
 import "./DeleteAccountDialog.scss";
 
 interface DeleteAccountDialogProps {

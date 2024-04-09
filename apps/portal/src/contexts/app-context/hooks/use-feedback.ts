@@ -1,8 +1,7 @@
-import { useCallback } from "react";
-import { Feedback } from "../types";
-import { EMPTY_FEEDBACK, feedbackVar } from "../apollo";
-import { useQuery } from "@apollo/client";
-import { GET_FEEDBACK } from "../graphql";
+import { useCallback, useContext } from "react";
+import { Feedback } from "../../../types";
+import { AppContext, AppDispatchContext } from "../..";
+import { ACTION_TYPES } from "../reducer";
 
 export const useFeedback = (): {
   setFeedback: (feedback: Feedback) => void;
@@ -10,19 +9,20 @@ export const useFeedback = (): {
   getFeedback: () => Feedback | undefined;
   setGenericErrorFeedback: () => void;
 } => {
-  const { data } = useQuery<{ feedback: Feedback }>(GET_FEEDBACK);
+  const { feedback } = useContext(AppContext);
+  const dispatch = useContext(AppDispatchContext);
 
   const setFeedback = useCallback((feedback: Feedback) => {
-    feedbackVar({ ...EMPTY_FEEDBACK, ...feedback });
+    dispatch({ type: ACTION_TYPES.SET_FEEDBACK, payload: feedback });
   }, []);
 
   const clearFeedback = useCallback(() => {
-    feedbackVar(EMPTY_FEEDBACK);
+    dispatch({ type: ACTION_TYPES.CLEAR_FEEDBACK });
   }, []);
 
   const getFeedback = useCallback(() => {
-    return data?.feedback;
-  }, [data?.feedback]);
+    return feedback;
+  }, [feedback]);
 
   const setGenericErrorFeedback = useCallback(() => {
     setFeedback({
