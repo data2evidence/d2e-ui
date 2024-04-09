@@ -12,12 +12,9 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
-    "@alp-os/alp-starboard-wrap": "git+ssh://git@github.com/alp-os/alp-starboard-wrap.git#develop",
     "@reduxjs/toolkit": "^1.9.5",
     "dayjs": "^1.11.7",
-    "jsonata": "^2.0.3",
     "monaco-editor": "^0.37.1",
-    "papaparse": "^5.4.1",
     "react-monaco-editor": "^0.52.0",
     "react-redux": "^8.0.5",
     "reactflow": "^11.7.0",
