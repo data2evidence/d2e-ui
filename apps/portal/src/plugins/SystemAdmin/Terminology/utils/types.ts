@@ -64,6 +64,9 @@ export type FilterOptions = {
   concept: {
     [key: string]: number;
   };
+  validity: {
+    [key: string]: number;
+  };
 };
 
 export interface FhirConceptMap {

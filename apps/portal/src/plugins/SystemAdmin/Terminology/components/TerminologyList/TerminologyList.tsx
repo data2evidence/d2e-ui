@@ -70,6 +70,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
     standardConcept: {},
     vocabularyId: {},
     concept: {},
+    validity: {},
   });
   const [allFilterOptions, setAllFilterOptions] = useState<FilterOptions>({
     conceptClassId: {},
@@ -77,6 +78,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
     standardConcept: {},
     vocabularyId: {},
     concept: {},
+    validity: {},
   });
   const [allFilterOptionsZeroed, setAllFilterOptionsZeroed] = useState<FilterOptions>({
     conceptClassId: {},
@@ -84,6 +86,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
     standardConcept: {},
     vocabularyId: {},
     concept: {},
+    validity: {},
   });
   const [columnFilters, setColumnFilters] = useState<{ id: string; value: unknown }[]>([]);
   const { setFeedback } = useFeedback();
@@ -109,6 +112,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
           []) as string[];
         const conceptFilters = (columnFilters.find((filter) => filter.id === "concept")?.value || []) as string[];
         const standardConceptFilters = conceptFilters.map((concept) => (concept === "Standard" ? "S" : "Non-standard"));
+        const validityFilters = (columnFilters.find((filter) => filter.id === "validity")?.value || []) as string[];
         if (
           tab === "SEARCH" &&
           Array.isArray(conceptClassIdFilters) &&
@@ -130,6 +134,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
             vocabularyId: { ...allFilterOptionsZeroed.vocabularyId, ...filterOptions.vocabularyId },
             standardConcept: { ...allFilterOptionsZeroed.standardConcept, ...filterOptions.standardConcept },
             concept: { ...allFilterOptionsZeroed.concept, ...filterOptions.concept },
+            validity: { ...allFilterOptionsZeroed.validity, ...filterOptions.validity },
           };
           setFilterOptions(combinedFilterOptions);
           const fhirResponse = await terminologyAPI.getTerminologies(
@@ -140,7 +145,8 @@ const TerminologyList: FC<TerminologyListProps> = ({
             conceptClassIdFilters,
             domainIdFilters,
             vocabularyIdFilters,
-            standardConceptFilters
+            standardConceptFilters,
+            validityFilters
           );
           const response = {
             count: fhirResponse.expansion.total,
@@ -340,8 +346,11 @@ const TerminologyList: FC<TerminologyListProps> = ({
       {
         accessorKey: "validity",
         header: "Validity",
-        grow: true,
-        size: 80,
+        filterVariant: "multi-select",
+        filterSelectOptions: filterOptions?.validity ? mapFilterOptions(filterOptions.validity) : [],
+        enableColumnFilter: tab === tabNames.SEARCH,
+        grow: false,
+        size: 180,
       },
     ];
 
