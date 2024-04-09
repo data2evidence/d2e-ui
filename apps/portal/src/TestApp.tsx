@@ -7,8 +7,7 @@ export const TestApp: FC = () => {
 
 /*
 TODO
-- get translation json from gateway (no need auth)
-- see how i18n fallback languages work
+- Add simple locale caching (dont do api call if locale available already)
 - translate portal
 - update tests values after using a real default dictionary
 */
