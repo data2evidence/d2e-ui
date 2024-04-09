@@ -7,6 +7,7 @@ import {
   FhirValueSet,
   FilterOptions,
   HybridSearchConfig,
+  Concept,
 } from "../plugins/SystemAdmin/Terminology/utils/types";
 
 const TERMINOLOGY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}terminology`;
@@ -46,8 +47,8 @@ export class Terminology {
     });
   }
 
-  public getRecommendedConcepts(conceptIds: number[], datasetId: string): Promise<any> {
-    return request({
+  public getRecommendedConcepts(conceptIds: number[], datasetId: string) {
+    return request<Concept[]>({
       baseURL: TERMINOLOGY_BASE_URL,
       url: `/concept/recommended/list`,
       method: "POST",
