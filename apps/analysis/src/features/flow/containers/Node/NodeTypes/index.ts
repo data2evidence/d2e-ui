@@ -2,7 +2,6 @@ import { ComponentType } from "react";
 import { Node, NodeProps } from "reactflow";
 import { NodeDataState } from "../../../types";
 import { RNode } from "./RNode/RNode";
-// import { CohortIncidentNode } from "./CohortIncidentNode/CohortIncidentNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
