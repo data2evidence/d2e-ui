@@ -7,8 +7,10 @@ const BASE_URL = isDevMode
   : `${env.REACT_APP_DN_BASE_URL}portal/translations`;
 
 export class Translation {
-  public async getTranslation(locale: string): Promise<any> {
-    return request({
+  public async getTranslation(locale: string) {
+    return request<{
+      [key: string]: string;
+    }>({
       baseURL: BASE_URL,
       url: `/${locale}.json`,
       method: "GET",

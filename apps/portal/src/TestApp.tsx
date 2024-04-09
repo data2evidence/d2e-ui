@@ -1,18 +1,22 @@
 import React, { FC } from "react";
-import { LocaleProvider, TranslationContext } from "./contexts/TranslationContext";
-import { api } from "./axios/api";
+import { TranslationContext } from "./contexts/TranslationContext";
 
 export const TestApp: FC = () => {
   return <LanguageApp />;
 };
 
+/*
+TODO
+- get translation json from gateway (no need auth)
+- see how i18n fallback languages work
+- translate portal
+- update tests values after using a real default dictionary
+*/
 
 const LanguageApp = () => {
-  const { locale, changeLocale, getText, i18nKeys, addTranslation } = TranslationContext();
+  const { changeLocale, getText, i18nKeys } = TranslationContext();
 
   const onClickLocale = async (locale: string) => {
-    const newTranslation = await api.translation.getTranslation(locale);
-    addTranslation(locale, newTranslation);
     changeLocale(locale);
   };
 
@@ -20,7 +24,7 @@ const LanguageApp = () => {
     <div>
       <div onClick={() => onClickLocale("en")}>English</div>
       <div onClick={() => onClickLocale("es")}>Spanish</div>
-      <div onClick={() => onClickLocale("fr")}>French</div>
+      <div onClick={() => onClickLocale("fr-US")}>French</div>
       <div style={{ fontSize: 30 }}>{getText(i18nKeys.greeting)}</div>
     </div>
   );

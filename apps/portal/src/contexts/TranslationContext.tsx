@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 import { i18nDefault, i18nKeys } from "../utils/i18n";
+import { api } from "../axios/api";
 
 type LanguageMappings = {
   [key in keyof typeof i18nKeys]: string;
@@ -26,6 +27,15 @@ export const replaceParams = (phrase: string, params?: string[]) => {
   return text;
 };
 
+export const getFallbackLocale = (locale: string) => {
+  const arr = locale.split("-");
+  if (arr.length === 1) {
+    return "default";
+  }
+  const fallbackLocale = arr.slice(0, arr.length - 1).join("-");
+  return fallbackLocale;
+};
+
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
 const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -33,7 +43,29 @@ const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [translations, setTranslations] = useState<{ [key: string]: typeof i18nDefault.default }>(i18nDefault);
 
   const changeLocale = (newLocale: string) => {
-    setLocale(newLocale);
+    const getTranslation = async (locale: string) => {
+      try {
+        if (locale === "default") {
+          setLocale("default");
+          return;
+        }
+        const newTranslation = await api.translation.getTranslation(locale);
+        addTranslation(locale, newTranslation);
+        setLocale(locale);
+        console.log(`Using translations for "${locale}"`);
+      } catch (e: any) {
+        if (e?.status === 404) {
+          const fallbackLocale = getFallbackLocale(locale);
+          console.log(`Locale "${locale}" not found, trying fallback locale "${fallbackLocale}"`);
+          getTranslation(fallbackLocale);
+          return;
+        } else {
+          setLocale("default");
+          return;
+        }
+      }
+    };
+    getTranslation(newLocale);
   };
 
   const addTranslation = async (localeName: string, translation: { [key: string]: string }): Promise<void> => {
