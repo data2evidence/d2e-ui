@@ -6,6 +6,7 @@ import { StudyInfoTab } from "../../../researcher/Information/Information";
 import { Chip } from "@mui/material";
 import "./StudyCard.scss";
 import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { i18nKeys } from "../../../../utils/i18n";
 
 export interface StudyCardProps {
   study: Study;
@@ -34,7 +35,7 @@ export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
       <div className="study-card__buttons">
         <div className="study-card__button" onClick={() => handleInformationClick(study)}>
           <FileIcon />
-          <p>{getText("STUDY_CARD__DATASET_INFORMATION")}</p>
+          <p>{getText(i18nKeys.STUDY_CARD__DATASET_INFORMATION)}</p>
         </div>
       </div>
     );
@@ -80,7 +81,7 @@ export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
         ) : (
           <div className="study-card__no_summary">
             <div className="study-card__no_summary_text">
-              <div>No dataset summary available</div>
+              <div>{getText(i18nKeys.STUDY_CARD__NO_DATASET_SUMMARY)}</div>
             </div>
             {studyTagsRender}
           </div>
@@ -89,7 +90,9 @@ export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
       </div>
 
       <div className="study-card__metadata">
-        <div className="metadata-study-code">Study code: {study.tokenStudyCode}</div>
+        <div className="metadata-study-code">
+          {getText(i18nKeys.STUDY_CARD__STUDY_CODE)}: {study.tokenStudyCode}
+        </div>
         {studyAttributesRender}
       </div>
     </Card>

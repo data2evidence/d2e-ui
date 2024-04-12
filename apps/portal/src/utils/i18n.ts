@@ -1,6 +1,8 @@
 export const i18nDefault = {
   default: {
     STUDY_CARD__DATASET_INFORMATION: "Dataset information",
+    STUDY_CARD__NO_DATASET_SUMMARY: "No dataset summary available",
+    STUDY_CARD__STUDY_CODE: "Study code",
     greeting: "default",
   },
 };
