@@ -44,33 +44,32 @@ const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [translations, setTranslations] = useState<{ [key: string]: typeof i18nDefault.default }>(i18nDefault);
 
   const changeLocale = (newLocale: string) => {
-    const getTranslation = async (locale: string) => {
+    const getTranslation = async (localeToGet: string) => {
+      if (localeToGet in translations) {
+        console.log(`Using cached version of locale ${localeToGet}`);
+        setLocale(localeToGet);
+        return;
+      }
       try {
-        if (locale === "default") {
-          setLocale("default");
-          return;
-        }
-        const newTranslation = await api.translation.getTranslation(locale);
-        addTranslation(locale, newTranslation.data);
-        setLocale(locale);
-        console.log(`Using translations for "${locale}"`);
+        const newTranslation = await api.translation.getTranslation(localeToGet);
+        addTranslation(localeToGet, newTranslation.data);
+        setLocale(localeToGet);
+        console.log(`Using translations for "${localeToGet}"`);
       } catch (e: any) {
         if (e instanceof AxiosError && e.response?.status === 404) {
-          const fallbackLocale = getFallbackLocale(locale);
-          console.log(`Locale "${locale}" not found, trying fallback locale "${fallbackLocale}"`);
+          const fallbackLocale = getFallbackLocale(localeToGet);
+          console.log(`Locale "${localeToGet}" not found, trying fallback locale "${fallbackLocale}"`);
           getTranslation(fallbackLocale);
           return;
-        } else {
-          setLocale("default");
-          return;
         }
+        setLocale("default");
+        return;
       }
     };
     getTranslation(newLocale);
   };
 
   const addTranslation = async (localeName: string, translation: { [key: string]: string }): Promise<void> => {
-    // TODO: Do api call to get translations
     const newTranslation = { ...i18nDefault.default, ...translation };
     const updatedTranslations = JSON.parse(JSON.stringify(translations)) as typeof translations;
     updatedTranslations[localeName] = newTranslation;
