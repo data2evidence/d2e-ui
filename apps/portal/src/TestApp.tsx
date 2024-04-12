@@ -7,7 +7,6 @@ export const TestApp: FC = () => {
 
 /*
 TODO
-- Add simple locale caching (dont do api call if locale available already)
 - translate portal
 - update tests values after using a real default dictionary
 - dont forget to make PR with gateway routing changes

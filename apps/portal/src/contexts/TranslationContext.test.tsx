@@ -53,14 +53,14 @@ test("TestApp shows value when context is updated", async () => {
 
   await waitFor(() => {
     // @ts-ignore
-    api.translation.getTranslation.mockResolvedValue({ greeting: "fr greeting" }); // Mock the API response
+    api.translation.getTranslation.mockResolvedValue({ data: { greeting: "fr greeting" } }); // Mock the API response
     fireEvent.click(screen.getByText("French"));
     expect(screen.getByText(/^TEST_VALUE:/)).toHaveTextContent("TEST_VALUE: fr greeting");
     expect(screen.getByText(/^TEST_LOCALE:/)).toHaveTextContent("TEST_LOCALE: fr");
   });
   await waitFor(() => {
     // @ts-ignore
-    api.translation.getTranslation.mockResolvedValue({ greeting: "es greeting" }); // Mock the API response
+    api.translation.getTranslation.mockResolvedValue({ data: { greeting: "es greeting" } }); // Mock the API response
     fireEvent.click(screen.getByText("Spanish"));
     expect(screen.getByText(/^TEST_VALUE:/)).toHaveTextContent("TEST_VALUE: es greeting");
     expect(screen.getByText(/^TEST_LOCALE:/)).toHaveTextContent("TEST_LOCALE: es");
