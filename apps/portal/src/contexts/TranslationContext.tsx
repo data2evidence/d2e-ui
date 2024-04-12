@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 import { i18nDefault, i18nKeys } from "../utils/i18n";
 import { api } from "../axios/api";
+import { AxiosError } from "axios";
 
 type LanguageMappings = {
   [key in keyof typeof i18nKeys]: string;
@@ -50,11 +51,11 @@ const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           return;
         }
         const newTranslation = await api.translation.getTranslation(locale);
-        addTranslation(locale, newTranslation);
+        addTranslation(locale, newTranslation.data);
         setLocale(locale);
         console.log(`Using translations for "${locale}"`);
       } catch (e: any) {
-        if (e?.status === 404) {
+        if (e instanceof AxiosError && e.response?.status === 404) {
           const fallbackLocale = getFallbackLocale(locale);
           console.log(`Locale "${locale}" not found, trying fallback locale "${fallbackLocale}"`);
           getTranslation(fallbackLocale);
