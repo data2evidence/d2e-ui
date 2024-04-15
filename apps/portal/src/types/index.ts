@@ -34,7 +34,7 @@ export interface Plugins {
   iframeUrlEnv?: string;
   requiredRoles?: string[];
   featureFlag?: string;
-  menus?: string[];
+  menus?: any[];
 }
 
 export interface PluginDropdown {
