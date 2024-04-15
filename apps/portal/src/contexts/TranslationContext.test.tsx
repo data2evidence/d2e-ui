@@ -23,7 +23,7 @@ const TestComponent = (): JSX.Element => {
       <div onClick={() => onClickLocale("en")}>English</div>
       <div onClick={() => onClickLocale("es")}>Spanish</div>
       <div onClick={() => onClickLocale("fr")}>French</div>
-      <div>TEST_VALUE: {getText(i18nKeys.greeting)}</div>
+      <div>TEST_VALUE: {getText(i18nKeys.TEST_KEY)}</div>
       <div>TEST_LOCALE: {locale}</div>
       <div>TEST</div>
     </div>
