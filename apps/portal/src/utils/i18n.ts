@@ -1,5 +1,6 @@
 export const i18nDefault = {
   default: {
+    TEST_KEY: "default",
     STUDY_CARD__DATASET_INFORMATION: "Dataset information",
     STUDY_CARD__NO_DATASET_SUMMARY: "No dataset summary available",
     STUDY_CARD__STUDY_CODE: "Study code",
@@ -15,7 +16,10 @@ export const i18nDefault = {
     DRILLDOWN_TRELLIS_CHART__TRELLIS_TOP_LABEL: "Age Decile",
     DRILLDOWN_TRELLIS_CHART__TRELLIS_BOTTOM_LABEL: "Years of Observation",
     DRILLDOWN_TRELLIS_CHART__Y_AXIS_PREVALENCE_PER_1000_PEOPLE: "Prevalence per 1000 People",
-    TEST_KEY: "default",
+    TREE_MAP_CHART__PREVALENCE: "Prevalence",
+    TREE_MAP_CHART__NUMBER_OF_PEOPLE: "Number of people",
+    TREE_MAP_CHART__RECORDS_PER_PERSON: "Records per person",
+    TREE_MAP_CHART__CHART_LEGEND: "Box Size: Prevalence, Color: Records per person (Green to Grey = High to Low)",
   },
 };
 
