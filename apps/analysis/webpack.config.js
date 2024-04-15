@@ -10,7 +10,7 @@ module.exports = (env, argv) => {
   const isBuild = env.build
 
   const entryFile = isBuild ? 'module.ts' : 'index.tsx'
-  const externals = isBuild ? ['react','@alp-os/alp-starboard-wrap'] : []
+  const externals = isBuild ? ['react'] : []
 
   return {
     mode: argv.mode,
@@ -20,7 +20,7 @@ module.exports = (env, argv) => {
         key: fs.readFileSync(path.resolve(__dirname, "../../.cert/local_alp_portal_private.key")),
         cert: fs.readFileSync(path.resolve(__dirname, "../../.cert/local_alp_portal_public.crt")),
       },
-      port: 4900,
+      port: 4800,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
@@ -31,12 +31,12 @@ module.exports = (env, argv) => {
       module: path.join(__dirname, 'src', entryFile)
     },
     output: {
-      path: isProduction ? path.resolve(__dirname, '../../resources/flow') : path.resolve(__dirname, 'dist'),
+      path: isProduction ? path.resolve(__dirname, '../../resources/analysis') : path.resolve(__dirname, 'dist'),
       filename: '[name].js',
       libraryTarget: 'umd',
       umdNamedDefine: true,
       globalObject: 'self',
-      publicPath: isProduction ? '/flow/' : 'https://localhost:4900/',
+      publicPath: isProduction ? '/analysis/' : 'https://localhost:4800/',
     },
     externals,
     target: 'web',
