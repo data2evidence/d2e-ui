@@ -4,6 +4,7 @@ export const i18nDefault = {
     STUDY_CARD__NO_DATASET_SUMMARY: "No dataset summary available",
     STUDY_CARD__STUDY_CODE: "Study code",
     BAR_CHART__NO_DATA: "No data",
+    BOX_PLOT_CHART__NO_DATA: "No data",
     TEST_KEY: "default",
   },
 };

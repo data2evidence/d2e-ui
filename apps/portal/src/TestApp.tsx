@@ -24,7 +24,7 @@ const LanguageApp = () => {
       <div onClick={() => onClickLocale("en")}>English</div>
       <div onClick={() => onClickLocale("es")}>Spanish</div>
       <div onClick={() => onClickLocale("fr-US")}>French</div>
-      <div style={{ fontSize: 30 }}>{getText(i18nKeys.greeting)}</div>
+      <div style={{ fontSize: 30 }}>{getText(i18nKeys.TEST_KEY)}</div>
     </div>
   );
 };

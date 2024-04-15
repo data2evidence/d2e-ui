@@ -4,6 +4,7 @@ import ChartContainer from "./ChartContainer";
 import LineChart from "./LineChart";
 
 import "./BarChart.scss";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 interface BarChartProps {
   barChartData: { data: number[]; labels: string[] };
@@ -14,10 +15,11 @@ interface BarChartProps {
 }
 
 const BarChart: FC<BarChartProps> = ({ barChartData, title, xAxisName, yAxisName, tooltipFormat }) => {
+  const { getText, i18nKeys } = TranslationContext();
   if (barChartData.data.length === 0) {
     return (
       <ChartContainer title={title}>
-        <div className="no_data_text">No data</div>
+        <div className="no_data_text">{getText(i18nKeys.BAR_CHART__NO_DATA)}</div>
       </ChartContainer>
     );
   }
