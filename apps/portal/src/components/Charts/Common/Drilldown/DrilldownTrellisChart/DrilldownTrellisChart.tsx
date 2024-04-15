@@ -4,6 +4,7 @@ import TrellisChart from "../../TrellisChart";
 
 import "./DrilldownTrellisChart.scss";
 import { groupBy } from "lodash";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface DrilldownTrellisChartProps {
   data: any;
@@ -11,9 +12,10 @@ interface DrilldownTrellisChartProps {
 }
 
 const DrilldownTrellisChart: FC<DrilldownTrellisChartProps> = ({ data, trellisXAxisKey = "Y_PREVALENCE_1000_PP" }) => {
-  const title = "Prevalence";
-  const trellisTopLabel = "Age Decile";
-  const trellisBottomLabel = "Years of Observation";
+  const { getText, i18nKeys } = TranslationContext();
+  const title = getText(i18nKeys.DRILLDOWN_TRELLIS_CHART__TITLE);
+  const trellisTopLabel = getText(i18nKeys.DRILLDOWN_TRELLIS_CHART__TRELLIS_TOP_LABEL);
+  const trellisBottomLabel = getText(i18nKeys.DRILLDOWN_TRELLIS_CHART__TRELLIS_BOTTOM_LABEL);
 
   const series: any[] = [];
   const grid: any[] = [];
@@ -124,7 +126,7 @@ const DrilldownTrellisChart: FC<DrilldownTrellisChartProps> = ({ data, trellisXA
       },
       // Only show y axis name for leftmost chart in grid
       ...(index === 0 && {
-        name: "Prevalence per 1000 People",
+        name: getText(i18nKeys.DRILLDOWN_TRELLIS_CHART__Y_AXIS_PREVALENCE_PER_1000_PEOPLE),
         nameLocation: "middle",
         nameGap: 50,
         position: "left",
