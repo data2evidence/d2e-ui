@@ -23,6 +23,11 @@ export const i18nDefault = {
     TREE_MAP_CHART_TABLE__NO_DATA: "No data",
     TREE_MAP_CHART_TABLE__LABEL_TREEMAP: "Treemap",
     TREE_MAP_CHART_TABLE__LABEL_TABLE: "Table",
+    TREE_MAP_TABLE__HEADER_CONCEPT_ID: "Concept Id",
+    TREE_MAP_TABLE__HEADER_CONCEPT_PATH: "Name",
+    TREE_MAP_TABLE__HEADER_NUM_PERSONS: "Person Count",
+    TREE_MAP_TABLE__HEADER_PERCENT_PERSONS: "Prevalence",
+    TREE_MAP_TABLE__HEADER_RECORDS_PER_PERSON: "Length of era",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
