@@ -4,22 +4,24 @@ import ChartContainer from "../../ChartContainer";
 import LineChart from "../../LineChart";
 
 import "./DrilldownPrevalenceByMonthChart.scss";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface DrilldownPrevalenceByMonthChartProps {
   data: any;
 }
 
 const DrilldownPrevalenceByMonthChart: FC<DrilldownPrevalenceByMonthChartProps> = ({ data }) => {
-  const title = "Prevalence by Month";
-  const xAxisName = "Date";
-  const yAxisName = "Prevalence per 1000 People";
-  const tooltipFormat = "Date: {b}<br />Prevalence per 1000 People: {c}";
-  const yAxisFormat = "{value}";
+  const { getText, i18nKeys } = TranslationContext();
+  const title = getText(i18nKeys.DRILLDOWN_PREVALENCE_BY_MONTH_CHART__TITLE);
+  const xAxisName = getText(i18nKeys.DRILLDOWN_PREVALENCE_BY_MONTH_CHART__Y_AXIS_NAME);
+  const yAxisName = getText(i18nKeys.DRILLDOWN_PREVALENCE_BY_MONTH_CHART__Y_AXIS_NAME);
+  const tooltipFormat = getText(i18nKeys.DRILLDOWN_PREVALENCE_BY_MONTH_CHART__TOOLTIP_FORMAT);
+  const yAxisFormat = getText(i18nKeys.DRILLDOWN_PREVALENCE_BY_MONTH_CHART__Y_AXIS_NAME);
 
   if (data.length === 0) {
     return (
       <ChartContainer title={title}>
-        <div className="no_data_text">No data</div>
+        <div className="no_data_text">{getText(i18nKeys.DRILLDOWN_PREVALENCE_BY_MONTH_CHART__NO_DATA)}</div>
       </ChartContainer>
     );
   }

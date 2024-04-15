@@ -5,6 +5,12 @@ export const i18nDefault = {
     STUDY_CARD__STUDY_CODE: "Study code",
     BAR_CHART__NO_DATA: "No data",
     BOX_PLOT_CHART__NO_DATA: "No data",
+    DRILLDOWN_PREVALENCE_BY_MONTH_CHART__TITLE: "Prevalence by Month",
+    DRILLDOWN_PREVALENCE_BY_MONTH_CHART__X_AXIS_NAME: "Date",
+    DRILLDOWN_PREVALENCE_BY_MONTH_CHART__Y_AXIS_NAME: "Prevalence per 1000 People",
+    DRILLDOWN_PREVALENCE_BY_MONTH_CHART__TOOLTIP_FORMAT: "Date: {b}<br />Prevalence per 1000 People: {c}",
+    DRILLDOWN_PREVALENCE_BY_MONTH_CHART__Y_AXIS_FORMAT: "{value}",
+    DRILLDOWN_PREVALENCE_BY_MONTH_CHART__NO_DATA: "No data",
     TEST_KEY: "default",
   },
 };
