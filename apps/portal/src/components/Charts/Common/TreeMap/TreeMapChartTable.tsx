@@ -5,6 +5,7 @@ import TreeMapTable from "./TreeMapTable";
 import { Tabs, Tab } from "@mui/material";
 
 import "./TreeMapChartTable.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface TreeMapChartTableProps {
   title: string;
@@ -18,6 +19,7 @@ enum TreeMapChartTab {
 }
 
 const TreeMapChartTable: FC<TreeMapChartTableProps> = ({ title, data, setSelectedConceptId }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [treeMapChartData, setTreeMapChartData] = useState<any[]>([]);
   const [treeMapTableData, setTreeMapTableData] = useState<any[]>([]);
   const [tabValue, setTabValue] = useState(TreeMapChartTab.TreeMap);
@@ -50,7 +52,7 @@ const TreeMapChartTable: FC<TreeMapChartTableProps> = ({ title, data, setSelecte
   if (data.length === 0) {
     return (
       <ChartContainer title={title}>
-        <div className="no_data_text">No data</div>
+        <div className="no_data_text">{getText(i18nKeys.TREE_MAP_CHART_TABLE__NO_DATA)}</div>
       </ChartContainer>
     );
   }
@@ -62,8 +64,8 @@ const TreeMapChartTable: FC<TreeMapChartTableProps> = ({ title, data, setSelecte
   return (
     <ChartContainer title={title}>
       <Tabs value={tabValue} onChange={handleTabSelectionChange}>
-        <Tab label="Treemap"></Tab>
-        <Tab label="Table"></Tab>
+        <Tab label={getText(i18nKeys.TREE_MAP_CHART_TABLE__LABEL_TREEMAP)}></Tab>
+        <Tab label={getText(i18nKeys.TREE_MAP_CHART_TABLE__LABEL_TABLE)}></Tab>
       </Tabs>
       {tabValue === TreeMapChartTab.TreeMap && (
         <TreeMapChart data={treeMapChartData} title={title} setSelectedConceptId={setSelectedConceptId} />

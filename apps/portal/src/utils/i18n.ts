@@ -20,8 +20,13 @@ export const i18nDefault = {
     TREE_MAP_CHART__NUMBER_OF_PEOPLE: "Number of people",
     TREE_MAP_CHART__RECORDS_PER_PERSON: "Records per person",
     TREE_MAP_CHART__CHART_LEGEND: "Box Size: Prevalence, Color: Records per person (Green to Grey = High to Low)",
+    TREE_MAP_CHART_TABLE__NO_DATA: "No data",
+    TREE_MAP_CHART_TABLE__LABEL_TREEMAP: "Treemap",
+    TREE_MAP_CHART_TABLE__LABEL_TABLE: "Table",
   },
 };
+// const { getText, i18nKeys } = TranslationContext();
+// getText(i18nKeys.TREE_MAP_CHART__PREVALENCE)
 
 function getKeyMap<T extends object>(obj: T) {
   const result = {} as Record<keyof T, keyof T>;
