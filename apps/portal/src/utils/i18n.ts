@@ -28,6 +28,13 @@ export const i18nDefault = {
     TREE_MAP_TABLE__HEADER_NUM_PERSONS: "Person Count",
     TREE_MAP_TABLE__HEADER_PERCENT_PERSONS: "Prevalence",
     TREE_MAP_TABLE__HEADER_RECORDS_PER_PERSON: "Length of era",
+    DASHBOARD__ERROR_MESSAGE: "Error occurred when fetching data characterization dashboard data",
+    DASHBOARD__PIECHART_TITLE: "Gender",
+    DASHBOARD__BARCHART_TITLE: "Age at First Observation",
+    DASHBOARD__BARCHART_X_AXIS_NAME: "Age",
+    DASHBOARD__BARCHART_Y_AXIS_NAME: "People",
+    DASHBOARD__BARCHART_TOOLTIP_FORMAT: "Age: {b}<br />Number of People: {c}",
+    DASHBOARD__LOADER: "Loading Dashboard Reports",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();

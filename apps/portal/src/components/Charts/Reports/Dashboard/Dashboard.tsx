@@ -14,12 +14,14 @@ import { parsePieChartData, parseBarChartData } from "../../util";
 
 import { DASHBOARD_REPORT_TYPE, WEBAPI_CDMRESULTS_SOURCE_KEYS } from "../../../DQD/types";
 import "./Dashboard.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface DashboardProps {
   flowRunId: string;
 }
 
 const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [dashboardData, setDashboardData] = useState<DASHBOARD_REPORT_TYPE>({
     population: [],
     gender: [],
@@ -43,7 +45,7 @@ const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
     } catch (error) {
       console.error(error);
       setIsLoadingDashboardData(false);
-      setErrDashboard(`Error occured when fetching data characterization dashboard data`);
+      setErrDashboard(getText(i18nKeys.TREE_MAP_CHART__PREVALENCE));
     }
   }, [flowRunId]);
 
@@ -55,21 +57,21 @@ const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
   return (
     <>
       {isloadingDashboardData ? (
-        <Loader text="Loading Dashboard Reports" />
+        <Loader text={getText(i18nKeys.DASHBOARD__LOADER)} />
       ) : errDashboard ? (
         <div className="info__section">{errDashboard}</div>
       ) : (
         <>
           <div className="summary__container">
             <CDMSummary data={dashboardData.population}></CDMSummary>
-            <PieChart data={parsePieChartData(dashboardData.gender)} title="Gender" />
+            <PieChart data={parsePieChartData(dashboardData.gender)} title={getText(i18nKeys.DASHBOARD__LOADER)} />
           </div>
           <BarChart
             barChartData={parseBarChartData(dashboardData.ageAtFirst)}
-            title="Age at First Observation"
-            xAxisName="Age"
-            yAxisName="People"
-            tooltipFormat="Age: {b}<br />Number of People: {c}"
+            title={getText(i18nKeys.DASHBOARD__BARCHART_TITLE)}
+            xAxisName={getText(i18nKeys.DASHBOARD__BARCHART_X_AXIS_NAME)}
+            yAxisName={getText(i18nKeys.DASHBOARD__BARCHART_Y_AXIS_NAME)}
+            tooltipFormat={getText(i18nKeys.DASHBOARD__BARCHART_TOOLTIP_FORMAT)}
           />
           <ObservationPeriodCumulativeDurationChart data={dashboardData.cumulativeDuration} />
           <ObservationPeriodObservedByMonthChart data={dashboardData.observedByMonth} />
