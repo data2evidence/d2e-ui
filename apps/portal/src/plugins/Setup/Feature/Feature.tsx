@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
 import { Box, Button, Checkbox, Loader, Title } from "@portal/components";
-import { useFeatures, useFeedback } from "../../../hooks";
+import { useFeatures } from "../../../hooks";
+import { useFeedback } from "../../../contexts";
 import { api } from "../../../axios/api";
 import { IFeature } from "../../../types";
 import "./Feature.scss";

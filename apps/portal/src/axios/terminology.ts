@@ -7,6 +7,7 @@ import {
   FhirValueSet,
   FilterOptions,
   HybridSearchConfig,
+  Concept,
 } from "../plugins/SystemAdmin/Terminology/utils/types";
 
 const TERMINOLOGY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}terminology`;
@@ -20,7 +21,8 @@ export class Terminology {
     conceptClassId: string[],
     domainId: string[],
     vocabularyId: string[],
-    standardConcept: string[]
+    standardConcept: string[],
+    validity: string[]
   ): Promise<FhirValueSet> {
     const offset = page * rowsPerPage;
 
@@ -29,7 +31,7 @@ export class Terminology {
     params.append("offset", String(offset));
     params.append("count", String(rowsPerPage));
     params.append("code", String(searchText));
-    params.append("filter", JSON.stringify({ conceptClassId, domainId, vocabularyId, standardConcept }));
+    params.append("filter", JSON.stringify({ conceptClassId, domainId, vocabularyId, standardConcept, validity }));
 
     return request({
       baseURL: TERMINOLOGY_BASE_URL,
@@ -46,8 +48,8 @@ export class Terminology {
     });
   }
 
-  public getRecommendedConcepts(conceptIds: number[], datasetId: string): Promise<any> {
-    return request({
+  public getRecommendedConcepts(conceptIds: number[], datasetId: string) {
+    return request<Concept[]>({
       baseURL: TERMINOLOGY_BASE_URL,
       url: `/concept/recommended/list`,
       method: "POST",

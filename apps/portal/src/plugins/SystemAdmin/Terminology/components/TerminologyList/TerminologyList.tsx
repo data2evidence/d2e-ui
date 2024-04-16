@@ -1,18 +1,14 @@
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableHead from "@mui/material/TableHead";
-import TableContainer from "@mui/material/TableContainer";
+import Checkbox from "@mui/material/Checkbox";
 import TablePagination from "@mui/material/TablePagination";
 import { MaterialReactTable, MRT_ColumnDef, useMaterialReactTable } from "material-react-table";
-import { Loader, TableCell, TablePaginationActions, TableRow, AddIcon, RemoveIcon } from "@portal/components";
-import { useFeedback } from "../../../../../hooks";
-import "./TerminologyList.scss";
+import { TablePaginationActions, AddIcon, RemoveIcon } from "@portal/components";
+import { useFeedback } from "../../../../../contexts";
 import { FilterOptions, TabName, FhirValueSetExpansionContainsWithExt, TerminologyResult } from "../../utils/types";
 import { Terminology } from "../../../../../axios/terminology";
-import SearchBar from "../SearchBar/SearchBar";
 import { tabNames } from "../../utils/constants";
-import { Checkbox } from "@mui/material";
+import SearchBar from "../SearchBar/SearchBar";
+import "./TerminologyList.scss";
 
 interface TerminologyListProps {
   userId?: string;
@@ -74,6 +70,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
     standardConcept: {},
     vocabularyId: {},
     concept: {},
+    validity: {},
   });
   const [allFilterOptions, setAllFilterOptions] = useState<FilterOptions>({
     conceptClassId: {},
@@ -81,6 +78,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
     standardConcept: {},
     vocabularyId: {},
     concept: {},
+    validity: {},
   });
   const [allFilterOptionsZeroed, setAllFilterOptionsZeroed] = useState<FilterOptions>({
     conceptClassId: {},
@@ -88,6 +86,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
     standardConcept: {},
     vocabularyId: {},
     concept: {},
+    validity: {},
   });
   const [columnFilters, setColumnFilters] = useState<{ id: string; value: unknown }[]>([]);
   const { setFeedback } = useFeedback();
@@ -113,6 +112,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
           []) as string[];
         const conceptFilters = (columnFilters.find((filter) => filter.id === "concept")?.value || []) as string[];
         const standardConceptFilters = conceptFilters.map((concept) => (concept === "Standard" ? "S" : "Non-standard"));
+        const validityFilters = (columnFilters.find((filter) => filter.id === "validity")?.value || []) as string[];
         if (
           tab === "SEARCH" &&
           Array.isArray(conceptClassIdFilters) &&
@@ -134,6 +134,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
             vocabularyId: { ...allFilterOptionsZeroed.vocabularyId, ...filterOptions.vocabularyId },
             standardConcept: { ...allFilterOptionsZeroed.standardConcept, ...filterOptions.standardConcept },
             concept: { ...allFilterOptionsZeroed.concept, ...filterOptions.concept },
+            validity: { ...allFilterOptionsZeroed.validity, ...filterOptions.validity },
           };
           setFilterOptions(combinedFilterOptions);
           const fhirResponse = await terminologyAPI.getTerminologies(
@@ -144,7 +145,8 @@ const TerminologyList: FC<TerminologyListProps> = ({
             conceptClassIdFilters,
             domainIdFilters,
             vocabularyIdFilters,
-            standardConceptFilters
+            standardConceptFilters,
+            validityFilters
           );
           const response = {
             count: fhirResponse.expansion.total,
@@ -161,7 +163,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
             selectedConcepts.map((selectedConcept) => selectedConcept.conceptId),
             datasetId
           );
-          setConceptsResult(response);
+          setConceptsResult({ count: response.length, data: response });
         }
       } catch (e) {
         console.error(e);
@@ -344,8 +346,11 @@ const TerminologyList: FC<TerminologyListProps> = ({
       {
         accessorKey: "validity",
         header: "Validity",
-        grow: true,
-        size: 80,
+        filterVariant: "multi-select",
+        filterSelectOptions: filterOptions?.validity ? mapFilterOptions(filterOptions.validity) : [],
+        enableColumnFilter: tab === tabNames.SEARCH,
+        grow: false,
+        size: 180,
       },
     ];
 

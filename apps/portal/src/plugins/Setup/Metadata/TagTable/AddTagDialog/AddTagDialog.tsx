@@ -2,7 +2,7 @@ import React, { FC, useCallback, useState } from "react";
 import Divider from "@mui/material/Divider";
 import { Box, Button, Dialog, TextField } from "@portal/components";
 import { api } from "../../../../../axios/api";
-import { useFeedback } from "../../../../../hooks";
+import { useFeedback } from "../../../../../contexts";
 import { CloseDialogType } from "../../../../../types";
 import "./AddTagDialog.scss";
 

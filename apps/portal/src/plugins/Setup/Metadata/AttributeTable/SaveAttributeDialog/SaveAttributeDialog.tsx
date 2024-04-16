@@ -2,9 +2,9 @@ import React, { ChangeEvent, FC, useCallback, useEffect, useState } from "react"
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
-import { api } from "../../../../../axios/api";
-import { useFeedback } from "../../../../../hooks";
 import { FormControl, InputLabel, Box, Button, Checkbox, Dialog, TextField } from "@portal/components";
+import { api } from "../../../../../axios/api";
+import { useFeedback } from "../../../../../contexts";
 import { CloseDialogType, DatasetAttributeConfig } from "../../../../../types";
 import "./SaveAttributeDialog.scss";
 
