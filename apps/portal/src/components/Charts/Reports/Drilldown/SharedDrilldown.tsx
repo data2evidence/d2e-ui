@@ -89,17 +89,17 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
           {drilldownData.ageAtFirstOccurrence && (
             <BoxPlotChart
               data={drilldownData.ageAtFirstOccurrence}
-              title={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_TITLE_1)}
-              xAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_X_AXIS_NAME_1)}
-              yAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_Y_AXIS_NAME_1)}
+              title={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_1_TITLE)}
+              xAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_1_X_AXIS_NAME)}
+              yAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_1_Y_AXIS_NAME)}
             />
           )}
           {drilldownData.lengthOfEra && (
             <BoxPlotChart
               data={drilldownData.lengthOfEra}
-              title={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_TITLE_2)}
-              xAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_X_AXIS_NAME_2)}
-              yAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_Y_AXIS_NAME_2)}
+              title={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_2_TITLE)}
+              xAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_2_X_AXIS_NAME)}
+              yAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_2_Y_AXIS_NAME)}
             />
           )}
         </div>
@@ -107,19 +107,19 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
         <div className="chart__container">
           {drilldownData.byValueAsConcept && (
             <PieChart
-              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_TITLE_1)}
+              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_1_TITLE)}
               data={parseDrilldownPieChartData(drilldownData.byValueAsConcept)}
             />
           )}
           {drilldownData.byOperator && (
             <PieChart
-              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_TITLE_2)}
+              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_2_TITLE)}
               data={parseDrilldownPieChartData(drilldownData.byOperator)}
             />
           )}
           {drilldownData.byQualifier && (
             <PieChart
-              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_TITLE_3)}
+              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_3_TITLE)}
               data={parseDrilldownPieChartData(drilldownData.byQualifier)}
             />
           )}
@@ -128,7 +128,7 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
         <div className="chart__container">
           {drilldownData.measurementValueDistribution && (
             <PieChart
-              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_TITLE_4)}
+              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_4_TITLE)}
               data={parseDrilldownPieChartData(drilldownData.measurementValueDistribution)}
             />
           )}
