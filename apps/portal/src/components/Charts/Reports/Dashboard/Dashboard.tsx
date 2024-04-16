@@ -68,10 +68,10 @@ const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
           </div>
           <BarChart
             barChartData={parseBarChartData(dashboardData.ageAtFirst)}
-            title={getText(i18nKeys.DASHBOARD__BARCHART_TITLE)}
-            xAxisName={getText(i18nKeys.DASHBOARD__BARCHART_X_AXIS_NAME)}
-            yAxisName={getText(i18nKeys.DASHBOARD__BARCHART_Y_AXIS_NAME)}
-            tooltipFormat={getText(i18nKeys.DASHBOARD__BARCHART_TOOLTIP_FORMAT)}
+            title={getText(i18nKeys.DASHBOARD__BAR_CHART_TITLE)}
+            xAxisName={getText(i18nKeys.DASHBOARD__BAR_CHART_X_AXIS_NAME)}
+            yAxisName={getText(i18nKeys.DASHBOARD__BAR_CHART_Y_AXIS_NAME)}
+            tooltipFormat={getText(i18nKeys.DASHBOARD__BAR_CHART_TOOLTIP_FORMAT)}
           />
           <ObservationPeriodCumulativeDurationChart data={dashboardData.cumulativeDuration} />
           <ObservationPeriodObservedByMonthChart data={dashboardData.observedByMonth} />
