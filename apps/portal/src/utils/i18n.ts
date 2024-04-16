@@ -35,6 +35,11 @@ export const i18nDefault = {
     DASHBOARD__BARCHART_Y_AXIS_NAME: "People",
     DASHBOARD__BARCHART_TOOLTIP_FORMAT: "Age: {b}<br />Number of People: {c}",
     DASHBOARD__LOADER: "Loading Dashboard Reports",
+    DATA_DENSITY__ERROR_MESSAGE: "Error occurred when fetching data characterization data density data",
+    DATA_DENSITY__LOADER: "Loading Data Density Reports",
+    DATA_DENSITY__BOX_PLOT_TITLE: "Concepts Per Person",
+    DATA_DENSITY__BOX_PLOT_X_AXIS_NAME: "Concept Type",
+    DATA_DENSITY__BOX_PLOT_Y_AXIS_NAME: "Concepts Per Person",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();

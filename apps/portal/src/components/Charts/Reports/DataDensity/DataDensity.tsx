@@ -10,12 +10,14 @@ import DataDensityTotalRecordsChart from "../../SourceKeys/DataDensity/DataDensi
 
 import { DATA_DENSITY_REPORT_TYPE, WEBAPI_CDMRESULTS_SOURCE_KEYS } from "../../../DQD/types";
 import "./DataDensity.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface DataDensityProps {
   flowRunId: string;
 }
 
 const DataDensity: FC<DataDensityProps> = ({ flowRunId }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [dataDensityData, setDataDensityData] = useState<DATA_DENSITY_REPORT_TYPE>({
     totalRecords: [],
     recordsPerPerson: [],
@@ -37,7 +39,7 @@ const DataDensity: FC<DataDensityProps> = ({ flowRunId }) => {
     } catch (error) {
       console.error(error);
       setIsLoadingDataDensityData(false);
-      setErrDataDensity(`Error occured when fetching data characterization data density data`);
+      setErrDataDensity(getText(i18nKeys.DATA_DENSITY__ERROR_MESSAGE));
     }
   }, [flowRunId]);
 
@@ -49,7 +51,7 @@ const DataDensity: FC<DataDensityProps> = ({ flowRunId }) => {
   return (
     <>
       {isloadingDataDensityData ? (
-        <Loader text="Loading Data Density Reports" />
+        <Loader text={getText(i18nKeys.DATA_DENSITY__LOADER)} />
       ) : errDataDensity ? (
         <div className="info__section">{errDataDensity}</div>
       ) : (
@@ -58,9 +60,9 @@ const DataDensity: FC<DataDensityProps> = ({ flowRunId }) => {
           <DataDensityRecordsPerPersonChart data={dataDensityData.recordsPerPerson} />
           <BoxPlotChart
             data={dataDensityData.conceptsPerPerson}
-            title={"Concepts Per Person"}
-            xAxisName={"Concept Type"}
-            yAxisName={"Concepts Per Person"}
+            title={getText(i18nKeys.DATA_DENSITY__BOX_PLOT_TITLE)}
+            xAxisName={getText(i18nKeys.DATA_DENSITY__BOX_PLOT_X_AXIS_NAME)}
+            yAxisName={getText(i18nKeys.DATA_DENSITY__BOX_PLOT_Y_AXIS_NAME)}
           />
         </>
       )}
