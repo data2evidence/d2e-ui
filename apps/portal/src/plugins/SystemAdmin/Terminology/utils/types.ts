@@ -1,5 +1,19 @@
 import { tabNames } from "./constants";
 
+export interface Concept {
+  conceptId: number;
+  display: string;
+  domainId: string;
+  system: string;
+  conceptClassId: string;
+  standardConcept: string;
+  concept: string;
+  code: string;
+  validStartDate: string;
+  validEndDate: string;
+  validity: string;
+}
+
 export interface TerminologyDetailsList {
   details: FhirValueSetExpansionContainsWithExt;
   connections: FhirConceptMapElementTarget[];
@@ -48,6 +62,9 @@ export type FilterOptions = {
     [key: string]: number;
   };
   concept: {
+    [key: string]: number;
+  };
+  validity: {
     [key: string]: number;
   };
 };
@@ -117,7 +134,7 @@ export interface FhirValueSetExpansion {
   contains: FhirValueSetExpansionContainsWithExt[];
 }
 
-export interface FhirValueSetExpansionContainsWithExt {
+export interface FhirValueSetExpansionContainsWithExt extends Concept {
   id?: string;
   extension?: string;
   abstract?: string;
@@ -125,17 +142,6 @@ export interface FhirValueSetExpansionContainsWithExt {
   version?: string;
   designation?: string;
   contains?: FhirValueSetExpansionContainsWithExt[];
-  code: string;
-  display: string;
-  system: string;
-  conceptId: number;
-  domainId: string;
-  conceptClassId: string;
-  standardConcept: string;
-  concept: string;
-  validStartDate: string;
-  validEndDate: string;
-  validity: string;
   useDescendants?: boolean;
   useMapped?: boolean;
 }

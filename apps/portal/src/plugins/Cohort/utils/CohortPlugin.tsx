@@ -3,8 +3,8 @@ import { CohortMgmt } from "../../../axios/cohort-mgmt";
 import CohortDefinitionList from "../components/CohortDefinitionList/CohortDefinitionList";
 import CohortDeleteDialog from "../components/CohortDeleteDialog/CohortDeleteDialog";
 import DataQualityDialog from "../components/DataQualityDialog/DataQualityDialog";
-import { useDialogHelper, useFeedback } from "../../../hooks";
-
+import { useDialogHelper } from "../../../hooks";
+import { useFeedback } from "../../../contexts";
 import { CohortMapping } from "../../../types/cohort";
 import "./CohortPlugin.scss";
 
