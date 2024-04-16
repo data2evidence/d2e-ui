@@ -198,8 +198,14 @@ export default {
     isNonInteractiveMode() {
       return this.getMriFrontendConfig.isNonInteractiveMode()
     },
+    
     hasChanges() {
-      return this.getActiveBookmark.isNew || this.getCurrentBookmarkHasChanges
+      const userId = getPortalAPI().userId
+      if (this.getActiveBookmark.shared && userId !== this.getActiveBookmark.user_id) {        
+        return false
+      } else {
+        return this.getActiveBookmark.isNew || this.getCurrentBookmarkHasChanges
+      }
     },
     shareBookmark: {
       get() {

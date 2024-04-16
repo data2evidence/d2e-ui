@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOidcIdToken } from "@axa-fr/react-oidc";
 import { EMPTY_USER_GROUP, useMsalInfo, UserClaims, useUserGroups } from "../../../contexts/UserContext";

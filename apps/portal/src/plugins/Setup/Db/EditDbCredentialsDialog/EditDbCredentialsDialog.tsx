@@ -14,7 +14,7 @@ import {
   USER_SCOPE_TYPES,
 } from "../../../../types";
 import { api } from "../../../../axios/api";
-import "./EditDbCredentialDialog.scss";
+import "./EditDbCredentialsDialog.scss";
 import { DbCredentialProcessor } from "../CredentialProcessor";
 import { validateCredentials } from "../CredentialValidator";
 
@@ -56,7 +56,7 @@ const EMPTY_FORM_DATA: FormData = {
   credentials: EMPTY_CREDENTIALS,
 };
 
-export const EditDbCredentialDialog: FC<EditDbCredentialDialogProps> = ({ open, onClose, db }) => {
+export const EditDbCredentialsDialog: FC<EditDbCredentialDialogProps> = ({ open, onClose, db }) => {
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
