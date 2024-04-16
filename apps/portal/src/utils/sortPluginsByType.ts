@@ -10,26 +10,14 @@ export const sortPluginsByType = (plugins: Plugins[]): Plugins[] => {
         return;
       }
       if (!typeSet.has(item.type)) {
-        let newPlugin;
-        if (item.menus) {
-          newPlugin = {
-            name: item.name,
-            iconUrl: item.iconUrl,
-            iconSize: item.iconSize,
-            route: item.route,
-            pluginPath: item.pluginPath,
-            children: [...item.menus],
-          };
-        } else {
-          newPlugin = {
-            name: item.type,
-            iconUrl: item.iconUrl,
-            iconSize: item.iconSize,
-            route: item.route,
-            pluginPath: item.pluginPath,
-            children: [item],
-          };
-        }
+        const newPlugin = {
+          name: item.type,
+          iconUrl: item.iconUrl,
+          iconSize: item.iconSize,
+          route: "",
+          pluginPath: "",
+          children: [item],
+        };
         typeSet.add(item.type);
         sortedPlugins.push(newPlugin);
       } else {
