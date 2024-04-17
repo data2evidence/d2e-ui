@@ -15,5 +15,6 @@ export default function formatBookmarkDisplay(element, bookmarkObj) {
     filterCardData: boolContainers,
     chartType: bookmarkObj.chartType,
     axisInfo: bookmarkObj.chartType === 'list' ? bookmarkObj.filter.selected_attributes : bookmarkObj.axisSelection,
+    shared: element.shared,
   }
 }
