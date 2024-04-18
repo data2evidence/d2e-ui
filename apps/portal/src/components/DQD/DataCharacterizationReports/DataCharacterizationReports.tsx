@@ -14,6 +14,7 @@ import SharedDrilldown from "../../Charts/Reports/Drilldown/SharedDrilldown";
 
 import { WEBAPI_CDMRESULTS_SOURCE_KEYS } from "../types";
 import "./DataCharacterizationReports.scss";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 interface DataCharacterizationReportsProps {
   flowRunId: string;
@@ -37,6 +38,7 @@ enum READABLE_MENU_ITEMS {
 }
 
 const DataCharacterizationReports: FC<DataCharacterizationReportsProps> = ({ flowRunId }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [selectedReport, setSelectedReport] = useState(WEBAPI_CDMRESULTS_SOURCE_KEYS.DASHBOARD as string);
 
   const handleMenuSelect = (selection: string) => {
@@ -128,12 +130,14 @@ const DataCharacterizationReports: FC<DataCharacterizationReportsProps> = ({ flo
   return (
     <>
       <FormControl className="report-selector-form" fullWidth>
-        <InputLabel id="report-selector-label">Select Data Characterization Report</InputLabel>
+        <InputLabel id="report-selector-label">
+          {getText(i18nKeys.DATA_CHARACTERIZATION_REPORTS__REPORT_SELECTOR_LABEL)}
+        </InputLabel>
         <Select
           labelId="report-selector-label"
           id="report-selector"
           value={selectedReport}
-          label="Select Data Characterization Report"
+          label={getText(i18nKeys.DATA_CHARACTERIZATION_REPORTS__REPORT_SELECTOR_LABEL)}
           onChange={(e) => {
             handleMenuSelect(e.target.value);
           }}

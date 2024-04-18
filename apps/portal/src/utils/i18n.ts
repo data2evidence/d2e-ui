@@ -187,6 +187,7 @@ export const i18nDefault = {
     DQD_TABLE__RENDER_DETAIL_PANE_IS_ERROR: "Is Error",
     DQD_TABLE__RENDER_DETAIL_PANE_ERROR_MESSAGE: "Error Message",
     DQD_TABLE__RENDER_DETAIL_PANE_SQL_QUERY: "SQL query",
+    DATA_CHARACTERIZATION_REPORTS__REPORT_SELECTOR_LABEL: "Select Data Characterization Report",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
