@@ -4,20 +4,22 @@ import ChartContainer from "../../../Common/ChartContainer";
 import LineChart from "../../../Common/LineChart";
 
 import "./DataDensityTotalRecordsChart.scss";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface DataDensityTotalRecordsChartProps {
   data: any;
 }
 
 const DataDensityTotalRecordsChart: FC<DataDensityTotalRecordsChartProps> = ({ data }) => {
-  const title = "Total Rows";
-  const xAxisName = "Year";
-  const yAxisName = "# of Records";
+  const { getText, i18nKeys } = TranslationContext();
+  const title = getText(i18nKeys.DATA_DENSITY_TOTAL_RECORDS_CHART__TITLE);
+  const xAxisName = getText(i18nKeys.DATA_DENSITY_TOTAL_RECORDS_CHART__X_AXIS_NAME);
+  const yAxisName = getText(i18nKeys.DATA_DENSITY_TOTAL_RECORDS_CHART__Y_AXIS_NAME);
 
   if (data.length === 0) {
     return (
       <ChartContainer title={title}>
-        <div className="no_data_text">No data</div>
+        <div className="no_data_text">{getText(i18nKeys.DATA_DENSITY_TOTAL_RECORDS_CHART__NO_DATA)}</div>
       </ChartContainer>
     );
   }
