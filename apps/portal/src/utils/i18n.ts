@@ -123,6 +123,10 @@ export const i18nDefault = {
     DOMAIN_CONTINUITY_CHART__X_AXIS_NAME: "CDM Release Date",
     DOMAIN_CONTINUITY_CHART__Y_AXIS_NAME: "No. of records",
     DOMAIN_CONTINUITY_CHART__NO_DATA: "No data",
+    HISTORICAL_DATA_QUALITY_CHART__TITLE: "Historical data quality",
+    HISTORICAL_DATA_QUALITY_CHART__X_AXIS_NAME: "CDM Release Date",
+    HISTORICAL_DATA_QUALITY_CHART__Y_AXIS_NAME: "Checks Failed",
+    HISTORICAL_DATA_QUALITY_CHART__NO_DATA: "No data",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
