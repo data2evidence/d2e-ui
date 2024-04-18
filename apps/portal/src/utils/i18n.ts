@@ -108,6 +108,7 @@ export const i18nDefault = {
     DQD_JOB_RESULTS__ERROR_DQD_OVERVIEW: "Error loading DQD Overview: {0}",
     DQD_JOB_RESULTS__LOADER_5: "Loading DQD Results",
     DQD_JOB_RESULTS__ERROR_DQD_RESULTS: "Error loading DQD Results: {0}",
+    CDM_SUMMARY__NO_DATA: "No data",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
