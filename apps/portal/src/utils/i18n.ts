@@ -201,6 +201,10 @@ export const i18nDefault = {
     OVERVIEW_TABLE__NOTE_1: "{0} out of {1} passed checks are Not Applicable, due to empty tables or fields.",
     OVERVIEW_TABLE__NOTE_2: "{0} out of {1} failed checks are SQL errors.",
     OVERVIEW_TABLE__NOTE_3: "Corrected pass percentage for NA and Errors: {0} ({1}/{2}).",
+    ACCOUNT_TAB__MENU_ITEMS_LEGAL: "Legal",
+    ACCOUNT_TAB__MENU_ITEMS_CHANGE_PASSWORD: "Change password",
+    ACCOUNT_TAB__MENU_ITEMS_LOGOUT: "Logout",
+    ACCOUNT_TAB__LINK: "Account",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
