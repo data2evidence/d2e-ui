@@ -3,38 +3,44 @@ import { SubTitle, Loader } from "@portal/components";
 import DQDTable from "../DQDTable/DQDTable";
 import OverviewTable from "../Overview/OverviewTable/OverviewTable";
 import { useDataQualityOverviewFromId, useDataQualityResultsFromId } from "../../../hooks";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 interface DQDCombinedResultsProps {
   flowRunId: string;
 }
 
 const DQDCombinedResults: FC<DQDCombinedResultsProps> = ({ flowRunId }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [dqdOverview, loadingDqdOverview, errorDqdOverview] = useDataQualityOverviewFromId(flowRunId);
   const [dqdResults, loadingDqdResults, errorDqdResults] = useDataQualityResultsFromId(flowRunId);
   return (
     <>
       {/* DQD Overview table */}
       {loadingDqdOverview ? (
-        <Loader text="Loading DQD Overview" />
+        <Loader text={getText(i18nKeys.DQD_COMBINED_RESULTS__LOADER_1)} />
       ) : errorDqdOverview ? (
-        <div>Error loading DQD Overview: {errorDqdOverview.message}</div>
+        <div>
+          {getText(i18nKeys.DQD_COMBINED_RESULTS__LOADER_MESSAGE_1)}: {errorDqdOverview.message}
+        </div>
       ) : (
         dqdOverview && (
           <>
-            <SubTitle>Overview</SubTitle>
+            <SubTitle>{getText(i18nKeys.DQD_COMBINED_RESULTS__OVERVIEW)}</SubTitle>
             <OverviewTable data={dqdOverview}></OverviewTable>
           </>
         )
       )}
       {/* DQD Results table */}
       {loadingDqdResults ? (
-        <Loader text="Loading DQD Results" />
+        <Loader text={getText(i18nKeys.DQD_COMBINED_RESULTS__LOADER_2)} />
       ) : errorDqdResults ? (
-        <div>Error loading DQD Results: {errorDqdResults.message}</div>
+        <div>
+          {getText(i18nKeys.DQD_COMBINED_RESULTS__LOADER_MESSAGE_2)}: {errorDqdResults.message}
+        </div>
       ) : (
         dqdResults && (
           <>
-            <SubTitle>Detail</SubTitle>
+            <SubTitle>{getText(i18nKeys.DQD_COMBINED_RESULTS__DETAIL)}</SubTitle>
             <DQDTable data={dqdResults}></DQDTable>
           </>
         )

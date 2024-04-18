@@ -148,6 +148,15 @@ export const i18nDefault = {
     OBSERVATION_PERIOD_OBSERVED_BY_MONTH_CHART__Y_AXIS_NAME: "People",
     OBSERVATION_PERIOD_OBSERVED_BY_MONTH_CHART__TOOLTIP_FORMAT: "Date: {b}<br />People: {c}",
     OBSERVATION_PERIOD_OBSERVED_BY_MONTH_CHART__NO_DATA: "No data",
+    CSV_READER__UNSUPPORTED_FILE_TYPE: "Unsupported file type",
+    CSV_READER__CLICK_MESSAGE: "Click here to choose a file, or drop a file",
+    CSV_READER__SUPPORTED_FILE_TYPES: "Supported file types: CSV",
+    DQD_COMBINED_RESULTS__LOADER_1: "Loading DQD Overview",
+    DQD_COMBINED_RESULTS__LOADER_MESSAGE_1: "Error loading DQD Overview",
+    DQD_COMBINED_RESULTS__OVERVIEW: "Overview",
+    DQD_COMBINED_RESULTS__LOADER_2: "Loading DQD Results",
+    DQD_COMBINED_RESULTS__LOADER_MESSAGE_2: "Error loading DQD Results",
+    DQD_COMBINED_RESULTS__DETAIL: "DETAIL",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
