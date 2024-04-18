@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import ChartContainer from "../../../Common/ChartContainer";
 import LineChart, { LineSeries } from "../../../Common/LineChart";
 import { HistoricalDataQualityMultiSeries } from "../../../../DQD/types";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface HistoricalDataQualitySeriesChartProps {
   data: HistoricalDataQualityMultiSeries[];
@@ -9,14 +10,15 @@ interface HistoricalDataQualitySeriesChartProps {
 }
 
 const HistoricalDataQualityMultiSeriesChart: FC<HistoricalDataQualitySeriesChartProps> = ({ data, seriesType }) => {
-  const title = `Historical data quality by ${seriesType}`;
-  const xAxisName = "CDM Release Date";
-  const yAxisName = "Checks Failed";
+  const { getText, i18nKeys } = TranslationContext();
+  const title = getText(i18nKeys.HISTORICAL_DATA_QUALITY_MULTI_SERIES_CHART__TITLE, [seriesType]);
+  const xAxisName = getText(i18nKeys.HISTORICAL_DATA_QUALITY_MULTI_SERIES_CHART__X_AXIS_NAME);
+  const yAxisName = getText(i18nKeys.HISTORICAL_DATA_QUALITY_MULTI_SERIES_CHART__Y_AXIS_NAME);
 
   if (data.length === 0) {
     return (
       <ChartContainer title={title}>
-        <div className="no_data_text">No data</div>
+        <div className="no_data_text">{getText(i18nKeys.HISTORICAL_DATA_QUALITY_MULTI_SERIES_CHART__NO_DATA)}</div>
       </ChartContainer>
     );
   }
