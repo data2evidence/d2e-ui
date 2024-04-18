@@ -108,7 +108,10 @@ export const i18nDefault = {
     DQD_JOB_RESULTS__ERROR_DQD_OVERVIEW: "Error loading DQD Overview: {0}",
     DQD_JOB_RESULTS__LOADER_5: "Loading DQD Results",
     DQD_JOB_RESULTS__ERROR_DQD_RESULTS: "Error loading DQD Results: {0}",
+    CDM_SUMMARY__TITLE: "CDM Summary",
     CDM_SUMMARY__NO_DATA: "No data",
+    CDM_SUMMARY__SOURCE_NAME: "Source name",
+    CDM_SUMMARY__NUMBER_OF_PERSONS: "Number of persons",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
