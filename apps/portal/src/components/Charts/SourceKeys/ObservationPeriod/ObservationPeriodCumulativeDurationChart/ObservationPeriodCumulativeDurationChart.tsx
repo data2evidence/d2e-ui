@@ -4,22 +4,24 @@ import LineChart from "../../../Common/LineChart";
 import ChartContainer from "../../../Common/ChartContainer";
 
 import "./ObservationPeriodCumulativeDurationChart.scss";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface ObservationPeriodCumulativeDurationChartProps {
   data: any;
 }
 
 const ObservationPeriodCumulativeDurationChart: FC<ObservationPeriodCumulativeDurationChartProps> = ({ data }) => {
-  const title = "Cumulative Observation";
-  const xAxisName = "Years";
-  const yAxisName = "Percent of Population";
-  const tooltipFormat = "Years: {b}<br />Percent of Population: {c}%";
-  const yAxisFormat = "{value}%";
+  const { getText, i18nKeys } = TranslationContext();
+  const title = getText(i18nKeys.OBSERVATION_PERIOD_CUMULATIVE_DURATION_CHART__TITLE);
+  const xAxisName = getText(i18nKeys.OBSERVATION_PERIOD_CUMULATIVE_DURATION_CHART__X_AXIS_NAME);
+  const yAxisName = getText(i18nKeys.OBSERVATION_PERIOD_CUMULATIVE_DURATION_CHART__Y_AXIS_NAME);
+  const tooltipFormat = getText(i18nKeys.OBSERVATION_PERIOD_CUMULATIVE_DURATION_CHART__TOOLTIP_FORMAT);
+  const yAxisFormat = getText(i18nKeys.OBSERVATION_PERIOD_CUMULATIVE_DURATION_CHART__Y_AXIS_FORMAT);
 
   if (data.length === 0) {
     return (
       <ChartContainer title={title}>
-        <div className="no_data_text">No data</div>
+        <div className="no_data_text">{getText(i18nKeys.OBSERVATION_PERIOD_CUMULATIVE_DURATION_CHART__NO_DATA)}</div>
       </ChartContainer>
     );
   }
