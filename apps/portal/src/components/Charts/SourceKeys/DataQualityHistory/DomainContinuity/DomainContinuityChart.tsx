@@ -2,21 +2,23 @@ import React, { FC } from "react";
 import ChartContainer from "../../../Common/ChartContainer";
 import LineChart, { LineSeries } from "../../../Common/LineChart";
 import { DomainContinuity } from "../../../../DQD/types";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface DomainContinuityChartProps {
   data: DomainContinuity;
 }
 
 const DomainContinuityChart: FC<DomainContinuityChartProps> = ({ data }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const title = data.domain;
-  const xAxisName = "CDM Release Date";
-  const yAxisName = "No. of records";
+  const xAxisName = getText(i18nKeys.DOMAIN_CONTINUITY_CHART__X_AXIS_NAME);
+  const yAxisName = getText(i18nKeys.DOMAIN_CONTINUITY_CHART__Y_AXIS_NAME);
   const records = data.records;
 
   if (records.length === 0) {
     return (
       <ChartContainer title={title}>
-        <div className="no_data_text">No data</div>
+        <div className="no_data_text">{getText(i18nKeys.DOMAIN_CONTINUITY_CHART__NO_DATA)}</div>
       </ChartContainer>
     );
   }

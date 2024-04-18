@@ -120,6 +120,9 @@ export const i18nDefault = {
     DATA_DENSITY_TOTAL_RECORDS_CHART__X_AXIS_NAME: "Year",
     DATA_DENSITY_TOTAL_RECORDS_CHART__Y_AXIS_NAME: "# of Records",
     DATA_DENSITY_TOTAL_RECORDS_CHART__NO_DATA: "No data",
+    DOMAIN_CONTINUITY_CHART__X_AXIS_NAME: "CDM Release Date",
+    DOMAIN_CONTINUITY_CHART__Y_AXIS_NAME: "No. of records",
+    DOMAIN_CONTINUITY_CHART__NO_DATA: "No data",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
