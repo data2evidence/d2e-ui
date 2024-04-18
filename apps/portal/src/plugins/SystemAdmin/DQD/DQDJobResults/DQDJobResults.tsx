@@ -7,6 +7,7 @@ import DQDTable from "../../../../components/DQD/DQDTable/DQDTable";
 import { FlowRunJobStateTypes, DQD_TABLE_TYPES } from "../types";
 import DownloadDataButtons from "../DownloadDataButtons/DownloadDataButtons";
 import DataCharacterizationReports from "../../../../components/DQD/DataCharacterizationReports/DataCharacterizationReports";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 const inProgressJobStates = [
   FlowRunJobStateTypes.SCHEDULED,
   FlowRunJobStateTypes.PENDING,
@@ -26,6 +27,7 @@ interface DQDJobResultsProps {
 }
 
 export const DQDJobResults: FC<DQDJobResultsProps> = ({ datasetId, datasetName, tableType, activeReleaseId }) => {
+  const { getText, i18nKeys } = TranslationContext();
   let jobType = "";
   // Derive job type from tableType
   if (tableType === DQD_TABLE_TYPES.DATA_QUALITY_OVERVIEW || tableType === DQD_TABLE_TYPES.DATA_QUALITY_RESULTS) {
@@ -62,15 +64,15 @@ export const DQDJobResults: FC<DQDJobResultsProps> = ({ datasetId, datasetName, 
   const renderDataQualityJobState = () => {
     // Flow has not completed succesfully
     if (failedJobStates.includes(latestFlowRun.state.type)) {
-      return <>Latest job failed</>;
+      return <>{getText(i18nKeys.DQD_JOB_RESULTS__LATEST_JOB_FAILED)}</>;
     }
 
     if (cancelledJobStates.includes(latestFlowRun.state.type)) {
-      return <>Latest job cancelled</>;
+      return <>{getText(i18nKeys.DQD_JOB_RESULTS__LATEST_JOB_CANCELLED)}</>;
     }
 
     if (inProgressJobStates.includes(latestFlowRun.state.type)) {
-      return <Loader text={`Latest Data Quality job is ${latestFlowRun.state.type}`} />;
+      return <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_1, [latestFlowRun.state.type])} />;
     }
 
     if (latestFlowRun.state.type === FlowRunJobStateTypes.COMPLETED) {
@@ -81,7 +83,7 @@ export const DQDJobResults: FC<DQDJobResultsProps> = ({ datasetId, datasetName, 
       } else if (tableType === DQD_TABLE_TYPES.DATA_CHARACTERIZATION) {
         return <DataCharacterizationReports flowRunId={latestFlowRun.id} />;
       } else {
-        return <>Incorrect tableType supplied</>;
+        return <>{getText(i18nKeys.DQD_JOB_RESULTS__INCORRECT_TABLETYPE)}</>;
       }
     }
   };
@@ -89,13 +91,13 @@ export const DQDJobResults: FC<DQDJobResultsProps> = ({ datasetId, datasetName, 
   return (
     <>
       {loadingLatestFlowRun ? (
-        <Loader text="Loading Data Quality Latest Flow Run" />
+        <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_2)} />
       ) : errorLatestFlowRun ? (
         <div>{errorLatestFlowRun.message}</div>
       ) : latestFlowRun ? (
         renderDataQualityJobState()
       ) : (
-        <>No job found</>
+        <>{getText(i18nKeys.DQD_JOB_RESULTS__NO_JOB_FOUND)}</>
       )}
     </>
   );
@@ -106,14 +108,15 @@ interface RenderDataQualityOverviewTableProps {
 }
 
 const RenderDataQualityOverviewTable: FC<RenderDataQualityOverviewTableProps> = ({ flowRunId }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [dqdOverview, loadingDqdOverview, errorDqdOverview] = useDataQualityOverviewFromId(flowRunId);
 
   return (
     <>
       {loadingDqdOverview ? (
-        <Loader text="Loading DQD Overview" />
+        <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_3)} />
       ) : errorDqdOverview ? (
-        <div>Error loading DQD Overview: {errorDqdOverview.message}</div>
+        <div>{getText(i18nKeys.DQD_JOB_RESULTS__ERROR_DQD_OVERVIEW, [errorDqdOverview.message])}</div>
       ) : (
         dqdOverview && (
           <>
@@ -131,15 +134,16 @@ interface RenderDataQualityResultsTableProps {
 }
 
 const RenderDataQualityResultsTable: FC<RenderDataQualityResultsTableProps> = ({ flowRunId, datasetName }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [dqdResults, loadingDqdResults, errorDqdResults] = useDataQualityResultsFromId(flowRunId);
   const [dqdOverview] = useDataQualityOverviewFromId(flowRunId);
 
   return (
     <>
       {loadingDqdResults ? (
-        <Loader text="Loading DQD Results" />
+        <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_4)} />
       ) : errorDqdResults ? (
-        <div>Error loading DQD Results: {errorDqdResults.message}</div>
+        <div>{getText(i18nKeys.DQD_JOB_RESULTS__ERROR_DQD_RESULTS, [errorDqdResults.message])}</div>
       ) : (
         dqdResults && (
           <>

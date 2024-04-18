@@ -88,10 +88,28 @@ export const i18nDefault = {
     OBSERVATION_PERIOD__BAR_CHART_3_Y_AXIS_NAME: "People",
     OBSERVATION_PERIOD__BAR_CHART_3_TOOLTIP_FORMAT: "Year: {b}<br />People: {c}",
     OBSERVATION_PERIOD__PIE_CHART_TITLE: "Observation Periods per Person",
+    PERSON__ERROR_MESSAGE: "Error occurred when fetching data characterization person data",
+    PERSON__LOADER: "Loading Person Reports",
+    PERSON__BAR_CHART_TITLE: "Year of Birth",
+    PERSON__BAR_CHART_X_AXIS_NAME: "Year",
+    PERSON__BAR_CHART_Y_AXIS_NAME: "# of Persons",
+    PERSON__BAR_CHART_TOOLTIP_FORMAT: "Year: {b}<br /># of Persons: {c}",
+    PERSON__PIE_CHART_1_TITLE: "Gender",
+    PERSON__PIE_CHART_2_TITLE: "Race",
+    PERSON__PIE_CHART_3_TITLE: "Ethnicity",
+    DQD_JOB_RESULTS__LATEST_JOB_FAILED: "Latest job failed",
+    DQD_JOB_RESULTS__LATEST_JOB_CANCELLED: "Latest job cancelled",
+    DQD_JOB_RESULTS__LOADER_1: "Latest Data Quality job is {0}",
+    DQD_JOB_RESULTS__INCORRECT_TABLETYPE: "Incorrect tableType supplied",
+    DQD_JOB_RESULTS__LOADER_2: "Loading Data Quality Latest Flow Run",
+    DQD_JOB_RESULTS__NO_JOB_FOUND: "No job found",
+    DQD_JOB_RESULTS__LOADER_3: "Error loading DQD Overview: {0}",
+    DQD_JOB_RESULTS__LOADER_4: "Loading DQD Results",
+    DQD_JOB_RESULTS__ERROR_DQD_RESULTS: "Error loading DQD Results: {0}",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
-// getText(i18nKeys.TREE_MAP_CHART__PREVALENCE)
+// getText(i18nKeys.DUMMY)
 
 function getKeyMap<T extends object>(obj: T) {
   const result = {} as Record<keyof T, keyof T>;
