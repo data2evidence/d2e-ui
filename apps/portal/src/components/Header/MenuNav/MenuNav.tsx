@@ -10,6 +10,7 @@ import { useDatasets, useEnabledFeatures, useMenuAnchor } from "../../../hooks";
 import { useUserInfo } from "../../../contexts/UserContext";
 import { getPluginChildPath } from "../../../utils";
 import "../Header.scss";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 export enum MenuType {
   Dataset,
@@ -23,6 +24,7 @@ interface MenuNavProps {
 }
 
 const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();
@@ -152,7 +154,7 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
             </Link>
           ) : (
             <Link to={`${config.ROUTES.researcher}/overview`} data-text="Dataset overview" className="overview-title">
-              {"Datasets"}
+              {getText(i18nKeys.MENU_NAV__DATASETS)}
             </Link>
           )}
 
@@ -210,8 +212,8 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
                             : "portal__menu-item"
                         }
                       >
-                        <span data-text={study.studyDetail?.name || "Untitled"}>
-                          {study.studyDetail?.name ? study.studyDetail?.name : "Untitled"}
+                        <span data-text={study.studyDetail?.name || getText(i18nKeys.MENU_NAV__UNTITLED)}>
+                          {study.studyDetail?.name ? study.studyDetail?.name : getText(i18nKeys.MENU_NAV__UNTITLED)}
                         </span>
                       </div>
                     </MenuItem>

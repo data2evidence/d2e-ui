@@ -217,6 +217,8 @@ export const i18nDefault = {
     CHANGE_MY_PASSWORD_DIALOG__BUTTON_GENERATE: "Generate",
     CHANGE_MY_PASSWORD_DIALOG__BUTTON_CANCEL: "Cancel",
     CHANGE_MY_PASSWORD_DIALOG__BUTTON_UPDATE: "Update",
+    MENU_NAV__DATASETS: "Datasets",
+    MENU_NAV__UNTITLED: "Untitled",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
