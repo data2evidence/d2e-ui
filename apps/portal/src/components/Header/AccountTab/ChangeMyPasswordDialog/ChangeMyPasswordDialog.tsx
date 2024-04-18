@@ -15,6 +15,7 @@ import { Feedback } from "../../../../types";
 import { generateRandom } from "../../../../utils";
 import { api } from "../../../../axios/api";
 import "./ChangeMyPassword.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface ChangeMyPasswordDialogProps {
   open: boolean;
@@ -29,6 +30,7 @@ interface FormData {
 const EMPTY_FORM_DATA: FormData = { oldPassword: "", password: "" };
 
 export const ChangeMyPasswordDialog: FC<ChangeMyPasswordDialogProps> = ({ open, onClose }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
@@ -60,7 +62,7 @@ export const ChangeMyPasswordDialog: FC<ChangeMyPasswordDialogProps> = ({ open, 
       await api.userMgmt.changeMyPassword(formData.oldPassword, formData.password);
       setFeedback({
         type: "success",
-        message: "Password updated",
+        message: getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__PASSWORD_UPDATED_ERROR_MESSAGE),
       });
     } catch (err: any) {
       const message = err?.data?.message || err?.data?.error_description;
@@ -70,8 +72,8 @@ export const ChangeMyPasswordDialog: FC<ChangeMyPasswordDialogProps> = ({ open, 
         console.log("There is an error in updating password", err);
         setFeedback({
           type: "error",
-          message: "An error has occurred.",
-          description: "Please try again. To report the error, please send an email to help@data4life.care.",
+          message: getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__PASSWORD_UPDATED_ERROR_MESSAGE),
+          description: getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__PASSWORD_UPDATED_ERROR_DESCRIPTION),
         });
       }
     } finally {
@@ -82,7 +84,7 @@ export const ChangeMyPasswordDialog: FC<ChangeMyPasswordDialogProps> = ({ open, 
   return (
     <Dialog
       className="change-my-password-dialog"
-      title="Change password"
+      title={getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__DIALOG_TITLE)}
       closable
       open={open}
       onClose={handleClose}
@@ -97,7 +99,7 @@ export const ChangeMyPasswordDialog: FC<ChangeMyPasswordDialogProps> = ({ open, 
                 fullWidth
                 type="password"
                 variant="standard"
-                label="Old password"
+                label={getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__DIALOG_TEXT_FIELD_LABEL_1)}
                 value={formData.oldPassword}
                 onChange={(event) => setFormData((formData) => ({ ...formData, oldPassword: event.target.value }))}
               />
@@ -111,25 +113,46 @@ export const ChangeMyPasswordDialog: FC<ChangeMyPasswordDialogProps> = ({ open, 
                 fullWidth
                 type={passwordShown ? "text" : "password"}
                 variant="standard"
-                label="New password"
+                label={getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__DIALOG_TEXT_FIELD_LABEL_2)}
                 value={formData.password}
                 onChange={(event) => setFormData((formData) => ({ ...formData, password: event.target.value }))}
               />
-              <Tooltip title={passwordShown ? "Hide password" : "Show password"}>
+              <Tooltip
+                title={
+                  passwordShown
+                    ? getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__DIALOG_TOOLTIP_TITLE_1)
+                    : getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__DIALOG_TOOLTIP_TITLE_2)
+                }
+              >
                 <IconButton
                   startIcon={passwordShown ? <VisibilityOffIcon /> : <VisibilityOnIcon />}
                   onClick={handleTogglePassword}
                 />
               </Tooltip>
-              <Button text="Generate" variant="tertiary" onClick={handleGeneratePassword} />
+              <Button
+                text={getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__BUTTON_GENERATE)}
+                variant="tertiary"
+                onClick={handleGeneratePassword}
+              />
             </Box>
           </FormControl>
         </div>
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={handleClose} variant="secondary" block disabled={loading} />
-        <Button text="Update" onClick={handleUpdate} block loading={loading} />
+        <Button
+          text={getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__BUTTON_CANCEL)}
+          onClick={handleClose}
+          variant="secondary"
+          block
+          disabled={loading}
+        />
+        <Button
+          text={getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__BUTTON_UPDATE)}
+          onClick={handleUpdate}
+          block
+          loading={loading}
+        />
       </div>
     </Dialog>
   );

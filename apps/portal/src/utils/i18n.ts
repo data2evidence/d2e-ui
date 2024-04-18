@@ -205,6 +205,18 @@ export const i18nDefault = {
     ACCOUNT_TAB__MENU_ITEMS_CHANGE_PASSWORD: "Change password",
     ACCOUNT_TAB__MENU_ITEMS_LOGOUT: "Logout",
     ACCOUNT_TAB__LINK: "Account",
+    CHANGE_MY_PASSWORD_DIALOG__PASSWORD_UPDATED: "Password updated",
+    CHANGE_MY_PASSWORD_DIALOG__PASSWORD_UPDATED_ERROR_MESSAGE: "An error has occurred.",
+    CHANGE_MY_PASSWORD_DIALOG__PASSWORD_UPDATED_ERROR_DESCRIPTION:
+      "Please try again. To report the error, please send an email to help@data4life.care.",
+    CHANGE_MY_PASSWORD_DIALOG__DIALOG_TITLE: "Change password",
+    CHANGE_MY_PASSWORD_DIALOG__DIALOG_TEXT_FIELD_LABEL_1: "Old password",
+    CHANGE_MY_PASSWORD_DIALOG__DIALOG_TEXT_FIELD_LABEL_2: "New password",
+    CHANGE_MY_PASSWORD_DIALOG__DIALOG_TOOLTIP_TITLE_1: "Hide password",
+    CHANGE_MY_PASSWORD_DIALOG__DIALOG_TOOLTIP_TITLE_2: "Show password",
+    CHANGE_MY_PASSWORD_DIALOG__BUTTON_GENERATE: "Generate",
+    CHANGE_MY_PASSWORD_DIALOG__BUTTON_CANCEL: "Cancel",
+    CHANGE_MY_PASSWORD_DIALOG__BUTTON_UPDATE: "Update",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
