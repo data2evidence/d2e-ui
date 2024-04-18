@@ -1,79 +1,82 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper } from "@mui/material";
 import { OverviewResults } from "../../types";
 import "./OverviewTable.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface OverviewTableProps {
   data: OverviewResults;
 }
 
-const transformData = (data: OverviewResults) => {
-  const rtnArray = [
-    {
-      category: "Plausibility",
-      passVerification: data.verification.plausibility.pass,
-      failVerification: data.verification.plausibility.fail,
-      totalVerification: data.verification.plausibility.total,
-      percentVerification: data.verification.plausibility.percentPass,
-      passValidation: data.validation.plausibility.pass,
-      failValidation: data.validation.plausibility.fail,
-      totalValidation: data.validation.plausibility.total,
-      percentValidation: data.validation.plausibility.percentPass,
-      passTotal: data.total.plausibility.pass,
-      failTotal: data.total.plausibility.fail,
-      totalTotal: data.total.plausibility.total,
-      percentTotal: data.total.plausibility.percentPass,
-    },
-    {
-      category: "Conformance",
-      passVerification: data.verification.conformance.pass,
-      failVerification: data.verification.conformance.fail,
-      totalVerification: data.verification.conformance.total,
-      percentVerification: data.verification.conformance.percentPass,
-      passValidation: data.validation.conformance.pass,
-      failValidation: data.validation.conformance.fail,
-      totalValidation: data.validation.conformance.total,
-      percentValidation: data.validation.conformance.percentPass,
-      passTotal: data.total.conformance.pass,
-      failTotal: data.total.conformance.fail,
-      totalTotal: data.total.conformance.total,
-      percentTotal: data.total.conformance.percentPass,
-    },
-    {
-      category: "Completeness",
-      passVerification: data.verification.completeness.pass,
-      failVerification: data.verification.completeness.fail,
-      totalVerification: data.verification.completeness.total,
-      percentVerification: data.verification.completeness.percentPass,
-      passValidation: data.validation.completeness.pass,
-      failValidation: data.validation.completeness.fail,
-      totalValidation: data.validation.completeness.total,
-      percentValidation: data.validation.completeness.percentPass,
-      passTotal: data.total.completeness.pass,
-      failTotal: data.total.completeness.fail,
-      totalTotal: data.total.completeness.total,
-      percentTotal: data.total.completeness.percentPass,
-    },
-    {
-      category: "Total",
-      passVerification: data.verification.total.pass,
-      failVerification: data.verification.total.fail,
-      totalVerification: data.verification.total.total,
-      percentVerification: data.verification.total.percentPass,
-      passValidation: data.validation.total.pass,
-      failValidation: data.validation.total.fail,
-      totalValidation: data.validation.total.total,
-      percentValidation: data.validation.total.percentPass,
-      passTotal: data.total.total.pass,
-      failTotal: data.total.total.fail,
-      totalTotal: data.total.total.total,
-      percentTotal: data.total.total.percentPass,
-    },
-  ];
-  return rtnArray;
-};
-
 const OverviewTable: FC<OverviewTableProps> = ({ data }) => {
+  const { getText, i18nKeys } = TranslationContext();
+
+  const transformData = useCallback((data: OverviewResults) => {
+    const rtnArray = [
+      {
+        category: getText(i18nKeys.OVERVIEW_TABLE__CATEGORY_PLAUSIBILITY),
+        passVerification: data.verification.plausibility.pass,
+        failVerification: data.verification.plausibility.fail,
+        totalVerification: data.verification.plausibility.total,
+        percentVerification: data.verification.plausibility.percentPass,
+        passValidation: data.validation.plausibility.pass,
+        failValidation: data.validation.plausibility.fail,
+        totalValidation: data.validation.plausibility.total,
+        percentValidation: data.validation.plausibility.percentPass,
+        passTotal: data.total.plausibility.pass,
+        failTotal: data.total.plausibility.fail,
+        totalTotal: data.total.plausibility.total,
+        percentTotal: data.total.plausibility.percentPass,
+      },
+      {
+        category: getText(i18nKeys.OVERVIEW_TABLE__CATEGORY_CONFORMANCE),
+        passVerification: data.verification.conformance.pass,
+        failVerification: data.verification.conformance.fail,
+        totalVerification: data.verification.conformance.total,
+        percentVerification: data.verification.conformance.percentPass,
+        passValidation: data.validation.conformance.pass,
+        failValidation: data.validation.conformance.fail,
+        totalValidation: data.validation.conformance.total,
+        percentValidation: data.validation.conformance.percentPass,
+        passTotal: data.total.conformance.pass,
+        failTotal: data.total.conformance.fail,
+        totalTotal: data.total.conformance.total,
+        percentTotal: data.total.conformance.percentPass,
+      },
+      {
+        category: getText(i18nKeys.OVERVIEW_TABLE__CATEGORY_COMPLETENESS),
+        passVerification: data.verification.completeness.pass,
+        failVerification: data.verification.completeness.fail,
+        totalVerification: data.verification.completeness.total,
+        percentVerification: data.verification.completeness.percentPass,
+        passValidation: data.validation.completeness.pass,
+        failValidation: data.validation.completeness.fail,
+        totalValidation: data.validation.completeness.total,
+        percentValidation: data.validation.completeness.percentPass,
+        passTotal: data.total.completeness.pass,
+        failTotal: data.total.completeness.fail,
+        totalTotal: data.total.completeness.total,
+        percentTotal: data.total.completeness.percentPass,
+      },
+      {
+        category: getText(i18nKeys.OVERVIEW_TABLE__CATEGORY_TOTAL),
+        passVerification: data.verification.total.pass,
+        failVerification: data.verification.total.fail,
+        totalVerification: data.verification.total.total,
+        percentVerification: data.verification.total.percentPass,
+        passValidation: data.validation.total.pass,
+        failValidation: data.validation.total.fail,
+        totalValidation: data.validation.total.total,
+        percentValidation: data.validation.total.percentPass,
+        passTotal: data.total.total.pass,
+        failTotal: data.total.total.fail,
+        totalTotal: data.total.total.total,
+        percentTotal: data.total.total.percentPass,
+      },
+    ];
+    return rtnArray;
+  }, []);
+
   const rows = transformData(data);
   return (
     <TableContainer component={Paper}>
@@ -91,13 +94,13 @@ const OverviewTable: FC<OverviewTableProps> = ({ data }) => {
               }}
             ></TableCell>
             <TableCell className="tablePrimaryHeader" align="center" colSpan={4}>
-              Verification
+              {getText(i18nKeys.OVERVIEW_TABLE__VERIFICATION)}
             </TableCell>
             <TableCell className="tablePrimaryHeader" align="center" colSpan={4}>
-              Validation
+              {getText(i18nKeys.OVERVIEW_TABLE__VALIDATION)}
             </TableCell>
             <TableCell className="tablePrimaryHeader" align="center" colSpan={4}>
-              Total
+              {getText(i18nKeys.OVERVIEW_TABLE__TOTAL)}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -112,42 +115,42 @@ const OverviewTable: FC<OverviewTableProps> = ({ data }) => {
               }}
             ></TableCell>
             <TableCell className="tableSecondaryHeader" align="center">
-              Pass
+              {getText(i18nKeys.OVERVIEW_TABLE__PASS)}
             </TableCell>
             <TableCell className="tableSecondaryHeader" align="center">
-              Fail
+              {getText(i18nKeys.OVERVIEW_TABLE__FAIL)}
             </TableCell>
             <TableCell className="tableSecondaryHeader" align="center">
-              Total
+              {getText(i18nKeys.OVERVIEW_TABLE__TOTAL)}
             </TableCell>
             <TableCell className="tableSecondaryHeader" align="center">
-              % Pass
-            </TableCell>
-
-            <TableCell className="tableSecondaryHeader" align="center">
-              Pass
-            </TableCell>
-            <TableCell className="tableSecondaryHeader" align="center">
-              Fail
-            </TableCell>
-            <TableCell className="tableSecondaryHeader" align="center">
-              Total
-            </TableCell>
-            <TableCell className="tableSecondaryHeader" align="center">
-              % Pass
+              {getText(i18nKeys.OVERVIEW_TABLE__PCT_PASS)}
             </TableCell>
 
             <TableCell className="tableSecondaryHeader" align="center">
-              Pass
+              {getText(i18nKeys.OVERVIEW_TABLE__PASS)}
             </TableCell>
             <TableCell className="tableSecondaryHeader" align="center">
-              Fail
+              {getText(i18nKeys.OVERVIEW_TABLE__FAIL)}
             </TableCell>
             <TableCell className="tableSecondaryHeader" align="center">
-              Total
+              {getText(i18nKeys.OVERVIEW_TABLE__TOTAL)}
             </TableCell>
             <TableCell className="tableSecondaryHeader" align="center">
-              % Pass
+              {getText(i18nKeys.OVERVIEW_TABLE__PCT_PASS)}
+            </TableCell>
+
+            <TableCell className="tableSecondaryHeader" align="center">
+              {getText(i18nKeys.OVERVIEW_TABLE__PASS)}
+            </TableCell>
+            <TableCell className="tableSecondaryHeader" align="center">
+              {getText(i18nKeys.OVERVIEW_TABLE__FAIL)}
+            </TableCell>
+            <TableCell className="tableSecondaryHeader" align="center">
+              {getText(i18nKeys.OVERVIEW_TABLE__TOTAL)}
+            </TableCell>
+            <TableCell className="tableSecondaryHeader" align="center">
+              {getText(i18nKeys.OVERVIEW_TABLE__PCT_PASS)}
             </TableCell>
           </TableRow>
         </TableHead>
@@ -202,15 +205,17 @@ const OverviewTable: FC<OverviewTableProps> = ({ data }) => {
       </Table>
       <div className="overview-text-container">
         <div>
-          {data.total.total.allNa} out of {data.total.total.pass} passed checks are Not Applicable, due to empty tables
-          or fields.
+          {getText(i18nKeys.OVERVIEW_TABLE__NOTE_1, [String(data.total.total.allNa), String(data.total.total.pass)])}
         </div>
         <div>
-          {data.total.total.allError} out of {data.total.total.fail} failed checks are SQL errors.
+          {getText(i18nKeys.OVERVIEW_TABLE__NOTE_2, [String(data.total.total.allError), String(data.total.total.fail)])}
         </div>
         <div>
-          Corrected pass percentage for NA and Errors: {data.total.total.correctedPassPercentage} (
-          {data.total.total.PassMinusAllNA}/{data.total.total.totalMinusAllErrorMinusAllNA}).
+          {getText(i18nKeys.OVERVIEW_TABLE__NOTE_3, [
+            data.total.total.correctedPassPercentage,
+            String(data.total.total.PassMinusAllNA),
+            String(data.total.total.totalMinusAllErrorMinusAllNA),
+          ])}
         </div>
       </div>
     </TableContainer>
