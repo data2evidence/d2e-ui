@@ -4,20 +4,23 @@ import ChartContainer from "../../../Common/ChartContainer";
 import LineChart from "../../../Common/LineChart";
 
 import "./DataDensityRecordsPerPersonChart.scss";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface DataDensityRecordsPerPersonChartProps {
   data: any;
 }
 
 const DataDensityRecordsPerPersonChart: FC<DataDensityRecordsPerPersonChartProps> = ({ data }) => {
-  const title = "Records Per Person";
-  const xAxisName = "Year";
-  const yAxisName = "Records Per Person";
+  const { getText, i18nKeys } = TranslationContext();
+
+  const title = getText(i18nKeys.DATA_DENSITY_RECORDS_PER_PERSON_CHART__TITLE);
+  const xAxisName = getText(i18nKeys.DATA_DENSITY_RECORDS_PER_PERSON_CHART__X_AXIS_NAME);
+  const yAxisName = getText(i18nKeys.DATA_DENSITY_RECORDS_PER_PERSON_CHART__Y_AXIS_NAME);
 
   if (data.length === 0) {
     return (
       <ChartContainer title={title}>
-        <div className="no_data_text">No data</div>
+        <div className="no_data_text">{getText(i18nKeys.DATA_DENSITY_RECORDS_PER_PERSON_CHART__NO_DATA)}</div>
       </ChartContainer>
     );
   }

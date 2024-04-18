@@ -112,6 +112,10 @@ export const i18nDefault = {
     CDM_SUMMARY__NO_DATA: "No data",
     CDM_SUMMARY__SOURCE_NAME: "Source name",
     CDM_SUMMARY__NUMBER_OF_PERSONS: "Number of persons",
+    DATA_DENSITY_RECORDS_PER_PERSON_CHART__TITLE: "No data",
+    DATA_DENSITY_RECORDS_PER_PERSON_CHART__X_AXIS_NAME: "Records Per Person",
+    DATA_DENSITY_RECORDS_PER_PERSON_CHART__Y_AXIS_NAME: "Year",
+    DATA_DENSITY_RECORDS_PER_PERSON_CHART__NO_DATA: "Records Per Person",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
