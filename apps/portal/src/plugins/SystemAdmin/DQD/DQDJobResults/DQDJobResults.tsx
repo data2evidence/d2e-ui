@@ -72,7 +72,10 @@ export const DQDJobResults: FC<DQDJobResultsProps> = ({ datasetId, datasetName, 
     }
 
     if (inProgressJobStates.includes(latestFlowRun.state.type)) {
-      return <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_1, [latestFlowRun.state.type])} />;
+      if (jobType === "data-characterization") {
+        return <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_1, [latestFlowRun.state.type])} />;
+      }
+      return <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_2, [latestFlowRun.state.type])} />;
     }
 
     if (latestFlowRun.state.type === FlowRunJobStateTypes.COMPLETED) {
@@ -91,7 +94,7 @@ export const DQDJobResults: FC<DQDJobResultsProps> = ({ datasetId, datasetName, 
   return (
     <>
       {loadingLatestFlowRun ? (
-        <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_2)} />
+        <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_3)} />
       ) : errorLatestFlowRun ? (
         <div>{errorLatestFlowRun.message}</div>
       ) : latestFlowRun ? (
@@ -114,7 +117,7 @@ const RenderDataQualityOverviewTable: FC<RenderDataQualityOverviewTableProps> = 
   return (
     <>
       {loadingDqdOverview ? (
-        <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_3)} />
+        <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_4)} />
       ) : errorDqdOverview ? (
         <div>{getText(i18nKeys.DQD_JOB_RESULTS__ERROR_DQD_OVERVIEW, [errorDqdOverview.message])}</div>
       ) : (
@@ -141,7 +144,7 @@ const RenderDataQualityResultsTable: FC<RenderDataQualityResultsTableProps> = ({
   return (
     <>
       {loadingDqdResults ? (
-        <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_4)} />
+        <Loader text={getText(i18nKeys.DQD_JOB_RESULTS__LOADER_5)} />
       ) : errorDqdResults ? (
         <div>{getText(i18nKeys.DQD_JOB_RESULTS__ERROR_DQD_RESULTS, [errorDqdResults.message])}</div>
       ) : (
