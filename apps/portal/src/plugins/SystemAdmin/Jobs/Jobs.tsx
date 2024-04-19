@@ -20,6 +20,7 @@ import { useLocation } from "react-router-dom";
 import LogViewer from "./LogViewer/LogViewer";
 import { FeatureGate } from "../../../config/FeatureGate";
 import { FEATURE_DATAFLOW } from "../../../config";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 enum JobTabs {
   Runs = "Job Runs",
@@ -30,6 +31,7 @@ const plugins = loadPlugins();
 const CURRENT_SYSTEM = env.REACT_APP_CURRENT_SYSTEM;
 
 const Jobs: FC = () => {
+  const { getText, i18nKeys } = TranslationContext();
   const [selectedStudy, setSelectedStudy] = useState("");
   const [studyId, setStudyId] = useState("");
   const [isSilentRefresh, setIsSilentRefresh] = useState(false);
@@ -97,7 +99,7 @@ const Jobs: FC = () => {
     return (
       <>
         {loadingJobs ? (
-          <Loader text="Loading Jobs" />
+          <Loader text={getText(i18nKeys.JOBS__LOADER)} />
         ) : errorJobs ? (
           <div>{errorJobs.message}</div>
         ) : (
@@ -150,17 +152,17 @@ const Jobs: FC = () => {
           {showDataflow && (
             <div className="jobs__back-header">
               <IconButton startIcon={<ArrowBackIcon />} onClick={handleCloseDataflow} />
-              <div>Back to Jobs</div>
+              <div>{getText(i18nKeys.JOBS__BACK)}</div>
             </div>
           )}
 
           <div className={classNames("jobs__wrapper", { jobs__plugin: showDataflow })}>
             {!showDataflow && (
               <>
-                <Title>Jobs</Title>
+                <Title>{getText(i18nKeys.JOBS__JOBS)}</Title>
                 <div className="jobs_header__container">
                   <div className="jobs_header__selector">
-                    <span> Data Quality Analysis:</span>
+                    <span> {getText(i18nKeys.JOBS__DATA_QUALITY_ANALYSIS)}:</span>
                     <DatasetSelector handleStudySelect={handleStudySelect} />
                   </div>
                   <JobRunButtons datasetId={studyId} studyName={selectedStudy} handleGenerateJob={handleGenerateJob} />
@@ -169,14 +171,14 @@ const Jobs: FC = () => {
                   <FeatureGate featureFlags={[FEATURE_DATAFLOW]}>
                     <Button
                       className="jobs__button"
-                      text="Manage Dataflows"
+                      text={getText(i18nKeys.JOBS__MANAGE_DATAFLOWS)}
                       onClick={handleShowDataflow}
                       disabled={!dataflowPlugin}
                     />
                   </FeatureGate>
                   <Button
                     className="jobs__button"
-                    text="Upload Job"
+                    text={getText(i18nKeys.JOBS__UPLOAD)}
                     variant="secondary"
                     onClick={handleOpenAddFlow}
                   ></Button>

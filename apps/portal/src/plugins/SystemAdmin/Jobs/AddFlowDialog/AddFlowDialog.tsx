@@ -12,6 +12,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import { api } from "../../../../axios/api";
 import "./AddFlowDialog.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface AddFlowDialogProps {
   open: boolean;
@@ -34,6 +35,7 @@ const EMPTY_FORM_DATA: FormData = { name: "", method: "FILE" };
 const ALLOWED_FILE_TYPES: string[] = ["application/zip", "application/x-zip-compressed"];
 
 const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
@@ -65,13 +67,13 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
       if (ALLOWED_FILE_TYPES.includes(fileType) && url) {
         setFeedback({
           type: "error",
-          message: "Zip/tgz file upload should not have git url provided",
+          message: getText(i18nKeys.ADD_FLOW_DIALOG__TYPE_ERROR),
         });
         return;
       } else if (!ALLOWED_FILE_TYPES.includes(fileType)) {
         setFeedback({
           type: "error",
-          message: "Uploaded file type not supported",
+          message: getText(i18nKeys.ADD_FLOW_DIALOG__UPLOAD_ERROR),
         });
         return;
       }
@@ -90,15 +92,15 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
       } else {
         setFeedback({
           type: "error",
-          message: "An error has occurred.",
-          description: "Please try again. To report the error, please send an email to help@data4life.care.",
+          message: getText(i18nKeys.ADD_FLOW_DIALOG__ERROR),
+          description: getText(i18nKeys.ADD_FLOW_DIALOG__ERROR_DESCRIPTION),
         });
       }
       console.error("err", err);
     } finally {
       setLoading(false);
     }
-  }, [formData.name, handleClose, selectedFile, formData.url]);
+  }, [formData.name, handleClose, selectedFile, formData.url, getText]);
 
   const handleAddFile = useCallback(() => {
     setFeedback({});
@@ -124,7 +126,7 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
   return (
     <Dialog
       className="add-flow-dialog"
-      title="Add flow"
+      title={getText(i18nKeys.ADD_FLOW_DIALOG__ADD_FLOW)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -134,10 +136,14 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
       <Divider />
       <div className="snapshotlocation__radiogroup">
         <FormControl component="fieldset">
-          <FormLabel component="legend">Upload Method</FormLabel>
+          <FormLabel component="legend">{getText(i18nKeys.ADD_FLOW_DIALOG__UPLOAD_METHOD)}</FormLabel>
           <RadioGroup name="uploadmethod" value={formData.method} onChange={handleUploadMethodChange}>
-            <FormControlLabel value="URL" control={<Radio />} label="via url" />
-            <FormControlLabel value="FILE" control={<Radio />} label="via file upload" />
+            <FormControlLabel value="URL" control={<Radio />} label={getText(i18nKeys.ADD_FLOW_DIALOG__VIA_URL)} />
+            <FormControlLabel
+              value="FILE"
+              control={<Radio />}
+              label={getText(i18nKeys.ADD_FLOW_DIALOG__VIA_FILE_UPLOAD)}
+            />
           </RadioGroup>
         </FormControl>
       </div>
@@ -147,7 +153,7 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
             <FormControl fullWidth>
               <TextField
                 variant="standard"
-                label="Git url"
+                label={getText(i18nKeys.ADD_FLOW_DIALOG__GIT_URL)}
                 value={formData.url}
                 onChange={(event) => handleFormDataChange({ url: event.target.value })}
               />
@@ -159,10 +165,10 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell style={{ width: "40%" }}>Filename</TableCell>
-                  <TableCell style={{ width: "20%" }}>Size</TableCell>
-                  <TableCell style={{ width: "20%" }}>File</TableCell>
-                  <TableCell style={{ width: "20%" }}>Action</TableCell>
+                  <TableCell style={{ width: "40%" }}>{getText(i18nKeys.ADD_FLOW_DIALOG__FILENAME)}</TableCell>
+                  <TableCell style={{ width: "20%" }}>{getText(i18nKeys.ADD_FLOW_DIALOG__SIZE)}</TableCell>
+                  <TableCell style={{ width: "20%" }}>{getText(i18nKeys.ADD_FLOW_DIALOG__FILE)}</TableCell>
+                  <TableCell style={{ width: "20%" }}>{getText(i18nKeys.ADD_FLOW_DIALOG__ACTION)}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -170,8 +176,12 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
                   <TableRow>
                     <TableCell colSpan={4} align="center">
                       <div className="add-flow-dialog__no-files">
-                        <span>No file available</span>
-                        <Button text="Select file" onClick={handleAddFile} variant="secondary" />
+                        <span>{getText(i18nKeys.ADD_FLOW_DIALOG__NO_FILE_AVAILABLE)}</span>
+                        <Button
+                          text={getText(i18nKeys.ADD_FLOW_DIALOG__SELECT_FILE)}
+                          onClick={handleAddFile}
+                          variant="secondary"
+                        />
                         <input
                           type="file"
                           pattern="(.+).(py|zip)$"
@@ -205,7 +215,13 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={loading} />
+        <Button
+          text={getText(i18nKeys.ADD_FLOW_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="secondary"
+          block
+          disabled={loading}
+        />
         <Button text="Add" onClick={handleAdd} block loading={loading} disabled={!selectedFile && !formData.url} />
       </div>
     </Dialog>
