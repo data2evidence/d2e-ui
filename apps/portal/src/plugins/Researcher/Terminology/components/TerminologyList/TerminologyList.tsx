@@ -292,19 +292,19 @@ const TerminologyList: FC<TerminologyListProps> = ({
       {
         accessorKey: "conceptId",
         header: "ID",
-        grow: false,
+        grow: true,
         size: 100,
       },
       {
         accessorKey: "code",
         header: "Code",
-        grow: false,
+        grow: true,
         size: 180,
       },
       {
         accessorKey: "display",
         header: "Name",
-        grow: false,
+        grow: true,
         size: isDrawer ? 250 : 350,
       },
       {
@@ -313,7 +313,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.conceptClassId ? mapFilterOptions(filterOptions.conceptClassId) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
-        grow: false,
+        grow: true,
         size: 180,
       },
       {
@@ -322,7 +322,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.concept ? mapFilterOptions(filterOptions.concept) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
-        grow: false,
+        grow: true,
         size: 180,
       },
       {
@@ -331,7 +331,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.domainId ? mapFilterOptions(filterOptions.domainId) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
-        grow: false,
+        grow: true,
         size: 180,
       },
       {
@@ -340,7 +340,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.vocabularyId ? mapFilterOptions(filterOptions.vocabularyId) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
-        grow: false,
+        grow: true,
         size: 180,
       },
       {
@@ -349,7 +349,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.validity ? mapFilterOptions(filterOptions.validity) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
-        grow: false,
+        grow: true,
         size: 180,
       },
     ];
