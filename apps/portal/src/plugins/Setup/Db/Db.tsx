@@ -11,8 +11,10 @@ import { SaveDbDialog } from "./SaveDbDialog/SaveDbDialog";
 import { EditDbCredentialDialog } from "./EditDbCredentialDialog/EditDbCredentialDialog";
 import { DeleteDbDialog } from "./DeleteDbDialog/DeleteDbDialog";
 import "./Db.scss";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 export const Db: FC = () => {
+  const { getText, i18nKeys } = TranslationContext();
   const [refetch, setRefetch] = useState(0);
   const [databases, loading, error] = useDatabases(refetch);
   const [selectedDb, setSelectedDb] = useState<IDatabase>();
@@ -80,25 +82,25 @@ export const Db: FC = () => {
   }
 
   if (loading) {
-    return <Loader text="Loading databases" />;
+    return <Loader text={getText(i18nKeys.DB__LOADER)} />;
   }
 
   return (
     <div className="db">
       <div className="db__header">
-        <Title>Databases</Title>
+        <Title>{getText(i18nKeys.DB__DATABASES)}</Title>
         <div className="db__add-button">
-          <Button text="Add database" onClick={handleAdd} />
+          <Button text={getText(i18nKeys.DB__ADD_DATABASE)} onClick={handleAdd} />
         </div>
       </div>
       <TableContainer className="db__list">
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Code</TableCell>
-              <TableCell>Host</TableCell>
-              <TableCell>Port</TableCell>
-              <TableCell>Dialect</TableCell>
+              <TableCell>{getText(i18nKeys.DB__CODE)}</TableCell>
+              <TableCell>{getText(i18nKeys.DB__HOST)}</TableCell>
+              <TableCell>{getText(i18nKeys.DB__PORT)}</TableCell>
+              <TableCell>{getText(i18nKeys.DB__DIALECT)}</TableCell>
               <TableCell style={{ width: "280px" }}></TableCell>
             </TableRow>
           </TableHead>
@@ -106,7 +108,7 @@ export const Db: FC = () => {
             {databases?.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} align="center">
-                  No data available
+                  {getText(i18nKeys.DB__NO_DATA)}
                 </TableCell>
               </TableRow>
             )}
@@ -117,8 +119,16 @@ export const Db: FC = () => {
                 <TableCell>{db.port}</TableCell>
                 <TableCell>{db.dialect}</TableCell>
                 <TableCell>
-                  <IconButton startIcon={<EditIcon />} title="Edit credentials" onClick={() => handleEdit(db)} />
-                  <IconButton startIcon={<TrashIcon />} title="Delete" onClick={() => handleDelete(db)} />
+                  <IconButton
+                    startIcon={<EditIcon />}
+                    title={getText(i18nKeys.DB__EDIT_CREDENTIALS)}
+                    onClick={() => handleEdit(db)}
+                  />
+                  <IconButton
+                    startIcon={<TrashIcon />}
+                    title={getText(i18nKeys.DB__DELETE)}
+                    onClick={() => handleDelete(db)}
+                  />
                 </TableCell>
               </TableRow>
             ))}

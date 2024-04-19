@@ -25,10 +25,12 @@ import SearchBar from "./SearchBar";
 import "./ConceptSets.scss";
 import { TerminologyProps } from "../../SystemAdmin/Terminology/Terminology";
 import { useDatasets } from "../../../hooks";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 interface ConceptSetsProps {}
 
 export const ConceptSets: FC<ConceptSetsProps> = () => {
+  const { getText, i18nKeys } = TranslationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
   const [page, setPage] = useState(0);
@@ -59,13 +61,13 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
       console.error(e);
       setFeedback({
         type: "error",
-        message: "An error has occurred",
-        description: "Please try again.",
+        message: getText(i18nKeys.CONCEPT_SETS__ERROR),
+        description: getText(i18nKeys.CONCEPT_SETS__ERROR_DESCRIPTION),
       });
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [getText]);
 
   useEffect(() => {
     fetchData();
@@ -118,13 +120,13 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
   return (
     <>
       <div className="concept-sets">
-        <Title>Concept Set List</Title>
+        <Title>{getText(i18nKeys.CONCEPT_SETS__LIST)}</Title>
         <div className="concept-sets__header">
           <div className="concept-sets__search">
             <SearchBar keyword={searchText} onEnter={updateSearchResult} />
           </div>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <div style={{ marginRight: "10px" }}>Reference concepts from dataset: </div>
+            <div style={{ marginRight: "10px" }}>{getText(i18nKeys.CONCEPT_SETS__REFERENCE_CONCEPTS)}: </div>
             <FormControl sx={{ marginRight: "20px" }}>
               <Select
                 value={selectedDatasetId}
@@ -142,18 +144,21 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
             </FormControl>
           </div>
           <div className="concept-sets__actions">
-            <Button text="Add concept set" onClick={() => handleAddAndEditConceptSet()} />
+            <Button
+              text={getText(i18nKeys.CONCEPT_SETS__ADD_CONCEPT_SET)}
+              onClick={() => handleAddAndEditConceptSet()}
+            />
           </div>
         </div>
         <TableContainer className="concept-sets__table">
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>Updated</TableCell>
-                <TableCell>Author</TableCell>
+                <TableCell>{getText(i18nKeys.CONCEPT_SETS__ID)}</TableCell>
+                <TableCell>{getText(i18nKeys.CONCEPT_SETS__Name)}</TableCell>
+                <TableCell>{getText(i18nKeys.CONCEPT_SETS__CREATED)}</TableCell>
+                <TableCell>{getText(i18nKeys.CONCEPT_SETS__UPDATED)}</TableCell>
+                <TableCell>{getText(i18nKeys.CONCEPT_SETS__AUTHOR)}</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>

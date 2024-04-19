@@ -2,8 +2,10 @@ import React, { FC, useContext, useMemo } from "react";
 import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
 import "./MappingTable.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 const MappingTable: FC = () => {
+  const { getText, i18nKeys } = TranslationContext();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
   const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;
@@ -13,53 +15,53 @@ const MappingTable: FC = () => {
       {
         id: "0",
         accessorKey: "status",
-        header: "Status",
+        header: getText(i18nKeys.MAPPING_TABLE__STATUS),
         size: 150,
       },
       {
         id: "1",
         accessorKey: sourceCode,
-        header: "Source",
+        header: getText(i18nKeys.MAPPING_TABLE__SOURCE),
         size: 150,
       },
       {
         id: "2",
         accessorKey: sourceName,
-        header: "Name", // source name
+        header: getText(i18nKeys.MAPPING_TABLE__NAME), // source name
         size: 150,
       },
       {
         id: "3",
         accessorKey: sourceFrequency,
-        header: "Frequency",
+        header: getText(i18nKeys.MAPPING_TABLE__FREQUENCY),
         size: 150,
       },
       {
         id: "4",
         accessorKey: description,
-        header: "Description",
+        header: getText(i18nKeys.MAPPING_TABLE__DESCRIPTION),
         size: 150,
       },
       {
         id: "5",
         accessorKey: "conceptId",
-        header: "Concept ID",
+        header: getText(i18nKeys.MAPPING_TABLE__CONCEPT_ID),
         size: 150,
       },
       {
         id: "6",
         accessorKey: "conceptName",
-        header: "Concept Name",
+        header: getText(i18nKeys.MAPPING_TABLE__CONCEPT_NAME),
         size: 150,
       },
       {
         id: "7",
         accessorKey: "domainId",
-        header: "Domain",
+        header: getText(i18nKeys.MAPPING_TABLE__DOMAIN_ID),
         size: 150,
       },
     ],
-    [sourceCode, sourceName, sourceFrequency, description]
+    [sourceCode, sourceName, sourceFrequency, description, getText]
   );
 
   const TableBodyRowProps = ({ row }: { row: any }) => ({
