@@ -9,8 +9,10 @@ import { StudyInfoTab } from "../../../containers/researcher/Information/Informa
 import { LocationState } from "../../../types";
 import { useMenuAnchor, usePublicDatasets } from "../../../hooks";
 import "../Header.scss";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 const PublicStudyOverviewNav: FC = () => {
+  const { getText, i18nKeys } = TranslationContext();
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();
@@ -49,7 +51,7 @@ const PublicStudyOverviewNav: FC = () => {
   return (
     <li key="study-overview" onMouseEnter={openMenu} onMouseLeave={closeMenu} className={isActiveTab()}>
       <Link to={`${config.ROUTES.public}/overview`} data-text="Dataset overview" className="overview-title">
-        Dataset overview
+        {getText(i18nKeys.PUBLIC_STUDY_OVERVIEW_NAV__)}
       </Link>
       <ChevronDownIcon />
       <Menu

@@ -2,6 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { CsvReader } from "../CsvReader";
+import { LocaleProvider } from "../../../contexts/TranslationContext";
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -10,7 +11,11 @@ afterEach(() => {
 it("should trigger readAsText", async () => {
   const handleFileLoaded = jest.fn();
   const readAsTextSpy = jest.spyOn(FileReader.prototype, "readAsText");
-  const { getByTestId } = render(<CsvReader onFileLoaded={handleFileLoaded} />);
+  const { getByTestId } = render(
+    <LocaleProvider>
+      <CsvReader onFileLoaded={handleFileLoaded} />
+    </LocaleProvider>
+  );
 
   const fileSelector = getByTestId("file");
   const file = new File(["a,b"], "test.csv", { type: "text/csv" });
@@ -22,7 +27,11 @@ it("should trigger readAsText", async () => {
 it("should not support png", async () => {
   const handleFileLoaded = jest.fn();
   const readAsTextSpy = jest.spyOn(FileReader.prototype, "readAsText");
-  const { getByTestId } = render(<CsvReader onFileLoaded={handleFileLoaded} />);
+  const { getByTestId } = render(
+    <LocaleProvider>
+      <CsvReader onFileLoaded={handleFileLoaded} />
+    </LocaleProvider>
+  );
 
   const fileSelector = getByTestId("file");
   const file = new File(["a,b"], "not_supported.png", { type: "image/png" });

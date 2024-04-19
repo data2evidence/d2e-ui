@@ -6,6 +6,7 @@ import { Header } from "../Header";
 import { MockedProvider } from "@apollo/client/testing";
 import { MOCK_GET_STUDIES, MOCK_GET_MY_TENANT } from "../../../graphql/mocks";
 import { Tenant, Study } from "../../../types";
+import { LocaleProvider } from "../../../contexts/TranslationContext";
 
 const tenant: Tenant = {
   id: "t01",
@@ -26,11 +27,13 @@ jest.mock("../../../containers/auth", () => ({
 
 it("render correctly", () => {
   const { queryByTestId } = render(
-    <MockedProvider mocks={mocks} addTypename={false}>
-      <MemoryRouter>
-        <Header portalType="researcher" />
-      </MemoryRouter>
-    </MockedProvider>
+    <LocaleProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <MemoryRouter>
+          <Header portalType="researcher" />
+        </MemoryRouter>
+      </MockedProvider>
+    </LocaleProvider>
   );
 
   expect(queryByTestId("header")).toBeTruthy();
@@ -38,11 +41,13 @@ it("render correctly", () => {
 
 it("has 2 navigation menu", () => {
   const { queryByTestId } = render(
-    <MockedProvider mocks={mocks} addTypename={false}>
-      <MemoryRouter>
-        <Header portalType="researcher" />
-      </MemoryRouter>
-    </MockedProvider>
+    <LocaleProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <MemoryRouter>
+          <Header portalType="researcher" />
+        </MemoryRouter>
+      </MockedProvider>
+    </LocaleProvider>
   );
 
   expect(queryByTestId("nav")?.childElementCount).toBe(1);
