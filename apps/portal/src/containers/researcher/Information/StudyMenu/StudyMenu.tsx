@@ -15,6 +15,7 @@ import { loadPlugins } from "../../../../utils";
 import { IPluginItem, PluginDropdown } from "../../../../types";
 import { useEnabledFeatures } from "../../../../hooks";
 import SideDropdown from "../../../shared/SideDropDown/SideDropdown";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface StudyMenuProps {
   user: UserInfo;
@@ -67,6 +68,7 @@ export const StudyMenu: FC<StudyMenuProps> = ({
   isStudyMenuOpen,
   setIsStudyMenuOpen,
 }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const studyId = activeStudy?.id || "";
   const featureFlags = useEnabledFeatures();
 
@@ -132,13 +134,17 @@ export const StudyMenu: FC<StudyMenuProps> = ({
               <ListItemIcon>
                 <MenuIcon />
               </ListItemIcon>
-              <ListItemText primary="Menu" />
+              <ListItemText primary={getText(i18nKeys.STUDY_MENU__MENU)} />
             </ListItem>
           </Tooltip>
         </List>
         <Divider />
         <List sx={listStyles}>
-          <Tooltip title={isStudyMenuOpen ? "" : "Dataset information"} placement="right" arrow>
+          <Tooltip
+            title={isStudyMenuOpen ? "" : getText(i18nKeys.STUDY_MENU__DATASET_INFORMATION)}
+            placement="right"
+            arrow
+          >
             <ListItem
               button
               onClick={() => handleTabChange(StudyInfoTab.DataInfo)}
@@ -147,7 +153,7 @@ export const StudyMenu: FC<StudyMenuProps> = ({
               <ListItemIcon>
                 <StudyInformationIcon />
               </ListItemIcon>
-              <ListItemText primary="Dataset information" />
+              <ListItemText primary={getText(i18nKeys.STUDY_MENU__DATASET_INFORMATION)} />
             </ListItem>
           </Tooltip>
 

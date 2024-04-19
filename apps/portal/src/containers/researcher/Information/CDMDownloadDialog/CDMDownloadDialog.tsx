@@ -9,6 +9,7 @@ import QueryString from "../../../../utils/mri/QueryString";
 import { createZip } from "../../../../utils/mri/createZip";
 import streamSaver from "streamsaver";
 import { Zip, AsyncZipDeflate } from "fflate";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface CDMDownloadDialogProps {
   open: boolean;
@@ -130,6 +131,7 @@ async function getCDMDataResponse(studyId: string, cancelToken: any) {
 }
 
 export const CDMDownloadDialog: FC<CDMDownloadDialogProps> = ({ open, studyId, onClose }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [isLoading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState<Feedback>({});
   const cancelToken = new AbortController();
@@ -194,8 +196,7 @@ export const CDMDownloadDialog: FC<CDMDownloadDialogProps> = ({ open, studyId, o
       failCleanup();
       setFeedback({
         type: "error",
-        message:
-          "Error occurred while retrieving ZIP from MRI. To report the error, please send an email to help@data4life.care",
+        message: getText(i18nKeys.CDM_DOWNLOAD_DIALOG__ERROR_ZIP),
       });
       console.error("Get Zip error: ", err);
     }
@@ -208,8 +209,7 @@ export const CDMDownloadDialog: FC<CDMDownloadDialogProps> = ({ open, studyId, o
         failCleanup();
         setFeedback({
           type: "error",
-          message:
-            "Error occurred while downloading patient data. To report the error, please send an email to help@data4life.care",
+          message: getText(i18nKeys.CDM_DOWNLOAD_DIALOG__ERROR_DOWNLOAD),
         });
         console.log("There is an error in retrieving the zip, ", err);
       });
@@ -225,9 +225,9 @@ export const CDMDownloadDialog: FC<CDMDownloadDialogProps> = ({ open, studyId, o
       onClose={onCloseWithSuccessCleanup}
       feedback={feedback}
     >
-      <p className="cdm-download-text">Downloading Zip. This could take a while if the data is large...</p>
+      <p className="cdm-download-text">{getText(i18nKeys.CDM_DOWNLOAD_DIALOG__DOWNLOADING_ZIP)}</p>
       <div className="button-group-actions">
-        <Button text="Please wait" loading={isLoading} block disabled />
+        <Button text={getText(i18nKeys.CDM_DOWNLOAD_DIALOG__PLEASE_WAIT)} loading={isLoading} block disabled />
       </div>
     </Dialog>
   );

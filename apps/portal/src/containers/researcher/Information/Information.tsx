@@ -35,6 +35,7 @@ import { saveBlobAs } from "../../../utils";
 import { api } from "../../../axios/api";
 import { DQD_TABLE_TYPES, DatasetRelease } from "../../../plugins/SystemAdmin/DQD/types";
 import "./Information.scss";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 enum Access {
   None,
@@ -96,6 +97,7 @@ const styles: SxProps = {
 };
 
 export const Information: FC = () => {
+  const { getText, i18nKeys } = TranslationContext();
   const { setFeedback } = useFeedback();
   const [requestLoading, setRequestLoading] = useState(false);
 
@@ -178,14 +180,14 @@ export const Information: FC = () => {
 
           setFeedback({
             type: "success",
-            message: "Request has been sent",
+            message: getText(i18nKeys.INFORMATION__FEEDBACK_MESSAGE),
             autoClose: 6000,
           });
         } catch (e) {
           setFeedback({
             type: "error",
-            message: "An error has occurred.",
-            description: "Please try again. To report the error, please send an email to help@data4life.care.",
+            message: getText(i18nKeys.INFORMATION__FEEDBACK_ERROR_MESSAGE),
+            description: getText(i18nKeys.INFORMATION__FEEDBACK_ERROR_DESCRIPTION),
           });
         } finally {
           setRequestLoading(false);
@@ -211,7 +213,10 @@ export const Information: FC = () => {
     <div className="information__container">
       <div className="dataset__info__dropdown">
         <SubTitle style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          Dataset:<Typography style={{ color: "grey" }}>{study?.studyDetail?.name || "Untitled"}</Typography>
+          {getText(i18nKeys.INFORMATION__DATASET)}:
+          <Typography style={{ color: "grey" }}>
+            {study?.studyDetail?.name || getText(i18nKeys.INFORMATION__UNTITLED)}
+          </Typography>
         </SubTitle>
         {releases.length !== 0 && (
           <Select
@@ -222,7 +227,7 @@ export const Information: FC = () => {
             disabled={releasesLoading}
           >
             <MenuItem value="" sx={styles} disableRipple>
-              Select release
+              {getText(i18nKeys.INFORMATION__SELECT_RELEASE)}
             </MenuItem>
             {releases?.map((release: DatasetRelease) => (
               <MenuItem value={release.id} key={release.id} sx={styles} disableRipple>
@@ -245,7 +250,7 @@ export const Information: FC = () => {
                     },
                     marginRight: "8px",
                   }}
-                  label="Dataset Info"
+                  label={getText(i18nKeys.INFORMATION__TAB_DATASET_INFO)}
                   id="tab-0"
                   value="info"
                 />
@@ -256,7 +261,7 @@ export const Information: FC = () => {
                       width: "200px",
                     },
                   }}
-                  label="Data Quality"
+                  label={getText(i18nKeys.INFORMATION__TAB_DATA_QUALITY)}
                   id="tab-1"
                   value="quality"
                 />
@@ -267,7 +272,7 @@ export const Information: FC = () => {
                       width: "200px",
                     },
                   }}
-                  label="Data Characterization"
+                  label={getText(i18nKeys.INFORMATION__TAB_DATA_CHARACTERIZATION)}
                   id="tab-2"
                   value="characterization"
                 />
@@ -279,7 +284,7 @@ export const Information: FC = () => {
                         width: "200px",
                       },
                     }}
-                    label="History"
+                    label={getText(i18nKeys.INFORMATION__TAB_HISTORY)}
                     id="tab-4"
                     value="history"
                   />
@@ -292,7 +297,7 @@ export const Information: FC = () => {
                         width: "200px",
                       },
                     }}
-                    label="Dashboard"
+                    label={getText(i18nKeys.INFORMATION__TAB_DASHBOARD)}
                     id="tab-3"
                     value="dashboard"
                   />
@@ -312,7 +317,7 @@ export const Information: FC = () => {
             </div>
             {tabValue === DatasetInfoTab.DatasetInfo && (
               <div className="dataset__info">
-                <SubTitle>How to access the data</SubTitle>
+                <SubTitle>{getText(i18nKeys.INFORMATION__HOW_TO_ACCESS)}</SubTitle>
                 <div className="tab__content__info">
                   <ReactMarkdown>{study?.studyDetail?.description || ""}</ReactMarkdown>
                 </div>
@@ -321,7 +326,7 @@ export const Information: FC = () => {
                     {tags.length > 0 && (
                       <>
                         <div className="tags__content">
-                          <SubTitle>Tags</SubTitle>
+                          <SubTitle>{getText(i18nKeys.INFORMATION__TAGS)}</SubTitle>
                           <Paper component="ul" className="tag__list" elevation={0}>
                             {tags.map((tag: StudyTag) => (
                               <li key={tag.name}>
@@ -335,7 +340,7 @@ export const Information: FC = () => {
                     {attributes.length > 0 && (
                       <>
                         <div className="metadata__content">
-                          <SubTitle>Metadata</SubTitle>
+                          <SubTitle>{getText(i18nKeys.INFORMATION__METADATA)}</SubTitle>
                           <TableContainer className="study-metadata">
                             <Table>
                               <colgroup>
@@ -344,8 +349,8 @@ export const Information: FC = () => {
                               </colgroup>
                               <TableHead>
                                 <TableRow>
-                                  <TableCell>Resource Type</TableCell>
-                                  <TableCell>Dataset</TableCell>
+                                  <TableCell>{getText(i18nKeys.INFORMATION__RESOURCE_TYPE)}</TableCell>
+                                  <TableCell>{getText(i18nKeys.INFORMATION__DATASET)}</TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
@@ -366,7 +371,7 @@ export const Information: FC = () => {
                     )}
                   </div>
                   <div className="files__container">
-                    <SubTitle>Files</SubTitle>
+                    <SubTitle>{getText(i18nKeys.INFORMATION__FILES)}</SubTitle>
                     <TableContainer>
                       <Table>
                         <colgroup>
@@ -376,16 +381,16 @@ export const Information: FC = () => {
                         </colgroup>
                         <TableHead>
                           <TableRow>
-                            <TableCell>Filename</TableCell>
-                            <TableCell>Size</TableCell>
-                            <TableCell>Download file</TableCell>
+                            <TableCell>{getText(i18nKeys.INFORMATION__FILENAME)}</TableCell>
+                            <TableCell>{getText(i18nKeys.INFORMATION__SIZE)}</TableCell>
+                            <TableCell>{getText(i18nKeys.INFORMATION__DOWNLOAD_FILE)}</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           {(!resources || resources.length === 0) && (
                             <TableRow>
                               <TableCell colSpan={4} align="center">
-                                No file available
+                                {getText(i18nKeys.INFORMATION__NO_FILE_AVAILABLE)}
                               </TableCell>
                             </TableRow>
                           )}
@@ -396,7 +401,7 @@ export const Information: FC = () => {
                               <TableCell>
                                 <IconButton
                                   startIcon={<DownloadIcon />}
-                                  title="Download"
+                                  title={getText(i18nKeys.INFORMATION__DOWNLOAD)}
                                   onClick={() => handleDownloadResource(res)}
                                   loading={downloading === res.name}
                                 />
@@ -412,10 +417,10 @@ export const Information: FC = () => {
                   <>
                     <FeatureGate featureFlags={[FEATURE_CDM_DOWNLOAD]}>
                       <div className="button-keygen__container">
-                        <h3 className="keygen__title">Patient Data</h3>
+                        <h3 className="keygen__title">{getText(i18nKeys.INFORMATION__PATIENT_DATA)}</h3>
                         <Button
                           className="button-keygen__block"
-                          text="Download CDM Data"
+                          text={getText(i18nKeys.INFORMATION___DOWNLOAD_CDM_DATA)}
                           block
                           onClick={openCDMDownload}
                           loading={showCDMDownloadDialog}
@@ -434,18 +439,22 @@ export const Information: FC = () => {
 
                 {study?.studyDetail?.showRequestAccess && [Access.None, Access.Pending].includes(getAccess()) && (
                   <>
-                    <div className="tab__content__subtitle">Request access</div>
+                    <div className="tab__content__subtitle">{getText(i18nKeys.INFORMATION__REQUEST_ACCESS)}</div>
                     {getAccess() === Access.None && (
                       <Button
                         // @ts-ignore
                         ref={requestAccessRef}
-                        text="Request access"
+                        text={getText(i18nKeys.INFORMATION__REQUEST_ACCESS)}
                         className="button__request"
                         loading={requestLoading}
                       />
                     )}
                     {getAccess() === Access.Pending && (
-                      <Button text="Pending approval" className="button__request" disabled />
+                      <Button
+                        text={getText(i18nKeys.INFORMATION__PENDING_APPROVAL)}
+                        className="button__request"
+                        disabled
+                      />
                     )}
                   </>
                 )}
@@ -455,7 +464,7 @@ export const Information: FC = () => {
               <>
                 {!study?.schemaName ? (
                   <div className="info__section">
-                    <div>Error: Schema Name is undefined </div>
+                    <div>{getText(i18nKeys.INFORMATION__SCHEMA_NAME_UNDEFINED)}</div>
                   </div>
                 ) : (
                   <DQDJobResults
@@ -470,18 +479,18 @@ export const Information: FC = () => {
               <>
                 {!study?.schemaName ? (
                   <div className="info__section">
-                    <div>Error: Schema Name or Database Name is undefined </div>
+                    <div>{getText(i18nKeys.INFORMATION__DATABASE_NAME_UNDEFINED)}</div>
                   </div>
                 ) : (
                   <>
-                    <SubTitle>Overview</SubTitle>
+                    <SubTitle>{getText(i18nKeys.INFORMATION__OVERVIEW)}</SubTitle>
                     <DQDJobResults
                       datasetId={activeStudyId}
                       datasetName={study?.schemaName}
                       tableType={DQD_TABLE_TYPES.DATA_QUALITY_OVERVIEW}
                       activeReleaseId={activeReleaseId}
                     />
-                    <SubTitle>Results</SubTitle>
+                    <SubTitle>{getText(i18nKeys.INFORMATION__RESULTS)}</SubTitle>
                     <DQDJobResults
                       datasetId={activeStudyId}
                       datasetName={study?.schemaName}
