@@ -397,25 +397,26 @@ export const Terminology: FC<TerminologyProps> = ({
   return (
     <WithDrawer onClose={onClickClose} isDrawer={isDrawer} open={open}>
       <div className="terminology__container">
-        <div
-          style={{
-            height: "40px",
-            width: "100%",
-            backgroundColor: "#edf2f7",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ color: "#000080", marginLeft: 10, fontWeight: 500 }}>
-            {isConceptSet ? "Concept Sets" : "Concepts"}
-          </div>
-          {isDrawer && (
+        {isDrawer && (
+          <div
+            style={{
+              height: "40px",
+              width: "100%",
+              backgroundColor: "#edf2f7",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ color: "#000080", marginLeft: 10, fontWeight: 500 }}>
+              {isConceptSet ? "Concept Sets" : "Concepts"}
+            </div>
             <div style={{ color: "#000080", marginRight: 10, cursor: "pointer" }} onClick={onClickClose}>
               x
             </div>
-          )}
-        </div>
+            )
+          </div>
+        )}
         {!selectedDatasetId ? (
           <div
             style={{
