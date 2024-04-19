@@ -17,6 +17,7 @@ import { api } from "../../../../axios/api";
 import "./EditDbCredentialDialog.scss";
 import { DbCredentialProcessor } from "../CredentialProcessor";
 import { validateCredentials } from "../CredentialValidator";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface EditDbCredentialDialogProps {
   open: boolean;
@@ -57,6 +58,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const EditDbCredentialDialog: FC<EditDbCredentialDialogProps> = ({ open, onClose, db }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
@@ -95,7 +97,7 @@ export const EditDbCredentialDialog: FC<EditDbCredentialDialogProps> = ({ open, 
       await api.dbCredentialsMgr.updateDbCredentials({ id: db.id, credentials });
       setFeedback({
         type: "success",
-        message: `Database ${db.code} credentials updated`,
+        message: getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__SUCCESS, [db.code]),
       });
 
       handleClose("success");
@@ -107,19 +109,19 @@ export const EditDbCredentialDialog: FC<EditDbCredentialDialogProps> = ({ open, 
         console.log("There is an error in updating password", err);
         setFeedback({
           type: "error",
-          message: "An error has occurred.",
-          description: "Please try again. To report the error, please send an email to help@data4life.care.",
+          message: getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__ERROR),
+          description: getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__ERROR_DESCRIPTION),
         });
       }
     } finally {
       setLoading(false);
     }
-  }, [formData.credentials, db]);
+  }, [formData.credentials, db, getText]);
 
   return (
     <Dialog
       className="edit-db-dialog"
-      title="Edit database credentials"
+      title={getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__EDIT_DATABASE_CREDENTIALS)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -128,18 +130,20 @@ export const EditDbCredentialDialog: FC<EditDbCredentialDialogProps> = ({ open, 
       <Divider />
       <div className="edit-db-dialog__content">
         <Box mb={4}>
-          <label className="database-code__label">Database Code</label>
+          <label className="database-code__label">{getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__DATABASE_CODE)}</label>
           <label className="database-code-value__label">{db.code}</label>
         </Box>
         <Box mb={4}>
           <Box mb={2}>
-            <b>Credentials</b>
+            <b>{getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__CREDENTIALS)}</b>
           </Box>
           {formData?.credentials?.map((cred, index) => (
             <Box key={index} display="flex" gap={3} mb={1}>
               <Box sx={{ width: "100px" }}>
                 <FormControl fullWidth variant="standard">
-                  <InputLabel id="user-scope-label">Privilege</InputLabel>
+                  <InputLabel id="user-scope-label">
+                    {getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__PRIVILEGE)}
+                  </InputLabel>
                   <Select
                     labelId="user-scope-label"
                     id="user-scope"
@@ -179,7 +183,7 @@ export const EditDbCredentialDialog: FC<EditDbCredentialDialogProps> = ({ open, 
               </Box>
               <Box sx={{ width: "100px" }} flex="1">
                 <TextField
-                  label="Username"
+                  label={getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__USERNAME)}
                   variant="standard"
                   fullWidth
                   value={cred.username}
@@ -199,7 +203,7 @@ export const EditDbCredentialDialog: FC<EditDbCredentialDialogProps> = ({ open, 
               </Box>
               <Box sx={{ width: "200px" }}>
                 <TextField
-                  label="Password"
+                  label={getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__PASSWORD)}
                   variant="standard"
                   type="password"
                   sx={{ width: "200px" }}
@@ -220,7 +224,9 @@ export const EditDbCredentialDialog: FC<EditDbCredentialDialogProps> = ({ open, 
               </Box>
               <Box sx={{ width: "130px" }}>
                 <FormControl fullWidth variant="standard">
-                  <InputLabel id="service-scope-label">Service</InputLabel>
+                  <InputLabel id="service-scope-label">
+                    {getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__SERVICE)}
+                  </InputLabel>
                   <Select
                     labelId="service-scope-label"
                     id="service-scope"
@@ -266,8 +272,13 @@ export const EditDbCredentialDialog: FC<EditDbCredentialDialogProps> = ({ open, 
 
       <div className="edit-db-dialog__footer">
         <Box display="flex" gap={1} className="edit-db-dialog__footer-actions">
-          <Button text="Cancel" variant="secondary" onClick={() => handleClose("cancelled")} disabled={loading} />
-          <Button text="Update" onClick={handleUpdate} loading={loading} />
+          <Button
+            text={getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__CANCEL)}
+            variant="secondary"
+            onClick={() => handleClose("cancelled")}
+            disabled={loading}
+          />
+          <Button text={getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__UPDATE)} onClick={handleUpdate} loading={loading} />
         </Box>
       </div>
     </Dialog>

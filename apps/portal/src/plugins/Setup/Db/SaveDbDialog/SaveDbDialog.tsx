@@ -33,6 +33,7 @@ import { validateCredentials } from "../CredentialValidator";
 import { DbCredentialProcessor } from "../CredentialProcessor";
 import { isValidJson } from "../../../../utils";
 import "./SaveDbDialog.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface SaveDbDialogProps {
   open: boolean;
@@ -109,6 +110,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
@@ -164,7 +166,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         if (!isValidJson(internalExtra.value)) {
           setFeedback({
             type: "error",
-            message: "Please enter a valid JSON value in Extra for Internal.",
+            message: getText(i18nKeys.SAVE_DB_DIALOG__ENTER_VALID_JSON_INTERNAL),
           });
           return;
         }
@@ -175,7 +177,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         if (!isValidJson(dataPlatformExtra.value)) {
           setFeedback({
             type: "error",
-            message: "Please enter a valid JSON value in Extra for Data Platform.",
+            message: getText(i18nKeys.SAVE_DB_DIALOG__ENTER_VALID_JSON_DATA_PLATFORM),
           });
           return;
         }
@@ -187,7 +189,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
 
       setFeedback({
         type: "success",
-        message: `Database added successfully`,
+        message: getText(i18nKeys.SAVE_DB_DIALOG__SUCCESS),
         autoClose: 60000,
       });
 
@@ -202,19 +204,19 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         console.error("There is an error in saving database", err);
         setFeedback({
           type: "error",
-          message: "An error has occurred.",
-          description: "Please try again. To report the error, please send an email to help@data4life.care.",
+          message: getText(i18nKeys.SAVE_DB_DIALOG__ERROR),
+          description: getText(i18nKeys.SAVE_DB_DIALOG__ERROR_MESSAGE),
         });
       }
     } finally {
       setSaving(false);
     }
-  }, [handleClose, formData, setFeedback]);
+  }, [handleClose, formData, setFeedback, getText]);
 
   return (
     <Dialog
       className="save-db-dialog"
-      title="Add database"
+      title={getText(i18nKeys.SAVE_DB_DIALOG__ADD_DATABASE)}
       feedback={feedback}
       closable
       fullWidth
@@ -226,14 +228,14 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
       <div className="save-db-dialog__content">
         <Box mb={4} display="flex" gap={4}>
           <TextField
-            label="Host"
+            label={getText(i18nKeys.SAVE_DB_DIALOG__HOST)}
             variant="standard"
             sx={{ minWidth: "300px" }}
             value={formData.host}
             onChange={(event) => handleFormDataChange({ host: event.target?.value })}
           />
           <TextField
-            label="Port"
+            label={getText(i18nKeys.SAVE_DB_DIALOG__PORT)}
             variant="standard"
             type="number"
             sx={{ width: "150px" }}
@@ -241,7 +243,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
             onChange={(event) => handleFormDataChange({ port: Number(event.target?.value || 0) })}
           />
           <FormControl fullWidth variant="standard">
-            <InputLabel id="dialect-select-label">Dialect</InputLabel>
+            <InputLabel id="dialect-select-label">{getText(i18nKeys.SAVE_DB_DIALOG__DIALECT)}</InputLabel>
             <Select
               labelId="dialect-select-label"
               id="dialect-select"
@@ -258,14 +260,14 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         </Box>
         <Box mb={4} display="flex" gap={4}>
           <TextField
-            label="Database code"
+            label={getText(i18nKeys.SAVE_DB_DIALOG__DATABASE_CODE)}
             variant="standard"
             sx={{ minWidth: "300px" }}
             value={formData.code}
             onChange={(event) => handleFormDataChange({ code: event.target?.value })}
           />
           <TextField
-            label="Database name"
+            label={getText(i18nKeys.SAVE_DB_DIALOG__DATABASE_NAME)}
             variant="standard"
             sx={{ minWidth: "300px" }}
             value={formData.name}
@@ -273,7 +275,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
           />
         </Box>
 
-        <Box fontWeight="bold">Vocab Schemas</Box>
+        <Box fontWeight="bold">{getText(i18nKeys.SAVE_DB_DIALOG__VOCAB_SCHEMAS)}</Box>
         <Box mb={4}>
           <Autocomplete
             multiple
@@ -293,13 +295,13 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         </Box>
         <Box mb={4}>
           <Box mb={2}>
-            <b>Extra</b>
+            <b>{getText(i18nKeys.SAVE_DB_DIALOG__EXTRA)}</b>
           </Box>
           {formData?.extra?.map((extra, index) => (
             <Box key={index} display="flex" gap={3} mb={1}>
               <Box flex="1">
                 <TextField
-                  label="Value (in JSON format)"
+                  label={getText(i18nKeys.SAVE_DB_DIALOG__VALUE)}
                   variant="standard"
                   fullWidth
                   value={extra.value}
@@ -319,7 +321,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
               </Box>
               <Box sx={{ width: "130px" }}>
                 <FormControl fullWidth variant="standard">
-                  <InputLabel id="service-scope-label">Service</InputLabel>
+                  <InputLabel id="service-scope-label">{getText(i18nKeys.SAVE_DB_DIALOG__SERVICE)}</InputLabel>
                   <Select
                     labelId="service-scope-label"
                     id="service-scope"
@@ -350,13 +352,13 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         </Box>
         <Box mb={4}>
           <Box mb={2}>
-            <b>Credentials</b>
+            <b>{getText(i18nKeys.SAVE_DB_DIALOG__CREDENTIALS)}</b>
           </Box>
           {formData?.credentials?.map((cred, index) => (
             <Box key={index} display="flex" gap={3} mb={1}>
               <Box sx={{ width: "100px" }}>
                 <FormControl fullWidth variant="standard">
-                  <InputLabel id="user-scope-label">Privilege</InputLabel>
+                  <InputLabel id="user-scope-label">{getText(i18nKeys.SAVE_DB_DIALOG__PRIVILEGE)}</InputLabel>
                   <Select
                     labelId="user-scope-label"
                     id="user-scope"
@@ -396,7 +398,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
               </Box>
               <Box flex="1">
                 <TextField
-                  label="Username"
+                  label={getText(i18nKeys.SAVE_DB_DIALOG__USERNAME)}
                   variant="standard"
                   fullWidth
                   value={cred.username}
@@ -416,7 +418,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
               </Box>
               <Box sx={{ width: "200px" }}>
                 <TextField
-                  label="Password"
+                  label={getText(i18nKeys.SAVE_DB_DIALOG__PASSWORD)}
                   variant="standard"
                   type="password"
                   sx={{ width: "200px" }}
@@ -437,7 +439,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
               </Box>
               <Box sx={{ width: "130px" }}>
                 <FormControl fullWidth variant="standard">
-                  <InputLabel id="service-scope-label">Service</InputLabel>
+                  <InputLabel id="service-scope-label">{getText(i18nKeys.SAVE_DB_DIALOG__SERVICE)}</InputLabel>
                   <Select
                     labelId="service-scope-label"
                     id="service-scope"
@@ -481,8 +483,12 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
       </div>
       <div className="save-db-dialog__footer">
         <Box display="flex" gap={1} className="save-db-dialog__footer-actions">
-          <Button text="Cancel" variant="secondary" onClick={() => handleClose("cancelled")} />
-          <Button text="Save" onClick={handleSave} loading={saving} />
+          <Button
+            text={getText(i18nKeys.SAVE_DB_DIALOG__CANCEL)}
+            variant="secondary"
+            onClick={() => handleClose("cancelled")}
+          />
+          <Button text={getText(i18nKeys.SAVE_DB_DIALOG__SAVE)} onClick={handleSave} loading={saving} />
         </Box>
       </div>
     </Dialog>

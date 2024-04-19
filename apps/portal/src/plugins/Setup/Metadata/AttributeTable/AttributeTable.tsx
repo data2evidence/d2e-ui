@@ -7,8 +7,10 @@ import { SaveAttributeDialog } from "./SaveAttributeDialog/SaveAttributeDialog";
 import { DeleteAttributeDialog } from "./DeleteAttributeDialog/DeleteAttributeDialog";
 import { DatasetAttributeConfig } from "../../../../types";
 import "./AttributeTable.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 const AttributeTable: FC = () => {
+  const { getText, i18nKeys } = TranslationContext();
   const [refetch, setRefetch] = useState(0);
   const [selectedAttribute, setSelectedAttribute] = useState<DatasetAttributeConfig | undefined>(undefined);
   const [attributeConfigs, loading, error] = useDatasetAttributeConfigs(refetch);
@@ -47,27 +49,27 @@ const AttributeTable: FC = () => {
   }
 
   if (loading) {
-    return <Loader text="Loading Attribute Configs" />;
+    return <Loader text={getText(i18nKeys.ATTRIBUTE_TABLE__LOADER)} />;
   }
 
   return (
     <>
       <Box>
         <div className="metadata-attribute-table__header">
-          <Title>Metadata</Title>
+          <Title>{getText(i18nKeys.ATTRIBUTE_TABLE__METADATA)}</Title>
           <div className="metadata-attribute-table__add-button">
-            <Button text="Add Attribute" onClick={handleAdd} />
+            <Button text={getText(i18nKeys.ATTRIBUTE_TABLE__ADD_ATTRIBUTE)} onClick={handleAdd} />
           </div>
         </div>
         <TableContainer className="metadata-attribute-table__table">
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Attribute Id</TableCell>
-                <TableCell>Attribute Name</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Datatype</TableCell>
-                <TableCell>Is Displayed</TableCell>
+                <TableCell>{getText(i18nKeys.ATTRIBUTE_TABLE__ATTRIBUTE_ID)}</TableCell>
+                <TableCell>{getText(i18nKeys.ATTRIBUTE_TABLE__ATTRIBUTE_NAME)}</TableCell>
+                <TableCell>{getText(i18nKeys.ATTRIBUTE_TABLE__CATEGORY)}</TableCell>
+                <TableCell>{getText(i18nKeys.ATTRIBUTE_TABLE__DATATYPE)}</TableCell>
+                <TableCell>{getText(i18nKeys.ATTRIBUTE_TABLE__IS_DISPLAYED)}</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -83,12 +85,12 @@ const AttributeTable: FC = () => {
                     <TableCell>
                       <IconButton
                         startIcon={<EditIcon />}
-                        title="Edit"
+                        title={getText(i18nKeys.ATTRIBUTE_TABLE__EDIT)}
                         onClick={() => handleEdit(metadataAttribute.id)}
                       />
                       <IconButton
                         startIcon={<TrashIcon />}
-                        title="Delete"
+                        title={getText(i18nKeys.ATTRIBUTE_TABLE__DELETE)}
                         onClick={() => handleDelete(metadataAttribute.id)}
                       />
                     </TableCell>

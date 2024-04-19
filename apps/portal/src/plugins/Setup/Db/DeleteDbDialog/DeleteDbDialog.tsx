@@ -5,6 +5,7 @@ import { useFeedback } from "../../../../hooks";
 import { Box, Button, Dialog } from "@portal/components";
 import { CloseDialogType, IDatabase } from "../../../../types";
 import "./DeleteDbDialog.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface DeleteDbDialogProps {
   open: boolean;
@@ -13,6 +14,7 @@ interface DeleteDbDialogProps {
 }
 
 export const DeleteDbDialog: FC<DeleteDbDialogProps> = ({ open, onClose, db }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const { setFeedback } = useFeedback();
   const [deleting, setDeletingn] = useState(false);
 
@@ -29,19 +31,19 @@ export const DeleteDbDialog: FC<DeleteDbDialogProps> = ({ open, onClose, db }) =
       await api.dbCredentialsMgr.deleteDb(db.id);
       setFeedback({
         type: "success",
-        message: "Database deleted successfully",
+        message: getText(i18nKeys.DELETE_DB_DIALOG__DELETE_SUCCESS),
         autoClose: 6000,
       });
       handleClose("success");
     } finally {
       setDeletingn(false);
     }
-  }, [handleClose, db.id, setFeedback]);
+  }, [handleClose, db.id, setFeedback, getText]);
 
   return (
     <Dialog
       className="delete-db-dialog"
-      title="Delete database"
+      title={getText(i18nKeys.DELETE_DB_DIALOG__DELETE_DATABASE)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -49,14 +51,18 @@ export const DeleteDbDialog: FC<DeleteDbDialogProps> = ({ open, onClose, db }) =
       <Divider />
       <div className="delete-db-dialog__content">
         <div className="delete-db-dialog__content-text">
-          Are you sure you want to delete the following <br />
-          Database: <strong>&quot;{db.code}&quot;</strong>? <br />
+          {getText(i18nKeys.DELETE_DB_DIALOG__CONFIRMATION)} <br />
+          {getText(i18nKeys.DELETE_DB_DIALOG___DATABASE)}: <strong>&quot;{db.code}&quot;</strong>? <br />
         </div>
       </div>
       <div className="delete-db-dialog__footer">
         <Box display="flex" gap={1} className="delete-db-dialog__footer-actions">
-          <Button text="Cancel" variant="secondary" onClick={() => handleClose("cancelled")} />
-          <Button text="Delete" onClick={handleDelete} loading={deleting} />
+          <Button
+            text={getText(i18nKeys.DELETE_DB_DIALOG__CANCEL)}
+            variant="secondary"
+            onClick={() => handleClose("cancelled")}
+          />
+          <Button text={getText(i18nKeys.DELETE_DB_DIALOG__DELETE)} onClick={handleDelete} loading={deleting} />
         </Box>
       </div>
     </Dialog>

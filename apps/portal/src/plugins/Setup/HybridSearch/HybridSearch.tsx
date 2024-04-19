@@ -3,6 +3,7 @@ import { Box, Button, Checkbox, Loader, TextField, Title } from "@portal/compone
 import { api } from "../../../axios/api";
 import "./HybridSearch.scss";
 import { useHybridSearchConfigs, useFeedback } from "../../../hooks";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 interface FormData {
   id: number;
@@ -19,6 +20,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const HybridSearch: FC = () => {
+  const { getText, i18nKeys } = TranslationContext();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [saving, setSaving] = useState(false);
   const { setFeedback } = useFeedback();
@@ -50,7 +52,7 @@ export const HybridSearch: FC = () => {
     try {
       setSaving(true);
       await api.terminology.updateHybridSearchConfig(formData);
-      setFeedback({ type: "success", message: "Changes saved", autoClose: 6000 });
+      setFeedback({ type: "success", message: getText(i18nKeys.HYBRID_SEARCH__SUCCESS), autoClose: 6000 });
     } catch (err: any) {
       console.error(err);
 
@@ -59,14 +61,14 @@ export const HybridSearch: FC = () => {
       } else {
         setFeedback({
           type: "error",
-          message: "An error has occurred.",
-          description: "Please try again. To report the error, please send an email to help@data4life.care.",
+          message: getText(i18nKeys.HYBRID_SEARCH__ERROR),
+          description: getText(i18nKeys.HYBRID_SEARCH__ERROR_DESCRIPTION),
         });
       }
     } finally {
       setSaving(false);
     }
-  }, [formData, setFeedback]);
+  }, [formData, setFeedback, getText]);
 
   if (error) console.error(error.message);
 
@@ -77,13 +79,13 @@ export const HybridSearch: FC = () => {
       ) : (
         <div className="hybrid-search">
           <div className="hybrid-search__header">
-            <Title>Hybrid Search Configurations</Title>
+            <Title>{getText(i18nKeys.HYBRID_SEARCH__CONFIGURATIONS)}</Title>
           </div>
           <div className="hybrid-search__content">
             <Box mb={4}>
               <Checkbox
                 checked={formData.isEnabled}
-                label="Enable Hybrid Search"
+                label={getText(i18nKeys.HYBRID_SEARCH__ENABLE)}
                 onChange={(event: ChangeEvent<HTMLInputElement>) =>
                   handleFormDataChange({ isEnabled: event.target.checked })
                 }
@@ -91,30 +93,30 @@ export const HybridSearch: FC = () => {
             </Box>
             <Box mb={4}>
               <TextField
-                label="Semantic Ratio"
+                label={getText(i18nKeys.HYBRID_SEARCH__SEMANTIC_RATIO)}
                 variant="standard"
                 sx={{ width: "100%" }}
                 value={formData.semanticRatio}
                 onChange={(event) => handleFormDataChange({ semanticRatio: event.target?.value })}
                 error={semanticRatioError}
-                helperText={semanticRatioError && "Semantic ratio must have a value between 0 and 1"}
+                helperText={semanticRatioError && getText(i18nKeys.HYBRID_SEARCH__SEMANTIC_RATIO_ERROR)}
               />
             </Box>
             <Box mb={4}>
               <TextField
-                label="Embeddings Model"
+                label={getText(i18nKeys.HYBRID_SEARCH__EMBEDDINGS_MODEL)}
                 variant="standard"
                 sx={{ width: "100%" }}
                 value={formData.model}
                 onChange={(event) => handleFormDataChange({ model: event.target?.value })}
                 error={modelError}
-                helperText={modelError && "Embeddings model cannot be empty"}
+                helperText={modelError && getText(i18nKeys.HYBRID_SEARCH__EMBEDDINGS_MODEL_ERROR)}
               />
             </Box>
           </div>
           <div className="hybrid-search__footer">
             <Box display="flex" gap={1} className="hybrid-search__footer-actions">
-              <Button text="Save" onClick={handleSave} loading={saving} />
+              <Button text={getText(i18nKeys.HYBRID_SEARCH__SAVE)} onClick={handleSave} loading={saving} />
             </Box>
           </div>
         </div>
