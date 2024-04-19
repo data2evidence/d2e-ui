@@ -444,7 +444,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       enableColumnActions: false,
     },
     onColumnFiltersChange: setColumnFilters,
-    state: { columnFilters, columnOrder },
+    state: { columnFilters, columnOrder, isLoading },
     enablePagination: false, // Use TablePagination instead of built in
     muiTableBodyRowProps: ({ row, staticRowIndex }) => ({
       onClick: () => {
@@ -492,6 +492,11 @@ const TerminologyList: FC<TerminologyListProps> = ({
             fontSize: 10,
           },
         },
+      },
+    },
+    muiCircularProgressProps: {
+      sx: {
+        color: "#000080",
       },
     },
     enableTopToolbar: false,
