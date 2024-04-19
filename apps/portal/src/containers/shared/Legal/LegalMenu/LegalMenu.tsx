@@ -6,6 +6,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { CollapsibleDrawer, MenuIcon, TermsOfUseIcon, PrivacyPolicyIcon, ImprintIcon } from "@portal/components";
 import { LegalTab } from "../Legal";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface LegalMenuProps {
   activeTab: string;
@@ -13,6 +14,7 @@ interface LegalMenuProps {
 }
 
 const LegalMenu: FC<LegalMenuProps> = ({ activeTab, onClick }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [open, setOpen] = useState(true);
 
   const handleDrawerToggle = () => {
@@ -27,7 +29,7 @@ const LegalMenu: FC<LegalMenuProps> = ({ activeTab, onClick }) => {
             <ListItemIcon>
               <MenuIcon />
             </ListItemIcon>
-            <ListItemText primary="Menu" />
+            <ListItemText primary={getText(i18nKeys.LEGAL_MENU__MENU)} />
           </ListItem>
         </List>
         <Divider />
@@ -36,7 +38,7 @@ const LegalMenu: FC<LegalMenuProps> = ({ activeTab, onClick }) => {
             <ListItemIcon>
               <TermsOfUseIcon />
             </ListItemIcon>
-            <ListItemText primary="Terms of Use" />
+            <ListItemText primary={getText(i18nKeys.LEGAL_MENU__TERMS_OF_USE)} />
           </ListItem>
 
           <ListItem
@@ -47,14 +49,14 @@ const LegalMenu: FC<LegalMenuProps> = ({ activeTab, onClick }) => {
             <ListItemIcon>
               <PrivacyPolicyIcon />
             </ListItemIcon>
-            <ListItemText primary="Privacy Policy" />
+            <ListItemText primary={getText(i18nKeys.LEGAL_MENU__PRIVACY_POLICY)} />
           </ListItem>
 
           <ListItem button onClick={() => onClick(LegalTab.Imprint)} selected={activeTab === LegalTab.Imprint}>
             <ListItemIcon>
               <ImprintIcon />
             </ListItemIcon>
-            <ListItemText primary="Imprint" />
+            <ListItemText primary={getText(i18nKeys.LEGAL_MENU__IMPRINT)} />
           </ListItem>
         </List>
       </div>

@@ -68,7 +68,12 @@ export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
   }, [study]);
 
   return (
-    <Card title={study.studyDetail?.name || "Untitled"} icon={DatabaseIcon} className="study-card" borderRadius={20}>
+    <Card
+      title={study.studyDetail?.name || getText(i18nKeys.STUDY_CARD__UNTITLED)}
+      icon={DatabaseIcon}
+      className="study-card"
+      borderRadius={20}
+    >
       <div className="study-card__summary">
         {study.studyDetail?.summary ? (
           <div className="study-card__summary_container">

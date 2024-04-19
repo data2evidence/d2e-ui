@@ -3,6 +3,7 @@ export const i18nDefault = {
     TEST_KEY: "default",
     STUDY_CARD__DATASET_INFORMATION: "Dataset information",
     STUDY_CARD__NO_DATASET_SUMMARY: "No dataset summary available",
+    STUDY_CARD__UNTITLED: "Untitled",
     STUDY_CARD__STUDY_CODE: "Study code",
     BAR_CHART__NO_DATA: "No data",
     BOX_PLOT_CHART__NO_DATA: "No data",
@@ -298,6 +299,13 @@ export const i18nDefault = {
     ACCOUNT__NAME: "Name",
     ACCOUNT__EMAIL: "Email",
     ACCOUNT__LEGAL: "Legal",
+    LEGAL_MENU__MENU: "Menu",
+    LEGAL_MENU__TERMS_OF_USE: "Terms of Use",
+    LEGAL_MENU__PRIVACY_POLICY: "Privacy Policy",
+    LEGAL_MENU__IMPRINT: "Imprint",
+    NO_ACCESS__ACCESS_DENIED: "Access denied.",
+    NO_ACCESS__INFO: "Please check with your administrator to request access",
+    SIDE_DROPDOWN__OPEN_IN_NEW_TAB: "Open in new tab",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();
