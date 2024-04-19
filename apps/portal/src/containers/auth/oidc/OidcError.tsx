@@ -1,5 +1,7 @@
 import React, { FC } from "react";
+import { TranslationContext } from "../../../contexts/TranslationContext";
 
 export const OidcError: FC = () => {
-  return <div style={{ padding: 10 }}>Error occurred while authenticating</div>;
+  const { getText, i18nKeys } = TranslationContext();
+  return <div style={{ padding: 10 }}>{getText(i18nKeys.OIDC_ERROR__MESSAGE)}</div>;
 };

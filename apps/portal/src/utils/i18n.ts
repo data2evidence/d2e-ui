@@ -221,7 +221,16 @@ export const i18nDefault = {
     MENU_NAV__UNTITLED: "Untitled",
     PORTAL_SWITCHER__ADMIN: "Admin",
     PORTAL_SWITCHER__RESEARCHER: "Researcher",
-    PUBLIC_STUDY_OVERVIEW_NAV__: "Dataset overview",
+    PUBLIC_STUDY_OVERVIEW_NAV__DATASET_OVERVIEW: "Dataset overview",
+    STUDY_NAV__NO_STUDY: "No study",
+    STUDY_NAV__UNTITLED: "Untitled",
+    OIDC_CALLBACK_SUCCESS__LOADER: "Authentication completed. Redirecting...",
+    OIDC_ERROR__MESSAGE: "Error occurred while authenticating",
+    OIDC_SESSION_LOST__BUTTON: "Logout",
+    DASHBOARD__NOT_ENOUGH_PRIVILEGES: "Not enough privileges!",
+    DASHBOARD__NOT_FOUND: "Dashboard not found!",
+    PUBLIC__NAVIGATION_LEGAL: "Legal",
+    PUBLIC__NAVIGATION_LOGIN: "Login",
   },
 };
 // const { getText, i18nKeys } = TranslationContext();

@@ -8,6 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { ChevronUpIcon } from "@portal/components";
 import { Study, Tenant } from "../../types";
 import "./StudyNav.scss";
+import { TranslationContext } from "../../contexts/TranslationContext";
 
 interface StudyNavProps {
   studies?: Study[];
@@ -16,6 +17,7 @@ interface StudyNavProps {
 }
 
 export const StudyNav: FC<StudyNavProps> = ({ studies, selectedStudyId, onClick }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [expanded, setExpanded] = React.useState("");
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export const StudyNav: FC<StudyNavProps> = ({ studies, selectedStudyId, onClick 
     setExpanded(isExpand ? tenantId : "");
   }, []);
 
-  if (!studies) return <div>No study</div>;
+  if (!studies) return <div>{getText(i18nKeys.STUDY_NAV__NO_STUDY)}</div>;
 
   return (
     <div className="study-nav" data-testid="study-nav">
@@ -64,7 +66,7 @@ export const StudyNav: FC<StudyNavProps> = ({ studies, selectedStudyId, onClick 
                     onClick={(event) => onClick(event, study.id, study.tenant.id)}
                     data-testid="study-nav-study"
                   >
-                    <ListItemText primary={study.studyDetail?.name || "Untitled"} />
+                    <ListItemText primary={study.studyDetail?.name || getText(i18nKeys.STUDY_NAV__UNTITLED)} />
                   </ListItem>
                 ))}
             </List>

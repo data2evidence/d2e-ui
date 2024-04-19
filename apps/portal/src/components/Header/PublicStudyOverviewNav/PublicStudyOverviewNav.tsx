@@ -51,7 +51,7 @@ const PublicStudyOverviewNav: FC = () => {
   return (
     <li key="study-overview" onMouseEnter={openMenu} onMouseLeave={closeMenu} className={isActiveTab()}>
       <Link to={`${config.ROUTES.public}/overview`} data-text="Dataset overview" className="overview-title">
-        {getText(i18nKeys.PUBLIC_STUDY_OVERVIEW_NAV__)}
+        {getText(i18nKeys.PUBLIC_STUDY_OVERVIEW_NAV__DATASET_OVERVIEW)}
       </Link>
       <ChevronDownIcon />
       <Menu

@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import { PostLoginRedirectUrlContext } from "../../../contexts/PostLoginRedirectUrlContext";
 import { isValidRedirectUrl } from "../../../utils";
 import { LocaleProvider } from "../../../contexts/TranslationContext";
+import { TestApp } from "../../../TestApp";
 
 let oidcConfig: any;
 try {
@@ -43,15 +44,17 @@ const OidcAppInternal: FC = () => {
 
 export const OidcApp: FC = () => {
   return (
-    <OidcProvider
-      configuration={oidcConfig}
-      authenticatingComponent={OidcAuthenticating}
-      authenticatingErrorComponent={OidcError}
-      callbackSuccessComponent={OidcCallbackSuccess}
-      sessionLostComponent={OidcSessionLost}
-    >
-      <LocaleProvider>
-      </LocaleProvider>
-    </OidcProvider>
+    <LocaleProvider>
+      <OidcProvider
+        configuration={oidcConfig}
+        authenticatingComponent={OidcAuthenticating}
+        authenticatingErrorComponent={OidcError}
+        callbackSuccessComponent={OidcCallbackSuccess}
+        sessionLostComponent={OidcSessionLost}
+      >
+        <OidcAppInternal />
+        {/* <TestApp /> */}
+      </OidcProvider>
+    </LocaleProvider>
   );
 };
