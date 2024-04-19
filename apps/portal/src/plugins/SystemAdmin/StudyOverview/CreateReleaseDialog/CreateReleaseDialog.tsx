@@ -8,6 +8,7 @@ import "./CreateReleaseDialog.scss";
 import dayjs from "dayjs";
 import { CreateHanaReleaseInput } from "../../../../types";
 import { SystemPortal } from "../../../../axios/system-portal";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface CreateReleaseDialogProps {
   study?: Study;
@@ -24,6 +25,7 @@ interface FormData {
 }
 
 const CreateReleaseDialog: FC<CreateReleaseDialogProps> = ({ study, open, onClose, loading, setLoading }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -75,7 +77,7 @@ const CreateReleaseDialog: FC<CreateReleaseDialogProps> = ({ study, open, onClos
       } catch (err: any) {
         setFeedback({
           type: "error",
-          message: `Schema for dataset ${study.id} failed to update`,
+          message: getText(i18nKeys.CREATE_RELEASE_DIALOG__ERROR, [study.id]),
           description: err.data?.message || err.data,
         });
         console.error("Error when updating schema", err);
@@ -83,13 +85,13 @@ const CreateReleaseDialog: FC<CreateReleaseDialogProps> = ({ study, open, onClos
         setLoading(false);
       }
     },
-    [study, formData.name, formData.releaseDate, setLoading, handleClose]
+    [study, formData.name, formData.releaseDate, setLoading, handleClose, getText]
   );
 
   return (
     <Dialog
       className="create-release-dialog"
-      title={`Create release - ${study?.studyDetail?.name}`}
+      title={getText(i18nKeys.CREATE_RELEASE_DIALOG__CREATE_RELEASE, [String(study?.studyDetail?.name)])}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -102,7 +104,7 @@ const CreateReleaseDialog: FC<CreateReleaseDialogProps> = ({ study, open, onClos
             <d4l-input
               // @ts-ignore
               ref={nameRef}
-              label="Release name"
+              label={getText(i18nKeys.CREATE_RELEASE_DIALOG__RELEASE_NAME)}
               value={formData.name}
               required
             />
@@ -123,13 +125,13 @@ const CreateReleaseDialog: FC<CreateReleaseDialogProps> = ({ study, open, onClos
           <div className="button-group-actions">
             <Button
               type="button"
-              text="Cancel"
+              text={getText(i18nKeys.CREATE_RELEASE_DIALOG__CANCEL)}
               onClick={() => handleClose("cancelled")}
               variant="secondary"
               block
               disabled={loading}
             />
-            <Button type="submit" text="Create" block loading={loading} />
+            <Button type="submit" text={getText(i18nKeys.CREATE_RELEASE_DIALOG__CREATE)} block loading={loading} />
           </div>
         </form>
       </div>

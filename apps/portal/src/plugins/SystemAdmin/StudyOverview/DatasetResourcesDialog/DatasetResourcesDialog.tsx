@@ -12,6 +12,7 @@ import { Study, Feedback, DatasetResource, CloseDialogType } from "../../../../t
 import { api } from "../../../../axios/api";
 import { saveBlobAs } from "../../../../utils";
 import "./DatasetResourcesDialog.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface DatasetResourcesDialogProps {
   study?: Study;
@@ -20,6 +21,7 @@ interface DatasetResourcesDialogProps {
 }
 
 const DatasetResourcesDialog: FC<DatasetResourcesDialogProps> = ({ study, open, onClose }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const datasetId = study?.id || "";
   const [hasChanges, setHasChanges] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
@@ -99,7 +101,7 @@ const DatasetResourcesDialog: FC<DatasetResourcesDialogProps> = ({ study, open, 
 
         setFeedback({
           type: "success",
-          message: `File deleted successfully.`,
+          message: getText(i18nKeys.DATASET_RESOURCES_DIALOG__SUCCESS),
         });
 
         setRefetch((refetch) => refetch + 1);
@@ -117,7 +119,9 @@ const DatasetResourcesDialog: FC<DatasetResourcesDialogProps> = ({ study, open, 
     <>
       <Dialog
         className="dataset-resources-dialog"
-        title={`Resources - ${study?.studyDetail?.name || "Untitled"}`}
+        title={`${getText(i18nKeys.DATASET_RESOURCES_DIALOG__TITLE_1)} - ${
+          study?.studyDetail?.name || getText(i18nKeys.DATASET_RESOURCES_DIALOG__TITLE_2)
+        }`}
         closable
         open={open}
         onClose={() => handleClose()}
@@ -127,7 +131,7 @@ const DatasetResourcesDialog: FC<DatasetResourcesDialogProps> = ({ study, open, 
         <Divider />
         <div className="dataset-resources-dialog__content">
           <div className="dataset-resources-dialog__content-header">
-            <Button text="Add file" onClick={handleAddFile} />
+            <Button text={getText(i18nKeys.DATASET_RESOURCES_DIALOG__ADD_FILE)} onClick={handleAddFile} />
             <input
               type="file"
               name="resourceFile"
@@ -150,17 +154,17 @@ const DatasetResourcesDialog: FC<DatasetResourcesDialogProps> = ({ study, open, 
             </colgroup>
             <TableHead>
               <TableRow>
-                <TableCell>Filename</TableCell>
-                <TableCell>Size</TableCell>
-                <TableCell>File</TableCell>
-                <TableCell>Action</TableCell>
+                <TableCell>{getText(i18nKeys.DATASET_RESOURCES_DIALOG__FILENAME)}</TableCell>
+                <TableCell>{getText(i18nKeys.DATASET_RESOURCES_DIALOG__SIZE)}</TableCell>
+                <TableCell>{getText(i18nKeys.DATASET_RESOURCES_DIALOG__FILE)}</TableCell>
+                <TableCell>{getText(i18nKeys.DATASET_RESOURCES_DIALOG__ACTION)}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {(!resources || resources.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={4} align="center">
-                    No file available
+                    {getText(i18nKeys.DATASET_RESOURCES_DIALOG__NO_FILE_AVAILABLE)}
                   </TableCell>
                 </TableRow>
               )}
@@ -172,11 +176,15 @@ const DatasetResourcesDialog: FC<DatasetResourcesDialogProps> = ({ study, open, 
                   <TableCell>
                     <IconButton
                       startIcon={<DownloadIcon />}
-                      title="Download"
+                      title={getText(i18nKeys.DATASET_RESOURCES_DIALOG__DOWNLOAD)}
                       onClick={() => handleDownloadResource(res)}
                       loading={downloading === res.name}
                     />
-                    <IconButton startIcon={<TrashIcon />} title="Delete" onClick={() => handleDeleteResource(res)} />
+                    <IconButton
+                      startIcon={<TrashIcon />}
+                      title={getText(i18nKeys.DATASET_RESOURCES_DIALOG__DELETE)}
+                      onClick={() => handleDeleteResource(res)}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
@@ -185,8 +193,19 @@ const DatasetResourcesDialog: FC<DatasetResourcesDialogProps> = ({ study, open, 
         </div>
         <Divider />
         <div className="button-group-actions">
-          <Button text="Cancel" onClick={handleClose} variant="secondary" block disabled={hasChanges} />
-          <Button text="Done" onClick={handleClose} block disabled={!hasChanges} />
+          <Button
+            text={getText(i18nKeys.DATASET_RESOURCES_DIALOG__CANCEL)}
+            onClick={handleClose}
+            variant="secondary"
+            block
+            disabled={hasChanges}
+          />
+          <Button
+            text={getText(i18nKeys.DATASET_RESOURCES_DIALOG__DONE)}
+            onClick={handleClose}
+            block
+            disabled={!hasChanges}
+          />
         </div>
       </Dialog>
       {study?.id && (

@@ -4,6 +4,7 @@ import { Button, Dialog } from "@portal/components";
 import { api } from "../../../../axios/api";
 import { Study, Feedback, CloseDialogType } from "../../../../types";
 import "./DeleteStudyDialog.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface DeleteStudyDialogProps {
   study?: Study;
@@ -12,6 +13,7 @@ interface DeleteStudyDialogProps {
 }
 
 const DeleteStudyDialog: FC<DeleteStudyDialogProps> = ({ study, open, onClose }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [deleting, setDeleting] = useState(false);
 
@@ -33,19 +35,19 @@ const DeleteStudyDialog: FC<DeleteStudyDialogProps> = ({ study, open, onClose })
     } catch (err: any) {
       setFeedback({
         type: "error",
-        message: `Study ${study.id} failed to delete`,
+        message: getText(i18nKeys.DELETE_STUDY_DIALOG__ERROR, [study.id]),
         description: err.data?.message || err.data,
       });
       console.error("Error when deleting dataset", err);
     } finally {
       setDeleting(false);
     }
-  }, [study, setFeedback, handleClose]);
+  }, [study, setFeedback, handleClose, getText]);
 
   return (
     <Dialog
       className="delete-study-dialog"
-      title="Delete dataset"
+      title={getText(i18nKeys.DELETE_STUDY_DIALOG__DELETE_DATASET)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -53,13 +55,24 @@ const DeleteStudyDialog: FC<DeleteStudyDialogProps> = ({ study, open, onClose })
     >
       <Divider />
       <div className="delete-study-dialog__content">
-        <div>Are you sure you want to delete this dataset:</div>
+        <div>{getText(i18nKeys.DELETE_STUDY_DIALOG__CONFIRM)}:</div>
         <div>{study!.id} ?</div>
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={deleting} />
-        <Button text="Yes, delete" onClick={handleDelete} block loading={deleting} />
+        <Button
+          text={getText(i18nKeys.DELETE_STUDY_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="secondary"
+          block
+          disabled={deleting}
+        />
+        <Button
+          text={getText(i18nKeys.DELETE_STUDY_DIALOG__YES_DELETE)}
+          onClick={handleDelete}
+          block
+          loading={deleting}
+        />
       </div>
     </Dialog>
   );

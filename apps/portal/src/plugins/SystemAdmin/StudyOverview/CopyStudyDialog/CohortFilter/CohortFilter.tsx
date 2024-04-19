@@ -9,6 +9,7 @@ import Alert from "@mui/material/Alert";
 
 import { CohortMapping } from "../../../../../types";
 import "./CohortFilter.scss";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 const selectStyles: SxProps = {
   "&.MuiOutlinedInput-root": {
@@ -47,6 +48,7 @@ const CohortFilter: FC<CohortFilterProps> = ({
   loading,
   error,
 }) => {
+  const { getText, i18nKeys } = TranslationContext();
   if (!cohortDefinitionList || loading) {
     return <Loader text={"Loading Cohort Definitions..."}></Loader>;
   }
@@ -62,7 +64,7 @@ const CohortFilter: FC<CohortFilterProps> = ({
   if (cohortDefinitionList.length === 0) {
     return (
       <Alert severity="warning" className="alert">
-        No cohorts found in study
+        {getText(i18nKeys.COHORT_FILTER__NO_COHORTS)}
       </Alert>
     );
   }
@@ -70,12 +72,12 @@ const CohortFilter: FC<CohortFilterProps> = ({
   return (
     <FormControl variant="outlined" className="cohort-filter-form" fullWidth>
       <InputLabel id="select-cohort-definition" className="input-label">
-        Select cohort filter
+        {getText(i18nKeys.COHORT_FILTER__SELECT_COHORT_FILTER)}
       </InputLabel>
       <Select
         sx={selectStyles}
         MenuProps={menuPropsStyles}
-        label="Select cohort filter"
+        label={getText(i18nKeys.COHORT_FILTER__SELECT_COHORT_FILTER)}
         labelId="select-cohort-filter"
         className="select"
         IconComponent={ChevronDownIcon}
@@ -84,7 +86,7 @@ const CohortFilter: FC<CohortFilterProps> = ({
       >
         {cohortDefinitionList.map((cohort: CohortMapping) => (
           <MenuItem className="menu-item" value={cohort.id} key={cohort.id}>
-            Cohort {cohort.id}
+            {getText(i18nKeys.COHORT_FILTER__COHORT)} {cohort.id}
           </MenuItem>
         ))}
       </Select>
