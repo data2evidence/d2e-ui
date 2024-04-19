@@ -2,6 +2,8 @@ import React, { FC, useState } from "react";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
+import { ArrowcirclerightIcon } from "@portal/components";
+
 interface SearchBarProps {
   keyword?: any;
   onEnter: (keyword: any) => void;
@@ -9,12 +11,24 @@ interface SearchBarProps {
 
 const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter }) => {
   const [searchString, setSearchString] = useState("");
-  const fullWidthPx = 400;
+  const fullWidthPx = 860;
   return (
-    <div style={{ width: `${fullWidthPx}px`, maxHeight: "10%" }}>
-      <div style={{ marginLeft: "10px", borderBottom: "1px solid lightgray", marginBottom: 5 }}>
+    <div style={{ width: `${fullWidthPx}px `, maxHeight: "10%" }}>
+      <div
+        style={{
+          marginLeft: "10px",
+          border: "1px solid lightgray",
+          borderRadius: 32,
+          marginBottom: 5,
+          paddingLeft: "10px",
+          display: "flex",
+        }}
+      >
+        <IconButton sx={{ p: "5px" }}>
+          <SearchIcon sx={{ color: "#000080" }} />
+        </IconButton>
         <InputBase
-          sx={{ flex: 1, width: `${fullWidthPx - 45}px` }}
+          sx={{ width: "100%" }}
           placeholder="Search"
           inputProps={{ "aria-label": "search terms" }}
           defaultValue={keyword}
@@ -28,7 +42,7 @@ const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter }) => {
           }}
         />
         <IconButton type="button" sx={{ p: "5px" }} aria-label="search" onClick={() => onEnter(searchString)}>
-          <SearchIcon sx={{ color: "#000080" }} />
+          <ArrowcirclerightIcon />
         </IconButton>
       </div>
     </div>
