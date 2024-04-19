@@ -1,7 +1,24 @@
 .concept-sets {
-  padding-left: 24px;
-  padding-right: 24px;
+  padding: 32px;
+  background-color: #F2F0F1;
+  height: 100%;
 
+  &__content {
+    height: inherit;
+    border-radius: 18px;
+    padding: 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2px;
+    margin-top: 5px;
+
+  }
   &__header {
     display: flex;
   }

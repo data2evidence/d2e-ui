@@ -5,6 +5,7 @@ import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
+import { Tabs, Tab } from "@mui/material";
 import {
   Button,
   EditIcon,
@@ -21,10 +22,17 @@ import {
 import { api } from "../../../axios/api";
 import { useFeedback } from "../../../contexts";
 import { useDatasets } from "../../../hooks";
+import { useUserInfo } from "../../../contexts/UserContext";
+import Terminology from "../../Researcher/Terminology/Terminology";
 import { ConceptSetWithConceptDetails } from "../../Researcher/Terminology/utils/types";
 import { TerminologyProps } from "../../Researcher/Terminology/Terminology";
 import SearchBar from "./SearchBar";
 import "./ConceptSets.scss";
+
+enum ConceptSetTab {
+  Search = "search",
+  ConceptSets = "conceptsets",
+}
 
 interface ConceptSetsProps {}
 
@@ -37,6 +45,12 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
   const [data, setData] = useState<ConceptSetWithConceptDetails[]>([]);
   const [datasets, loading, error] = useDatasets("researcher");
   const [selectedDatasetId, setSelectedDatasetId] = useState<string>();
+  const [tabValue, setTabValue] = useState(ConceptSetTab.Search);
+  const userId = useUserInfo().user?.userId;
+
+  const handleTabSelectionChange = async (event: React.SyntheticEvent, value: ConceptSetTab) => {
+    setTabValue(value);
+  };
 
   const updateSearchResult = useCallback(
     (keyword: string) => {
@@ -115,79 +129,103 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
 
   if (isLoading || !selectedDatasetId) return <Loader />;
 
+  if (!userId) {
+    return null;
+  }
+
   return (
     <>
       <div className="concept-sets">
-        <Title>Concept Set List</Title>
-        <div className="concept-sets__header">
-          <div className="concept-sets__search">
-            <SearchBar keyword={searchText} onEnter={updateSearchResult} />
+        <div className="concept-sets__content">
+          <div className="concept-sets__tabs">
+            <Tabs value={tabValue} onChange={handleTabSelectionChange}>
+              <Tab disableRipple label="Search" value={ConceptSetTab.Search}></Tab>
+              <Tab disableRipple label="Concept Sets" value={ConceptSetTab.ConceptSets}></Tab>
+            </Tabs>
           </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div style={{ marginRight: "10px" }}>Reference concepts from dataset: </div>
-            <FormControl sx={{ marginRight: "20px" }}>
-              <Select
-                value={selectedDatasetId}
-                onChange={(e: SelectChangeEvent) => {
-                  setSelectedDatasetId(e.target.value);
-                }}
-                sx={{ "& .MuiSelect-outlined": { paddingTop: "8px", paddingBottom: "8px" } }}
-              >
-                {datasets?.map((dataset) => (
-                  <MenuItem value={dataset.id} key={dataset.id} sx={{}} disableRipple>
-                    {dataset.studyDetail?.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-          <div className="concept-sets__actions">
-            <Button text="Add concept set" onClick={() => handleAddAndEditConceptSet()} />
-          </div>
+
+          {tabValue == ConceptSetTab.Search && <Terminology baseUserId={userId} />}
+
+          {tabValue == ConceptSetTab.ConceptSets && (
+            <>
+              <div className="concept-sets__header">
+                <div className="concept-sets__search">
+                  <SearchBar keyword={searchText} onEnter={updateSearchResult} />
+                </div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <div style={{ marginRight: "10px" }}>Reference concepts from dataset: </div>
+                  <FormControl sx={{ marginRight: "20px" }}>
+                    <Select
+                      value={selectedDatasetId}
+                      onChange={(e: SelectChangeEvent) => {
+                        setSelectedDatasetId(e.target.value);
+                      }}
+                      sx={{ "& .MuiSelect-outlined": { paddingTop: "8px", paddingBottom: "8px" } }}
+                    >
+                      {datasets?.map((dataset) => (
+                        <MenuItem value={dataset.id} key={dataset.id} sx={{}} disableRipple>
+                          {dataset.studyDetail?.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="concept-sets__actions">
+                  <Button text="Add concept set" onClick={() => handleAddAndEditConceptSet()} />
+                </div>
+              </div>
+              {}
+              <TableContainer className="concept-sets__table">
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>ID</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Created</TableCell>
+                      <TableCell>Updated</TableCell>
+                      <TableCell>Author</TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {pageData.map((row) => {
+                      return (
+                        <TableRow key={row.id}>
+                          <TableCell>{row.id}</TableCell>
+                          <TableCell>{row.name}</TableCell>
+                          <TableCell>{row.createdDate}</TableCell>
+                          <TableCell>{row.modifiedDate}</TableCell>
+                          <TableCell>{row.createdBy}</TableCell>
+                          <TableCell>
+                            <IconButton startIcon={<EditIcon />} onClick={() => handleAddAndEditConceptSet(row.id)} />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              {filteredData.length > 0 && (
+                <TablePagination
+                  component="div"
+                  count={filteredData.length}
+                  page={page}
+                  rowsPerPage={rowsPerPage}
+                  onRowsPerPageChange={handleRowsPerPageChange}
+                  onPageChange={handlePageChange}
+                  ActionsComponent={TablePaginationActions}
+                  sx={{
+                    overflow: "visible",
+                    height: "52px",
+                    "& .MuiButtonBase-root:not(.Mui-disabled)": { color: "#000080" },
+                  }}
+                />
+              )}
+            </>
+          )}
         </div>
-        <TableContainer className="concept-sets__table">
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>Updated</TableCell>
-                <TableCell>Author</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {pageData.map((row) => {
-                return (
-                  <TableRow key={row.id}>
-                    <TableCell>{row.id}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.createdDate}</TableCell>
-                    <TableCell>{row.modifiedDate}</TableCell>
-                    <TableCell>{row.createdBy}</TableCell>
-                    <TableCell>
-                      <IconButton startIcon={<EditIcon />} onClick={() => handleAddAndEditConceptSet(row.id)} />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
       </div>
-      {filteredData.length > 0 && (
-        <TablePagination
-          component="div"
-          count={filteredData.length}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleRowsPerPageChange}
-          onPageChange={handlePageChange}
-          ActionsComponent={TablePaginationActions}
-          sx={{ overflow: "visible", height: "52px", "& .MuiButtonBase-root:not(.Mui-disabled)": { color: "#000080" } }}
-        />
-      )}
     </>
   );
 };
