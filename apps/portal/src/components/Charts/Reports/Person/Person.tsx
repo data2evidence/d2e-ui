@@ -41,7 +41,7 @@ const Person: FC<PersonProps> = ({ flowRunId }) => {
       setIsLoadingPersonData(false);
       setErrPerson(getText(i18nKeys.PERSON__ERROR_MESSAGE));
     }
-  }, [flowRunId]);
+  }, [flowRunId, getText]);
 
   useEffect(() => {
     // Fetch data for charts

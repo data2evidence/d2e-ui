@@ -52,7 +52,7 @@ const ObservationPeriod: FC<ObservationPeriodProps> = ({ flowRunId }) => {
       setIsLoadingObservationPeriodData(false);
       setErrObservationPeriod(getText(i18nKeys.OBSERVATION_PERIOD__ERROR_MESSAGE));
     }
-  }, [flowRunId]);
+  }, [flowRunId, getText]);
 
   useEffect(() => {
     // Fetch data for charts

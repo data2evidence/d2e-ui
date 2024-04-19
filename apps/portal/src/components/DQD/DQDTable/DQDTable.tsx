@@ -106,7 +106,7 @@ const DQDTable: FC<DQDTableProps> = ({ data }) => {
         show: false,
       },
     ],
-    [data, i18nKeys]
+    [data, getText]
   );
 
   const renderDetailPanel = ({ row }: { row: MRT_Row<CheckResults> }) => (

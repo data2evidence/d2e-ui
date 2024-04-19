@@ -41,7 +41,7 @@ const Death: FC<DeathProps> = ({ flowRunId }) => {
       setIsLoadingDeathData(false);
       setErrDeath(getText(i18nKeys.DEATH__ERROR_MESSAGE));
     }
-  }, [flowRunId]);
+  }, [flowRunId, getText]);
 
   useEffect(() => {
     // Fetch data for charts

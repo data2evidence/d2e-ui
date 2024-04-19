@@ -45,7 +45,7 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
       setIsLoadingData(false);
       setErr(getText(i18nKeys.TREE_MAP_CHART__PREVALENCE, [sourceKey]));
     }
-  }, [flowRunId, sourceKey]);
+  }, [flowRunId, sourceKey, getText]);
 
   const getDrilldownData = useCallback(async () => {
     if (selectedConceptId === "") return;
@@ -64,7 +64,7 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
       setIsLoadingDrilldownData(false);
       setErrDrilldown(getText(i18nKeys.TREE_MAP_CHART__PREVALENCE, [sourceKey]));
     }
-  }, [flowRunId, sourceKey, selectedConceptId]);
+  }, [flowRunId, sourceKey, selectedConceptId, getText]);
 
   useEffect(() => {
     // Fetch data for charts

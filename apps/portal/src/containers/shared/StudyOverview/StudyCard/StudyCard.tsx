@@ -38,7 +38,7 @@ export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
         </div>
       </div>
     );
-  }, [handleInformationClick, study]);
+  }, [handleInformationClick, study, getText]);
 
   const studyTagsRender = useMemo(() => {
     return (

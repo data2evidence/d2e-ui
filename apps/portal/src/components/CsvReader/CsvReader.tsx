@@ -43,7 +43,7 @@ export const CsvReader: FC<CsvReaderProps> = ({
         reader.readAsText(files[0], fileEncoding);
       }
     },
-    [onFileLoaded, onError, parseOptions, fileEncoding]
+    [onFileLoaded, onError, parseOptions, fileEncoding, getText]
   );
 
   return (

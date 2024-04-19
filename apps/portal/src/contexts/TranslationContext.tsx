@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
+import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from "react";
 import { i18nDefault, i18nKeys } from "../utils/i18n";
 import { api } from "../axios/api";
 import { AxiosError } from "axios";
@@ -80,12 +80,19 @@ const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     getTranslation(newLocale);
   };
 
-  const getText = (phraseKey: keyof LanguageMappings, params?: string[]) => {
-    const values = translations?.[locale] ?? translations.default;
-    const phrase = values[phraseKey] ?? translations.default[phraseKey] ?? phraseKey;
-    const text = replaceParams(phrase, params);
-    return text;
-  };
+  // Temporarily exposing function for demo. Remove when language selector is added
+  //@ts-ignore
+  window.changeLocale = changeLocale;
+
+  const getText = useCallback(
+    (phraseKey: keyof LanguageMappings, params?: string[]) => {
+      const values = translations?.[locale] ?? translations.default;
+      const phrase = values[phraseKey] ?? translations.default[phraseKey] ?? phraseKey;
+      const text = replaceParams(phrase, params);
+      return text;
+    },
+    [translations]
+  );
 
   useEffect(() => {
     if (env.REACT_APP_LOCALE) {

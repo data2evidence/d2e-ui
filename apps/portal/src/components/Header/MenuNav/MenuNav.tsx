@@ -225,7 +225,7 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
         </>
       );
     },
-    [anchorEl, closeMenu, datasets, handleDatasetClick, handlePluginClick, isActiveDataset, isActivePlugin]
+    [anchorEl, closeMenu, datasets, handleDatasetClick, handlePluginClick, isActiveDataset, isActivePlugin, getText]
   );
 
   const renderPluginMenu = useCallback(

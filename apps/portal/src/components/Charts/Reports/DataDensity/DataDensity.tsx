@@ -41,7 +41,7 @@ const DataDensity: FC<DataDensityProps> = ({ flowRunId }) => {
       setIsLoadingDataDensityData(false);
       setErrDataDensity(getText(i18nKeys.DATA_DENSITY__ERROR_MESSAGE));
     }
-  }, [flowRunId]);
+  }, [flowRunId, getText]);
 
   useEffect(() => {
     // Fetch data for charts

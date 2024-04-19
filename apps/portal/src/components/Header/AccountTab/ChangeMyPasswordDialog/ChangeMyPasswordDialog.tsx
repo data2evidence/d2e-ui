@@ -79,7 +79,7 @@ export const ChangeMyPasswordDialog: FC<ChangeMyPasswordDialogProps> = ({ open, 
     } finally {
       setLoading(false);
     }
-  }, [formData.oldPassword, formData.password]);
+  }, [formData.oldPassword, formData.password, getText]);
 
   return (
     <Dialog

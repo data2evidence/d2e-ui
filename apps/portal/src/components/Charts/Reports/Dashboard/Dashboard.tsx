@@ -47,7 +47,7 @@ const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
       setIsLoadingDashboardData(false);
       setErrDashboard(getText(i18nKeys.TREE_MAP_CHART__PREVALENCE));
     }
-  }, [flowRunId]);
+  }, [flowRunId, getText]);
 
   useEffect(() => {
     // Fetch data for charts
