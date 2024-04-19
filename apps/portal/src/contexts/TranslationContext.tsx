@@ -91,7 +91,7 @@ const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       const text = replaceParams(phrase, params);
       return text;
     },
-    [translations]
+    [translations, locale]
   );
 
   useEffect(() => {
