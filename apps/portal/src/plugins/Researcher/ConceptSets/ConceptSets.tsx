@@ -21,8 +21,8 @@ import {
 import { api } from "../../../axios/api";
 import { useFeedback } from "../../../contexts";
 import { useDatasets } from "../../../hooks";
-import { ConceptSetWithConceptDetails } from "../../SystemAdmin/Terminology/utils/types";
-import { TerminologyProps } from "../../SystemAdmin/Terminology/Terminology";
+import { ConceptSetWithConceptDetails } from "../../Researcher/Terminology/utils/types";
+import { TerminologyProps } from "../../Researcher/Terminology/Terminology";
 import SearchBar from "./SearchBar";
 import "./ConceptSets.scss";
 
