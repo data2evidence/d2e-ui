@@ -5,6 +5,7 @@ import { FilterNumberRange } from "./FilterNumberRange";
 import { FilterNumberSlider } from "./FilterNumberSlider";
 import { useDatasetFilterScopes } from "../../../../hooks";
 import "./DatasetFilters.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface DatasetFiltersProps {
   onChange?: (filters: Record<string, string>) => void;
@@ -30,6 +31,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const DatasetFilters: FC<DatasetFiltersProps> = ({ onChange }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [filterByAge, setFilterByAge] = useState(false);
   const [filterByObsYear, setFilterByObsYear] = useState(false);
@@ -98,30 +100,32 @@ export const DatasetFilters: FC<DatasetFiltersProps> = ({ onChange }) => {
   return (
     <div className="dataset-filters">
       <div className="dataset-filter">
-        <div className="dataset-filter__header">Domain requirement</div>
+        <div className="dataset-filter__header">{getText(i18nKeys.DATASET_FILTERS__DOMAIN_REQUIREMENT)}</div>
         <div className="dataset-filter__body">
           <FilterAutocomplete
             options={domainOptions}
             value={formData.domains}
-            placeholder="Select requirement"
+            placeholder={getText(i18nKeys.DATASET_FILTERS__SELECT_REQUIREMENT)}
             onChange={(_event: any, domains: AutocompleteOption[]) => handleFormDataChange({ domains })}
           />
         </div>
       </div>
       <div className="dataset-filter">
-        <div className="dataset-filter__header">Range requirement</div>
+        <div className="dataset-filter__header">{getText(i18nKeys.DATASET_FILTERS__RANGE_REQUIREMENT)}</div>
         <div className="dataset-filter__body">
-          <span className="dataset-filter__description">Select applicable filters:</span>
+          <span className="dataset-filter__description">
+            {getText(i18nKeys.DATASET_FILTERS__SELECT_APPLICABLE_FILTERS)}:
+          </span>
           <Box display="flex" flexDirection="column" gap={1}>
             <Checkbox
               checked={filterByAge}
-              label="Age range"
+              label={getText(i18nKeys.DATASET_FILTERS__AGE_RANGE)}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 setFilterByAge(event.target.checked);
               }}
             />
             <FilterNumberRange
-              label="Enter range:"
+              label={getText(i18nKeys.DATASET_FILTERS__ENTER_RANGE)}
               min={filterScopes?.age.min}
               max={filterScopes?.age.max}
               from={formData.age?.from || 0}
@@ -133,13 +137,13 @@ export const DatasetFilters: FC<DatasetFiltersProps> = ({ onChange }) => {
             />
             <Checkbox
               checked={filterByObsYear}
-              label="Observation year range"
+              label={getText(i18nKeys.DATASET_FILTERS__OBSERVATION_YEAR_RANGE)}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 setFilterByObsYear(event.target.checked);
               }}
             />
             <FilterNumberRange
-              label="Year range:"
+              label={getText(i18nKeys.DATASET_FILTERS__YEAR_RANGE)}
               min={filterScopes?.observationYear.min}
               max={filterScopes?.observationYear.max}
               from={formData.observationYear?.from || 0}
@@ -151,13 +155,13 @@ export const DatasetFilters: FC<DatasetFiltersProps> = ({ onChange }) => {
             />
             <Checkbox
               checked={filterByCumulativeObsMths}
-              label="Minimum cumulative observation"
+              label={getText(i18nKeys.DATASET_FILTERS__MIN_CUMULATIVE_OBSERVATION)}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 setFilterByCumulativeObsMths(event.target.checked);
               }}
             />
             <FilterNumberSlider
-              label="Minimum cumulative observation:"
+              label={`${getText(i18nKeys.DATASET_FILTERS__MIN_CUMULATIVE_OBSERVATION)}:`}
               min={filterScopes?.cumulativeObservationMonths.min}
               max={filterScopes?.cumulativeObservationMonths.max}
               value={formData.cumulativeObservationMonths || 0}
