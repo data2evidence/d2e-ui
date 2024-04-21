@@ -2,19 +2,7 @@ import React, { FC } from "react";
 import { Button } from "@portal/components";
 import { dqdParseToCsv, filterJSON, downloadFile, DownloadColumn } from "../../../../utils/Export";
 import { CheckResults, OverviewResults } from "../../../../components/DQD/types";
-
-export const downloadColumns: DownloadColumn[] = [
-  { header: "STATUS", accessor: "failed" },
-  { header: "CONTEXT", accessor: "context" },
-  { header: "TABLE", accessor: "cdmTableName" },
-  { header: "CATEGORY", accessor: "category" },
-  { header: "SUBCATEGORY", accessor: "subcategory" },
-  { header: "LEVEL", accessor: "checkLevel" },
-  { header: "NOTES", accessor: "notesValue" },
-  { header: "DESCRIPTION", accessor: "checkDescription" },
-  { header: "%VIOLATEDROWS", accessor: "pctViolatedRows" },
-  { header: "NUMVIOLATEDROWS", accessor: "numViolatedRows" },
-];
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface DownloadDataButtonsProps {
   data: CheckResults[];
@@ -23,6 +11,19 @@ interface DownloadDataButtonsProps {
 }
 
 const DownloadDataButtons: FC<DownloadDataButtonsProps> = ({ data, overviewData, datasetName }) => {
+  const { getText, i18nKeys } = TranslationContext();
+  const downloadColumns: DownloadColumn[] = [
+    { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__STATUS), accessor: "failed" },
+    { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__CONTEXT), accessor: "context" },
+    { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__TABLE), accessor: "cdmTableName" },
+    { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__CATEGORY), accessor: "category" },
+    { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__SUBCATEGORY), accessor: "subcategory" },
+    { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__LEVEL), accessor: "checkLevel" },
+    { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__NOTES), accessor: "notesValue" },
+    { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__DESCRIPTION), accessor: "checkDescription" },
+    { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__VIOLATEDROWS), accessor: "pctViolatedRows" },
+    { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__NUMVIOLATEDROWS), accessor: "numViolatedRows" },
+  ];
   return (
     <div className="selector__button">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -35,7 +36,7 @@ const DownloadDataButtons: FC<DownloadDataButtonsProps> = ({ data, overviewData,
                 fileType: "text/csv",
               })
             }
-            text="Download CSV"
+            text={getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__DOWNLOAD_CSV)}
           />
           <Button
             onClick={() =>
@@ -48,7 +49,7 @@ const DownloadDataButtons: FC<DownloadDataButtonsProps> = ({ data, overviewData,
                 fileType: "text/json",
               })
             }
-            text="Download JSON"
+            text={getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__DOWNLOAD_JSON)}
           />
         </div>
       </div>

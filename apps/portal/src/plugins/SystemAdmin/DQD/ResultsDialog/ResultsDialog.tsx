@@ -6,6 +6,7 @@ import { HistoryJob } from "../types";
 import DataCharacterizationReports from "../../../../components/DQD/DataCharacterizationReports/DataCharacterizationReports";
 import DQDCombinedResults from "../../../../components/DQD/DQDCombinedResults/DQDCombinedResults";
 import "./ResultsDialog.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 export interface ResultsDialogProps {
   job: HistoryJob;
@@ -14,6 +15,7 @@ export interface ResultsDialogProps {
 }
 
 const ResultsDialog: FC<ResultsDialogProps> = ({ job, open, onClose }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const handleClose = useCallback(() => {
     typeof onClose === "function" && onClose();
   }, [onClose]);
@@ -21,7 +23,7 @@ const ResultsDialog: FC<ResultsDialogProps> = ({ job, open, onClose }) => {
   return (
     <Dialog
       className="results-dialog"
-      title={`Results for dataset: ${job?.schemaName} (${job?.createdAt})`}
+      title={getText(i18nKeys.RESULTS_DIALOG__RESULTS, [job?.schemaName, job?.createdAt])}
       closable
       open={open}
       onClose={handleClose}
