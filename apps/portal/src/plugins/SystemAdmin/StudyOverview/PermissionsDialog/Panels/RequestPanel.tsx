@@ -12,6 +12,7 @@ import { TableRow, TableCell } from "@portal/components";
 import env from "../../../../../env";
 import { StudyAccessRequest } from "../PermissionsDialog";
 import "./PanelTables.scss";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface RequestPanelProps {
   studyId: string;
@@ -22,9 +23,10 @@ interface RequestPanelProps {
 }
 
 const RequestPanel: FC<RequestPanelProps> = ({ selectedAction, handleActionChange, accessRequests }) => {
+  const { getText, i18nKeys } = TranslationContext();
   return (
     <div className="request-panel">
-      <div className="request-panel__title">Requests</div>
+      <div className="request-panel__title">{getText(i18nKeys.REQUEST_PANEL__REQUESTS)}</div>
       <TableContainer className="pending-requests">
         <Table>
           <colgroup>
@@ -34,8 +36,8 @@ const RequestPanel: FC<RequestPanelProps> = ({ selectedAction, handleActionChang
           </colgroup>
           <TableHead>
             <TableRow>
-              <TableCell>Email</TableCell>
-              <TableCell>Requested on</TableCell>
+              <TableCell>{getText(i18nKeys.REQUEST_PANEL__EMAIL)}</TableCell>
+              <TableCell>{getText(i18nKeys.REQUEST_PANEL__REQUESTED)}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -43,7 +45,7 @@ const RequestPanel: FC<RequestPanelProps> = ({ selectedAction, handleActionChang
             {(!accessRequests || accessRequests.length === 0) && (
               <TableRow>
                 <TableCell colSpan={3} align="center">
-                  No data available
+                  {getText(i18nKeys.REQUEST_PANEL__NO_DATA)}
                 </TableCell>
               </TableRow>
             )}
@@ -63,9 +65,9 @@ const RequestPanel: FC<RequestPanelProps> = ({ selectedAction, handleActionChang
                       onChange={(event) => handleActionChange(event, request)}
                       displayEmpty
                     >
-                      <MenuItem value="">Select action</MenuItem>
-                      <MenuItem value="approve">Approve</MenuItem>
-                      <MenuItem value="reject">Reject</MenuItem>
+                      <MenuItem value="">{getText(i18nKeys.REQUEST_PANEL__SELECT_ACTION)}</MenuItem>
+                      <MenuItem value="approve">{getText(i18nKeys.REQUEST_PANEL__APPROVE)}</MenuItem>
+                      <MenuItem value="reject">{getText(i18nKeys.REQUEST_PANEL__REJECT)}</MenuItem>
                     </Select>
                   </FormControl>
                 </TableCell>

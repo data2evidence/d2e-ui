@@ -15,6 +15,7 @@ import { useUserInfo, useUserGroups } from "../../../../../contexts/UserContext"
 import RolesSelect from "./RolesSelect";
 import { RoleEdit, StudyAccessRequest } from "../PermissionsDialog";
 import "./PanelTables.scss";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface AcessPanelProps {
   studyId: string;
@@ -43,6 +44,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
   fetchStudyUsers,
   setLoading,
 }) => {
+  const { getText, i18nKeys } = TranslationContext();
   // menu helpers
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();
   const [allowedUsers, setAllowedUsers] = useState<UserWithRoles[]>([]);
@@ -62,8 +64,8 @@ const AcessPanel: FC<AcessPanelProps> = ({
         } else {
           setFeedback({
             type: "error",
-            message: "An error has occurred.",
-            description: "Please try again. To report the error, please send an email to help@data4life.care.",
+            message: getText(i18nKeys.ACCESS_PANEL__ERROR),
+            description: getText(i18nKeys.ACCESS_PANEL__ERROR_DESCRIPTION),
           });
         }
         console.error("err", err);
@@ -99,7 +101,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
         // Do a check first
         addedUsers.forEach((u) => {
           if (u.userId == null) {
-            throw new Error(`User ${u.username} cannot be added as they have not completed registration`);
+            throw new Error(getText(i18nKeys.ACCESS_PANEL__ERROR_2, [u.username]));
           }
         });
 
@@ -110,7 +112,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
         closeMenu();
         setFeedback({
           type: "success",
-          message: `You've added access for ${user.username}`,
+          message: getText(i18nKeys.ACCESS_PANEL__SUCCESS, [user.username]),
         });
         fetchStudyUsers();
       } catch (err: any) {
@@ -120,7 +122,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
         setLoading(false);
       }
     },
-    [allowedUsers, setLoading, tenantId, studyId, closeMenu, setFeedback, fetchStudyUsers]
+    [allowedUsers, setLoading, tenantId, studyId, closeMenu, setFeedback, fetchStudyUsers, getText]
   );
 
   // Revoke role
@@ -140,7 +142,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
 
         setFeedback({
           type: "success",
-          message: `You've revoked access for user ${user.username}`,
+          message: getText(i18nKeys.ACCESS_PANEL__SUCCESS_REVOKE, [user.username]),
         });
         fetchStudyUsers();
       } catch (err: any) {
@@ -150,15 +152,15 @@ const AcessPanel: FC<AcessPanelProps> = ({
         setLoading(false);
       }
     },
-    [fetchStudyUsers, ctxUser, setFeedback, setLoading, setUserGroups, studyId, tenantId]
+    [fetchStudyUsers, ctxUser, setFeedback, setLoading, setUserGroups, studyId, tenantId, getText]
   );
 
   return (
     <div className="access-panel">
       <div className="access-panel__container">
         <div className="access-panel__header">
-          <div className="access-panel__title">Access</div>
-          <Button text="Add existing users" onClick={openMenu}></Button>
+          <div className="access-panel__title">{getText(i18nKeys.ACCESS_PANEL__ACCESS)}</div>
+          <Button text={getText(i18nKeys.ACCESS_PANEL__ADD_EXISTING)} onClick={openMenu}></Button>
           <Menu
             className="access-panel__menu"
             onClose={closeMenu}
@@ -188,8 +190,8 @@ const AcessPanel: FC<AcessPanelProps> = ({
             </colgroup>
             <TableHead>
               <TableRow>
-                <TableCell>Email</TableCell>
-                <TableCell>Role</TableCell>
+                <TableCell>{getText(i18nKeys.ACCESS_PANEL__EMAIL)}</TableCell>
+                <TableCell>{getText(i18nKeys.ACCESS_PANEL__ROLE)}</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -197,7 +199,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
               {(!users || users.length === 0) && (
                 <TableRow>
                   <TableCell colSpan={3} align="center">
-                    No data available
+                    {getText(i18nKeys.ACCESS_PANEL__NO_DATA)}
                   </TableCell>
                 </TableRow>
               )}
@@ -222,7 +224,11 @@ const AcessPanel: FC<AcessPanelProps> = ({
                       setWithdrawRolesList={setWithdrawRolesList}
                     />
                     <div className="button-group">
-                      <IconButton startIcon={<RejectIcon />} title="Revoke" onClick={() => handleRevoke(user)} />
+                      <IconButton
+                        startIcon={<RejectIcon />}
+                        title={getText(i18nKeys.ACCESS_PANEL__REVOKE)}
+                        onClick={() => handleRevoke(user)}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>
