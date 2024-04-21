@@ -5,6 +5,7 @@ import { CloseDialogType } from "../../../../types";
 import { StarboardNotebook } from "../../utils/notebook";
 import "./EditTitleDialog.scss";
 import { Divider } from "@mui/material";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface EditTitleDialogProps {
   title?: string;
@@ -15,6 +16,7 @@ interface EditTitleDialogProps {
 }
 
 export const EditTitleDialog: FC<EditTitleDialogProps> = ({ title, open, onClose, renameNotebook, notebooks }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [notebookTitle, setNotebookTitle] = useState(title);
 
@@ -49,28 +51,31 @@ export const EditTitleDialog: FC<EditTitleDialogProps> = ({ title, open, onClose
     <Dialog
       className="edit-title-dialog"
       closable
-      title="Edit Notebook Title"
+      title={getText(i18nKeys.EDIT_TITLE_DIALOG__EDIT_NOTEBOOK_TITLE)}
       open={open}
       onClose={() => handleClose("cancelled")}
     >
       <div className="edit-title-dialog__content">
         <TextField
           id="standard-helperText"
-          label="Notebook Title"
+          label={getText(i18nKeys.EDIT_TITLE_DIALOG__NOTEBOOK_TITLE)}
           defaultValue={notebookTitle}
           variant="standard"
           onChange={handleNotebookChanges}
         />
         {showErrorMessage && (
-          <div className="edit-title-dialog__content__error">
-            The notebook title already exists. Please enter a different title.
-          </div>
+          <div className="edit-title-dialog__content__error">{getText(i18nKeys.EDIT_TITLE_DIALOG__ALREADY_EXISTS)}</div>
         )}
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block />
-        <Button text="Save" onClick={handleRename} block />
+        <Button
+          text={getText(i18nKeys.EDIT_TITLE_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="secondary"
+          block
+        />
+        <Button text={getText(i18nKeys.EDIT_TITLE_DIALOG__SAVE)} onClick={handleRename} block />
       </div>
     </Dialog>
   );

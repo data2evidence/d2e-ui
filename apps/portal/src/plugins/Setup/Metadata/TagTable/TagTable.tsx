@@ -6,8 +6,10 @@ import { Button, IconButton, Loader, TableCell, TableRow, TrashIcon } from "@por
 import { AddTagDialog } from "./AddTagDialog/AddTagDialog";
 import { DeleteTagDialog } from "./DeleteTagDialog/DeleteTagDialog";
 import "./TagTable.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 const TagTable: FC = () => {
+  const { getText, i18nKeys } = TranslationContext();
   const [refetch, setRefetch] = useState(0);
   const [selectedTagName, setSelectedTagName] = useState("");
   const [tagConfigs, loading, error] = useDatasetTagConfigs(refetch);
@@ -35,20 +37,20 @@ const TagTable: FC = () => {
   }
 
   if (loading) {
-    return <Loader text="Loading Tag Configs" />;
+    return <Loader text={getText(i18nKeys.TAG_TABLE__LOADER)} />;
   }
 
   return (
     <>
       <Box>
         <div className="metadata-tag-table__add-button">
-          <Button text="Add Tag" onClick={handleAdd} />
+          <Button text={getText(i18nKeys.TAG_TABLE__ADD_TAG)} onClick={handleAdd} />
         </div>
         <TableContainer className="metadata-tag-table__table">
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Tag</TableCell>
+                <TableCell>{getText(i18nKeys.TAG_TABLE__TAG)}</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -60,7 +62,7 @@ const TagTable: FC = () => {
                     <TableCell>
                       <IconButton
                         startIcon={<TrashIcon />}
-                        title="Delete"
+                        title={getText(i18nKeys.TAG_TABLE__DELETE)}
                         onClick={() => handleDelete(metadataTagName)}
                       />
                     </TableCell>

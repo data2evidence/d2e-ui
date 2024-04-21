@@ -9,6 +9,7 @@ import { convertJupyterToStarboard, notebookContentToText } from "./utils/jupyst
 import { useFeedback } from "../../hooks";
 import { Loader } from "@portal/components";
 import env from "../../env";
+import { TranslationContext } from "../../contexts/TranslationContext";
 
 const MRI_ROOT_URL = `${env.REACT_APP_DN_BASE_URL}analytics-svc`;
 const uiFilesUrl = env.REACT_APP_DN_BASE_URL;
@@ -16,6 +17,7 @@ const zipUrl = `${uiFilesUrl}starboard-notebook-base/alp-starboard-notebook-base
 interface StarboardProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const Starboard: FC<StarboardProps> = ({ metadata }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const { setFeedback } = useFeedback();
   const [loading, setLoading] = useState(true);
 
@@ -47,13 +49,13 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
         console.error(err);
         setFeedback({
           type: "error",
-          message: "An error has occured while fetching notebooks",
+          message: getText(i18nKeys.STARBOARD__ERROR_FETCH),
         });
       } finally {
         setLoading(false);
       }
     },
-    [setFeedback]
+    [setFeedback, getText]
   );
 
   useEffect(() => {
@@ -109,10 +111,10 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
       console.error(err);
       setFeedback({
         type: "error",
-        message: "An error has occured while creating a new notebook",
+        message: getText(i18nKeys.STARBOARD__ERROR_CREATE),
       });
     }
-  }, [fetchNotebooks, setFeedback]);
+  }, [fetchNotebooks, setFeedback, getText]);
 
   // Check Jupyter Notebook Name if it exist in the database
   const checkNotebookName = async (name: string) => {
@@ -156,7 +158,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
       console.error(err);
       setFeedback({
         type: "error",
-        message: "An error has occured. Please import Jupyter files(.ipynb) only.",
+        message: getText(i18nKeys.STARBOARD__ERROR_IMPORT),
       });
     }
   };
