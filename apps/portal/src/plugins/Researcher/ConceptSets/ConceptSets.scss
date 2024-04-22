@@ -21,10 +21,15 @@
   }
   &__header {
     display: flex;
+    justify-content: space-between;
+
+    .button {
+      border-radius: 6px;
+    }
   }
 
   &__search {
-    flex: 1;
+    display: flex;
   }
 
   &__table {
