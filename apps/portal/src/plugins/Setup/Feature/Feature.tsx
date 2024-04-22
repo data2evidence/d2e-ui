@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Button, Checkbox, Loader, Title } from "@portal/components";
-import { useFeatures, useFeedback } from "../../../hooks";
+import { useFeatures } from "../../../hooks";
+import { useFeedback } from "../../../contexts";
 import { api } from "../../../axios/api";
 import { IFeature } from "../../../types";
 import "./Feature.scss";
@@ -28,9 +29,6 @@ export const Feature: FC = () => {
       },
       terminology: {
         name: getText(i18nKeys.FEATURE__TERMINOLOGY),
-      },
-      cdmDownload: {
-        name: getText(i18nKeys.FEATURE__CDM_DOWNLOAD),
       },
       pa: {
         name: getText(i18nKeys.FEATURE__PATIENT_ANALYTICS),
@@ -94,6 +92,7 @@ export const Feature: FC = () => {
           </div>
           <div className="feature__content">
             {formData.features
+              .filter((f) => Object.keys(FEATURES).includes(f.feature))
               .sort((a, b) => Object.keys(FEATURES).indexOf(a.feature) - Object.keys(FEATURES).indexOf(b.feature))
               .map((feat) => (
                 <Box key={feat.feature} className="feature__item">

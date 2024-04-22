@@ -1,12 +1,13 @@
-import React, { FC, useCallback, useState, useEffect } from "react";
-import { Button, Dialog, Loader } from "@portal/components";
+import React, { FC, useCallback, useState } from "react";
 import Divider from "@mui/material/Divider";
+import { Button, Dialog, Loader } from "@portal/components";
 import { UsefulEvent } from "../../../../types";
 import webComponentWrapper from "../../../../webcomponents/webComponentWrapper";
-import ReleaseSelector from "../ReleaseSelector/ReleaseSelector";
 import { JobRunTypes } from "../types";
 import { api } from "../../../../axios/api";
-import { useDatasets, useFeedback } from "../../../../hooks";
+import { useDatasets } from "../../../../hooks";
+import { useFeedback } from "../../../../contexts";
+import ReleaseSelector from "../ReleaseSelector/ReleaseSelector";
 import "./JobDialog.scss";
 import { TranslationContext } from "../../../../contexts/TranslationContext";
 

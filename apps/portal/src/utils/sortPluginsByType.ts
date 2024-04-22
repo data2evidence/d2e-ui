@@ -2,32 +2,27 @@ import { Plugins } from "../types";
 
 export const sortPluginsByType = (plugins: Plugins[]): Plugins[] => {
   const sortedPlugins = [] as Plugins[];
-  const categories: any = [];
+  const typeSet = new Set<string>();
 
   plugins.forEach((item) => {
     if (item.type) {
       if (item.type === "hidden") {
         return;
       }
-      if (!categories.some((el: Plugins) => el.name === item.type)) {
-        if (item.menus) {
-          categories.push({
-            name: item.name,
-            iconUrl: item.iconUrl,
-            iconSize: item.iconSize,
-            children: [...item.menus],
-          });
-        }
-        categories.push({
+      if (!typeSet.has(item.type)) {
+        const newPlugin = {
           name: item.type,
           iconUrl: item.iconUrl,
           iconSize: item.iconSize,
+          route: "",
+          pluginPath: "",
           children: [item],
-        });
-        sortedPlugins.push(...categories);
+        };
+        typeSet.add(item.type);
+        sortedPlugins.push(newPlugin);
       } else {
-        const cat = categories.filter((el: any) => el.name === item.type);
-        cat[0].children.push(item);
+        const foundIndex = sortedPlugins.findIndex((plugin) => plugin.name === item.type);
+        sortedPlugins[foundIndex].children?.push(item);
       }
     } else {
       sortedPlugins.push(item);

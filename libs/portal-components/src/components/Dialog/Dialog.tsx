@@ -38,6 +38,7 @@ export const Dialog: FC<DialogProps> = ({
         style: {
           borderRadius: 32,
           overflow: "hidden", // scrollbar should be handled inside the children to retain fixed Header
+          position: "unset", // override paper's style to avoid blank space in the dialog
         },
       }}
       data-testid="dialog"

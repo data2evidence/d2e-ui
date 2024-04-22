@@ -1,16 +1,16 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Snackbar, ErrorBoundary } from "@portal/components";
+import { PluginDropdownItem, SubFeatureFlags } from "@portal/plugin";
 import { Header } from "../../components";
-import { useFeedback } from "../../hooks";
+import { useFeedback } from "../../contexts";
 import { IPluginItem, PluginDropdown } from "../../types";
+import { getPluginChildPath, loadPlugins, sortPluginsByType } from "../../utils";
+import { ResearcherStudyPluginRenderer } from "../../plugins/core/ResearcherStudyPluginRenderer";
+import { useEnabledFeatures } from "../../hooks";
 import { Overview } from "./Overview/Overview";
 import { Information } from "./Information/Information";
 import { Account } from "../shared/Account/Account";
-import { getPluginChildPath, loadPlugins, sortPluginsByType } from "../../utils";
-import { PluginDropdownItem, SubFeatureFlags } from "@portal/plugin";
-import { ResearcherStudyPluginRenderer } from "../../plugins/core/ResearcherStudyPluginRenderer";
-import { useEnabledFeatures } from "../../hooks";
 import "./Researcher.scss";
 
 const plugins = loadPlugins();

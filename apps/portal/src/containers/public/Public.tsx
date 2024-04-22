@@ -5,7 +5,7 @@ import { Header } from "../../components";
 import { PublicOverview } from "./PublicOverview/PublicOverview";
 import { PublicInformation } from "./PublicInformation/PublicInformation";
 import { Legal } from "../shared/Legal/Legal";
-import { useFeedback } from "../../hooks";
+import { useFeedback } from "../../contexts";
 import { NavLink } from "../../types";
 import "./Public.scss";
 import { TranslationContext } from "../../contexts/TranslationContext";

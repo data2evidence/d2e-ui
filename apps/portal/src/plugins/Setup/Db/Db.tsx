@@ -1,17 +1,62 @@
 import React, { FC, useCallback, useState } from "react";
+import { SelectChangeEvent, SxProps } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import Alert from "@mui/material/Alert";
-import { Button, EditIcon, IconButton, Loader, TableCell, TableRow, Title, TrashIcon } from "@portal/components";
+import Select from "@mui/material/Select";
+import {
+  Button,
+  FormControl,
+  IconButton,
+  Loader,
+  MenuItem,
+  TableCell,
+  TableRow,
+  Title,
+  TrashIcon,
+} from "@portal/components";
 import { useDatabases, useDialogHelper } from "../../../hooks";
 import { CloseDialogType, IDatabase } from "../../../types";
 import { SaveDbDialog } from "./SaveDbDialog/SaveDbDialog";
-import { EditDbCredentialDialog } from "./EditDbCredentialDialog/EditDbCredentialDialog";
+import { EditDbCredentialsDialog } from "./EditDbCredentialsDialog/EditDbCredentialsDialog";
 import { DeleteDbDialog } from "./DeleteDbDialog/DeleteDbDialog";
+import { EditDbDetailsDialog } from "./EditDbDetailsDialog/EditDbDetailsDialog";
 import "./Db.scss";
 import { TranslationContext } from "../../../contexts/TranslationContext";
+
+const styles: SxProps = {
+  color: "#000080",
+  ".MuiInputLabel-root": {
+    color: "#000080",
+    "&.MuiInputLabel-shrink, &.Mui-focused": {
+      color: "var(--color-neutral)",
+    },
+  },
+  ".MuiInput-input:focus": {
+    backgroundColor: "transparent",
+    color: "#000080",
+  },
+  ".MuiInput-root": {
+    "&::after, &:hover:not(.Mui-disabled)::before": {
+      borderBottom: "2px solid #000080",
+    },
+  },
+  "&.MuiMenuItem-root:hover": {
+    backgroundColor: "#ebf2fa",
+  },
+};
+
+interface Action {
+  name: string;
+  value: string;
+}
+
+const actionsList: Action[] = [
+  { name: "Details", value: "details" },
+  { name: "Credentials", value: "credentials" },
+];
 
 export const Db: FC = () => {
   const { getText, i18nKeys } = TranslationContext();
@@ -19,7 +64,8 @@ export const Db: FC = () => {
   const [databases, loading, error] = useDatabases(refetch);
   const [selectedDb, setSelectedDb] = useState<IDatabase>();
   const [showSaveDialog, openSaveDialog, closeSaveDialog] = useDialogHelper(false);
-  const [showEditDialog, openEditDialog, closeEditDialog] = useDialogHelper(false);
+  const [showEditCredentialsDialog, openEditCredentialsDialog, closeEditCredentialsDialog] = useDialogHelper(false);
+  const [showEditDetailsDialog, openEditDetailsDialog, closeEditDetailsDialog] = useDialogHelper(false);
   const [showDeleteDialog, openDeleteDialog, closeDeleteDialog] = useDialogHelper(false);
 
   const handleAdd = useCallback(() => {
@@ -37,12 +83,20 @@ export const Db: FC = () => {
     [closeSaveDialog]
   );
 
-  const handleEdit = useCallback(
+  const handleEditCredentials = useCallback(
     (db: IDatabase) => {
       setSelectedDb(db);
-      openEditDialog();
+      openEditCredentialsDialog();
     },
-    [openEditDialog]
+    [openEditCredentialsDialog]
+  );
+
+  const handleEditDetails = useCallback(
+    (db: IDatabase) => {
+      setSelectedDb(db);
+      openEditDetailsDialog();
+    },
+    [openEditDetailsDialog]
   );
 
   const handleDelete = useCallback(
@@ -53,14 +107,24 @@ export const Db: FC = () => {
     [openDeleteDialog]
   );
 
-  const handleCloseEditDialog = useCallback(
+  const handleCloseEditCredentialsDialog = useCallback(
     (type: CloseDialogType) => {
       if (type === "success") {
         setRefetch((refetch) => refetch + 1);
       }
-      closeEditDialog();
+      closeEditCredentialsDialog();
     },
-    [closeEditDialog]
+    [closeEditCredentialsDialog]
+  );
+
+  const handleCloseEditDetailsDialog = useCallback(
+    (type: CloseDialogType) => {
+      if (type === "success") {
+        setRefetch((refetch) => refetch + 1);
+      }
+      closeEditDetailsDialog();
+    },
+    [closeEditDetailsDialog]
   );
 
   const handleCloseDeleteDialog = useCallback(
@@ -71,6 +135,22 @@ export const Db: FC = () => {
       closeDeleteDialog();
     },
     [closeDeleteDialog]
+  );
+
+  const handleActionChange = useCallback(
+    (event: SelectChangeEvent<string>, db: IDatabase) => {
+      switch (event.target.value) {
+        case "details":
+          handleEditDetails(db);
+          break;
+        case "credentials":
+          handleEditCredentials(db);
+          break;
+        default:
+          break;
+      }
+    },
+    [handleEditDetails, handleEditCredentials]
   );
 
   if (error) {
@@ -119,16 +199,25 @@ export const Db: FC = () => {
                 <TableCell>{db.port}</TableCell>
                 <TableCell>{db.dialect}</TableCell>
                 <TableCell>
-                  <IconButton
-                    startIcon={<EditIcon />}
-                    title={getText(i18nKeys.DB__EDIT_CREDENTIALS)}
-                    onClick={() => handleEdit(db)}
-                  />
-                  <IconButton
-                    startIcon={<TrashIcon />}
-                    title={getText(i18nKeys.DB__DELETE)}
-                    onClick={() => handleDelete(db)}
-                  />
+                  <div className="db__button-group">
+                    <FormControl sx={styles}>
+                      <Select value="" onChange={(event) => handleActionChange(event, db)} displayEmpty sx={styles}>
+                        <MenuItem value="" sx={styles} disableRipple>
+                          {getText(i18nKeys.DB__EDIT)}
+                        </MenuItem>
+                        {actionsList.map((action: Action) => (
+                          <MenuItem value={action.value} key={action.name} sx={styles} disableRipple>
+                            {action.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <IconButton
+                      startIcon={<TrashIcon />}
+                      title={getText(i18nKeys.DB__DELETE)}
+                      onClick={() => handleDelete(db)}
+                    />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -136,7 +225,16 @@ export const Db: FC = () => {
         </Table>
       </TableContainer>
       <SaveDbDialog open={showSaveDialog} onClose={handleCloseSaveDialog} />
-      {selectedDb && <EditDbCredentialDialog open={showEditDialog} onClose={handleCloseEditDialog} db={selectedDb} />}
+      {selectedDb && (
+        <EditDbCredentialsDialog
+          open={showEditCredentialsDialog}
+          onClose={handleCloseEditCredentialsDialog}
+          db={selectedDb}
+        />
+      )}
+      {selectedDb && (
+        <EditDbDetailsDialog open={showEditDetailsDialog} onClose={handleCloseEditDetailsDialog} db={selectedDb} />
+      )}
       {selectedDb && <DeleteDbDialog open={showDeleteDialog} onClose={handleCloseDeleteDialog} db={selectedDb} />}
     </div>
   );

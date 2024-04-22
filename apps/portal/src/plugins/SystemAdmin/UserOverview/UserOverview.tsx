@@ -6,10 +6,6 @@ import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import Chip from "@mui/material/Chip";
 import { Button, EditIcon, IconButton, Loader, TableCell, TableRow, TrashIcon } from "@portal/components";
-import DeleteUserDialog from "./DeleteUserDialog/DeleteUserDialog";
-import EditTenantRoleDialog from "./EditTenantRoleDialog/EditTenantRoleDialog";
-import AddUserDialog from "./AddUserDialog/AddUserDialog";
-import { ChangeUserPasswordDialog } from "./ChangeUserPasswordDialog/ChangeUserPasswordDialog";
 import { UserWithRolesInfoExt, CloseDialogType } from "../../../types";
 import {
   Roles,
@@ -21,10 +17,15 @@ import {
   TENANT_ROLES,
   ALP_DASHBOARD_VIEWER,
 } from "../../../config";
-import { useFeedback, useTenants, useGroupCleanUp, useDialogHelper } from "../../../hooks";
+import { useTenants, useGroupCleanUp, useDialogHelper } from "../../../hooks";
+import { useFeedback } from "../../../contexts";
 import { useUserInfo } from "../../../contexts/UserContext";
-import { MoreActionButton } from "./MoreActionButton";
 import { api } from "../../../axios/api";
+import DeleteUserDialog from "./DeleteUserDialog/DeleteUserDialog";
+import EditTenantRoleDialog from "./EditTenantRoleDialog/EditTenantRoleDialog";
+import AddUserDialog from "./AddUserDialog/AddUserDialog";
+import { ChangeUserPasswordDialog } from "./ChangeUserPasswordDialog/ChangeUserPasswordDialog";
+import { MoreActionButton } from "./MoreActionButton";
 import env from "../../../env";
 import "./UserOverview.scss";
 import { TranslationContext } from "../../../contexts/TranslationContext";

@@ -85,7 +85,7 @@
       <ul class="bookmark-list">
         <template v-for="bookmark in bookmarksDisplay" :key="bookmark.name">
           <li class="bookmark-item" ref="bookmarkItem">
-            <div class="bookmark-item-container" ref="bookmarkItemContainer">
+            <div class="bookmark-item-container" ref="bookmarkItemContainer" v-on:click="loadBookmarkCheck(bookmark.id, bookmark.chartType)">
               <table class="bookmark-item-table">
                 <tr>
                   <td>
@@ -93,7 +93,7 @@
                       <appCheckbox
                         v-model="bookmark.selected"
                         @checkEv="onSelectBookmark(bookmark)"
-                        :text="bookmark.name"
+                        :text="`${bookmark.name} ${bookmark.shared ? '(Shared)' : ''}`"
                       ></appCheckbox>
                     </div>
                   </td>
@@ -128,7 +128,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <div class="bookmark-item-content" v-on:click="loadBookmarkCheck(bookmark.id, bookmark.chartType)">
+                    <div class="bookmark-item-content">
                       <table class="bookmark-item-cards">
                         <thead>
                           <th style="width: 25px"></th>
@@ -233,22 +233,20 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td v-if="!bookmark.disableUpdate">
                             <button
                               v-on:click.stop="renameBookmark(bookmark)"
                               :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
                               class="bookmark-button"
-                              :disabled="bookmark.disableUpdate"
                             >
                               <span class="icon"></span>
                             </button>
                           </td>
-                          <td>
+                          <td v-if="!bookmark.disableUpdate">
                             <button
                               v-on:click.stop="deleteBookmark(bookmark)"
                               :title="getText('MRI_PA_TOOLTIP_DELETE_BOOKMARK')"
                               class="bookmark-button"
-                              :disabled="bookmark.disableUpdate"
                             >
                               <span class="icon"></span>
                             </button>
@@ -442,7 +440,7 @@ export default {
           }
         }
       }, this)
-
+      
       return returnValue
     },
     hasChanges() {
