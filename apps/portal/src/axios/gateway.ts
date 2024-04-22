@@ -85,4 +85,12 @@ export class Gateway {
       data: input,
     });
   }
+
+  public registerDashboardRoutes() {
+    return request({
+      baseURL: env.REACT_APP_DN_BASE_URL,
+      url: "/dashboard-gate/register",
+      method: "POST",
+    });
+  }
 }
