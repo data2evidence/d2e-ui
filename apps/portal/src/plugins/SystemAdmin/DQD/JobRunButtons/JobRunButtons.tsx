@@ -1,9 +1,11 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useCallback } from "react";
 import { Button } from "@portal/components";
 import { useDialogHelper } from "../../../../hooks";
 import JobDialog from "../JobDialog/JobDialog";
 import { JobRunTypes } from "../types";
 import "./JobRunButtons.scss";
+import { api } from "../../../../axios/api";
+import { MetaData } from "../../../../types";
 
 interface JobRunButtonsProps {
   datasetId: string;
@@ -14,6 +16,16 @@ interface JobRunButtonsProps {
 const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGenerateJob }) => {
   const [showJobDialog, openJobDialog, closeJobDialog] = useDialogHelper(false);
   const [jobRunType, setJobRunType] = useState<JobRunTypes | null>(null);
+  const [flowMetadata, setFlowMetadata] = useState<MetaData[]>([]);
+
+  const getFlowMetadata = useCallback(async () => {
+    try {
+      const flowMetadata = await api.dataflow.getFlowMetadata();
+      setFlowMetadata(flowMetadata);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   const handleRunDQDClick = () => {
     setJobRunType(JobRunTypes.DQD);
@@ -24,16 +36,28 @@ const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGen
     openJobDialog();
   };
 
-  // If studyName is empty, disable buttons
-  const isButtonDisabled = !studyName;
+  const isButtonDisabled = useCallback(
+    (type?: string) => {
+      if (type === JobRunTypes.DQD && studyName) {
+        return !flowMetadata.some((flow) => flow.type === JobRunTypes.DQD.toLowerCase());
+      }
+      return !studyName;
+    },
+    [studyName, flowMetadata]
+  );
+
+  useEffect(() => {
+    getFlowMetadata();
+  }, [getFlowMetadata]);
+
   return (
     <>
       <div className="selector__button">
-        <Button onClick={handleRunDQDClick} text="Run Data Quality" disabled={isButtonDisabled} />
+        <Button onClick={handleRunDQDClick} text="Run Data Quality" disabled={isButtonDisabled(JobRunTypes.DQD)} />
         <Button
           onClick={handleRunDataCharacterizationClick}
           text="Run Data Characterization"
-          disabled={isButtonDisabled}
+          disabled={isButtonDisabled()}
         />
       </div>
       {jobRunType && (
