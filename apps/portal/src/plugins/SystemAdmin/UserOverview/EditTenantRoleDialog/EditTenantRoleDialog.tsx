@@ -7,6 +7,7 @@ import { Roles, TENANT_ROLES, DATA_ADMIN_ROLES, ALP_ROLES } from "../../../../co
 import { getRoleChanges } from "../../../../utils";
 import { api } from "../../../../axios/api";
 import "./EditTenantRoleDialog.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface EditTenantRoleDialogProps {
   user?: UserWithRolesInfoExt;
@@ -23,6 +24,7 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
   open,
   onClose,
 }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const { user: userInfo } = useUserInfo();
   const { setUserGroups } = useUserGroups();
   const [loading, setLoading] = useState(false);
@@ -178,7 +180,7 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
   return (
     <Dialog
       className="edit-tenant-role-dialog"
-      title="Edit roles"
+      title={getText(i18nKeys.EDIT_TENANT_ROLE_DIALOG__EDIT)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -186,7 +188,7 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
     >
       <Divider />
       <div className="edit-tenant-role-dialog__content">
-        <div className="roles__title">Roles</div>
+        <div className="roles__title">{getText(i18nKeys.EDIT_TENANT_ROLE_DIALOG__ROLES)}</div>
         {userInfo.isUserAdmin && (
           <>
             {Object.keys(availableTenantRoles).map((role) => (
@@ -226,8 +228,20 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={loading} />
-        <Button text="Save" onClick={handleSave} block loading={loading} disabled={!hasChanges()} />
+        <Button
+          text={getText(i18nKeys.EDIT_TENANT_ROLE_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="secondary"
+          block
+          disabled={loading}
+        />
+        <Button
+          text={getText(i18nKeys.EDIT_TENANT_ROLE_DIALOG__SAVE)}
+          onClick={handleSave}
+          block
+          loading={loading}
+          disabled={!hasChanges()}
+        />
       </div>
     </Dialog>
   );

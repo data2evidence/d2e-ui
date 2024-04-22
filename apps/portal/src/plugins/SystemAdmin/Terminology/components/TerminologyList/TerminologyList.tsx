@@ -13,6 +13,7 @@ import { Terminology } from "../../../../../axios/terminology";
 import SearchBar from "../SearchBar/SearchBar";
 import { tabNames } from "../../utils/constants";
 import { Checkbox } from "@mui/material";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface TerminologyListProps {
   userId?: string;
@@ -63,6 +64,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
   datasetId,
   isDrawer,
 }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -167,8 +169,8 @@ const TerminologyList: FC<TerminologyListProps> = ({
         console.error(e);
         setFeedback({
           type: "error",
-          message: "An error has occurred",
-          description: "Please try again.",
+          message: getText(i18nKeys.TERMINOLOGY_LIST__ERROR),
+          description: getText(i18nKeys.TERMINOLOGY_LIST__ERROR_DESCRIPTION),
         });
       } finally {
         setIsLoading(false);
@@ -185,6 +187,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
     selectedConcepts,
     JSON.stringify(columnFilters),
     allFilterOptionsZeroed,
+    getText,
   ]);
 
   const onClickAddRemoveButton = useCallback(
@@ -289,25 +292,25 @@ const TerminologyList: FC<TerminologyListProps> = ({
     const basicColumns: MRT_ColumnDef<FhirValueSetExpansionContainsWithExt>[] = [
       {
         accessorKey: "conceptId",
-        header: "ID",
+        header: getText(i18nKeys.TERMINOLOGY_LIST__ID),
         grow: false,
         size: 100,
       },
       {
         accessorKey: "code",
-        header: "Code",
+        header: getText(i18nKeys.TERMINOLOGY_LIST__CODE),
         grow: false,
         size: 180,
       },
       {
         accessorKey: "display",
-        header: "Name",
+        header: getText(i18nKeys.TERMINOLOGY_LIST__NAME),
         grow: false,
         size: isDrawer ? 250 : 350,
       },
       {
         accessorKey: "conceptClassId",
-        header: "Class",
+        header: getText(i18nKeys.TERMINOLOGY_LIST__CLASS),
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.conceptClassId ? mapFilterOptions(filterOptions.conceptClassId) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
@@ -316,7 +319,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       },
       {
         accessorKey: "concept",
-        header: "Concept",
+        header: getText(i18nKeys.TERMINOLOGY_LIST__CONCEPT),
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.concept ? mapFilterOptions(filterOptions.concept) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
@@ -325,7 +328,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       },
       {
         accessorKey: "domainId",
-        header: "Domain",
+        header: getText(i18nKeys.TERMINOLOGY_LIST__DOMAIN),
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.domainId ? mapFilterOptions(filterOptions.domainId) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
@@ -334,7 +337,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       },
       {
         accessorKey: "system",
-        header: "Vocabulary",
+        header: getText(i18nKeys.TERMINOLOGY_LIST__VOCABULARY),
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.vocabularyId ? mapFilterOptions(filterOptions.vocabularyId) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
@@ -343,7 +346,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       },
       {
         accessorKey: "validity",
-        header: "Validity",
+        header: getText(i18nKeys.TERMINOLOGY_LIST__VALIDITY),
         grow: true,
         size: 80,
       },
@@ -374,7 +377,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       const descendantsAndMapped: MRT_ColumnDef<FhirValueSetExpansionContainsWithExt>[] = [
         {
           accessorKey: "useDescendants",
-          header: "Descendants",
+          header: getText(i18nKeys.TERMINOLOGY_LIST__DESCENDANTS),
           Cell: ({ row }: { row: any }) => {
             const terminology = row.original as FhirValueSetExpansionContainsWithExt;
             return (
@@ -395,7 +398,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         },
         {
           accessorKey: "useMapped",
-          header: "Mapped",
+          header: getText(i18nKeys.TERMINOLOGY_LIST__MAPPED),
           Cell: ({ row }: { row: any }) => {
             const terminology = row.original as FhirValueSetExpansionContainsWithExt;
             return (
@@ -424,7 +427,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       return { columns: [...addButton, ...basicColumns], columnOrder: ["addButton", ...basicColumnOrder] };
     }
     return { columns: basicColumns, columnOrder: basicColumnOrder };
-  }, [filterOptions, tab, JSON.stringify(listData), selectedConcepts]);
+  }, [filterOptions, tab, JSON.stringify(listData), selectedConcepts, getText]);
 
   const table = useMaterialReactTable({
     layoutMode: "grid",
