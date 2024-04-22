@@ -4,6 +4,7 @@ import { Button, Dialog } from "@portal/components";
 import { Study, Feedback, CloseDialogType, UpdateSchemaInput } from "../../../../types";
 import { Gateway } from "../../../../axios/gateway";
 import "./UpdateSchemaDialog.scss";
+import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface UpdateSchemaDialogProps {
   study?: Study;
@@ -12,6 +13,7 @@ interface UpdateSchemaDialogProps {
 }
 
 const UpdateSchemaDialog: FC<UpdateSchemaDialogProps> = ({ study, open, onClose }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [updating, setUpdating] = useState(false);
 
@@ -42,19 +44,19 @@ const UpdateSchemaDialog: FC<UpdateSchemaDialogProps> = ({ study, open, onClose 
     } catch (err: any) {
       setFeedback({
         type: "error",
-        message: `Schema for dataset ${study.id} failed to update`,
+        message: getText(i18nKeys.UPDATE_SCHEMA_DIALOG__ERROR, [study.id]),
         description: err.data?.message || err.data,
       });
       console.error("Error when updating schema", err);
     } finally {
       setUpdating(false);
     }
-  }, [study, setFeedback, handleClose]);
+  }, [study, setFeedback, handleClose, getText]);
 
   return (
     <Dialog
       className="update-schema-dialog"
-      title="Update schema"
+      title={getText(i18nKeys.UPDATE_SCHEMA_DIALOG__UPDATE_SCHEMA)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -62,13 +64,19 @@ const UpdateSchemaDialog: FC<UpdateSchemaDialogProps> = ({ study, open, onClose 
     >
       <Divider />
       <div className="update-schema-dialog__content">
-        <div>Are you sure you want to update the schema of this dataset:</div>
+        <div>{getText(i18nKeys.UPDATE_SCHEMA_DIALOG__CONFIRM)}</div>
         <div>{study!.id} ?</div>
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={updating} />
-        <Button text="Yes, update" onClick={handleUpdate} block loading={updating} />
+        <Button
+          text={getText(i18nKeys.UPDATE_SCHEMA_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="secondary"
+          block
+          disabled={updating}
+        />
+        <Button text={getText(i18nKeys.UPDATE_SCHEMA_DIALOG__UPDATE)} onClick={handleUpdate} block loading={updating} />
       </div>
     </Dialog>
   );

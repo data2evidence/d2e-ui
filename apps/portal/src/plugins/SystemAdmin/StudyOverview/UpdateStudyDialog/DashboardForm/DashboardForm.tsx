@@ -2,6 +2,7 @@ import React, { ChangeEvent, FC, useCallback } from "react";
 import { Box, IconButton, TextField, TrashIcon } from "@portal/components";
 import { DatasetDashboard } from "../../../../../types";
 import { FormHelperText } from "@mui/material";
+import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface DashboardFormProps {
   index: number;
@@ -32,6 +33,7 @@ export const EMPTY_DASHBOARD_FORM_ERROR: DashboardFormError = {
 export const EMPTY_DASHBOARD_FORM_DATA: DatasetDashboard = { name: "", url: "", basePath: "" };
 
 export const DashboardForm: FC<DashboardFormProps> = ({ index, dashboard, onRemove, onChange, error }) => {
+  const { getText, i18nKeys } = TranslationContext();
   const handleChange = useCallback(
     (changes: Partial<DatasetDashboard>) => {
       const update = { ...dashboard, ...changes } as DatasetDashboard;
@@ -51,7 +53,9 @@ export const DashboardForm: FC<DashboardFormProps> = ({ index, dashboard, onRemo
           error={error?.name.required}
           onChange={(event: ChangeEvent<HTMLInputElement>) => handleChange({ name: event.target.value })}
         />
-        {error?.name.required && <FormHelperText className="form-error">This is required</FormHelperText>}
+        {error?.name.required && (
+          <FormHelperText className="form-error">{getText(i18nKeys.DASHBOARD_FORM__REQUIRED)}</FormHelperText>
+        )}
       </Box>
       <Box flex="1" sx={{ height: index === 0 ? "70px" : "60px" }}>
         <TextField
@@ -62,7 +66,9 @@ export const DashboardForm: FC<DashboardFormProps> = ({ index, dashboard, onRemo
           error={error?.url.required}
           onChange={(event: ChangeEvent<HTMLInputElement>) => handleChange({ url: event.target.value })}
         />
-        {error?.url.required && <FormHelperText className="form-error">This is required</FormHelperText>}
+        {error?.url.required && (
+          <FormHelperText className="form-error">{getText(i18nKeys.DASHBOARD_FORM__REQUIRED)}</FormHelperText>
+        )}
       </Box>
       <Box sx={{ width: "150px", height: index === 0 ? "70px" : "60px" }}>
         <TextField
@@ -73,7 +79,9 @@ export const DashboardForm: FC<DashboardFormProps> = ({ index, dashboard, onRemo
           error={error?.basePath.required}
           onChange={(event: ChangeEvent<HTMLInputElement>) => handleChange({ basePath: event.target.value })}
         />
-        {error?.basePath.required && <FormHelperText className="form-error">This is required</FormHelperText>}
+        {error?.basePath.required && (
+          <FormHelperText className="form-error">{getText(i18nKeys.DASHBOARD_FORM__REQUIRED)}</FormHelperText>
+        )}
       </Box>
       <Box flex="none" sx={{ height: "60px" }}>
         <IconButton startIcon={<TrashIcon />} onClick={() => onRemove()} />
