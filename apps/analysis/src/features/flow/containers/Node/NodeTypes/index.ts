@@ -5,6 +5,7 @@ import { RNode } from "./RNode/RNode";
 import { CohortGeneratorNode } from "./CohortGeneratorNode/CohortGeneratorNode";
 import { CohortDiagnosticsNode } from "./CohortDiagnosticsNode/CohortDiagnosticsNode";
 import { NegatveControlOutcomeNode } from "./NegativeControlOutcomeNode/NegativeControlOutcomeNode";
+import { CharacterizationNode } from "./CharacterizationNode/CharacterizationNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -17,7 +18,7 @@ export const NODE_TYPES: {
   cohort_incidence_target_cohorts_node: RNode,
   time_at_risk_node: RNode,
   covariate_settings_node: RNode,
-  characterization_node: RNode,
+  characterization_node: CharacterizationNode,
   target_compartor_outcomes_node: RNode,
   cohort_method_analysis_node: RNode,
   cohort_method_node: RNode,
@@ -117,7 +118,10 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Characterization",
     description: "JSON analysis specification for executing HADES modules",
     tag: NodeTag.Darkgreen,
-    defaultData: {},
+    defaultData: {
+      dechallengeStopiterval: 0,
+      dechallengeEvaluationWindow: 0,
+    },
   },
   target_compartor_outcomes_node: {
     title: "Target Compartor Outcomes",
