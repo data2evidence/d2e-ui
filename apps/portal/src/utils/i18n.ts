@@ -842,7 +842,7 @@ export const i18nDefault = {
     TERMINOLOGY_LIST__CONCEPT: "Concept",
     TERMINOLOGY_LIST__DESCENDANTS: "Descendants",
     TERMINOLOGY_LIST__DOMAIN: "Domain",
-    TERMINOLOGY_LIST__ERROR_DESCRIPTION: "",
+    TERMINOLOGY_LIST__ERROR_DESCRIPTION: "Please try again.",
     TERMINOLOGY_LIST__ERROR: "An error has occurred",
     TERMINOLOGY_LIST__ID: "ID",
     TERMINOLOGY_LIST__MAPPED: "Mapped",
