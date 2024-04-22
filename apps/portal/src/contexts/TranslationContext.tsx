@@ -39,7 +39,7 @@ export const getFallbackLocale = (locale: string) => {
 
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
-const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+const TranslationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [locale, setLocale] = useState<string>("default");
   const [translations, setTranslations] = useState<{ [key: string]: typeof i18nDefault.default }>(i18nDefault);
   const [ready, setReady] = useState(false);
@@ -114,9 +114,9 @@ const LocaleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 const TranslationContext = () => {
   const context = useContext(LocaleContext);
   if (context === undefined) {
-    throw new Error("useLocale must be used within a LocaleProvider");
+    throw new Error("useLocale must be used within a TranslationProvider");
   }
   return context;
 };
 
-export { LocaleProvider, TranslationContext };
+export { TranslationProvider, TranslationContext };

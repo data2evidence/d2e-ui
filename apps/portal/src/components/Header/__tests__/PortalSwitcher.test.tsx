@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom/extend-expect";
 import PortalSwitcher from "../PortalSwitcher/PortalSwitcher";
 import * as userContext from "../../../contexts/UserContext";
-import { LocaleProvider } from "../../../contexts/TranslationContext";
+import { TranslationProvider } from "../../../contexts/TranslationContext";
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -22,11 +22,11 @@ it("renders without switcher", () => {
   }));
 
   const { queryByTestId } = render(
-    <LocaleProvider>
+    <TranslationProvider>
       <MemoryRouter>
         <PortalSwitcher portalType="researcher" />
       </MemoryRouter>
-    </LocaleProvider>
+    </TranslationProvider>
   );
 
   expect(queryByTestId("portal-switcher-many")).toBeNull();
@@ -44,11 +44,11 @@ it("renders switcher as link", () => {
   }));
 
   const { queryByTestId, queryAllByTestId } = render(
-    <LocaleProvider>
+    <TranslationProvider>
       <MemoryRouter>
         <PortalSwitcher portalType="researcher" />
       </MemoryRouter>
-    </LocaleProvider>
+    </TranslationProvider>
   );
 
   expect(queryByTestId("portal-switcher-one")).toBeNull();

@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom/extend-expect";
 import { Header } from "../Header";
 import { Tenant, Study } from "../../../types";
-import { LocaleProvider } from "../../../contexts/TranslationContext";
+import { TranslationProvider } from "../../../contexts/TranslationContext";
 
 const tenant: Tenant = {
   id: "t01",
@@ -23,11 +23,11 @@ jest.mock("../../../containers/auth", () => ({
 
 it("render correctly", () => {
   const { queryByTestId } = render(
-    <LocaleProvider>
+    <TranslationProvider>
       <MemoryRouter>
         <Header portalType="researcher" />
       </MemoryRouter>
-    </LocaleProvider>
+    </TranslationProvider>
   );
 
   expect(queryByTestId("header")).toBeTruthy();
@@ -35,11 +35,11 @@ it("render correctly", () => {
 
 it("has 2 navigation menu", () => {
   const { queryByTestId } = render(
-    <LocaleProvider>
+    <TranslationProvider>
       <MemoryRouter>
         <Header portalType="researcher" />
       </MemoryRouter>
-    </LocaleProvider>
+    </TranslationProvider>
   );
 
   expect(queryByTestId("nav")?.childElementCount).toBe(1);

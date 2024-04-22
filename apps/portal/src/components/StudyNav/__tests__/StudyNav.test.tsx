@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { StudyNav } from "../StudyNav";
 import { Study } from "../../../types";
-import { LocaleProvider } from "../../../contexts/TranslationContext";
+import { TranslationProvider } from "../../../contexts/TranslationContext";
 
 const studies: Study[] = [
   {
@@ -45,9 +45,9 @@ const studies: Study[] = [
 it("has empty study", () => {
   const handleClick = jest.fn();
   const { queryByTestId } = render(
-    <LocaleProvider>
+    <TranslationProvider>
       <StudyNav studies={undefined} selectedStudyId="" onClick={handleClick} />
-    </LocaleProvider>
+    </TranslationProvider>
   );
   expect(queryByTestId("studynav")).toBeNull();
 });
@@ -55,9 +55,9 @@ it("has empty study", () => {
 it("renders correctly", () => {
   const handleClick = jest.fn();
   const { queryByTestId } = render(
-    <LocaleProvider>
+    <TranslationProvider>
       <StudyNav studies={studies} selectedStudyId="" onClick={handleClick} />
-    </LocaleProvider>
+    </TranslationProvider>
   );
   expect(queryByTestId("study-nav")).toBeTruthy();
 });
@@ -65,9 +65,9 @@ it("renders correctly", () => {
 it("has 2 tenants with each tenant has one study", () => {
   const handleClick = jest.fn();
   const { queryAllByTestId } = render(
-    <LocaleProvider>
+    <TranslationProvider>
       <StudyNav studies={studies} selectedStudyId="" onClick={handleClick} />
-    </LocaleProvider>
+    </TranslationProvider>
   );
   expect(queryAllByTestId("study-nav-tenant").length).toBe(2);
   expect(queryAllByTestId("study-nav-tenant")[0].childElementCount).toBe(1);

@@ -293,7 +293,7 @@ export const i18nDefault = {
     DB__DATABASES: "Databases",
     DB__DELETE: "Delete",
     DB__DIALECT: "Dialect",
-    DB__EDIT_CREDENTIALS: "Edit credentials",
+    DB__EDIT: "Edit",
     DB__HOST: "Host",
     DB__LOADER: "Loading databases",
     DB__NO_DATA: "No data available",

@@ -10,7 +10,7 @@ import env from "../../../env";
 import { useLocation } from "react-router-dom";
 import { PostLoginRedirectUrlContext } from "../../../contexts/PostLoginRedirectUrlContext";
 import { isValidRedirectUrl } from "../../../utils";
-import { LocaleProvider } from "../../../contexts/TranslationContext";
+import { TranslationProvider } from "../../../contexts/TranslationContext";
 import { AppProvider } from "../../../contexts";
 
 let oidcConfig: any;
@@ -44,7 +44,7 @@ const OidcAppInternal: FC = () => {
 
 export const OidcApp: FC = () => {
   return (
-    <LocaleProvider>
+    <TranslationProvider>
       <OidcProvider
         configuration={oidcConfig}
         authenticatingComponent={OidcAuthenticating}
@@ -56,6 +56,6 @@ export const OidcApp: FC = () => {
           <OidcAppInternal />
         </AppProvider>
       </OidcProvider>
-    </LocaleProvider>
+    </TranslationProvider>
   );
 };

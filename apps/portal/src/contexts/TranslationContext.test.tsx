@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { getFallbackLocale, LocaleProvider, replaceParams, TranslationContext } from "./TranslationContext";
+import { getFallbackLocale, TranslationProvider, replaceParams, TranslationContext } from "./TranslationContext";
 import { api } from "../axios/api";
 
 jest.mock("../axios/api", () => ({
@@ -32,14 +32,14 @@ const TestComponent = (): JSX.Element => {
 
 const TestApp = (): JSX.Element => {
   return (
-    <LocaleProvider>
+    <TranslationProvider>
       <TestComponent />
-    </LocaleProvider>
+    </TranslationProvider>
   );
 };
 
 const customRender = (ui: JSX.Element, { providerProps, ...renderOptions }: { providerProps: any }) => {
-  return render(<LocaleProvider {...providerProps}>{ui}</LocaleProvider>, renderOptions);
+  return render(<TranslationProvider {...providerProps}>{ui}</TranslationProvider>, renderOptions);
 };
 
 test("TestApp shows default value", () => {
