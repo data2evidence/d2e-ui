@@ -44,18 +44,18 @@ const OidcAppInternal: FC = () => {
 
 export const OidcApp: FC = () => {
   return (
-    <OidcProvider
-      configuration={oidcConfig}
-      authenticatingComponent={OidcAuthenticating}
-      authenticatingErrorComponent={OidcError}
-      callbackSuccessComponent={OidcCallbackSuccess}
-      sessionLostComponent={OidcSessionLost}
-    >
-      <AppProvider>
-        <LocaleProvider>
+    <LocaleProvider>
+      <OidcProvider
+        configuration={oidcConfig}
+        authenticatingComponent={OidcAuthenticating}
+        authenticatingErrorComponent={OidcError}
+        callbackSuccessComponent={OidcCallbackSuccess}
+        sessionLostComponent={OidcSessionLost}
+      >
+        <AppProvider>
           <OidcAppInternal />
-        </LocaleProvider>
-      </AppProvider>
-    </OidcProvider>
+        </AppProvider>
+      </OidcProvider>
+    </LocaleProvider>
   );
 };
