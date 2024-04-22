@@ -7,7 +7,7 @@ import { useFeedback } from "../../../../../contexts";
 import { FilterOptions, TabName, FhirValueSetExpansionContainsWithExt, TerminologyResult } from "../../utils/types";
 import { Terminology } from "../../../../../axios/terminology";
 import { tabNames } from "../../utils/constants";
-import SearchBar from "../SearchBar/SearchBar";
+import SearchBar from "../../../../../components/SearchBar/SearchBar";
 import "./TerminologyList.scss";
 
 interface TerminologyListProps {
@@ -498,7 +498,11 @@ const TerminologyList: FC<TerminologyListProps> = ({
   });
   return (
     <>
-      {tab === "SEARCH" ? <SearchBar keyword={searchText} onEnter={updateSearchResult} /> : null}
+      {tab === "SEARCH" ? (
+        <div className="terminology__list-search">
+          <SearchBar keyword={searchText} onEnter={updateSearchResult} width={860} />
+        </div>
+      ) : null}
       <MaterialReactTable table={table} />
       {terminologiesCount ? (
         <TablePagination
