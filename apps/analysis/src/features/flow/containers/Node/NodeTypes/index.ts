@@ -3,14 +3,16 @@ import { Node, NodeProps } from "reactflow";
 import { NodeDataState } from "../../../types";
 import { RNode } from "./RNode/RNode";
 import { CohortGeneratorNode } from "./CohortGeneratorNode/CohortGeneratorNode";
+import { CohortDiagnosticsNode } from "./CohortDiagnosticsNode/CohortDiagnosticsNode";
+import { NegatveControlOutcomeNode } from "./NegativeControlOutcomeNode/NegativeControlOutcomeNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
   [key in NodeType]: ComponentType<NodeProps<any>>;
 } = {
   cohort_generator_node: CohortGeneratorNode,
-  cohort_diagnostic_node: RNode,
-  negative_control_outcome_cohort_node: RNode,
+  cohort_diagnostic_node: CohortDiagnosticsNode,
+  negative_control_outcome_cohort_node: NegatveControlOutcomeNode,
   cohort_incidence_node: RNode,
   cohort_incidence_target_cohorts_node: RNode,
   time_at_risk_node: RNode,
@@ -65,13 +67,27 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Cohort Diagnostic Module Specifications",
     description: "Run cohort diagnostic starboard.",
     tag: NodeTag.Grey,
-    defaultData: {},
+    defaultData: {
+      runInclusionStatistics: "TRUE",
+      runIncludedSourceConcepts: "TRUE",
+      runOrphanConcepts: "TRUE",
+      runTimeSeries: "FALSE",
+      runVisistContext: "TRUE",
+      runBreakdownIndexEvents: "TRUE",
+      runIncidenceRate: "TRUE",
+      runCohortRelationship: "TRUE",
+      runTemporalCohortCharacterization: "TRUE",
+      incremental: "FALSE",
+    },
   },
   negative_control_outcome_cohort_node: {
     title: "Negative Control Outcome Cohort Shared Resource Specifications",
     description: "Run negative control outcome cohort.",
     tag: NodeTag.Lime,
-    defaultData: {},
+    defaultData: {
+      occurenceType: "all",
+      detectOnDescendants: "TRUE",
+    },
   },
   cohort_incidence_node: {
     title: "Cohort Incidence",

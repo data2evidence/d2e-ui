@@ -20,30 +20,28 @@ import { NodeState } from "~/features/flow/types";
 import { RootState, dispatch } from "~/store";
 import { NodeDrawer, NodeDrawerProps } from "../../NodeDrawer/NodeDrawer";
 import { NodeChoiceMap } from "../../NodeTypes";
-import { CohortGeneratorNodeData } from "./CohortGeneratorNode";
+import { NegatveControlOutcomeNodeData } from "./NegativeControlOutcomeNode";
 
-export interface CohortGeneratorDrawerProps
+export interface NegatveControlOutcomeDrawerProps
   extends Omit<NodeDrawerProps, "children"> {
-  node: NodeProps<CohortGeneratorNodeData>;
+  node: NodeProps<NegatveControlOutcomeNodeData>;
   onClose: () => void;
 }
 
 const booleanOptions: string[] = ["TRUE", "FALSE"];
 
-interface FormData extends CohortGeneratorNodeData {}
+interface FormData extends NegatveControlOutcomeNodeData {}
 
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  incremental: "",
-  generateStats: "",
+  occurenceType: "",
+  detectOnDescendants: "",
 };
 
-export const CohortGeneratorDrawer: FC<CohortGeneratorDrawerProps> = ({
-  node,
-  onClose,
-  ...props
-}) => {
+export const NegatveControlOutcomeDrawer: FC<
+  NegatveControlOutcomeDrawerProps
+> = ({ node, onClose, ...props }) => {
   const { formData, setFormData, onFormDataChange } =
     useFormData<FormData>(EMPTY_FORM_DATA);
   const nodeState = useSelector((state: RootState) =>
@@ -55,8 +53,8 @@ export const CohortGeneratorDrawer: FC<CohortGeneratorDrawerProps> = ({
       setFormData({
         name: node.data.name,
         description: node.data.description,
-        incremental: node.data.incremental,
-        generateStats: node.data.generateStats,
+        occurenceType: node.data.occurenceType,
+        detectOnDescendants: node.data.detectOnDescendants,
       });
     } else {
       setFormData({
@@ -67,7 +65,7 @@ export const CohortGeneratorDrawer: FC<CohortGeneratorDrawerProps> = ({
   }, [node.data]);
 
   const handleOk = useCallback(() => {
-    const updated: NodeState<CohortGeneratorNodeData> = {
+    const updated: NodeState<NegatveControlOutcomeNodeData> = {
       ...nodeState,
       data: formData,
     };
@@ -98,30 +96,21 @@ export const CohortGeneratorDrawer: FC<CohortGeneratorDrawerProps> = ({
         />
       </Box>
       <Box mb={4}>
-        <FormControl variant="standard" fullWidth>
-          <InputLabel shrink>Incremental</InputLabel>
-          <Select
-            value={formData.incremental}
-            onChange={(e: SelectChangeEvent) =>
-              onFormDataChange({ incremental: e.target.value })
-            }
-          >
-            <MenuItem value="">&nbsp;</MenuItem>
-            {booleanOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <TextInput
+          label="OccurenceType"
+          value={formData.occurenceType}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({ occurenceType: e.target.value })
+          }
+        />
       </Box>
       <Box mb={4}>
         <FormControl variant="standard" fullWidth>
-          <InputLabel shrink>GenerateStats</InputLabel>
+          <InputLabel shrink>DetectOnDescendants</InputLabel>
           <Select
-            value={formData.generateStats}
+            value={formData.detectOnDescendants}
             onChange={(e: SelectChangeEvent) =>
-              onFormDataChange({ generateStats: e.target.value })
+              onFormDataChange({ detectOnDescendants: e.target.value })
             }
           >
             <MenuItem value="">&nbsp;</MenuItem>
