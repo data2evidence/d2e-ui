@@ -2,12 +2,13 @@ import { ComponentType } from "react";
 import { Node, NodeProps } from "reactflow";
 import { NodeDataState } from "../../../types";
 import { RNode } from "./RNode/RNode";
+import { CohortGeneratorNode } from "./CohortGeneratorNode/CohortGeneratorNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
   [key in NodeType]: ComponentType<NodeProps<any>>;
 } = {
-  cohort_generator_node: RNode,
+  cohort_generator_node: CohortGeneratorNode,
   cohort_diagnostic_node: RNode,
   negative_control_outcome_cohort_node: RNode,
   cohort_incidence_node: RNode,
@@ -56,25 +57,8 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run cohort generator code.",
     tag: NodeTag.Lightgrey,
     defaultData: {
-      r_code: `source("https://raw.githubusercontent.com/OHDSI/CohortGeneratorModule/v0.3.0/SettingsFunctions.R")
-
-# Create the cohort definition shared resource element for the analysis specification
-cohortDefinitionSharedResource <- createCohortSharedResourceSpecifications(
-  cohortDefinitionSet = cohortDefinitionSet
-)
-
-# Create the negative control outcome shared resource element for the analysis specification
-ncoSharedResource <- createNegativeControlOutcomeCohortSharedResourceSpecifications(
-  negativeControlOutcomeCohortSet = ncoCohortSet,
-  occurrenceType = "all",
-  detectOnDescendants = TRUE
-)
-
-# Create the module specification
-cohortGeneratorModuleSpecifications <- createCohortGeneratorModuleSpecifications(
-  incremental = TRUE,
-  generateStats = TRUE
-)`,
+      incremental: "TRUE",
+      generateStats: "TRUE",
     },
   },
   cohort_diagnostic_node: {
