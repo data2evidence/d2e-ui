@@ -36,7 +36,7 @@ sap.ui.define([
                 resourceBundle: "../i18n/cdw.properties",
                 modulePath: "/hc/hph/cdw/config/ui",
                 configService: {
-                    modulePath: "/hc/hph/config",
+                    modulePath: "/hc/hph/cdw/config",
                     resourceBundle: "i18n/config.properties"
                 }
             },
