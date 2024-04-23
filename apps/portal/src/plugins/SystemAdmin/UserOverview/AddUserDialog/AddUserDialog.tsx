@@ -17,7 +17,7 @@ import { CloseDialogType } from "../../../../types";
 import { api } from "../../../../axios/api";
 import { generateRandom } from "../../../../utils";
 import "./AddUserDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface AddUserDialogProps {
   open: boolean;
@@ -32,7 +32,7 @@ interface FormData {
 const EMPTY_FORM_DATA: FormData = { username: "", password: "" };
 
 const AddUserDialog: FC<AddUserDialogProps> = ({ open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});

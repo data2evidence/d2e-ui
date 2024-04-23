@@ -5,7 +5,7 @@ import TreeMapTable from "./TreeMapTable";
 import { Tabs, Tab } from "@mui/material";
 
 import "./TreeMapChartTable.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface TreeMapChartTableProps {
   title: string;
@@ -19,7 +19,7 @@ enum TreeMapChartTab {
 }
 
 const TreeMapChartTable: FC<TreeMapChartTableProps> = ({ title, data, setSelectedConceptId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [treeMapChartData, setTreeMapChartData] = useState<any[]>([]);
   const [treeMapTableData, setTreeMapTableData] = useState<any[]>([]);
   const [tabValue, setTabValue] = useState(TreeMapChartTab.TreeMap);

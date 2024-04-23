@@ -1,11 +1,10 @@
 import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Button, Checkbox, Loader, Title } from "@portal/components";
 import { useFeatures } from "../../../hooks";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import { api } from "../../../axios/api";
 import { IFeature } from "../../../types";
 import "./Feature.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
 
 interface FormData {
   features: IFeature[];
@@ -16,7 +15,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const Feature: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [saving, setSaving] = useState(false);
   const [features, loading, error] = useFeatures();

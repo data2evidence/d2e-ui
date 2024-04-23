@@ -2,14 +2,14 @@ import React, { FC, useMemo } from "react";
 import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 
 import "./TreeMapTable.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface TreeMapTableProps {
   data: any;
   setSelectedConceptId: (value: string) => void;
 }
 const TreeMapTable: FC<TreeMapTableProps> = ({ data, setSelectedConceptId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   // column properties
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [

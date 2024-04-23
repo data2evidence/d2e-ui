@@ -5,7 +5,7 @@ import { Study, StudyTag, StudyAttribute } from "../../../../types";
 import { StudyInfoTab } from "../../../researcher/Information/Information";
 import { Chip } from "@mui/material";
 import "./StudyCard.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 export interface StudyCardProps {
   study: Study;
@@ -14,7 +14,7 @@ export interface StudyCardProps {
 
 export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
   const navigate = useNavigate();
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
 
   const handleInformationClick = useCallback(
     (study: Study) => {

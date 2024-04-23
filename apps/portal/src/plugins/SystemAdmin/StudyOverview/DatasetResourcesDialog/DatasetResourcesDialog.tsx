@@ -12,7 +12,7 @@ import { Study, Feedback, DatasetResource, CloseDialogType } from "../../../../t
 import { api } from "../../../../axios/api";
 import { saveBlobAs } from "../../../../utils";
 import "./DatasetResourcesDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DatasetResourcesDialogProps {
   study?: Study;
@@ -21,7 +21,7 @@ interface DatasetResourcesDialogProps {
 }
 
 const DatasetResourcesDialog: FC<DatasetResourcesDialogProps> = ({ study, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const datasetId = study?.id || "";
   const [hasChanges, setHasChanges] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});

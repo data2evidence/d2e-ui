@@ -2,10 +2,9 @@ import React, { FC, useCallback, useState } from "react";
 import Divider from "@mui/material/Divider";
 import { Box, Button, Dialog } from "@portal/components";
 import { api } from "../../../../axios/api";
-import { useFeedback } from "../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../contexts";
 import { CloseDialogType, IDatabase } from "../../../../types";
 import "./DeleteDbDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface DeleteDbDialogProps {
   open: boolean;
@@ -14,7 +13,7 @@ interface DeleteDbDialogProps {
 }
 
 export const DeleteDbDialog: FC<DeleteDbDialogProps> = ({ open, onClose, db }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [deleting, setDeletingn] = useState(false);
 

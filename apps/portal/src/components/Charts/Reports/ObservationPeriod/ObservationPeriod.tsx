@@ -13,14 +13,14 @@ import { parsePieChartData, parseDaysToYears, parseBarChartData } from "../../ut
 
 import { OBSERVATION_PERIOD_REPORT_TYPE, WEBAPI_CDMRESULTS_SOURCE_KEYS } from "../../../DQD/types";
 import "./ObservationPeriod.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface ObservationPeriodProps {
   flowRunId: string;
 }
 
 const ObservationPeriod: FC<ObservationPeriodProps> = ({ flowRunId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [observationPeriodData, setObservationPeriodData] = useState<OBSERVATION_PERIOD_REPORT_TYPE>({
     ageAtFirst: [],
     ageByGender: [],

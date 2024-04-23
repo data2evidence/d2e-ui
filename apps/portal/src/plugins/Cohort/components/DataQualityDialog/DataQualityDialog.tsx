@@ -13,11 +13,10 @@ import {
   JobRunTypes,
 } from "../../../SystemAdmin/DQD/types";
 import { useDialogHelper } from "../../../../hooks";
-import { useFeedback } from "../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../contexts";
 import { useUserInfo } from "../../../../contexts/UserContext";
 
 import "./DataQualityDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface DataQualityDialogProps {
   datasetId: string;
@@ -27,7 +26,7 @@ interface DataQualityDialogProps {
 }
 
 const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [refetchLatestFlowRun, setRefetchLatestFlowRun] = useState(0);
   const [latestFlowRun, loadingLatestFlowRun, errorLatestFlowRun] = useDataQualityDatasetLatestCohortFlowRun(
     datasetId,

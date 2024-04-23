@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import { Box } from "@portal/components";
 import { useDashboard } from "../../hooks";
 import { useUserInfo } from "../../contexts/UserContext";
-import { TranslationContext } from "../../contexts/TranslationContext";
+import { useTranslation } from "../../contexts";
 
 export const Dashboard: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { id } = useParams();
   const [dashboard] = useDashboard(id || "");
   const { user } = useUserInfo();

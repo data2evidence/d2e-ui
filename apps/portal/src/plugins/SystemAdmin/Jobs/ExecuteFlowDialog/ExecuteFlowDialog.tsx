@@ -4,7 +4,7 @@ import { Feedback, CloseDialogType, Flow } from "../../../../types";
 import Divider from "@mui/material/Divider";
 import { api } from "../../../../axios/api";
 import "./ExecuteFlowDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface ExecuteFlowDialogProps {
   flow?: Flow;
@@ -23,7 +23,7 @@ interface FormDataField {
 }
 
 const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormDataField>({});
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});

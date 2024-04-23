@@ -15,7 +15,7 @@ import { useUserInfo, useUserGroups } from "../../../../../contexts/UserContext"
 import RolesSelect from "./RolesSelect";
 import { RoleEdit, StudyAccessRequest } from "../PermissionsDialog";
 import "./PanelTables.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface AcessPanelProps {
   studyId: string;
@@ -44,7 +44,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
   fetchStudyUsers,
   setLoading,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   // menu helpers
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();
   const [allowedUsers, setAllowedUsers] = useState<UserWithRoles[]>([]);

@@ -15,7 +15,7 @@ import { Feedback } from "../../../../types";
 import { generateRandom } from "../../../../utils";
 import { api } from "../../../../axios/api";
 import "./ChangeUserPassword.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface ChangeUserPasswordDialogProps {
   userId: string;
@@ -30,7 +30,7 @@ interface FormData {
 const EMPTY_FORM_DATA: FormData = { password: "" };
 
 export const ChangeUserPasswordDialog: FC<ChangeUserPasswordDialogProps> = ({ userId, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);

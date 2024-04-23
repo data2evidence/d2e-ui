@@ -1,12 +1,12 @@
 import React, { FC, useCallback, useState } from "react";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
 import "./SampleResearcherStudy.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface SampleResearcherStudyProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const SampleResearcherStudy: FC<SampleResearcherStudyProps> = ({ metadata }: SampleResearcherStudyProps) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [token, setToken] = useState<string>();
 
   const handleClick = useCallback(async () => {

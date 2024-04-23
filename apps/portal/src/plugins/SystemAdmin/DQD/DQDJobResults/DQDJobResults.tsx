@@ -7,7 +7,7 @@ import DQDTable from "../../../../components/DQD/DQDTable/DQDTable";
 import { FlowRunJobStateTypes, DQD_TABLE_TYPES } from "../types";
 import DownloadDataButtons from "../DownloadDataButtons/DownloadDataButtons";
 import DataCharacterizationReports from "../../../../components/DQD/DataCharacterizationReports/DataCharacterizationReports";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 const inProgressJobStates = [
   FlowRunJobStateTypes.SCHEDULED,
   FlowRunJobStateTypes.PENDING,
@@ -27,7 +27,7 @@ interface DQDJobResultsProps {
 }
 
 export const DQDJobResults: FC<DQDJobResultsProps> = ({ datasetId, datasetName, tableType, activeReleaseId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   let jobType = "";
   // Derive job type from tableType
   if (tableType === DQD_TABLE_TYPES.DATA_QUALITY_OVERVIEW || tableType === DQD_TABLE_TYPES.DATA_QUALITY_RESULTS) {
@@ -111,7 +111,7 @@ interface RenderDataQualityOverviewTableProps {
 }
 
 const RenderDataQualityOverviewTable: FC<RenderDataQualityOverviewTableProps> = ({ flowRunId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [dqdOverview, loadingDqdOverview, errorDqdOverview] = useDataQualityOverviewFromId(flowRunId);
 
   return (
@@ -137,7 +137,7 @@ interface RenderDataQualityResultsTableProps {
 }
 
 const RenderDataQualityResultsTable: FC<RenderDataQualityResultsTableProps> = ({ flowRunId, datasetName }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [dqdResults, loadingDqdResults, errorDqdResults] = useDataQualityResultsFromId(flowRunId);
   const [dqdOverview] = useDataQualityOverviewFromId(flowRunId);
 

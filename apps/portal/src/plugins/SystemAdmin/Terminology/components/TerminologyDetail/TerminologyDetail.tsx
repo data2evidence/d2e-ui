@@ -1,10 +1,9 @@
 import React, { FC, useEffect, useState } from "react";
 import { Table, TableBody, TableHead } from "@mui/material";
 import { TableRow, TableCell, Loader } from "@portal/components";
-import { useFeedback } from "../../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../../contexts";
 import { TerminologyDetailsList } from "../../utils/types";
 import { Terminology } from "../../../../../axios/terminology";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
 import "./TerminologyDetail.scss";
 
 interface TerminologyDetailProps {
@@ -14,7 +13,7 @@ interface TerminologyDetailProps {
 }
 
 const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, datasetId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<TerminologyDetailsList | null>();
   const { setFeedback } = useFeedback();

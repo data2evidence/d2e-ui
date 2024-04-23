@@ -4,10 +4,10 @@ import { useUserInfo, useUserGroups } from "../../../contexts/UserContext";
 import { Button, Loader } from "@portal/components";
 import { config } from "../../../config";
 import "./NoAccess.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 const NoAccess: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { getUserId, user } = useUserInfo();
   const { userGroups } = useUserGroups();
   const isAuthorized = user?.canAccessResearcherPortal || user?.canAccessSystemAdminPortal;

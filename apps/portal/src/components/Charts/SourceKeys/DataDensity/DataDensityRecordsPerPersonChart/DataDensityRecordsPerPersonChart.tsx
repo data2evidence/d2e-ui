@@ -4,14 +4,14 @@ import ChartContainer from "../../../Common/ChartContainer";
 import LineChart from "../../../Common/LineChart";
 
 import "./DataDensityRecordsPerPersonChart.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface DataDensityRecordsPerPersonChartProps {
   data: any;
 }
 
 const DataDensityRecordsPerPersonChart: FC<DataDensityRecordsPerPersonChartProps> = ({ data }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
 
   const title = getText(i18nKeys.DATA_DENSITY_RECORDS_PER_PERSON_CHART__TITLE);
   const xAxisName = getText(i18nKeys.DATA_DENSITY_RECORDS_PER_PERSON_CHART__X_AXIS_NAME);

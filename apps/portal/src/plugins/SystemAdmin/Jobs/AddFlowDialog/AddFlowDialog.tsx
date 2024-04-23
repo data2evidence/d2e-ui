@@ -12,7 +12,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import { api } from "../../../../axios/api";
 import "./AddFlowDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface AddFlowDialogProps {
   open: boolean;
@@ -35,7 +35,7 @@ const EMPTY_FORM_DATA: FormData = { name: "", method: "FILE" };
 const ALLOWED_FILE_TYPES: string[] = ["application/zip", "application/x-zip-compressed"];
 
 const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});

@@ -8,7 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { ChevronUpIcon } from "@portal/components";
 import { Study, Tenant } from "../../types";
 import "./StudyNav.scss";
-import { TranslationContext } from "../../contexts/TranslationContext";
+import { useTranslation } from "../../contexts";
 
 interface StudyNavProps {
   studies?: Study[];
@@ -17,7 +17,7 @@ interface StudyNavProps {
 }
 
 export const StudyNav: FC<StudyNavProps> = ({ studies, selectedStudyId, onClick }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [expanded, setExpanded] = React.useState("");
 
   useEffect(() => {

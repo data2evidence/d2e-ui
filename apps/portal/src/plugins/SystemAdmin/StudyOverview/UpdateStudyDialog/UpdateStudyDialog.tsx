@@ -32,7 +32,7 @@ import {
   EMPTY_DASHBOARD_FORM_ERROR,
 } from "./DashboardForm/DashboardForm";
 import "./UpdateStudyDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface UpdateStudyDialogProps {
   dataset: Study;
@@ -110,7 +110,7 @@ const styles: SxProps = {
 const EMPTY_STUDY_METADATA: NewStudyMetadataInput = { attributeId: "", value: "" };
 
 const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const datasetId = dataset.id;
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [formError, setFormError] = useState<FormError>(EMPTY_FORM_ERROR);

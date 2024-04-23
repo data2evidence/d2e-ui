@@ -14,13 +14,13 @@ import JobRunButtons from "./JobRunButtons/JobRunButtons";
 import { api } from "../../../axios/api";
 
 import "./DQD.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const DQD: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const DataQualityDashboardTabs = {
     Overview: getText(i18nKeys.DQD__OVERVIEW),
     Detail: getText(i18nKeys.DQD__DETAIL),

@@ -9,7 +9,7 @@ import DeleteAccountDialog from "./DeleteAccountDialog/DeleteAccountDialog";
 import { useDialogHelper } from "../../../hooks";
 import env from "../../../env";
 import "./Account.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 const subProp = env.REACT_APP_IDP_SUBJECT_PROP;
 const nameProp = env.REACT_APP_IDP_NAME_PROP;
@@ -17,7 +17,7 @@ const nameProp = env.REACT_APP_IDP_NAME_PROP;
 const EMPTY_MY_USER: User = { id: "", name: "" };
 
 export const Account: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { claims } = useMsalInfo();
   const [tabValue, setTabValue] = useState(0);
   const [myUser, setMyUser] = useState(EMPTY_MY_USER);

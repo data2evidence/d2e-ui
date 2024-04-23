@@ -3,7 +3,7 @@ import { Box, Button, Loader, TextField, Title } from "@portal/components";
 import { useAzureAdConfigs } from "../../../hooks";
 import { api } from "../../../axios/api";
 import "./AzureAD.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface FormData {
   tenantViewerGroupId: string;
@@ -18,7 +18,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const AzureAD: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [saving, setSaving] = useState(false);
   const [configs, loading, error] = useAzureAdConfigs();

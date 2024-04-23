@@ -25,7 +25,7 @@ import { Gateway } from "../../../../axios/gateway";
 
 import CohortFilter from "./CohortFilter/CohortFilter";
 import SchemaFilter from "./SchemaFilter/SchemaFilter";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 interface CopyStudyDialogProps {
   study: Study | undefined;
   open: boolean;
@@ -49,7 +49,7 @@ interface RootFilterSelection {
 }
 
 const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loading, setLoading }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [rootFilterCheckbox, setRootFilterCheckbox] = useState<RootFilterSelection>({
     isDateFilterSelected: false,
     isCohortFilterSelected: false,

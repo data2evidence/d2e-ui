@@ -8,7 +8,7 @@ import "./CreateReleaseDialog.scss";
 import dayjs from "dayjs";
 import { CreateHanaReleaseInput } from "../../../../types";
 import { SystemPortal } from "../../../../axios/system-portal";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface CreateReleaseDialogProps {
   study?: Study;
@@ -25,7 +25,7 @@ interface FormData {
 }
 
 const CreateReleaseDialog: FC<CreateReleaseDialogProps> = ({ study, open, onClose, loading, setLoading }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [formData, setFormData] = useState<FormData>({
     name: "",

@@ -8,7 +8,7 @@ import { NavLink } from "../../../types";
 import { config } from "../../../config";
 import { ChangeMyPasswordDialog } from "./ChangeMyPasswordDialog/ChangeMyPasswordDialog";
 import "../Header.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface AccountTabProps {
   portalType: string;
@@ -20,7 +20,7 @@ const ROUTES = {
 };
 
 const AccountTab: FC<AccountTabProps> = ({ portalType }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();
   const [showPwd, openPwdDialog, closePwdDialog] = useDialogHelper(false);
   const location = useLocation();

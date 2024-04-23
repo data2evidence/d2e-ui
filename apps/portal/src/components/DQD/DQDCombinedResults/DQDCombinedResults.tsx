@@ -3,14 +3,14 @@ import { SubTitle, Loader } from "@portal/components";
 import DQDTable from "../DQDTable/DQDTable";
 import OverviewTable from "../Overview/OverviewTable/OverviewTable";
 import { useDataQualityOverviewFromId, useDataQualityResultsFromId } from "../../../hooks";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface DQDCombinedResultsProps {
   flowRunId: string;
 }
 
 const DQDCombinedResults: FC<DQDCombinedResultsProps> = ({ flowRunId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [dqdOverview, loadingDqdOverview, errorDqdOverview] = useDataQualityOverviewFromId(flowRunId);
   const [dqdResults, loadingDqdResults, errorDqdResults] = useDataQualityResultsFromId(flowRunId);
   return (

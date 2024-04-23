@@ -20,7 +20,7 @@ import {
 import { CloseDialogType } from "../../../../types";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
 import "./ImportDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface ImportDialogProps {
   open: boolean;
@@ -30,7 +30,7 @@ interface ImportDialogProps {
 }
 
 const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoading }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
   const [columnMappingState, setColumnMappingState] = useState({

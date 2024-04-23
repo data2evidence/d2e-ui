@@ -9,10 +9,10 @@ import { parseToCsv, downloadFile, DownloadColumn } from "../../../../utils/Expo
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
 import "./Overview.scss";
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 const Overview: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
   const conceptMappingState = useContext(ConceptMappingContext);
   const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;

@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Button } from "@portal/components";
 import { dqdParseToCsv, filterJSON, downloadFile, DownloadColumn } from "../../../../utils/Export";
 import { CheckResults, OverviewResults } from "../../../../components/DQD/types";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DownloadDataButtonsProps {
   data: CheckResults[];
@@ -11,7 +11,7 @@ interface DownloadDataButtonsProps {
 }
 
 const DownloadDataButtons: FC<DownloadDataButtonsProps> = ({ data, overviewData, datasetName }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const downloadColumns: DownloadColumn[] = [
     { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__STATUS), accessor: "failed" },
     { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__CONTEXT), accessor: "context" },

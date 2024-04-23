@@ -4,7 +4,7 @@ import { Button, Dialog } from "@portal/components";
 import { Study, Feedback, CloseDialogType, UpdateSchemaInput } from "../../../../types";
 import { Gateway } from "../../../../axios/gateway";
 import "./UpdateSchemaDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface UpdateSchemaDialogProps {
   study?: Study;
@@ -13,7 +13,7 @@ interface UpdateSchemaDialogProps {
 }
 
 const UpdateSchemaDialog: FC<UpdateSchemaDialogProps> = ({ study, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [updating, setUpdating] = useState(false);
 

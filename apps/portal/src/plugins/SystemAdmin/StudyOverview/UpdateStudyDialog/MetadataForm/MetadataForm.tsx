@@ -10,7 +10,7 @@ import { TrashIcon } from "@portal/components";
 import webComponentWrapper from "../../../../../webcomponents/webComponentWrapper";
 import { UsefulEvent, NewStudyMetadataInput, DatasetAttributeConfig } from "../../../../../types";
 import "./MetadataForm.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface MetadataFormProps {
   studyMetadata: NewStudyMetadataInput;
@@ -50,7 +50,7 @@ const MetadataForm: FC<MetadataFormProps> = ({
   handleMetadataChange,
   error,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [attributeId, setAttributeId] = useState<string>("");
   const [value, setValue] = useState<string>("");
   const [dataType, setDataType] = useState<FormType>("");

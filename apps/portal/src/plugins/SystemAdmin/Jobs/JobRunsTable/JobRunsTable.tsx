@@ -9,7 +9,7 @@ import "./JobRunsTable.scss";
 import { useDatasets } from "../../../../hooks";
 import { FlowRunJobStateTypes } from "../types";
 import { useLocation, useNavigate } from "react-router-dom";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 const JobStatusColorMapping = {
   // Blue
@@ -50,7 +50,7 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
   handleCancelJobClick,
   handleViewLogsClick,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const study = studies.find((s) => s.id === row.datasetId);
   return (
     <>
@@ -129,7 +129,7 @@ interface JobRunsTableProps {
 }
 
 const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCancelJobClick, setMode }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const studies = useDatasets("systemAdmin")[0];
   // Dialog show hooks
   const [showResultsDialog, openResultsDialog, closeResultsDialog] = useDialogHelper(false);

@@ -6,7 +6,7 @@ import { FormControl, InputLabel } from "@mui/material";
 import { useDatasets } from "../../../../hooks";
 import { SxProps } from "@mui/system";
 import { Study } from "../../../../types";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 interface DatasetSelectorProps {
   handleStudySelect: (study: string, studyId: string) => void;
 }
@@ -35,7 +35,7 @@ const styles: SxProps = {
 };
 
 const DatasetSelector: FC<DatasetSelectorProps> = ({ handleStudySelect }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [studyId, setStudyId] = useState("");
   const studies = useDatasets("systemAdmin")[0];
 

@@ -7,14 +7,14 @@ import { useMenuAnchor } from "../../../hooks";
 import { NavLink } from "../../../types";
 import { useUserInfo } from "../../../contexts/UserContext";
 import "../Header.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface PortalSwitcherProps {
   portalType: string;
 }
 
 const PortalSwitcher: FC<PortalSwitcherProps> = ({ portalType }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { user } = useUserInfo();
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();
 

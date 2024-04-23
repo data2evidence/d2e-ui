@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../axios/api";
 import { AppError, DatasetDashboard } from "../types";
-import { TranslationContext } from "../contexts/TranslationContext";
+import { useTranslation } from "../contexts";
 
 export const useDashboard = (
   id: string,
   refetch = 0
 ): [DatasetDashboard | undefined, boolean, AppError | undefined] => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [dashboard, setDashboard] = useState<DatasetDashboard>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<AppError>();

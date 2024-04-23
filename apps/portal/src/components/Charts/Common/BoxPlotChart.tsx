@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import ReactECharts from "echarts-for-react";
 import ChartContainer from "./ChartContainer";
 import "./BoxPlotChart.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface BoxPlotChartProps {
   data: any[];
@@ -14,7 +14,7 @@ interface BoxPlotChartProps {
 }
 
 const BoxPlotChart: FC<BoxPlotChartProps> = ({ data, title, xAxisName, yAxisName, extraChartConfigs }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   if (data.length === 0) {
     return (
       <ChartContainer title={title}>

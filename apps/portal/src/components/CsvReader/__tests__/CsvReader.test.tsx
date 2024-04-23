@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { CsvReader } from "../CsvReader";
-import { TranslationProvider } from "../../../contexts/TranslationContext";
+import { AppProvider } from "../../../contexts";
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -12,9 +12,9 @@ it("should trigger readAsText", async () => {
   const handleFileLoaded = jest.fn();
   const readAsTextSpy = jest.spyOn(FileReader.prototype, "readAsText");
   const { getByTestId } = render(
-    <TranslationProvider>
+    <AppProvider>
       <CsvReader onFileLoaded={handleFileLoaded} />
-    </TranslationProvider>
+    </AppProvider>
   );
 
   const fileSelector = getByTestId("file");
@@ -28,9 +28,9 @@ it("should not support png", async () => {
   const handleFileLoaded = jest.fn();
   const readAsTextSpy = jest.spyOn(FileReader.prototype, "readAsText");
   const { getByTestId } = render(
-    <TranslationProvider>
+    <AppProvider>
       <CsvReader onFileLoaded={handleFileLoaded} />
-    </TranslationProvider>
+    </AppProvider>
   );
 
   const fileSelector = getByTestId("file");

@@ -10,14 +10,14 @@ import { parsePieChartData, parseBarChartData } from "../../util";
 
 import { PERSON_REPORT_TYPE, WEBAPI_CDMRESULTS_SOURCE_KEYS } from "../../../DQD/types";
 import "./Person.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface PersonProps {
   flowRunId: string;
 }
 
 const Person: FC<PersonProps> = ({ flowRunId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [personData, setPersonData] = useState<PERSON_REPORT_TYPE>({
     population: [],
     gender: [],

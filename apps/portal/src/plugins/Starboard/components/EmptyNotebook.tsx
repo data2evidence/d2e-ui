@@ -2,7 +2,7 @@ import { Button } from "@portal/components";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
 import React, { FC } from "react";
 import "../style/Main.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface EmptyNotebookProps extends PageProps<ResearcherStudyMetadata> {
   createNotebook: () => void;
@@ -10,7 +10,7 @@ interface EmptyNotebookProps extends PageProps<ResearcherStudyMetadata> {
 }
 
 export const EmptyNotebook: FC<EmptyNotebookProps> = ({ createNotebook, importJupyterNb }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const hiddenFileInput = React.useRef<HTMLInputElement>(null);
 
   const handleJupyterInput = () => {

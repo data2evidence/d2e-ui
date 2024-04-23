@@ -6,7 +6,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { CollapsibleDrawer, MenuIcon, TermsOfUseIcon, PrivacyPolicyIcon, ImprintIcon } from "@portal/components";
 import { LegalTab } from "../Legal";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface LegalMenuProps {
   activeTab: string;
@@ -14,7 +14,7 @@ interface LegalMenuProps {
 }
 
 const LegalMenu: FC<LegalMenuProps> = ({ activeTab, onClick }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [open, setOpen] = useState(true);
 
   const handleDrawerToggle = () => {

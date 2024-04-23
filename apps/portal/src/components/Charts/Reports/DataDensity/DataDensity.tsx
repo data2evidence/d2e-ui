@@ -10,14 +10,14 @@ import DataDensityTotalRecordsChart from "../../SourceKeys/DataDensity/DataDensi
 
 import { DATA_DENSITY_REPORT_TYPE, WEBAPI_CDMRESULTS_SOURCE_KEYS } from "../../../DQD/types";
 import "./DataDensity.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DataDensityProps {
   flowRunId: string;
 }
 
 const DataDensity: FC<DataDensityProps> = ({ flowRunId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [dataDensityData, setDataDensityData] = useState<DATA_DENSITY_REPORT_TYPE>({
     totalRecords: [],
     recordsPerPerson: [],

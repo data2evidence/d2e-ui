@@ -4,14 +4,14 @@ import ChartContainer from "../../../Common/ChartContainer";
 import LineChart from "../../../Common/LineChart";
 
 import "./DataDensityTotalRecordsChart.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface DataDensityTotalRecordsChartProps {
   data: any;
 }
 
 const DataDensityTotalRecordsChart: FC<DataDensityTotalRecordsChartProps> = ({ data }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const title = getText(i18nKeys.DATA_DENSITY_TOTAL_RECORDS_CHART__TITLE);
   const xAxisName = getText(i18nKeys.DATA_DENSITY_TOTAL_RECORDS_CHART__X_AXIS_NAME);
   const yAxisName = getText(i18nKeys.DATA_DENSITY_TOTAL_RECORDS_CHART__Y_AXIS_NAME);

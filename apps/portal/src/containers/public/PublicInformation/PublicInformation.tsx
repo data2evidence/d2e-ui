@@ -12,7 +12,7 @@ import { StudyAttribute, StudyTag, LocationState } from "../../../types";
 import { PublicStudyMenu } from "./StudyMenu/PublicStudyMenu";
 import "./PublicInformation.scss";
 import { usePublicDatasets } from "../../../hooks";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 export const StudyInfoTab = {
   DataInfo: "data_info",
@@ -20,7 +20,7 @@ export const StudyInfoTab = {
 };
 
 export const PublicInformation: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [datasets, loading, error] = usePublicDatasets();
 
   const location = useLocation();

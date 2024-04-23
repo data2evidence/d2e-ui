@@ -2,10 +2,10 @@ import React, { FC, useCallback } from "react";
 import { Button } from "@portal/components";
 import { oidcLogout } from "./oidc";
 import "./OidcSessionLost.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 export const OidcSessionLost: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const handleLogout = useCallback(async () => {
     localStorage.clear();
     oidcLogout();

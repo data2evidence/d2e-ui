@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Button } from "@portal/components";
 import "./SetupMenuItem.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface SetupMenuItemProps {
   name: string;
@@ -11,7 +11,7 @@ interface SetupMenuItemProps {
 }
 
 export const SetupMenuItem: FC<SetupMenuItemProps> = ({ name, description, notes, onClick }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   return (
     <div className="setup-menu-item">
       <div className="setup-menu-item__info">

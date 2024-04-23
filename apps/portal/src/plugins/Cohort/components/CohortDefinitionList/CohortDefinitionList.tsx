@@ -7,11 +7,10 @@ import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import { Button, IconButton, Loader, TableCell, TableRow, TablePaginationActions, TrashIcon } from "@portal/components";
-import { useFeedback } from "../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../contexts";
 import { CohortMapping } from "../../../../types";
 import { CohortMgmt } from "../../../../axios/cohort-mgmt";
 import "./CohortDefinitionList.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface CohortDefinitionListProps {
   userId?: string;
@@ -34,7 +33,7 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
   refetch,
   setRefetch,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
   const [cohortDefinitionCount, setCohortDefinitionCount] = useState(0);

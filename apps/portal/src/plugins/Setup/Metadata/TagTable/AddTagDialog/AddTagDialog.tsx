@@ -2,10 +2,9 @@ import React, { FC, useCallback, useState } from "react";
 import Divider from "@mui/material/Divider";
 import { Box, Button, Dialog, TextField } from "@portal/components";
 import { api } from "../../../../../axios/api";
-import { useFeedback } from "../../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../../contexts";
 import { CloseDialogType } from "../../../../../types";
 import "./AddTagDialog.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface AddTagDialogProps {
   open: boolean;
@@ -22,7 +21,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const AddTagDialog: FC<AddTagDialogProps> = ({ open, onClose, setRefetch }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [saving, setSaving] = useState(false);

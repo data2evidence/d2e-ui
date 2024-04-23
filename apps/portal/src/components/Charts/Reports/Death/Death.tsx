@@ -12,14 +12,14 @@ import { parsePieChartData } from "../../util";
 
 import { DEATH_REPORT_TYPE, WEBAPI_CDMRESULTS_SOURCE_KEYS } from "../../../DQD/types";
 import "./Death.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DeathProps {
   flowRunId: string;
 }
 
 const Death: FC<DeathProps> = ({ flowRunId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [deathData, setDeathData] = useState<DEATH_REPORT_TYPE>({
     ageAtDeath: [],
     deathByType: [],

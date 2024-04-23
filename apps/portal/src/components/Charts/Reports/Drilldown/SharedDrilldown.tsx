@@ -13,7 +13,7 @@ import { parseDrilldownPieChartData, parseDrilldownBarChartData } from "../../ut
 
 import { DRILLDOWN_REPORT_BASE_TYPE } from "../../../DQD/types";
 import "./SharedDrilldown.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface SharedDrilldownProps {
   flowRunId: string;
@@ -21,7 +21,7 @@ interface SharedDrilldownProps {
 }
 
 const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [data, setData] = useState({
     treemap: [],
   });

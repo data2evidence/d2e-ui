@@ -4,7 +4,7 @@ import { Button, Dialog } from "@portal/components";
 import { api } from "../../../../axios/api";
 import { Study, Feedback, CloseDialogType } from "../../../../types";
 import "./DeleteStudyDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DeleteStudyDialogProps {
   study?: Study;
@@ -13,7 +13,7 @@ interface DeleteStudyDialogProps {
 }
 
 const DeleteStudyDialog: FC<DeleteStudyDialogProps> = ({ study, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [deleting, setDeleting] = useState(false);
 

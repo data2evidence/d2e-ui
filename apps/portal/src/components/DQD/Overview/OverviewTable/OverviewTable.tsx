@@ -2,14 +2,14 @@ import React, { FC, useCallback } from "react";
 import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper } from "@mui/material";
 import { OverviewResults } from "../../types";
 import "./OverviewTable.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface OverviewTableProps {
   data: OverviewResults;
 }
 
 const OverviewTable: FC<OverviewTableProps> = ({ data }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
 
   const transformData = useCallback(
     (data: OverviewResults) => {

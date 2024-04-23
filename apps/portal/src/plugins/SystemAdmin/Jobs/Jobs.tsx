@@ -20,7 +20,7 @@ import { useLocation } from "react-router-dom";
 import LogViewer from "./LogViewer/LogViewer";
 import { FeatureGate } from "../../../config/FeatureGate";
 import { FEATURE_DATAFLOW } from "../../../config";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 enum JobTabs {
   Runs = "Job Runs",
@@ -31,7 +31,7 @@ const plugins = loadPlugins();
 const CURRENT_SYSTEM = env.REACT_APP_CURRENT_SYSTEM;
 
 const Jobs: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [selectedStudy, setSelectedStudy] = useState("");
   const [studyId, setStudyId] = useState("");
   const [isSilentRefresh, setIsSilentRefresh] = useState(false);

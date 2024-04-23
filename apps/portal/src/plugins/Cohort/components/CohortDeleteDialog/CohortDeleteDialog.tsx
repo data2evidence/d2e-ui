@@ -6,7 +6,7 @@ import { Button, Dialog } from "@portal/components";
 import { Loader } from "@portal/components";
 import { CohortMgmt } from "../../../../axios/cohort-mgmt";
 import "./CohortDeleteDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 interface CohortDeleteDialogProps {
   cohort?: CohortMapping;
   cohortMgmtClient: CohortMgmt;
@@ -24,7 +24,7 @@ const CohortDeleteDialog: FC<CohortDeleteDialogProps> = ({
   onClose,
   setRefetch,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [isLoading, setIsLoading] = useState(false);
 

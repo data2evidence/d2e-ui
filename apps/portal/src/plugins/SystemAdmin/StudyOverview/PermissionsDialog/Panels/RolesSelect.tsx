@@ -8,7 +8,7 @@ import Select from "@mui/material/Select";
 import { getRoleChanges } from "../../../../../utils";
 import { RoleEdit } from "../PermissionsDialog";
 import { SxProps } from "@mui/system";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface RolesSelectProps {
   user: UserWithRoles;
@@ -48,7 +48,7 @@ const RolesSelect: FC<RolesSelectProps> = ({
   setGrantRolesList,
   setWithdrawRolesList,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [newRoles, setNewRoles] = useState<string[]>(user?.roles || []);
   const userId = user.userId || "";
 

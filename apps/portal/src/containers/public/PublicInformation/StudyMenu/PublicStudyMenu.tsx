@@ -8,7 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Tooltip from "@mui/material/Tooltip";
 import { CollapsibleDrawer, MenuIcon, StudyInformationIcon } from "@portal/components";
 import { Study } from "../../../../types";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface StudyMenuProps {
   activeStudy?: Study;
@@ -47,7 +47,7 @@ const listStyles: SxProps = {
 };
 
 export const PublicStudyMenu: FC<StudyMenuProps> = ({ activeTab, onClick }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [open, setOpen] = useState(true);
 
   const handleDrawerToggle = useCallback(() => {

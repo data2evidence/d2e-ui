@@ -5,7 +5,7 @@ import { FilterNumberRange } from "./FilterNumberRange";
 import { FilterNumberSlider } from "./FilterNumberSlider";
 import { useDatasetFilterScopes } from "../../../../hooks";
 import "./DatasetFilters.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DatasetFiltersProps {
   onChange?: (filters: Record<string, string>) => void;
@@ -31,7 +31,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const DatasetFilters: FC<DatasetFiltersProps> = ({ onChange }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [filterByAge, setFilterByAge] = useState(false);
   const [filterByObsYear, setFilterByObsYear] = useState(false);

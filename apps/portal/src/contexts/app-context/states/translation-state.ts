@@ -901,8 +901,6 @@ export const i18nDefault = {
     USER_OVERVIEW__USERS: "Users",
   },
 };
-// const { getText, i18nKeys } = TranslationContext();
-// getText(i18nKeys.DUMMY)
 
 function getKeyMap<T extends object>(obj: T) {
   const result = {} as Record<keyof T, keyof T>;

@@ -2,9 +2,8 @@ import React, { ChangeEvent, FC, useCallback, useEffect, useState } from "react"
 import { Box, Button, Checkbox, Loader, TextField, Title } from "@portal/components";
 import { api } from "../../../axios/api";
 import { useHybridSearchConfigs } from "../../../hooks";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import "./HybridSearch.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
 
 interface FormData {
   id: number;
@@ -21,7 +20,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const HybridSearch: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [saving, setSaving] = useState(false);
   const { setFeedback } = useFeedback();

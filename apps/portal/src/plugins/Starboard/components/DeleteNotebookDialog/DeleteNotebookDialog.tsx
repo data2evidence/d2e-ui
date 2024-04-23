@@ -3,7 +3,7 @@ import { Button, Dialog } from "@portal/components";
 import { StarboardNotebook } from "../../utils/notebook";
 import { Divider } from "@mui/material";
 import "./DeleteNotebookDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DeleteNotebookDialogProps {
   notebook?: StarboardNotebook;
@@ -13,7 +13,7 @@ interface DeleteNotebookDialogProps {
 }
 
 const DeleteNotebookDialog: FC<DeleteNotebookDialogProps> = ({ notebook, open, onClose, onDelete }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const handleDelete = useCallback(() => {
     onDelete();
     onClose();

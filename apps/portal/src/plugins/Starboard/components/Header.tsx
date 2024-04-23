@@ -2,7 +2,7 @@ import React, { ChangeEvent, FC, useCallback, useMemo } from "react";
 import { saveAs } from "file-saver";
 import { Button, EditIcon, IconButton, Checkbox, DownloadIcon, Tooltip } from "@portal/components";
 import { useDialogHelper } from "../../../hooks";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import { useUserInfo } from "../../../contexts/UserContext";
 import {
   convertStarboardToJupyter,
@@ -16,7 +16,6 @@ import DeleteNotebookDialog from "./DeleteNotebookDialog/DeleteNotebookDialog";
 import { EditTitleDialog } from "./EditTitleDialog/EditTitleDialog";
 import NotebookSelect from "./NotebookSelect/NotebookSelect";
 import "../style/Header.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
 
 interface HeaderProps {
   metadata: any;
@@ -43,7 +42,7 @@ export const Header: FC<HeaderProps> = ({
   isShared,
   setIsShared,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { user } = useUserInfo();
   const isNotUserNotebook = useMemo(() => user.idpUserId !== activeNotebook?.userId, [activeNotebook]);
   const { setFeedback } = useFeedback();

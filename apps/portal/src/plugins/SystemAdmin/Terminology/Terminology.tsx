@@ -22,7 +22,7 @@ import { tabNames } from "./utils/constants";
 import { TabName, ConceptSet } from "./utils/types";
 import { terminologyApi } from "../../../axios/terminology";
 import { useDatasets } from "../../../hooks";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 export interface TerminologyProps extends PageProps<SystemAdminPageMetadata> {
   onConceptIdSelect?: (conceptData: any) => void;
@@ -80,7 +80,7 @@ const NameSection = ({
   onClickClose(): void;
   errorMsg: string;
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
 
   return (
     <Box sx={{ borderBottom: "1px solid #d4d4d4" }}>
@@ -141,7 +141,7 @@ const TabSection = ({
   changeTab(tabName: TabName): void;
   selectedConceptsCount: number;
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const tabWidthPx = 220;
   return (
     <div style={{ height: "60px" }}>
@@ -209,7 +209,7 @@ export const Terminology: FC<TerminologyProps> = ({
   mode = "CONCEPT_SEARCH",
   selectedDatasetId,
 }: TerminologyProps) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const userId = baseUserId || metadata?.userId;
   const [conceptId, setConceptId] = useState<null | number>(null);
   const [showDetails, setShowDetails] = useState(false);

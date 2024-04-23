@@ -3,13 +3,12 @@ import Checkbox from "@mui/material/Checkbox";
 import TablePagination from "@mui/material/TablePagination";
 import { MaterialReactTable, MRT_ColumnDef, useMaterialReactTable } from "material-react-table";
 import { TablePaginationActions, AddIcon, RemoveIcon } from "@portal/components";
-import { useFeedback } from "../../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../../contexts";
 import { FilterOptions, TabName, FhirValueSetExpansionContainsWithExt, TerminologyResult } from "../../utils/types";
 import { Terminology } from "../../../../../axios/terminology";
 import { tabNames } from "../../utils/constants";
 import SearchBar from "../SearchBar/SearchBar";
 import "./TerminologyList.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface TerminologyListProps {
   userId?: string;
@@ -60,7 +59,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
   datasetId,
   isDrawer,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);

@@ -5,10 +5,9 @@ import { Header } from "../../components";
 import { PublicOverview } from "./PublicOverview/PublicOverview";
 import { PublicInformation } from "./PublicInformation/PublicInformation";
 import { Legal } from "../shared/Legal/Legal";
-import { useFeedback } from "../../contexts";
+import { useFeedback, useTranslation } from "../../contexts";
 import { NavLink } from "../../types";
 import "./Public.scss";
-import { TranslationContext } from "../../contexts/TranslationContext";
 
 const ROUTES = {
   overview: "overview",
@@ -19,7 +18,7 @@ const ROUTES = {
 };
 
 export const Public: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { clearFeedback, getFeedback } = useFeedback();
   const feedback = getFeedback();
 

@@ -2,14 +2,14 @@ import React, { FC } from "react";
 import ChartContainer from "../../../Common/ChartContainer";
 import LineChart, { LineSeries } from "../../../Common/LineChart";
 import { DomainContinuity } from "../../../../DQD/types";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface DomainContinuityChartProps {
   data: DomainContinuity;
 }
 
 const DomainContinuityChart: FC<DomainContinuityChartProps> = ({ data }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const title = data.domain;
   const xAxisName = getText(i18nKeys.DOMAIN_CONTINUITY_CHART__X_AXIS_NAME);
   const yAxisName = getText(i18nKeys.DOMAIN_CONTINUITY_CHART__Y_AXIS_NAME);

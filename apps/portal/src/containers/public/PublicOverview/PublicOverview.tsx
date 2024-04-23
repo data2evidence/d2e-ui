@@ -5,10 +5,10 @@ import { StudyCard } from "../../shared/StudyOverview/StudyCard/StudyCard";
 import { usePublicDatasets } from "../../../hooks";
 import { config } from "../../../config/index";
 import "./PublicOverview.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 export const PublicOverview: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const navigate = useNavigate();
 
   const [datasets, loading, error] = usePublicDatasets();

@@ -9,10 +9,10 @@ import { DatasetFilters } from "./components/DatasetFilters";
 import noStudyImg from "../../shared/StudyOverview/images/no-study.png";
 import { FeatureGate } from "../../../config/FeatureGate";
 import "./Overview.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 export const Overview: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [filters, setFilters] = useState<Record<string, string>>({});
   const debounceSetFilters = debounce((filters: Record<string, string>) => setFilters(filters), 300);
   const [datasets, loading, error] = useDatasets("researcher", filters);

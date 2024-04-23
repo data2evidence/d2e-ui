@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FC, HTMLAttributes, useCallback } from "react";
 import * as PapaParse from "papaparse";
 import "./CsvReader.scss";
-import { TranslationContext } from "../../contexts/TranslationContext";
+import { useTranslation } from "../../contexts";
 
 export interface CsvReaderProps extends Omit<HTMLAttributes<HTMLDivElement>, "onError"> {
   fileEncoding?: string;
@@ -18,7 +18,7 @@ export const CsvReader: FC<CsvReaderProps> = ({
   onError,
   parseOptions = {},
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const handleChangeFile = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const reader = new FileReader();

@@ -17,7 +17,7 @@ import { api } from "../../../../axios/api";
 import "./EditDbCredentialsDialog.scss";
 import { DbCredentialProcessor } from "../CredentialProcessor";
 import { validateCredentials } from "../CredentialValidator";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface EditDbCredentialDialogProps {
   open: boolean;
@@ -58,7 +58,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const EditDbCredentialsDialog: FC<EditDbCredentialDialogProps> = ({ open, onClose, db }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});

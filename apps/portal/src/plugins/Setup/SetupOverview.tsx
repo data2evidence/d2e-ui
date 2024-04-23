@@ -8,12 +8,12 @@ import { loadPlugins } from "../../utils";
 import { IPluginItem, LocationState } from "../../types";
 import { SetupPluginRenderer } from "../core/SetupPluginRenderer";
 import "./SetupOverview.scss";
-import { TranslationContext } from "../../contexts/TranslationContext";
+import { useTranslation } from "../../contexts";
 
 const plugins = loadPlugins();
 
 export const SetupOverview: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as LocationState;

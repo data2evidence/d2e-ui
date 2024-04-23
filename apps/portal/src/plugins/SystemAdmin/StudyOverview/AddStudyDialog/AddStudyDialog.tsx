@@ -47,7 +47,7 @@ import {
 } from "../UpdateStudyDialog/DashboardForm/DashboardForm";
 import "./AddStudyDialog.scss";
 import { api } from "../../../../axios/api";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface AddStudyDialogProps {
   open: boolean;
@@ -192,7 +192,7 @@ const styles: SxProps = {
  * @returns The dialog object
  */
 const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLoading, studies, databases }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [tenant] = useTenant();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [formError, setFormError] = useState<FormError>(EMPTY_FORM_ERROR);

@@ -14,7 +14,7 @@ import SharedDrilldown from "../../Charts/Reports/Drilldown/SharedDrilldown";
 
 import { WEBAPI_CDMRESULTS_SOURCE_KEYS } from "../types";
 import "./DataCharacterizationReports.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface DataCharacterizationReportsProps {
   flowRunId: string;
@@ -38,7 +38,7 @@ enum READABLE_MENU_ITEMS {
 }
 
 const DataCharacterizationReports: FC<DataCharacterizationReportsProps> = ({ flowRunId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [selectedReport, setSelectedReport] = useState(WEBAPI_CDMRESULTS_SOURCE_KEYS.DASHBOARD as string);
 
   const handleMenuSelect = (selection: string) => {

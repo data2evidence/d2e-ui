@@ -6,7 +6,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import webComponentWrapper from "../../../../webcomponents/webComponentWrapper";
 import { api } from "../../../../axios/api";
 import "./DeleteFlowDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DeleteFlowDialogProps {
   flow?: Flow;
@@ -15,7 +15,7 @@ interface DeleteFlowDialogProps {
 }
 
 const DeleteFlowDialog: FC<DeleteFlowDialogProps> = ({ flow, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [inputData, setInputData] = useState("");
   const [inputError, setInputError] = useState(false);

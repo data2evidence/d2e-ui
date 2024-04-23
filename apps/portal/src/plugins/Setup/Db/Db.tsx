@@ -24,7 +24,7 @@ import { EditDbCredentialsDialog } from "./EditDbCredentialsDialog/EditDbCredent
 import { DeleteDbDialog } from "./DeleteDbDialog/DeleteDbDialog";
 import { EditDbDetailsDialog } from "./EditDbDetailsDialog/EditDbDetailsDialog";
 import "./Db.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 const styles: SxProps = {
   color: "#000080",
@@ -59,7 +59,7 @@ const actionsList: Action[] = [
 ];
 
 export const Db: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [databases, loading, error] = useDatabases(refetch);
   const [selectedDb, setSelectedDb] = useState<IDatabase>();

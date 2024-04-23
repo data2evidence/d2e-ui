@@ -1,14 +1,14 @@
 import React, { FC, useCallback, useMemo, useState } from "react";
 import { Box, MenuItem, Select, SelectChangeEvent } from "@portal/components";
 import { DatasetDashboard } from "../../../../types";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DatasetDashboardsProps {
   dashboards: DatasetDashboard[];
 }
 
 export const DatasetDashboards: FC<DatasetDashboardsProps> = ({ dashboards }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [activeDashboardName, setActiveDashboardName] = useState<string>("");
   const dashboard = useMemo(
     () => dashboards.find((d) => d.name === activeDashboardName),

@@ -4,14 +4,14 @@ import LineChart from "../../../Common/LineChart";
 import ChartContainer from "../../../Common/ChartContainer";
 
 import "./ObservationPeriodCumulativeDurationChart.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface ObservationPeriodCumulativeDurationChartProps {
   data: any;
 }
 
 const ObservationPeriodCumulativeDurationChart: FC<ObservationPeriodCumulativeDurationChartProps> = ({ data }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const title = getText(i18nKeys.OBSERVATION_PERIOD_CUMULATIVE_DURATION_CHART__TITLE);
   const xAxisName = getText(i18nKeys.OBSERVATION_PERIOD_CUMULATIVE_DURATION_CHART__X_AXIS_NAME);
   const yAxisName = getText(i18nKeys.OBSERVATION_PERIOD_CUMULATIVE_DURATION_CHART__Y_AXIS_NAME);

@@ -5,7 +5,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { FormControl } from "@mui/material";
 import { SxProps } from "@mui/system";
 import { StarboardNotebook } from "../../utils/notebook";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface NotebookSelectProps {
   notebooks: StarboardNotebook[] | undefined;
@@ -37,7 +37,7 @@ const styles: SxProps = {
 };
 
 const NotebookSelect: FC<NotebookSelectProps> = ({ notebooks, activeNotebook, updateActiveNotebook, setIsShared }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const handleNotebookChange = useCallback(
     (event: SelectChangeEvent<string>) => {
       const findNb = notebooks && notebooks.find((nb) => nb.id === event.target.value);

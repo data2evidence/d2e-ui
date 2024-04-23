@@ -4,7 +4,7 @@ import { useDialogHelper } from "../../../../hooks";
 import JobDialog from "../JobDialog/JobDialog";
 import { JobRunTypes } from "../types";
 import "./JobRunButtons.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface JobRunButtonsProps {
   datasetId: string;
@@ -13,7 +13,7 @@ interface JobRunButtonsProps {
 }
 
 const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGenerateJob }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [showJobDialog, openJobDialog, closeJobDialog] = useDialogHelper(false);
   const [jobRunType, setJobRunType] = useState<JobRunTypes | null>(null);
 

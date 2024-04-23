@@ -4,10 +4,9 @@ import Select from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
 import { FormControl, InputLabel, Box, Button, Checkbox, Dialog, TextField } from "@portal/components";
 import { api } from "../../../../../axios/api";
-import { useFeedback } from "../../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../../contexts";
 import { CloseDialogType, DatasetAttributeConfig } from "../../../../../types";
 import "./SaveAttributeDialog.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
 
 interface SaveAttributeDialogProps {
   open: boolean;
@@ -36,7 +35,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClose, attribute, setRefetch }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [saving, setSaving] = useState(false);
 

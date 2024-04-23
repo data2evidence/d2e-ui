@@ -10,7 +10,7 @@ import { useDatasets, useEnabledFeatures, useMenuAnchor } from "../../../hooks";
 import { useUserInfo } from "../../../contexts/UserContext";
 import { getPluginChildPath } from "../../../utils";
 import "../Header.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 export enum MenuType {
   Dataset,
@@ -24,7 +24,7 @@ interface MenuNavProps {
 }
 
 const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();

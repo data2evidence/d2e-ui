@@ -4,7 +4,7 @@ import Divider from "@mui/material/Divider";
 import { Button, Dialog } from "@portal/components";
 import { api } from "../../../../../axios/api";
 import "./DatasetDeleteResourceDialog.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface DatasetDeleteResourceDialogProps {
   datasetId: string;
@@ -14,7 +14,7 @@ interface DatasetDeleteResourceDialogProps {
 }
 
 const DatasetDeleteResourceDialog: FC<DatasetDeleteResourceDialogProps> = ({ datasetId, resource, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [loading, setLoading] = useState(false);
 

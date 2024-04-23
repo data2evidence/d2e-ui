@@ -6,7 +6,7 @@ import { HistoryJob } from "../types";
 import DataCharacterizationReports from "../../../../components/DQD/DataCharacterizationReports/DataCharacterizationReports";
 import DQDCombinedResults from "../../../../components/DQD/DQDCombinedResults/DQDCombinedResults";
 import "./ResultsDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 export interface ResultsDialogProps {
   job: HistoryJob;
@@ -15,7 +15,7 @@ export interface ResultsDialogProps {
 }
 
 const ResultsDialog: FC<ResultsDialogProps> = ({ job, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const handleClose = useCallback(() => {
     typeof onClose === "function" && onClose();
   }, [onClose]);

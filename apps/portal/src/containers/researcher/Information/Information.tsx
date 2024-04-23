@@ -15,7 +15,7 @@ import { SxProps } from "@mui/system";
 import { Button, Loader, TableCell, TableRow, SubTitle, IconButton, DownloadIcon } from "@portal/components";
 import { useUserInfo } from "../../../contexts/UserContext";
 import { StudyAttribute, StudyTag, DatasetResource } from "../../../types";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import { useDatasetResources, useDataset, useDatasetDashboards, useDatasetReleases } from "../../../hooks";
 import webComponentWrapper from "../../../webcomponents/webComponentWrapper";
 import { DQDJobResults } from "../../../plugins/SystemAdmin/DQD/DQDJobResults/DQDJobResults";
@@ -26,7 +26,6 @@ import { saveBlobAs } from "../../../utils";
 import { api } from "../../../axios/api";
 import { DQD_TABLE_TYPES, DatasetRelease } from "../../../plugins/SystemAdmin/DQD/types";
 import "./Information.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
 
 enum Access {
   None,
@@ -88,7 +87,7 @@ const styles: SxProps = {
 };
 
 export const Information: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [requestLoading, setRequestLoading] = useState(false);
 

@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useState } from "react";
 import { UserWithRolesInfoExt } from "../../../types";
 import { EllipsisVerticalIcon, IconButton, Menu, MenuItem } from "@portal/components";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface MoreActionButtonProps {
   user: UserWithRolesInfoExt;
@@ -10,7 +10,7 @@ interface MoreActionButtonProps {
 }
 
 export const MoreActionButton: FC<MoreActionButtonProps> = ({ user, onActivateClick, onChangePasswordClick }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [actionEl, setActionEl] = useState<null | HTMLElement>(null);
 
   const handleOpenAction = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {

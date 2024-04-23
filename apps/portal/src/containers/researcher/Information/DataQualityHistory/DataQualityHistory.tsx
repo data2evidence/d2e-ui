@@ -12,14 +12,14 @@ import {
   HistoricalDataQualityMultiSeries,
 } from "../../../../components/DQD/types";
 import "./DataQualityHistory.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DataQualityHistoryProps {
   activeDatasetId: string;
 }
 
 const DataQualityHistory: FC<DataQualityHistoryProps> = ({ activeDatasetId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [historicalDataQuality, setHistoricalDataQuality] = useState<HistoricalDataQuality[]>([]);
   const [historicalDataQualityByCategory, setHistoricalDataQualityByCategory] = useState<
     HistoricalDataQualityMultiSeries[]

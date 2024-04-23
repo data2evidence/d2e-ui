@@ -2,7 +2,7 @@ import React, { FC } from "react";
 
 import ReactECharts from "echarts-for-react";
 import "./TreeMapChart.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface TreeMapChartProps {
   data: any[];
@@ -12,7 +12,7 @@ interface TreeMapChartProps {
 }
 
 const TreeMapChart: FC<TreeMapChartProps> = ({ data, title, setSelectedConceptId, extraChartConfigs }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const option = {
     tooltip: {
       formatter: function (info: any) {

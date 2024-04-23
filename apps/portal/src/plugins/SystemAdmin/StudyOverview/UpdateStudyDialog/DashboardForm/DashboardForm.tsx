@@ -2,7 +2,7 @@ import React, { ChangeEvent, FC, useCallback } from "react";
 import { Box, IconButton, TextField, TrashIcon } from "@portal/components";
 import { DatasetDashboard } from "../../../../../types";
 import { FormHelperText } from "@mui/material";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface DashboardFormProps {
   index: number;
@@ -33,7 +33,7 @@ export const EMPTY_DASHBOARD_FORM_ERROR: DashboardFormError = {
 export const EMPTY_DASHBOARD_FORM_DATA: DatasetDashboard = { name: "", url: "", basePath: "" };
 
 export const DashboardForm: FC<DashboardFormProps> = ({ index, dashboard, onRemove, onChange, error }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const handleChange = useCallback(
     (changes: Partial<DatasetDashboard>) => {
       const update = { ...dashboard, ...changes } as DatasetDashboard;

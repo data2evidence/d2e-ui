@@ -6,10 +6,10 @@ import { Button, IconButton, Loader, TableCell, TableRow, TrashIcon } from "@por
 import { AddTagDialog } from "./AddTagDialog/AddTagDialog";
 import { DeleteTagDialog } from "./DeleteTagDialog/DeleteTagDialog";
 import "./TagTable.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 const TagTable: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [selectedTagName, setSelectedTagName] = useState("");
   const [tagConfigs, loading, error] = useDatasetTagConfigs(refetch);

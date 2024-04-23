@@ -4,12 +4,12 @@ import CohortPlugin from "./utils/CohortPlugin";
 import { CohortMgmt } from "../../axios/cohort-mgmt";
 import { useDataset } from "../../hooks";
 import "./Cohort.scss";
-import { TranslationContext } from "../../contexts/TranslationContext";
+import { useTranslation } from "../../contexts";
 
 interface CohortProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const Cohort: FC<CohortProps> = ({ metadata }: CohortProps) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const studyId = metadata?.studyId;
   const userId = metadata?.userId;
   const [dataset] = useDataset(studyId || "");

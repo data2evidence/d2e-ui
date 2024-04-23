@@ -9,7 +9,7 @@ import Alert from "@mui/material/Alert";
 
 import { CohortMapping } from "../../../../../types";
 import "./CohortFilter.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 const selectStyles: SxProps = {
   "&.MuiOutlinedInput-root": {
@@ -48,7 +48,7 @@ const CohortFilter: FC<CohortFilterProps> = ({
   loading,
   error,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   if (!cohortDefinitionList || loading) {
     return <Loader text={"Loading Cohort Definitions..."}></Loader>;
   }

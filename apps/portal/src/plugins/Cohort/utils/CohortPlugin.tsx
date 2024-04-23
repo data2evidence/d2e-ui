@@ -4,10 +4,9 @@ import CohortDefinitionList from "../components/CohortDefinitionList/CohortDefin
 import CohortDeleteDialog from "../components/CohortDeleteDialog/CohortDeleteDialog";
 import DataQualityDialog from "../components/DataQualityDialog/DataQualityDialog";
 import { useDialogHelper } from "../../../hooks";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import { CohortMapping } from "../../../types/cohort";
 import "./CohortPlugin.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
 
 interface CohortPluginProps {
   userId: string;
@@ -18,7 +17,7 @@ interface CohortPluginProps {
 }
 
 const CohortPlugin: FC<CohortPluginProps> = ({ userId, cohortMgmtClient, studyName, schemaName, databaseCode }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [activeCohort, setActiveCohort] = useState<CohortMapping>();
   const [refetch, setRefetch] = useState(false);
   const { setFeedback } = useFeedback();

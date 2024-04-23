@@ -7,7 +7,7 @@ import { Roles, TENANT_ROLES, DATA_ADMIN_ROLES, ALP_ROLES } from "../../../../co
 import { getRoleChanges } from "../../../../utils";
 import { api } from "../../../../axios/api";
 import "./EditTenantRoleDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface EditTenantRoleDialogProps {
   user?: UserWithRolesInfoExt;
@@ -24,7 +24,7 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
   open,
   onClose,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { user: userInfo } = useUserInfo();
   const { setUserGroups } = useUserGroups();
   const [loading, setLoading] = useState(false);

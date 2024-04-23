@@ -19,7 +19,7 @@ import { PluginDropdownItem } from "@portal/plugin";
 import { useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { Divider } from "@mui/material";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface SideDropdownProps {
   activeTab: string;
@@ -36,7 +36,7 @@ const listItemTextStyles: SxProps = {
 };
 
 const SideDropdown: FC<SideDropdownProps> = ({ activeTab, onClick, plugin, open, submenus }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
   const location = useLocation();

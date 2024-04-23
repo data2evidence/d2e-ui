@@ -7,10 +7,10 @@ import { SaveAttributeDialog } from "./SaveAttributeDialog/SaveAttributeDialog";
 import { DeleteAttributeDialog } from "./DeleteAttributeDialog/DeleteAttributeDialog";
 import { DatasetAttributeConfig } from "../../../../types";
 import "./AttributeTable.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 const AttributeTable: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [selectedAttribute, setSelectedAttribute] = useState<DatasetAttributeConfig | undefined>(undefined);
   const [attributeConfigs, loading, error] = useDatasetAttributeConfigs(refetch);

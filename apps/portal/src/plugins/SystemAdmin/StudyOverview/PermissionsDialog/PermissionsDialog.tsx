@@ -10,7 +10,7 @@ import AccessPanel from "./Panels/AccessPanel";
 import { api } from "../../../../axios/api";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useUserGroups, useUserInfo } from "../../../../contexts/UserContext";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface PermissionsDialogProps {
   study?: Study;
@@ -35,7 +35,7 @@ export interface RoleEdit {
 }
 
 const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [tabIndex, setTabIndex] = useState(0);
   const [users, setUsers] = useState<UserWithRoles[]>([]);
   const [feedback, setFeedback] = useState<Feedback>({});

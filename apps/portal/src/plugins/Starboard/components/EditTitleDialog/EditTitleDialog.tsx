@@ -5,7 +5,7 @@ import { CloseDialogType } from "../../../../types";
 import { StarboardNotebook } from "../../utils/notebook";
 import "./EditTitleDialog.scss";
 import { Divider } from "@mui/material";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface EditTitleDialogProps {
   title?: string;
@@ -16,7 +16,7 @@ interface EditTitleDialogProps {
 }
 
 export const EditTitleDialog: FC<EditTitleDialogProps> = ({ title, open, onClose, renameNotebook, notebooks }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [notebookTitle, setNotebookTitle] = useState(title);
 

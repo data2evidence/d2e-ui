@@ -6,7 +6,7 @@ import { FormControl } from "@mui/material";
 import { Study } from "../../../../types";
 import { SxProps } from "@mui/system";
 import { useUserInfo } from "../../../../contexts/UserContext";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface ActionSelectorProps {
   study: Study;
@@ -58,7 +58,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
   handleUpdate,
   handleRelease,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { user } = useUserInfo();
   const isUserAdmin = user.isUserAdmin;
 

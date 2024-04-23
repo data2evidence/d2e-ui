@@ -6,10 +6,9 @@ import webComponentWrapper from "../../../../webcomponents/webComponentWrapper";
 import { JobRunTypes } from "../types";
 import { api } from "../../../../axios/api";
 import { useDatasets } from "../../../../hooks";
-import { useFeedback } from "../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../contexts";
 import ReleaseSelector from "../ReleaseSelector/ReleaseSelector";
 import "./JobDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
 
 interface JobDialogProps {
   jobRunType: string;
@@ -28,7 +27,7 @@ const JobDialog: FC<JobDialogProps> = ({
   open,
   onClose,
 }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const studies = useDatasets("systemAdmin")[0];
   // Set title based on jobRunType
   const title =

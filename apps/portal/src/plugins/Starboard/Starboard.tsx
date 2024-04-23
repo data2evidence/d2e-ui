@@ -4,12 +4,11 @@ import { StarboardNotebook } from "./utils/notebook";
 import { StarboardEmbed } from "@alp-os/alp-starboard-wrap";
 import { Loader } from "@portal/components";
 import { api } from "../../axios/api";
-import { useFeedback } from "../../contexts";
+import { useFeedback, useTranslation } from "../../contexts";
 import { EmptyNotebook } from "./components/EmptyNotebook";
 import { Header } from "./components/Header";
 import { convertJupyterToStarboard, notebookContentToText } from "./utils/jupystar";
 import env from "../../env";
-import { TranslationContext } from "../../contexts/TranslationContext";
 
 const MRI_ROOT_URL = `${env.REACT_APP_DN_BASE_URL}analytics-svc`;
 const uiFilesUrl = env.REACT_APP_DN_BASE_URL;
@@ -17,7 +16,7 @@ const zipUrl = `${uiFilesUrl}starboard-notebook-base/alp-starboard-notebook-base
 interface StarboardProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const Starboard: FC<StarboardProps> = ({ metadata }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [loading, setLoading] = useState(true);
 

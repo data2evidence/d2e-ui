@@ -33,7 +33,7 @@ import { validateCredentials } from "../CredentialValidator";
 import { DbCredentialProcessor } from "../CredentialProcessor";
 import { isValidJson } from "../../../../utils";
 import "./SaveDbDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface SaveDbDialogProps {
   open: boolean;
@@ -110,7 +110,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);

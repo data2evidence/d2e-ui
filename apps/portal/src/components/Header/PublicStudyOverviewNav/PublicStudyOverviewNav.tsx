@@ -9,10 +9,10 @@ import { StudyInfoTab } from "../../../containers/researcher/Information/Informa
 import { LocationState } from "../../../types";
 import { useMenuAnchor, usePublicDatasets } from "../../../hooks";
 import "../Header.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 const PublicStudyOverviewNav: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();

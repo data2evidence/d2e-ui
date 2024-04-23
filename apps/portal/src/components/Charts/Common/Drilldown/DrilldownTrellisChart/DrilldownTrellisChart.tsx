@@ -4,7 +4,7 @@ import TrellisChart from "../../TrellisChart";
 
 import "./DrilldownTrellisChart.scss";
 import { groupBy } from "lodash";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface DrilldownTrellisChartProps {
   data: any;
@@ -12,7 +12,7 @@ interface DrilldownTrellisChartProps {
 }
 
 const DrilldownTrellisChart: FC<DrilldownTrellisChartProps> = ({ data, trellisXAxisKey = "Y_PREVALENCE_1000_PP" }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const title = getText(i18nKeys.DRILLDOWN_TRELLIS_CHART__TITLE);
   const trellisTopLabel = getText(i18nKeys.DRILLDOWN_TRELLIS_CHART__TRELLIS_TOP_LABEL);
   const trellisBottomLabel = getText(i18nKeys.DRILLDOWN_TRELLIS_CHART__TRELLIS_BOTTOM_LABEL);

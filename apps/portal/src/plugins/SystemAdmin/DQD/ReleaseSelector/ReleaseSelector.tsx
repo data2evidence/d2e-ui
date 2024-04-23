@@ -5,7 +5,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { SxProps } from "@mui/system";
 import { SystemPortal } from "../../../../axios/system-portal";
 import { DatasetRelease } from "../types";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface ReleaseSelectorProps {
   datasetId: string;
@@ -36,7 +36,7 @@ const styles: SxProps = {
 };
 
 const ReleaseSelector: FC<ReleaseSelectorProps> = ({ datasetId, handleReleaseSelect }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [releases, setReleases] = useState([]);
   const [releaseId, setReleaseId] = useState("");
   const isLoading = false;

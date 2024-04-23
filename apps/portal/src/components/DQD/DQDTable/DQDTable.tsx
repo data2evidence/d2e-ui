@@ -13,14 +13,14 @@ import FilterListOffIcon from "@mui/icons-material/FilterListOff";
 import SortIcon from "@mui/icons-material/Sort";
 import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface DQDTableProps {
   data: CheckResults[];
 }
 
 const DQDTable: FC<DQDTableProps> = ({ data }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const filterUniqueValues = (data: CheckResults[], key: keyof CheckResults) => {
     const uniqueValues = [...new Set(data.map((item) => item[key]))];
     const uniqueFilterOptions = uniqueValues.map((elem) => ({ text: String(elem), value: elem }));

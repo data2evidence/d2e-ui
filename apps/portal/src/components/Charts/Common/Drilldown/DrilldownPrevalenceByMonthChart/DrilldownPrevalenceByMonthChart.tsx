@@ -4,14 +4,14 @@ import ChartContainer from "../../ChartContainer";
 import LineChart from "../../LineChart";
 
 import "./DrilldownPrevalenceByMonthChart.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface DrilldownPrevalenceByMonthChartProps {
   data: any;
 }
 
 const DrilldownPrevalenceByMonthChart: FC<DrilldownPrevalenceByMonthChartProps> = ({ data }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const title = getText(i18nKeys.DRILLDOWN_PREVALENCE_BY_MONTH_CHART__TITLE);
   const xAxisName = getText(i18nKeys.DRILLDOWN_PREVALENCE_BY_MONTH_CHART__Y_AXIS_NAME);
   const yAxisName = getText(i18nKeys.DRILLDOWN_PREVALENCE_BY_MONTH_CHART__Y_AXIS_NAME);

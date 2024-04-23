@@ -18,7 +18,7 @@ import {
   ALP_DASHBOARD_VIEWER,
 } from "../../../config";
 import { useTenants, useGroupCleanUp, useDialogHelper } from "../../../hooks";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import { useUserInfo } from "../../../contexts/UserContext";
 import { api } from "../../../axios/api";
 import DeleteUserDialog from "./DeleteUserDialog/DeleteUserDialog";
@@ -28,7 +28,6 @@ import { ChangeUserPasswordDialog } from "./ChangeUserPasswordDialog/ChangeUserP
 import { MoreActionButton } from "./MoreActionButton";
 import env from "../../../env";
 import "./UserOverview.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
 
 const idpRelyingParty = env.REACT_APP_IDP_RELYING_PARTY;
 const isManagedUser = idpRelyingParty === "azure";
@@ -36,7 +35,7 @@ const isManagedUser = idpRelyingParty === "azure";
 interface UserOverviewProps extends PageProps<SystemAdminPageMetadata> {}
 
 export const UserOverview: FC<UserOverviewProps> = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const { user: userInfo } = useUserInfo();
   const [loading, setLoading] = useState(false);
 

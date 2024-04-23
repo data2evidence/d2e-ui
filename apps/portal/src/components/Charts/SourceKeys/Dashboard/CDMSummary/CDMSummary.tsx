@@ -2,14 +2,14 @@ import React from "react";
 
 import ChartContainer from "../../../Common/ChartContainer";
 import "./CDMSummary.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface CDMSummaryProps {
   data: any;
 }
 
 function CDMSummary({ data }: CDMSummaryProps) {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const title = getText(i18nKeys.CDM_SUMMARY__TITLE);
 
   if (data.length === 0) {

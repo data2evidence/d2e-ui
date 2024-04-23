@@ -19,18 +19,17 @@ import {
   Title,
 } from "@portal/components";
 import { api } from "../../../axios/api";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import { useDatasets } from "../../../hooks";
 import { ConceptSetWithConceptDetails } from "../../SystemAdmin/Terminology/utils/types";
 import { TerminologyProps } from "../../SystemAdmin/Terminology/Terminology";
 import SearchBar from "./SearchBar";
 import "./ConceptSets.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
 
 interface ConceptSetsProps {}
 
 export const ConceptSets: FC<ConceptSetsProps> = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
   const [page, setPage] = useState(0);

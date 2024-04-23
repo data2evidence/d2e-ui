@@ -14,14 +14,14 @@ import { parsePieChartData, parseBarChartData } from "../../util";
 
 import { DASHBOARD_REPORT_TYPE, WEBAPI_CDMRESULTS_SOURCE_KEYS } from "../../../DQD/types";
 import "./Dashboard.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DashboardProps {
   flowRunId: string;
 }
 
 const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [dashboardData, setDashboardData] = useState<DASHBOARD_REPORT_TYPE>({
     population: [],
     gender: [],

@@ -7,10 +7,10 @@ import dayjs from "dayjs";
 import DeleteFlowDialog from "../DeleteFlowDialog/DeleteFlowDialog";
 import ExecuteFlowDialog from "../ExecuteFlowDialog/ExecuteFlowDialog";
 import "./JobTable.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 const JobTable: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [flows, setFlows] = useState<Flow[]>([]);
   const [flowMetadata, setFlowMetadata] = useState<MetaData[]>([]);

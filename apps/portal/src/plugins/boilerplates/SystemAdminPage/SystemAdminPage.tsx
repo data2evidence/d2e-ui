@@ -1,12 +1,12 @@
 import React, { FC, useCallback, useState } from "react";
 import { PageProps, SystemAdminPageMetadata } from "@portal/plugin";
 import "./SystemAdminPage.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 interface SystemAdminPageProps extends PageProps<SystemAdminPageMetadata> {}
 
 export const SystemAdminPage: FC<SystemAdminPageProps> = ({ metadata }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [token, setToken] = useState<string>();
 
   const handleClick = useCallback(async () => {

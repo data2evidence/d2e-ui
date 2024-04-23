@@ -2,14 +2,14 @@ import React, { FC, useState } from "react";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 interface SearchBarProps {
   keyword?: any;
   onEnter: (keyword: any) => void;
 }
 
 const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [searchString, setSearchString] = useState("");
   const fullWidthPx = 400;
   return (

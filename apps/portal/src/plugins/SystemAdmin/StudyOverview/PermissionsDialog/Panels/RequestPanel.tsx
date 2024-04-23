@@ -12,7 +12,7 @@ import { TableRow, TableCell } from "@portal/components";
 import env from "../../../../../env";
 import { StudyAccessRequest } from "../PermissionsDialog";
 import "./PanelTables.scss";
-import { TranslationContext } from "../../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../../contexts";
 
 interface RequestPanelProps {
   studyId: string;
@@ -23,7 +23,7 @@ interface RequestPanelProps {
 }
 
 const RequestPanel: FC<RequestPanelProps> = ({ selectedAction, handleActionChange, accessRequests }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   return (
     <div className="request-panel">
       <div className="request-panel__title">{getText(i18nKeys.REQUEST_PANEL__REQUESTS)}</div>

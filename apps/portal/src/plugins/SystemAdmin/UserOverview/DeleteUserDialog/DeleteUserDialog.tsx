@@ -4,7 +4,7 @@ import { Button, Dialog, Feedback } from "@portal/components";
 import { CloseDialogType, UserWithRolesInfoExt } from "../../../../types";
 import { api } from "../../../../axios/api";
 import "./DeleteUserDialog.scss";
-import { TranslationContext } from "../../../../contexts/TranslationContext";
+import { useTranslation } from "../../../../contexts";
 
 interface DeleteUserDialogProps {
   user?: UserWithRolesInfoExt;
@@ -13,7 +13,7 @@ interface DeleteUserDialogProps {
 }
 
 const DeleteUserDialog: FC<DeleteUserDialogProps> = ({ user, open, onClose }) => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
   const userId = user?.userId;

@@ -26,7 +26,7 @@ import PermissionsDialog from "./PermissionsDialog/PermissionsDialog";
 import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
 import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
 import "./StudyOverview.scss";
-import { TranslationContext } from "../../../contexts/TranslationContext";
+import { useTranslation } from "../../../contexts";
 
 const enum StudyAttributeConfigIds {
   LATEST_SCHEMA_VERSION = "latest_schema_version",
@@ -35,7 +35,7 @@ const enum StudyAttributeConfigIds {
 const MISSING_ATTRIBUTE_ERROR = "Not Available";
 
 const StudyOverview: FC = () => {
-  const { getText, i18nKeys } = TranslationContext();
+  const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, refetch);
   const [databases] = useDatabases();
