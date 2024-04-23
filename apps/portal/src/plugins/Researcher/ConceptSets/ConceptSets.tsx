@@ -21,32 +21,31 @@ import {
 } from "@portal/components";
 import { api } from "../../../axios/api";
 import { useFeedback } from "../../../contexts";
-import { useDatasets } from "../../../hooks";
 import { useUserInfo } from "../../../contexts/UserContext";
 import Terminology from "../../Researcher/Terminology/Terminology";
 import { ConceptSetWithConceptDetails } from "../../Researcher/Terminology/utils/types";
 import { TerminologyProps } from "../../Researcher/Terminology/Terminology";
-import SearchBar from "./SearchBar";
+import SearchBar from "../../../components/SearchBar/SearchBar";
+import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
 import "./ConceptSets.scss";
 
 enum ConceptSetTab {
-  Search = "search",
-  ConceptSets = "conceptsets",
+  ConceptSearch = "ConceptSearch",
+  ConceptSets = "ConceptSets",
 }
 
-interface ConceptSetsProps {}
+interface ConceptSetsProps extends PageProps<ResearcherStudyMetadata> {}
 
-export const ConceptSets: FC<ConceptSetsProps> = () => {
+export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const { setFeedback } = useFeedback();
   const [data, setData] = useState<ConceptSetWithConceptDetails[]>([]);
-  const [datasets, loading, error] = useDatasets("researcher");
-  const [selectedDatasetId, setSelectedDatasetId] = useState<string>();
-  const [tabValue, setTabValue] = useState(ConceptSetTab.Search);
+  const [tabValue, setTabValue] = useState(ConceptSetTab.ConceptSearch);
   const userId = useUserInfo().user?.userId;
+  const datasetId = metadata?.studyId;
 
   const handleTabSelectionChange = async (event: React.SyntheticEvent, value: ConceptSetTab) => {
     setTabValue(value);
@@ -87,7 +86,7 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
 
   const handleAddAndEditConceptSet = useCallback(
     (conceptSetId?: string) => {
-      if (!selectedDatasetId) {
+      if (datasetId) {
         return;
       }
       const event = new CustomEvent<{ props: TerminologyProps }>("alp-terminology-open", {
@@ -99,13 +98,13 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
             },
             mode: "CONCEPT_SET",
             isConceptSet: true,
-            selectedDatasetId,
+            selectedDatasetId: datasetId,
           },
         },
       });
       window.dispatchEvent(event);
     },
-    [fetchData, selectedDatasetId]
+    [fetchData, datasetId]
   );
 
   const handleRowsPerPageChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -120,14 +119,7 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
   const filteredData = data.filter((row) => row.name.toLowerCase().includes(searchText));
   const pageData = filteredData.slice(rowsPerPage * page, rowsPerPage * (page + 1));
 
-  useEffect(() => {
-    if (!datasets || selectedDatasetId) return;
-    if (datasets?.[0]?.id) {
-      setSelectedDatasetId(datasets[0].id);
-    }
-  }, [datasets, selectedDatasetId]);
-
-  if (isLoading || !selectedDatasetId) return <Loader />;
+  if (isLoading || datasetId) return <Loader />;
 
   if (!userId) {
     return null;
@@ -139,12 +131,12 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
         <div className="concept-sets__content">
           <div className="concept-sets__tabs">
             <Tabs value={tabValue} onChange={handleTabSelectionChange}>
-              <Tab disableRipple label="Search" value={ConceptSetTab.Search}></Tab>
+              <Tab disableRipple label="Concept Search" value={ConceptSetTab.ConceptSearch}></Tab>
               <Tab disableRipple label="Concept Sets" value={ConceptSetTab.ConceptSets}></Tab>
             </Tabs>
           </div>
 
-          {tabValue == ConceptSetTab.Search && <Terminology baseUserId={userId} />}
+          {tabValue == ConceptSetTab.ConceptSearch && <Terminology baseUserId={userId} />}
 
           {tabValue == ConceptSetTab.ConceptSets && (
             <>
@@ -152,27 +144,7 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
                 <div className="concept-sets__search">
                   <SearchBar keyword={searchText} onEnter={updateSearchResult} />
                 </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <div style={{ marginRight: "10px" }}>Reference concepts from dataset: </div>
-                  <FormControl sx={{ marginRight: "20px" }}>
-                    <Select
-                      value={selectedDatasetId}
-                      onChange={(e: SelectChangeEvent) => {
-                        setSelectedDatasetId(e.target.value);
-                      }}
-                      sx={{ "& .MuiSelect-outlined": { paddingTop: "8px", paddingBottom: "8px" } }}
-                    >
-                      {datasets?.map((dataset) => (
-                        <MenuItem value={dataset.id} key={dataset.id} sx={{}} disableRipple>
-                          {dataset.studyDetail?.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </div>
-                <div className="concept-sets__actions">
-                  <Button text="Add concept set" onClick={() => handleAddAndEditConceptSet()} />
-                </div>
+                <Button text="Add concept set" onClick={() => handleAddAndEditConceptSet()} />
               </div>
               {}
               <TableContainer className="concept-sets__table">
