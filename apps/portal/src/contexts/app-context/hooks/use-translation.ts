@@ -1,10 +1,11 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { AppContext, AppDispatchContext } from "../..";
 import { ACTION_TYPES } from "../reducer";
 import { i18nDefault, i18nKeys } from "../states";
 import { AxiosError } from "axios";
 import { api } from "../../../axios/api";
 import { getFallbackLocale, replaceParams } from "../helpers";
+import env from "../../../env";
 
 type LanguageMappings = {
   [key in keyof typeof i18nKeys]: string;
@@ -68,6 +69,12 @@ export const useTranslation = (): {
     },
     [translations, translation.locale]
   );
+
+  useEffect(() => {
+    if (env.REACT_APP_LOCALE) {
+      changeLocale(env.REACT_APP_LOCALE);
+    }
+  }, []);
 
   return { getText, changeLocale, i18nKeys, locale: translation.locale };
 };
