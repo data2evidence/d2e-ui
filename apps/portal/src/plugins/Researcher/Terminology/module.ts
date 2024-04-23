@@ -1,4 +1,4 @@
-import { SystemAdminPagePlugin } from "@portal/plugin";
+import { ResearcherStudyPlugin } from "@portal/plugin";
 import Terminology from "./Terminology";
 
-export const plugin = new SystemAdminPagePlugin(Terminology);
+export const plugin = new ResearcherStudyPlugin(Terminology);
