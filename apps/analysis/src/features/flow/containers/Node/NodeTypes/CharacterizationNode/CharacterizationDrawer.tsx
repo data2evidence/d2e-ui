@@ -25,7 +25,7 @@ interface FormData extends CharacterizationNodeData {}
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  dechallengeStopiterval: 0,
+  dechallengeStopInterval: 0,
   dechallengeEvaluationWindow: 0,
 };
 
@@ -45,7 +45,7 @@ export const CharacterizationDrawer: FC<CharacterizationDrawerProps> = ({
       setFormData({
         name: node.data.name,
         description: node.data.description,
-        dechallengeStopiterval: node.data.dechallengeStopiterval,
+        dechallengeStopInterval: node.data.dechallengeStopInterval,
         dechallengeEvaluationWindow: node.data.dechallengeEvaluationWindow,
       });
     } else {
@@ -89,10 +89,10 @@ export const CharacterizationDrawer: FC<CharacterizationDrawerProps> = ({
       </Box>
       <Box mb={4}>
         <TextInput
-          label="DechallengeStopiterval"
-          value={formData.dechallengeStopiterval}
+          label="DechallengeStopInterval"
+          value={formData.dechallengeStopInterval}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({ dechallengeStopiterval: e.target.value })
+            onFormDataChange({ dechallengeStopInterval: e.target.value })
           }
           type="number"
         />

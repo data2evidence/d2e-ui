@@ -4,25 +4,25 @@ import { useBooleanHelper } from "~/features/flow/hooks";
 import { NodeDataState } from "../../../../types";
 import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
-import { NegatveControlOutcomeDrawer } from "./NegativeControlOutcomeDrawer";
-import "./NegativeControlOutcomeNode.scss";
+import { TimeAtRiskDrawer } from "./TimeAtRiskDrawer";
+import "./TimeAtRiskNode.scss";
 
-export interface NegatveControlOutcomeNodeData extends NodeDataState {
-  occurenceType: string;
-  detectOnDescendants: string;
+export interface TimeAtRiskNodeData extends NodeDataState {
+  riskWindowStart: number[];
+  startAnchor: string[];
+  riskWindowEnd: number[];
+  endAnchor: string[];
 }
 
-export const NegatveControlOutcomeNode = (
-  node: NodeProps<NegatveControlOutcomeNodeData>
-) => {
+export const TimeAtRiskNode = (node: NodeProps<TimeAtRiskNodeData>) => {
   const { data } = node;
   const [settingVisible, openSetting, closeSetting] = useBooleanHelper(false);
   const [resultVisible, openResult, closeResult] = useBooleanHelper(false);
 
   return (
     <>
-      <NodeLayout<NegatveControlOutcomeNodeData>
-        className="negative-control-outcome-node"
+      <NodeLayout<TimeAtRiskNodeData>
+        className="time-at-risk-node"
         name={data.name}
         onSettingClick={openSetting}
         resultType={data.error ? "error" : "success"}
@@ -31,10 +31,10 @@ export const NegatveControlOutcomeNode = (
       >
         {data.description}
       </NodeLayout>
-      <NegatveControlOutcomeDrawer
+      <TimeAtRiskDrawer
         node={node}
-        title="Configure Negative Control Outcome Node"
-        className="negative-control-outcome-drawer"
+        title="Configure TimeAtRisk Node"
+        className="time-at-risk-drawer"
         open={settingVisible}
         onClose={closeSetting}
       />

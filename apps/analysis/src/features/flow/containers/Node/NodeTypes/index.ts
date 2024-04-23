@@ -6,6 +6,7 @@ import { CohortGeneratorNode } from "./CohortGeneratorNode/CohortGeneratorNode";
 import { CohortDiagnosticsNode } from "./CohortDiagnosticsNode/CohortDiagnosticsNode";
 import { NegatveControlOutcomeNode } from "./NegativeControlOutcomeNode/NegativeControlOutcomeNode";
 import { CharacterizationNode } from "./CharacterizationNode/CharacterizationNode";
+import { TimeAtRiskNode } from "./TimeAtRiskNode/TimeAtRiskNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -16,7 +17,7 @@ export const NODE_TYPES: {
   negative_control_outcome_cohort_node: NegatveControlOutcomeNode,
   cohort_incidence_node: RNode,
   cohort_incidence_target_cohorts_node: RNode,
-  time_at_risk_node: RNode,
+  time_at_risk_node: TimeAtRiskNode,
   covariate_settings_node: RNode,
   characterization_node: CharacterizationNode,
   target_compartor_outcomes_node: RNode,
@@ -106,7 +107,12 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Time At Risk",
     description: "Run time at risk code.",
     tag: NodeTag.Wheat,
-    defaultData: {},
+    defaultData: {
+      riskWindowStart: [1, 1],
+      riskWindowEnd: [1, 1],
+      startAnchor: ["cohort start", "cohort start"],
+      endAnchor: ["cohort end", "cohort end"],
+    },
   },
   covariate_settings_node: {
     title: "Covariate Settings",

@@ -8,7 +8,7 @@ import { CharacterizationDrawer } from "./CharacterizationDrawer";
 import "./CharacterizationNode.scss";
 
 export interface CharacterizationNodeData extends NodeDataState {
-  dechallengeStopiterval: number;
+  dechallengeStopInterval: number;
   dechallengeEvaluationWindow: number;
 }
 
