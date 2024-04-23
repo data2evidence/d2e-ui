@@ -82,7 +82,7 @@ const TranslationProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Temporarily exposing function for demo. Remove when language selector is added
   //@ts-ignore
-  window.changeLocale = changeLocale;
+  // window.changeLocale = changeLocale;
 
   const getText = useCallback(
     (phraseKey: keyof LanguageMappings, params?: string[]) => {
