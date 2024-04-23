@@ -7,6 +7,7 @@ import { CohortDiagnosticsNode } from "./CohortDiagnosticsNode/CohortDiagnostics
 import { NegatveControlOutcomeNode } from "./NegativeControlOutcomeNode/NegativeControlOutcomeNode";
 import { CharacterizationNode } from "./CharacterizationNode/CharacterizationNode";
 import { TimeAtRiskNode } from "./TimeAtRiskNode/TimeAtRiskNode";
+import { SelfControlledCaseSeriesNode } from "./SelfControlledCaseSeriesNode/SelfControlledCaseSeriesNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -27,7 +28,7 @@ export const NODE_TYPES: {
   calendar_time_covariate_settings_node: RNode,
   seasonality_covariate_settings_node: RNode,
   self_controlled_case_series_analysis_node: RNode,
-  self_controlled_case_series_node: RNode,
+  self_controlled_case_series_node: SelfControlledCaseSeriesNode,
   patient_level_prediction_node: RNode,
   study_poplulation_settings_node: RNode,
 };
@@ -175,7 +176,9 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Self Controlled Case Series",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     tag: NodeTag.Darkred,
-    defaultData: {},
+    defaultData: {
+      combineDataFetchAcrossOutcomes: "FALSE",
+    },
   },
   patient_level_prediction_node: {
     title: "Patient Level Prediction",
