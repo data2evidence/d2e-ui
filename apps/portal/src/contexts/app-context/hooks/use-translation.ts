@@ -14,6 +14,7 @@ export const useTranslation = (): {
   i18nKeys: typeof i18nKeys;
   changeLocale: (newLocale: string) => void;
   getText: (phraseKey: keyof LanguageMappings, params?: string[]) => string;
+  locale: string;
 } => {
   const { translation } = useContext(AppContext);
   const dispatch = useContext(AppDispatchContext);
@@ -68,5 +69,5 @@ export const useTranslation = (): {
     [translations, translation.locale]
   );
 
-  return { getText, changeLocale, i18nKeys };
+  return { getText, changeLocale, i18nKeys, locale: translation.locale };
 };
