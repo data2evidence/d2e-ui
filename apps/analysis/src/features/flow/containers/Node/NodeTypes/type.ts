@@ -7,7 +7,7 @@ export type NodeType =
   | "time_at_risk_node"
   | "covariate_settings_node"
   | "characterization_node"
-  | "target_compartor_outcomes_node"
+  | "target_comparator_outcomes_node"
   | "cohort_method_analysis_node"
   | "cohort_method_node"
   | "era_covariate_settings_node"
@@ -84,7 +84,7 @@ export const THREE_INCIDENCE_NODE = [
   "patient_level_prediction_node",
 ];
 export const FOUR_INCIDENCE_NODE = ["self_controlled_case_series_node"];
-export const FIVE_INCIDENCE_NODE = ["target_compartor_outcomes_node"];
+export const FIVE_INCIDENCE_NODE = ["target_comparator_outcomes_node"];
 
 export const NODE_CONNECTOR_MAPPING = {
   cohort_generator_node: { type: "lightgrey", connector_list: [] },
@@ -137,7 +137,7 @@ export const NODE_CONNECTOR_MAPPING = {
       },
     ],
   },
-  target_compartor_outcomes_node: {
+  target_comparator_outcomes_node: {
     type: "indigo",
     connector_list: [
       {

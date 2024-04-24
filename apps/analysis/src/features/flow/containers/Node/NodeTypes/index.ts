@@ -13,6 +13,7 @@ import { CalendarTimeCovariateSettingsNode } from "./CalendarTimeCovariateSettin
 import { SeasonalityCovariateSettingsNode } from "./SeasonalityCovariateSettingsNode/SeasonalityCovariateSettingsNode";
 import { CohortIncidentNode } from "./CohortIncidentNode/CohortIncidentNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
+import { TargetComparatorOutcomesNode } from "./TargetComparatorOutcomesNode/TargetComparatorOutcomesNode";
 
 export const NODE_TYPES: {
   [key in NodeType]: ComponentType<NodeProps<any>>;
@@ -25,7 +26,7 @@ export const NODE_TYPES: {
   time_at_risk_node: TimeAtRiskNode,
   covariate_settings_node: RNode,
   characterization_node: CharacterizationNode,
-  target_compartor_outcomes_node: RNode,
+  target_comparator_outcomes_node: TargetComparatorOutcomesNode,
   cohort_method_analysis_node: RNode,
   cohort_method_node: RNode,
   era_covariate_settings_node: EraCovariateSettingsNode,
@@ -48,7 +49,7 @@ export const NODE_COLORS: {
   time_at_risk_node: "wheat",
   covariate_settings_node: "darkgreen",
   characterization_node: "darkgreen",
-  target_compartor_outcomes_node: "indigo",
+  target_comparator_outcomes_node: "indigo",
   cohort_method_analysis_node: "lavender",
   cohort_method_node: "mediumpurple",
   era_covariate_settings_node: "chocolate",
@@ -137,11 +138,14 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
       dechallengeEvaluationWindow: 0,
     },
   },
-  target_compartor_outcomes_node: {
+  target_comparator_outcomes_node: {
     title: "Target Compartor Outcomes",
-    description: "Run target compartor outcomes code",
+    description: "Run target comparator outcomes code",
     tag: NodeTag.Indigo,
-    defaultData: {},
+    defaultData: {
+      trueEffectSize: 1,
+      priorOutcomeLookback: 30,
+    },
   },
   cohort_method_analysis_node: {
     title: "Cohort Method Analysis",
