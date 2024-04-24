@@ -8,6 +8,9 @@ import { NegatveControlOutcomeNode } from "./NegativeControlOutcomeNode/Negative
 import { CharacterizationNode } from "./CharacterizationNode/CharacterizationNode";
 import { TimeAtRiskNode } from "./TimeAtRiskNode/TimeAtRiskNode";
 import { SelfControlledCaseSeriesNode } from "./SelfControlledCaseSeriesNode/SelfControlledCaseSeriesNode";
+import { EraCovariateSettingsNode } from "./EraCovariateSettingsNode/EraCovariateSettingsNode";
+import { CalendarTimeCovariateSettingsNode } from "./CalendarTimeCovariateSettingsNode/CalendarTimeCovariateSettingsNode";
+import { SeasonalityCovariateSettingsNode } from "./SeasonalityCovariateSettingsNode/SeasonalityCovariateSettingsNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -24,9 +27,9 @@ export const NODE_TYPES: {
   target_compartor_outcomes_node: RNode,
   cohort_method_analysis_node: RNode,
   cohort_method_node: RNode,
-  era_covariate_settings_node: RNode,
-  calendar_time_covariate_settings_node: RNode,
-  seasonality_covariate_settings_node: RNode,
+  era_covariate_settings_node: EraCovariateSettingsNode,
+  calendar_time_covariate_settings_node: CalendarTimeCovariateSettingsNode,
+  seasonality_covariate_settings_node: SeasonalityCovariateSettingsNode,
   self_controlled_case_series_analysis_node: RNode,
   self_controlled_case_series_node: SelfControlledCaseSeriesNode,
   patient_level_prediction_node: RNode,
@@ -152,19 +155,36 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Era Covariate Settings",
     description: "Run era covariate settings code.",
     tag: NodeTag.Chocolate,
-    defaultData: {},
+    defaultData: {
+      label: "Main",
+      includeEraIds: "exposureId",
+      start: 0,
+      end: 0,
+      startAnchor: ["era start", "era start"],
+      endAnchor: ["era end", "era end"],
+      profileLikelihood: true,
+      exposureOfInterest: true,
+    },
   },
   calendar_time_covariate_settings_node: {
     title: "Calendar Time Covariate Settings",
     description: "Run calendar time covariate settings code.",
     tag: NodeTag.Chocolate,
-    defaultData: {},
+    defaultData: {
+      caldendarTimeKnots: 5,
+      allowRegularization: true,
+      computeConfidenceIntervals: false,
+    },
   },
   seasonality_covariate_settings_node: {
     title: "Seasonality Covariate Settings",
     description: "Run seasonality covariate settings code.",
     tag: NodeTag.Chocolate,
-    defaultData: {},
+    defaultData: {
+      seasonalityKnots: 5,
+      allowRegularization: true,
+      computeConfidenceIntervals: false,
+    },
   },
   self_controlled_case_series_analysis_node: {
     title: "Self Controlled Case Series Analysis",
