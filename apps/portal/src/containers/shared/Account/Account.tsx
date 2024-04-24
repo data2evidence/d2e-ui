@@ -9,18 +9,25 @@ import DeleteAccountDialog from "./DeleteAccountDialog/DeleteAccountDialog";
 import { useDialogHelper } from "../../../hooks";
 import env from "../../../env";
 import "./Account.scss";
+import { useTranslation } from "../../../contexts";
 
-const legalTabs = ["Terms of use", "Privacy policy", "Imprint"];
 const subProp = env.REACT_APP_IDP_SUBJECT_PROP;
 const nameProp = env.REACT_APP_IDP_NAME_PROP;
 
 const EMPTY_MY_USER: User = { id: "", name: "" };
 
 export const Account: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const { claims } = useMsalInfo();
   const [tabValue, setTabValue] = useState(0);
   const [myUser, setMyUser] = useState(EMPTY_MY_USER);
   const [showDeleteAccount, openDeleteAccount, closeDeleteAccount] = useDialogHelper(false);
+
+  const legalTabs = [
+    getText(i18nKeys.ACCOUNT__TERMS_OF_USE),
+    getText(i18nKeys.ACCOUNT__PRIVACY_POLICY),
+    getText(i18nKeys.ACCOUNT__IMPRINT),
+  ];
 
   useEffect(() => {
     if (claims) {
@@ -52,18 +59,18 @@ export const Account: FC = () => {
     <div className="account">
       <div className="account__container">
         <div className="account__title">
-          <Title>Account</Title>
+          <Title>{getText(i18nKeys.ACCOUNT__ACCOUNT)}</Title>
         </div>
         <div className="account__content">
           <div className="account__content_account">
-            <Card title="Account">
+            <Card title={getText(i18nKeys.ACCOUNT__ACCOUNT)}>
               <div className="account__content_account_details">
                 <div>
-                  <span>Name</span>
+                  <span>{getText(i18nKeys.ACCOUNT__NAME)}</span>
                   <span>{myUser?.name || "-"}</span>
                 </div>
                 <div>
-                  <span>Email</span>
+                  <span>{getText(i18nKeys.ACCOUNT__EMAIL)}</span>
                   <span>{claims.email || "-"}</span>
                 </div>
                 <div>
@@ -73,7 +80,7 @@ export const Account: FC = () => {
             </Card>
           </div>
           <div className="account__content_legal">
-            <Card title="Legal">
+            <Card title={getText(i18nKeys.ACCOUNT__LEGAL)}>
               <div className="tab__container">
                 <Tabs value={tabValue} onChange={handleTabSelectionChange} centered>
                   {legalTabs.map((tab, index) => (

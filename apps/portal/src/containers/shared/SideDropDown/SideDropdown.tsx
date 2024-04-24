@@ -19,6 +19,7 @@ import { PluginDropdownItem } from "@portal/plugin";
 import { useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { Divider } from "@mui/material";
+import { useTranslation } from "../../../contexts";
 
 interface SideDropdownProps {
   activeTab: string;
@@ -35,6 +36,7 @@ const listItemTextStyles: SxProps = {
 };
 
 const SideDropdown: FC<SideDropdownProps> = ({ activeTab, onClick, plugin, open, submenus }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
   const location = useLocation();
@@ -123,7 +125,7 @@ const SideDropdown: FC<SideDropdownProps> = ({ activeTab, onClick, plugin, open,
                             "config_list_external__is-active": activeTab === item.route,
                           })}
                         >
-                          <Tooltip title="Open in new tab" placement="right-start">
+                          <Tooltip title={getText(i18nKeys.SIDE_DROPDOWN__OPEN_IN_NEW_TAB)} placement="right-start">
                             <>
                               <IconButton
                                 startIcon={<ExternalLinkIcon />}
@@ -235,7 +237,7 @@ const SideDropdown: FC<SideDropdownProps> = ({ activeTab, onClick, plugin, open,
                       "config_list_external__is-active": activeTab === plugin.route,
                     })}
                   >
-                    <Tooltip title="Open in new tab" placement="right-start">
+                    <Tooltip title={getText(i18nKeys.SIDE_DROPDOWN__OPEN_IN_NEW_TAB)} placement="right-start">
                       <>
                         <IconButton startIcon={<ExternalLinkIcon />} onClick={() => openNewTab(plugin.iframeUrlEnv)} />
                       </>

@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { Table, TableBody, TableHead } from "@mui/material";
 import { TableRow, TableCell, Loader } from "@portal/components";
-import { useFeedback } from "../../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../../contexts";
 import { TerminologyDetailsList } from "../../utils/types";
 import { Terminology } from "../../../../../axios/terminology";
 import "./TerminologyDetail.scss";
@@ -13,6 +13,7 @@ interface TerminologyDetailProps {
 }
 
 const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, datasetId }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<TerminologyDetailsList | null>();
   const { setFeedback } = useFeedback();
@@ -37,8 +38,8 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
             console.error(e);
             setFeedback({
               type: "error",
-              message: "An error has occurred",
-              description: "Please try again.",
+              message: getText(i18nKeys.TERMINOLOGY_DETAIL__ERROR),
+              description: getText(i18nKeys.TERMINOLOGY_DETAIL__ERROR_DESCRIPTION),
             });
           } finally {
             setIsLoading(false);
@@ -47,7 +48,7 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
       };
       fetchData();
     }
-  }, [userId, conceptId, setData, setFeedback, datasetId]);
+  }, [userId, conceptId, setData, setFeedback, datasetId, getText]);
 
   if (isLoading) {
     return <Loader />;
@@ -66,10 +67,10 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
           <Table size="small" stickyHeader sx={{ "& .MuiTableCell-root": { color: "#000080" } }}>
             <TableHead>
               <TableRow>
-                <TableCell width="20%">Relationship</TableCell>
-                <TableCell width="40%">Relates to</TableCell>
-                <TableCell width="20%">Concept ID</TableCell>
-                <TableCell width="20%">Vocabulary</TableCell>
+                <TableCell width="20%">{getText(i18nKeys.TERMINOLOGY_DETAIL__RELATIONSHIP)}</TableCell>
+                <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__RELATES_TO)}</TableCell>
+                <TableCell width="20%">{getText(i18nKeys.TERMINOLOGY_DETAIL__CONCEPT_ID)}</TableCell>
+                <TableCell width="20%">{getText(i18nKeys.TERMINOLOGY_DETAIL__VOCABULARY)}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody
@@ -107,33 +108,33 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
               >
                 <TableRow>
                   <TableCell variant="head" colSpan={5}>
-                    Details
+                    {getText(i18nKeys.TERMINOLOGY_DETAIL__DETAILS)}
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell width="40%">Domain ID</TableCell>
+                  <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__DOMAIN_ID)}</TableCell>
                   <TableCell>{data?.details?.domainId ?? ""}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell width="40%">Concept Class ID</TableCell>
+                  <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__CONCEPT_CLASS_ID)}</TableCell>
                   <TableCell>{data?.details?.conceptClassId ?? ""}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell width="40%">Vocabulary ID</TableCell>
+                  <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__VOCABULARY_ID)}</TableCell>
                   <TableCell>
                     <div>{data?.details?.system ?? ""}</div>
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell width="40%">Concept ID</TableCell>
+                  <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__CONCEPT_ID)}</TableCell>
                   <TableCell>{data?.details?.conceptId ?? ""}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell width="40%">Concept code</TableCell>
+                  <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__CONCEPT_CODE)}</TableCell>
                   <TableCell>{data?.details?.code ?? ""}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell width="40%">Validity</TableCell>
+                  <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__VALIDITY)}</TableCell>
                   <TableCell>{data?.details?.validity ?? ""}</TableCell>
                 </TableRow>
               </TableBody>

@@ -1,12 +1,14 @@
 import React, { FC, useCallback, useMemo, useState } from "react";
 import { Box, MenuItem, Select, SelectChangeEvent } from "@portal/components";
 import { DatasetDashboard } from "../../../../types";
+import { useTranslation } from "../../../../contexts";
 
 interface DatasetDashboardsProps {
   dashboards: DatasetDashboard[];
 }
 
 export const DatasetDashboards: FC<DatasetDashboardsProps> = ({ dashboards }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [activeDashboardName, setActiveDashboardName] = useState<string>("");
   const dashboard = useMemo(
     () => dashboards.find((d) => d.name === activeDashboardName),
@@ -23,7 +25,7 @@ export const DatasetDashboards: FC<DatasetDashboardsProps> = ({ dashboards }) =>
   return (
     <Box display="flex" flexDirection="column" mt={4}>
       <Box display="flex" alignItems="center" gap={2} mb={2}>
-        <span>Dashboard</span>
+        <span>{getText(i18nKeys.DATASET_DASHBOARDS__DASHBOARD)}</span>
         <Select
           value={activeDashboardName}
           onChange={handleDashboardChange}
@@ -33,7 +35,7 @@ export const DatasetDashboards: FC<DatasetDashboardsProps> = ({ dashboards }) =>
           }}
         >
           <MenuItem value="" disableRipple>
-            Select dashboard
+            {getText(i18nKeys.DATASET_DASHBOARDS__SELECT_DASHBOARD)}
           </MenuItem>
           {dashboards
             .sort((a, b) => a.name.localeCompare(b.name))

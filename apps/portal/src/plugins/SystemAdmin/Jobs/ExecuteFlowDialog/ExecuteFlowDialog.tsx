@@ -4,6 +4,7 @@ import { Feedback, CloseDialogType, Flow } from "../../../../types";
 import Divider from "@mui/material/Divider";
 import { api } from "../../../../axios/api";
 import "./ExecuteFlowDialog.scss";
+import { useTranslation } from "../../../../contexts";
 
 interface ExecuteFlowDialogProps {
   flow?: Flow;
@@ -22,6 +23,7 @@ interface FormDataField {
 }
 
 const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormDataField>({});
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
@@ -141,20 +143,20 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       } else {
         setFeedback({
           type: "error",
-          message: "An error has occurred.",
-          description: "Please try again. To report the error, please send an email to help@data4life.care.",
+          message: getText(i18nKeys.EXECUTE_FLOW_DIALOG__ERROR),
+          description: getText(i18nKeys.EXECUTE_FLOW_DIALOG__ERROR_DESCRIPTION),
         });
       }
       console.error("err", err);
     } finally {
       setLoading(false);
     }
-  }, [deploymentName, flowName, flowRunName, formData, formDataIsEmpty, handleClose, validateFormData]);
+  }, [deploymentName, flowName, flowRunName, formData, formDataIsEmpty, handleClose, validateFormData, getText]);
 
   return (
     <Dialog
       className="execute-flow-dialog"
-      title="Execute flow"
+      title={getText(i18nKeys.EXECUTE_FLOW_DIALOG__EXECUTE_FLOW)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -164,20 +166,22 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       <Divider />
 
       <div className="execute-flow-dialog__content">
-        <span className="subheader">Flow run</span>
+        <span className="subheader">{getText(i18nKeys.EXECUTE_FLOW_DIALOG__FLOW_RUN)}</span>
         <div className="u-padding-vertical--normal">
           <FormControl fullWidth>
             <TextField
               error={flowRunNameError}
               variant="standard"
-              label="Name"
+              label={getText(i18nKeys.EXECUTE_FLOW_DIALOG__NAME)}
               onChange={(event) => setFlowRunName(event.target.value)}
-              helperText={flowRunNameError && "This is required"}
+              helperText={flowRunNameError && getText(i18nKeys.EXECUTE_FLOW_DIALOG__REQUIRED)}
             />
           </FormControl>
         </div>
 
-        {inputs?.length !== 0 && <span className="subheader">Flow parameters</span>}
+        {inputs?.length !== 0 && (
+          <span className="subheader">{getText(i18nKeys.EXECUTE_FLOW_DIALOG__FLOW_PARAMETERS)}</span>
+        )}
         {inputs?.length !== 0 &&
           inputs?.map((input, index) => (
             <div className="u-padding-vertical--normal" key={index}>
@@ -187,7 +191,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
                   variant="standard"
                   label={input.name}
                   onChange={(event) => handleInputChange(event, input.name)}
-                  helperText={input.error && "This is required"}
+                  helperText={input.error && getText(i18nKeys.EXECUTE_FLOW_DIALOG__REQUIRED)}
                 />
               </FormControl>
             </div>
@@ -195,8 +199,20 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={loading} />
-        <Button text="Execute" onClick={handleAdd} block loading={loading} disabled={formDataIsEmpty()} />
+        <Button
+          text={getText(i18nKeys.EXECUTE_FLOW_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="secondary"
+          block
+          disabled={loading}
+        />
+        <Button
+          text={getText(i18nKeys.EXECUTE_FLOW_DIALOG__EXECUTE)}
+          onClick={handleAdd}
+          block
+          loading={loading}
+          disabled={formDataIsEmpty()}
+        />
       </div>
     </Dialog>
   );

@@ -6,6 +6,7 @@ import { JobRunTypes } from "../types";
 import "./JobRunButtons.scss";
 import { api } from "../../../../axios/api";
 import { MetaData } from "../../../../types";
+import { useTranslation } from "../../../../contexts";
 
 interface JobRunButtonsProps {
   datasetId: string;
@@ -14,6 +15,7 @@ interface JobRunButtonsProps {
 }
 
 const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGenerateJob }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [showJobDialog, openJobDialog, closeJobDialog] = useDialogHelper(false);
   const [jobRunType, setJobRunType] = useState<JobRunTypes | null>(null);
   const [flowMetadata, setFlowMetadata] = useState<MetaData[]>([]);
@@ -53,10 +55,14 @@ const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGen
   return (
     <>
       <div className="selector__button">
-        <Button onClick={handleRunDQDClick} text="Run Data Quality" disabled={isButtonDisabled(JobRunTypes.DQD)} />
+        <Button
+          onClick={handleRunDQDClick}
+          text={getText(i18nKeys.JOB_RUN_BUTTONS__RUN_DATA_QUALITY)}
+          disabled={isButtonDisabled(JobRunTypes.DQD)}
+        />
         <Button
           onClick={handleRunDataCharacterizationClick}
-          text="Run Data Characterization"
+          text={getText(i18nKeys.JOB_RUN_BUTTONS__RUN_DATA_CHARACTERIZATION)}
           disabled={isButtonDisabled()}
         />
       </div>

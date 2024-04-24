@@ -55,11 +55,14 @@ export default {
     ...mapActions(['fetchDataQualityFlowRun', 'generateDataQualityFlowRun']),
     async generateCohort() {
       const GenerateDataQualityFlowRunParams = {
-        datasetId: this.getSelectedUserStudy.id,
-        comment: '',
-        cohortDefinitionId: String(this.cohort.id),
-        releaseId: '',
-        vocabSchemaName: '',
+        options: {
+          datasetId: this.getSelectedUserStudy.id,
+          comment: '',
+          cohortDefinitionId: String(this.cohort.id),
+          releaseId: '',
+          vocabSchemaName: '',
+        },
+        type: "dqd"
       }
 
       await this.generateDataQualityFlowRun({ GenerateDataQualityFlowRunParams })
