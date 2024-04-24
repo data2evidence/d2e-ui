@@ -1,24 +1,11 @@
 import React, { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
-import Select from "@mui/material/Select";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import { Tabs, Tab } from "@mui/material";
-import {
-  Button,
-  EditIcon,
-  FormControl,
-  IconButton,
-  Loader,
-  MenuItem,
-  SelectChangeEvent,
-  TableCell,
-  TablePaginationActions,
-  TableRow,
-  Title,
-} from "@portal/components";
+import { Button, EditIcon, IconButton, Loader, TableCell, TablePaginationActions, TableRow } from "@portal/components";
 import { api } from "../../../axios/api";
 import { useUserInfo } from "../../../contexts/UserContext";
 import Terminology from "../../Researcher/Terminology/Terminology";
@@ -27,7 +14,6 @@ import { TerminologyProps } from "../../Researcher/Terminology/Terminology";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
 import { useFeedback, useTranslation } from "../../../contexts";
-import { useDatasets } from "../../../hooks";
 import "./ConceptSets.scss";
 
 enum ConceptSetTab {
@@ -80,7 +66,7 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [getText]);
+  }, [getText, setFeedback, i18nKeys.CONCEPT_SETS__ERROR, i18nKeys.CONCEPT_SETS__ERROR_DESCRIPTION]);
 
   useEffect(() => {
     fetchData();
