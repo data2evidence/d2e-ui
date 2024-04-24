@@ -11,6 +11,7 @@ import { SelfControlledCaseSeriesNode } from "./SelfControlledCaseSeriesNode/Sel
 import { EraCovariateSettingsNode } from "./EraCovariateSettingsNode/EraCovariateSettingsNode";
 import { CalendarTimeCovariateSettingsNode } from "./CalendarTimeCovariateSettingsNode/CalendarTimeCovariateSettingsNode";
 import { SeasonalityCovariateSettingsNode } from "./SeasonalityCovariateSettingsNode/SeasonalityCovariateSettingsNode";
+import { CohortIncidentNode } from "./CohortIncidentNode/CohortIncidentNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -19,7 +20,7 @@ export const NODE_TYPES: {
   cohort_generator_node: CohortGeneratorNode,
   cohort_diagnostic_node: CohortDiagnosticsNode,
   negative_control_outcome_cohort_node: NegatveControlOutcomeNode,
-  cohort_incidence_node: RNode,
+  cohort_incidence_node: CohortIncidentNode,
   cohort_incidence_target_cohorts_node: RNode,
   time_at_risk_node: TimeAtRiskNode,
   covariate_settings_node: RNode,
@@ -99,7 +100,10 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Cohort Incidence",
     description: "Run cohort incidence code.",
     tag: NodeTag.Cyan,
-    defaultData: {},
+    defaultData: {
+      byYear: true,
+      byGender: true,
+    },
   },
   cohort_incidence_target_cohorts_node: {
     title: "Cohort Incidence Target Cohorts",
