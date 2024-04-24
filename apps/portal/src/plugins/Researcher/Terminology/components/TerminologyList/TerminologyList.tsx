@@ -477,7 +477,6 @@ const TerminologyList: FC<TerminologyListProps> = ({
         whiteSpace: "normal",
         wordWrap: "break-word",
         color: "#000080",
-        padding: "6px",
       },
     },
     muiTableContainerProps: {

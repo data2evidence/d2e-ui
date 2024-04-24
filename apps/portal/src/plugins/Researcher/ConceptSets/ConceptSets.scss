@@ -12,16 +12,22 @@
     flex-direction: column;
   }
 
+  &__break {
+      opacity: 0.5;
+      border-top: solid 1px #acaba8;
+      margin: 0 -10px 0 -10px;
+  }
+
   &__tabs {
     display: flex;
     justify-content: center;
-    margin-bottom: 2px;
     margin-top: 5px;
-
   }
+
   &__header {
     display: flex;
     justify-content: space-between;
+    margin-top: 10px;
 
     .button {
       border-radius: 6px;
@@ -39,6 +45,11 @@
     }
     .MuiTableRow-root {
       border: 1px solid #dad7d7;
+    }
+
+    .MuiTableCell-root {
+      line-height: normal;
+      padding: 6px;
     }
   }
 }

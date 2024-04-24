@@ -124,6 +124,8 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
             </Tabs>
           </div>
 
+          <div className="concept-sets__break"></div>
+
           {tabValue == ConceptSetTab.ConceptSearch && <Terminology baseUserId={userId} />}
 
           {tabValue == ConceptSetTab.ConceptSets && (
