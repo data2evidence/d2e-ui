@@ -4,7 +4,7 @@ import Select from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
 import { FormControl, InputLabel, Box, Button, Checkbox, Dialog, TextField } from "@portal/components";
 import { api } from "../../../../../axios/api";
-import { useFeedback } from "../../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../../contexts";
 import { CloseDialogType, DatasetAttributeConfig } from "../../../../../types";
 import "./SaveAttributeDialog.scss";
 
@@ -35,6 +35,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClose, attribute, setRefetch }) => {
+  const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [saving, setSaving] = useState(false);
 
@@ -68,7 +69,7 @@ export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClos
       }
       setFeedback({
         type: "success",
-        message: `Attribute Config added successfully.`,
+        message: getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__SUCCESS),
         autoClose: 6000,
       });
       setRefetch((refetch) => refetch + 1);
@@ -84,12 +85,12 @@ export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClos
     } finally {
       setSaving(false);
     }
-  }, [handleClose, formData, setRefetch, setFeedback, isEditMode]);
+  }, [handleClose, formData, setRefetch, setFeedback, isEditMode, getText]);
 
   return (
     <Dialog
       className="save-attribute-dialog"
-      title={isEditMode ? "Edit Attribute" : "Add Attribute"}
+      title={isEditMode ? getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__EDIT) : getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__ADD)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -99,7 +100,7 @@ export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClos
         <div className="save-attribute-dialog__content">
           <Box mb={4}>
             <TextField
-              label="Attribute Id"
+              label={getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__ATTRIBUTE_ID)}
               variant="standard"
               sx={{ width: "100%" }}
               disabled={isEditMode}
@@ -109,7 +110,7 @@ export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClos
           </Box>
           <Box mb={4}>
             <TextField
-              label="Attribute Name"
+              label={getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__ATTRIBUTE_NAME)}
               variant="standard"
               sx={{ width: "100%" }}
               value={formData.name}
@@ -118,10 +119,10 @@ export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClos
           </Box>
           <Box mb={4}>
             <FormControl fullWidth>
-              <InputLabel id="category-select-label">Category</InputLabel>
+              <InputLabel id="category-select-label">{getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__CATEGORY)}</InputLabel>
               <Select
                 labelId="category-select-label"
-                label="Category"
+                label={getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__CATEGORY)}
                 id="category-select"
                 value={formData.category}
                 onChange={(event) => handleFormDataChange({ category: event.target?.value })}
@@ -136,10 +137,10 @@ export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClos
           </Box>
           <Box mb={4}>
             <FormControl fullWidth>
-              <InputLabel id="datatype-select-label">Datatype</InputLabel>
+              <InputLabel id="datatype-select-label">{getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__DATATYPE)}</InputLabel>
               <Select
                 labelId="datatype-select-label"
-                label="Datatype"
+                label={getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__DATATYPE)}
                 id="datatype-select"
                 value={formData.dataType}
                 onChange={(event) => handleFormDataChange({ dataType: event.target?.value })}
@@ -155,7 +156,7 @@ export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClos
           <Box mb={4}>
             <Checkbox
               checked={formData.isDisplayed}
-              label="Display in overview page"
+              label={getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__DISPLAY_IN_OVERVIEW)}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 handleFormDataChange({ isDisplayed: event.target.checked });
               }}
@@ -164,8 +165,12 @@ export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClos
         </div>
         <div className="save-attribute-dialog__footer">
           <Box display="flex" gap={1} className="save-attribute-dialog__footer-actions">
-            <Button text="Cancel" variant="secondary" onClick={() => handleClose("cancelled")} />
-            <Button text="Save" onClick={handleSave} loading={saving} />
+            <Button
+              text={getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__CANCEL)}
+              variant="secondary"
+              onClick={() => handleClose("cancelled")}
+            />
+            <Button text={getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__SAVE)} onClick={handleSave} loading={saving} />
           </Box>
         </div>
       </>

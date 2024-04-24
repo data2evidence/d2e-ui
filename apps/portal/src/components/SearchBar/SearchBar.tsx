@@ -3,7 +3,7 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import { ArrowcirclerightIcon } from "@portal/components";
-
+import { useTranslation } from "../../contexts";
 interface SearchBarProps {
   keyword?: any;
   onEnter: (keyword: any) => void;
@@ -11,6 +11,7 @@ interface SearchBarProps {
 }
 
 const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter, width = 480 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [searchString, setSearchString] = useState("");
   return (
     <div style={{ width: `${width}px `, maxHeight: "40px" }}>
@@ -29,8 +30,8 @@ const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter, width = 480 }) => {
         </IconButton>
         <InputBase
           sx={{ width: "100%" }}
-          placeholder="Search"
-          inputProps={{ "aria-label": "search terms" }}
+          placeholder={getText(i18nKeys.SEARCH_BAR__SEARCH)}
+          inputProps={{ "aria-label": getText(i18nKeys.SEARCH_BAR__SEARCH_TERMS) }}
           defaultValue={keyword}
           onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
             if (event.key == "Enter") {
@@ -41,7 +42,12 @@ const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter, width = 480 }) => {
             setSearchString(event.target.value.toLowerCase());
           }}
         />
-        <IconButton type="button" sx={{ p: "5px" }} aria-label="search" onClick={() => onEnter(searchString)}>
+        <IconButton
+          type="button"
+          sx={{ p: "5px" }}
+          aria-label={getText(i18nKeys.SEARCH_BAR__SEARCH)}
+          onClick={() => onEnter(searchString)}
+        >
           <ArrowcirclerightIcon />
         </IconButton>
       </div>

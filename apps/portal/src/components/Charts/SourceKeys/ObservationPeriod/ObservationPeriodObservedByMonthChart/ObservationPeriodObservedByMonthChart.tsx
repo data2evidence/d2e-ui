@@ -4,21 +4,23 @@ import LineChart from "../../../Common/LineChart";
 import ChartContainer from "../../../Common/ChartContainer";
 
 import "./ObservationPeriodObservedByMonthChart.scss";
+import { useTranslation } from "../../../../../contexts";
 
 interface ObservationPeriodObservedByMonthChartProps {
   data: any;
 }
 
 const ObservationPeriodObservedByMonthChart: FC<ObservationPeriodObservedByMonthChartProps> = ({ data }) => {
-  const title = "Persons With Continuous Observation By Month";
-  const xAxisName = "Date";
-  const yAxisName = "People";
-  const tooltipFormat = "Date: {b}<br />People: {c}";
+  const { getText, i18nKeys } = useTranslation();
+  const title = getText(i18nKeys.OBSERVATION_PERIOD_OBSERVED_BY_MONTH_CHART__TITLE);
+  const xAxisName = getText(i18nKeys.OBSERVATION_PERIOD_OBSERVED_BY_MONTH_CHART__X_AXIS_NAME);
+  const yAxisName = getText(i18nKeys.OBSERVATION_PERIOD_OBSERVED_BY_MONTH_CHART__Y_AXIS_NAME);
+  const tooltipFormat = getText(i18nKeys.OBSERVATION_PERIOD_OBSERVED_BY_MONTH_CHART__TOOLTIP_FORMAT);
 
   if (data.length === 0) {
     return (
       <ChartContainer title={title}>
-        <div className="no_data_text">No data</div>
+        <div className="no_data_text">{getText(i18nKeys.OBSERVATION_PERIOD_OBSERVED_BY_MONTH_CHART__NO_DATA)}</div>
       </ChartContainer>
     );
   }

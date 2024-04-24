@@ -25,6 +25,7 @@ import { Gateway } from "../../../../axios/gateway";
 
 import CohortFilter from "./CohortFilter/CohortFilter";
 import SchemaFilter from "./SchemaFilter/SchemaFilter";
+import { useTranslation } from "../../../../contexts";
 interface CopyStudyDialogProps {
   study: Study | undefined;
   open: boolean;
@@ -48,6 +49,7 @@ interface RootFilterSelection {
 }
 
 const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loading, setLoading }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [rootFilterCheckbox, setRootFilterCheckbox] = useState<RootFilterSelection>({
     isDateFilterSelected: false,
     isCohortFilterSelected: false,
@@ -105,11 +107,11 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
       setCopyStudyMetadataFetchError("");
       setFormData((prevState) => ({ ...prevState, copyStudySchemaMetadata: result }));
     } catch (err: any) {
-      setCopyStudyMetadataFetchError("Error Study Schema Metadata, Please try refreshing page to load again");
+      setCopyStudyMetadataFetchError(getText(i18nKeys.COPY_STUDY_DIALOG__METADATA_FETCH_ERROR));
     } finally {
       setIsFetchingcopyStudyMetadata(false);
     }
-  }, [study]);
+  }, [study, getText]);
 
   const fetchCohortDefinitionList = useCallback(async () => {
     setIsFetchingCohortDefinition(true);
@@ -122,11 +124,11 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
       setCohortDefinitionFetchError("");
       setCohortDefinitionList(result.data);
     } catch (err) {
-      setCohortDefinitionFetchError("Error loading Cohort Definitions, Please try refreshing page to load again");
+      setCohortDefinitionFetchError(getText(i18nKeys.COPY_STUDY_DIALOG__DEFINITION_FETCH_ERROR));
     } finally {
       setIsFetchingCohortDefinition(false);
     }
-  }, [study]);
+  }, [study, getText]);
 
   useEffect(() => {
     fetchCopyStudyMetadata();
@@ -178,7 +180,7 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
       if (formData.snapshotLocation === "") {
         setFeedback({
           type: "error",
-          message: "Snapshot location required!",
+          message: getText(i18nKeys.COPY_STUDY_DIALOG__SNAPSHOT_LOCATION_REQUIRED),
         });
         return;
       }
@@ -200,7 +202,7 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
       ) {
         setFeedback({
           type: "error",
-          message: "Table Filter is checked, but no table was chosen!",
+          message: getText(i18nKeys.COPY_STUDY_DIALOG__NO_TABLE_CHOSEN),
         });
         return;
       }
@@ -256,7 +258,7 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
         setLoading(false);
       }
     },
-    [formData, study, setLoading, handleClose, cohortDefinitionList, rootFilterCheckbox]
+    [formData, study, setLoading, handleClose, cohortDefinitionList, rootFilterCheckbox, getText]
   );
 
   const handleCheckboxTableChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -324,7 +326,7 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
   return (
     <Dialog
       className="copy-study-dialog"
-      title={`Create data mart - ${study?.studyDetail?.name}`}
+      title={getText(i18nKeys.COPY_STUDY_DIALOG__CREATE_DATA_MART, [String(study?.studyDetail?.name)])}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -337,7 +339,7 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
             <d4l-input
               // @ts-ignore
               ref={nameRef}
-              label="New dataset name"
+              label={getText(i18nKeys.COPY_STUDY_DIALOG__NEW_DATASET_NAME)}
               value={formData.name}
               required
             />
@@ -346,7 +348,7 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
             <Checkbox
               checked={rootFilterCheckbox.isDateFilterSelected}
               checkbox-id={"isDateFilterSelected"}
-              label={"Date Filter"}
+              label={getText(i18nKeys.COPY_STUDY_DIALOG__DATE_FILTER)}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 handleRootFilterCheckboxChange(event);
               }}
@@ -369,7 +371,7 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
             <Checkbox
               checked={rootFilterCheckbox.isCohortFilterSelected}
               checkbox-id={"isCohortFilterSelected"}
-              label={"Cohort Filter"}
+              label={getText(i18nKeys.COPY_STUDY_DIALOG__COHORT_FILTER)}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 handleRootFilterCheckboxChange(event);
               }}
@@ -388,7 +390,7 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
             <Checkbox
               checked={rootFilterCheckbox.isTableFilterSelected}
               checkbox-id={"isTableFilterSelected"}
-              label={"Table Filter"}
+              label={getText(i18nKeys.COPY_STUDY_DIALOG__TABLE_FILTER)}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 handleRootFilterCheckboxChange(event);
               }}
@@ -405,14 +407,22 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
           </div>
           <div className="snapshotlocation__radiogroup">
             <FormControl component="fieldset">
-              <FormLabel component="legend">Snapshot Location</FormLabel>
+              <FormLabel component="legend">{getText(i18nKeys.COPY_STUDY_DIALOG__SNAPSHOT_LOCATION_1)}</FormLabel>
               <RadioGroup
-                name="snapshotLocation"
+                name={getText(i18nKeys.COPY_STUDY_DIALOG__SNAPSHOT_LOCATION_2)}
                 value={formData.snapshotLocation}
                 onChange={handleSnapshotLocationChange}
               >
-                <FormControlLabel value="DB" control={<Radio />} label="Store snapshots in DB" />
-                <FormControlLabel value="PARQUET" control={<Radio />} label="Store snapshots as parquet file" />
+                <FormControlLabel
+                  value="DB"
+                  control={<Radio />}
+                  label={getText(i18nKeys.COPY_STUDY_DIALOG__STORE_SNAPSHOTS_IN_DB)}
+                />
+                <FormControlLabel
+                  value="PARQUET"
+                  control={<Radio />}
+                  label={getText(i18nKeys.COPY_STUDY_DIALOG__STORE_SNAPSHOTS_AS_PARQUET)}
+                />
               </RadioGroup>
             </FormControl>
           </div>
@@ -420,13 +430,13 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
           <div className="button-group-actions">
             <Button
               type="button"
-              text="Cancel"
+              text={getText(i18nKeys.COPY_STUDY_DIALOG__CANCEL)}
               onClick={() => handleClose("cancelled")}
               variant="secondary"
               block
               disabled={loading}
             />
-            <Button type="submit" text="Create" block loading={loading} />
+            <Button type="submit" text={getText(i18nKeys.COPY_STUDY_DIALOG__CREATE)} block loading={loading} />
           </div>
         </form>
       </div>

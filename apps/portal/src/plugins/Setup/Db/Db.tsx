@@ -24,6 +24,7 @@ import { EditDbCredentialsDialog } from "./EditDbCredentialsDialog/EditDbCredent
 import { DeleteDbDialog } from "./DeleteDbDialog/DeleteDbDialog";
 import { EditDbDetailsDialog } from "./EditDbDetailsDialog/EditDbDetailsDialog";
 import "./Db.scss";
+import { useTranslation } from "../../../contexts";
 
 const styles: SxProps = {
   color: "#000080",
@@ -58,6 +59,7 @@ const actionsList: Action[] = [
 ];
 
 export const Db: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [databases, loading, error] = useDatabases(refetch);
   const [selectedDb, setSelectedDb] = useState<IDatabase>();
@@ -160,25 +162,25 @@ export const Db: FC = () => {
   }
 
   if (loading) {
-    return <Loader text="Loading databases" />;
+    return <Loader text={getText(i18nKeys.DB__LOADER)} />;
   }
 
   return (
     <div className="db">
       <div className="db__header">
-        <Title>Databases</Title>
+        <Title>{getText(i18nKeys.DB__DATABASES)}</Title>
         <div className="db__add-button">
-          <Button text="Add database" onClick={handleAdd} />
+          <Button text={getText(i18nKeys.DB__ADD_DATABASE)} onClick={handleAdd} />
         </div>
       </div>
       <TableContainer className="db__list">
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Code</TableCell>
-              <TableCell>Host</TableCell>
-              <TableCell>Port</TableCell>
-              <TableCell>Dialect</TableCell>
+              <TableCell>{getText(i18nKeys.DB__CODE)}</TableCell>
+              <TableCell>{getText(i18nKeys.DB__HOST)}</TableCell>
+              <TableCell>{getText(i18nKeys.DB__PORT)}</TableCell>
+              <TableCell>{getText(i18nKeys.DB__DIALECT)}</TableCell>
               <TableCell style={{ width: "280px" }}></TableCell>
             </TableRow>
           </TableHead>
@@ -186,7 +188,7 @@ export const Db: FC = () => {
             {databases?.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} align="center">
-                  No data available
+                  {getText(i18nKeys.DB__NO_DATA)}
                 </TableCell>
               </TableRow>
             )}
@@ -201,7 +203,7 @@ export const Db: FC = () => {
                     <FormControl sx={styles}>
                       <Select value="" onChange={(event) => handleActionChange(event, db)} displayEmpty sx={styles}>
                         <MenuItem value="" sx={styles} disableRipple>
-                          Edit
+                          {getText(i18nKeys.DB__EDIT)}
                         </MenuItem>
                         {actionsList.map((action: Action) => (
                           <MenuItem value={action.value} key={action.name} sx={styles} disableRipple>
@@ -210,7 +212,11 @@ export const Db: FC = () => {
                         ))}
                       </Select>
                     </FormControl>
-                    <IconButton startIcon={<TrashIcon />} title="Delete" onClick={() => handleDelete(db)} />
+                    <IconButton
+                      startIcon={<TrashIcon />}
+                      title={getText(i18nKeys.DB__DELETE)}
+                      onClick={() => handleDelete(db)}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

@@ -20,13 +20,14 @@ import {
   Title,
 } from "@portal/components";
 import { api } from "../../../axios/api";
-import { useFeedback } from "../../../contexts";
 import { useUserInfo } from "../../../contexts/UserContext";
 import Terminology from "../../Researcher/Terminology/Terminology";
 import { ConceptSetWithConceptDetails } from "../../Researcher/Terminology/utils/types";
 import { TerminologyProps } from "../../Researcher/Terminology/Terminology";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
+import { useFeedback, useTranslation } from "../../../contexts";
+import { useDatasets } from "../../../hooks";
 import "./ConceptSets.scss";
 
 enum ConceptSetTab {
@@ -37,6 +38,7 @@ enum ConceptSetTab {
 interface ConceptSetsProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
   const [page, setPage] = useState(0);
@@ -72,13 +74,13 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
       console.error(e);
       setFeedback({
         type: "error",
-        message: "An error has occurred",
-        description: "Please try again.",
+        message: getText(i18nKeys.CONCEPT_SETS__ERROR),
+        description: getText(i18nKeys.CONCEPT_SETS__ERROR_DESCRIPTION),
       });
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [getText]);
 
   useEffect(() => {
     fetchData();
@@ -144,18 +146,21 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
                 <div className="concept-sets__search">
                   <SearchBar keyword={searchText} onEnter={updateSearchResult} />
                 </div>
-                <Button text="Add concept set" onClick={() => handleAddAndEditConceptSet()} />
+                <Button
+                  text={getText(i18nKeys.CONCEPT_SETS__ADD_CONCEPT_SET)}
+                  onClick={() => handleAddAndEditConceptSet()}
+                />
               </div>
               {}
               <TableContainer className="concept-sets__table">
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Created</TableCell>
-                      <TableCell>Updated</TableCell>
-                      <TableCell>Author</TableCell>
+                      <TableCell>{getText(i18nKeys.CONCEPT_SETS__ID)}</TableCell>
+                      <TableCell>{getText(i18nKeys.CONCEPT_SETS__Name)}</TableCell>
+                      <TableCell>{getText(i18nKeys.CONCEPT_SETS__CREATED)}</TableCell>
+                      <TableCell>{getText(i18nKeys.CONCEPT_SETS__UPDATED)}</TableCell>
+                      <TableCell>{getText(i18nKeys.CONCEPT_SETS__AUTHOR)}</TableCell>
                       <TableCell></TableCell>
                     </TableRow>
                   </TableHead>

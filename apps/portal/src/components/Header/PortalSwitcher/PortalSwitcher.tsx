@@ -7,34 +7,36 @@ import { useMenuAnchor } from "../../../hooks";
 import { NavLink } from "../../../types";
 import { useUserInfo } from "../../../contexts/UserContext";
 import "../Header.scss";
+import { useTranslation } from "../../../contexts";
 
 interface PortalSwitcherProps {
   portalType: string;
 }
 
-const SYSTEMADMIN = {
-  id: "systemadmin",
-  path: "/systemadmin",
-  title: "Admin",
-};
-
-const RESEARCHER = {
-  id: "researcher",
-  path: "/researcher",
-  title: "Researcher",
-};
-
-function getPortalNavLink(portalType: string) {
-  if (portalType === "systemadmin") {
-    return SYSTEMADMIN;
-  }
-  return RESEARCHER;
-}
-
 const PortalSwitcher: FC<PortalSwitcherProps> = ({ portalType }) => {
+  const { getText, i18nKeys } = useTranslation();
   const { user } = useUserInfo();
-  const portalNavLink: NavLink = getPortalNavLink(portalType);
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();
+
+  const SYSTEMADMIN = {
+    id: "systemadmin",
+    path: "/systemadmin",
+    title: getText(i18nKeys.PORTAL_SWITCHER__ADMIN),
+  };
+
+  const RESEARCHER = {
+    id: "researcher",
+    path: "/researcher",
+    title: getText(i18nKeys.PORTAL_SWITCHER__RESEARCHER),
+  };
+
+  function getPortalNavLink(portalType: string) {
+    if (portalType === "systemadmin") {
+      return SYSTEMADMIN;
+    }
+    return RESEARCHER;
+  }
+  const portalNavLink: NavLink = getPortalNavLink(portalType);
 
   const portalMenuItems = useMemo(() => {
     const menuItems: Array<NavLink> = [];

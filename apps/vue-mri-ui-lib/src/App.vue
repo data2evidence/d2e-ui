@@ -14,6 +14,7 @@
       @ok="okAlert"
     />
     <!-- <ui5adaptor /> -->
+    <splashScreen v-if="getInitialLoad" />
     <patientanalytics />
   </div>
 </template>
@@ -25,6 +26,7 @@ import configSelection from './components/ConfigSelection.vue'
 import notification from './components/Notification.vue'
 import patientanalytics from './components/PatientAnalytics.vue'
 import ui5adaptor from "./components/UI5Adaptor.vue";
+import SplashScreen from './components/SplashScreen.vue'
 import store from './store'
 import { MESSAGE_ALERT_SHOW_TOGGLE, MESSAGE_FATAL_SHOW_TOGGLE } from './store/mutation-types'
 
@@ -43,7 +45,7 @@ export default {
     this.requestMriConfig()
   },
   computed: {
-    ...mapGetters(['getConfigSelectionDialogState', 'getFatalNotification', 'getAlertNotification', 'getText']),
+    ...mapGetters(['getConfigSelectionDialogState', 'getFatalNotification', 'getAlertNotification', 'getText', 'getInitialLoad']),
   },
   methods: {
     ...mapActions(['requestMriConfig', 'toggleConfigSelectionDialog']),
@@ -62,6 +64,7 @@ export default {
     configSelection,
     fatal: notification,
     alert: notification,
+    SplashScreen
   },
 }
 </script>

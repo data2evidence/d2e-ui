@@ -2,18 +2,20 @@ import React from "react";
 
 import ChartContainer from "../../../Common/ChartContainer";
 import "./CDMSummary.scss";
+import { useTranslation } from "../../../../../contexts";
 
 interface CDMSummaryProps {
   data: any;
 }
 
 function CDMSummary({ data }: CDMSummaryProps) {
-  const title = "CDM Summary";
+  const { getText, i18nKeys } = useTranslation();
+  const title = getText(i18nKeys.CDM_SUMMARY__TITLE);
 
   if (data.length === 0) {
     return (
       <ChartContainer title={title}>
-        <div className="no_data_text">No data</div>
+        <div className="no_data_text">{getText(i18nKeys.CDM_SUMMARY__NO_DATA)}</div>
       </ChartContainer>
     );
   }
@@ -25,8 +27,12 @@ function CDMSummary({ data }: CDMSummaryProps) {
 
   return (
     <ChartContainer title={title}>
-      <p>Source name: {sourceName}</p>
-      <p>Number of persons: {numberOfPersons}</p>
+      <p>
+        {getText(i18nKeys.CDM_SUMMARY__SOURCE_NAME)}: {sourceName}
+      </p>
+      <p>
+        {getText(i18nKeys.CDM_SUMMARY__NUMBER_OF_PERSONS)}: {numberOfPersons}
+      </p>
     </ChartContainer>
   );
 }

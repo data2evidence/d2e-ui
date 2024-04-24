@@ -9,8 +9,10 @@ import { parseToCsv, downloadFile, DownloadColumn } from "../../../../utils/Expo
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
 import "./Overview.scss";
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { useTranslation } from "../../../../contexts";
 
 const Overview: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
   const conceptMappingState = useContext(ConceptMappingContext);
   const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;
@@ -39,13 +41,13 @@ const Overview: FC = () => {
   }, [datasets, selectedDatasetId]);
 
   const downloadColumns: DownloadColumn[] = [
-    { header: "Source", accessor: sourceCode },
-    { header: "Name", accessor: sourceName },
-    { header: "Frequency", accessor: sourceFrequency },
-    { header: "Description", accessor: description },
-    { header: "Concept Id", accessor: "conceptId" },
-    { header: "Concept Name", accessor: "conceptName" },
-    { header: "Domain", accessor: "domainId" },
+    { header: getText(i18nKeys.OVERVIEW__SOURCE), accessor: sourceCode },
+    { header: getText(i18nKeys.OVERVIEW__NAME), accessor: sourceName },
+    { header: getText(i18nKeys.OVERVIEW__FREQUENCY), accessor: sourceFrequency },
+    { header: getText(i18nKeys.OVERVIEW__DESCRIPTION), accessor: description },
+    { header: getText(i18nKeys.OVERVIEW__CONCEPT_ID), accessor: "conceptId" },
+    { header: getText(i18nKeys.OVERVIEW__CONCEPT_NAME), accessor: "conceptName" },
+    { header: getText(i18nKeys.OVERVIEW__DOMAIN), accessor: "domainId" },
   ];
 
   if (!selectedDatasetId) {
@@ -54,10 +56,10 @@ const Overview: FC = () => {
 
   return (
     <>
-      <Title>Concept Mapping</Title>
+      <Title>{getText(i18nKeys.OVERVIEW__CONCEPT_MAPPING)}</Title>
 
       <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ marginRight: "10px" }}>Reference concepts from dataset: </div>
+        <div style={{ marginRight: "10px" }}>{getText(i18nKeys.OVERVIEW__REFERENCE_CONCEPTS)}: </div>
         <FormControl sx={{ marginRight: "20px" }}>
           <Select
             value={selectedDatasetId}
@@ -91,7 +93,7 @@ const Overview: FC = () => {
           <div className="overview-selection__buttons">
             <Button
               onClick={() => dispatch({ type: "CLEAR_CSV_DATA" })}
-              text="Clear and Import another file"
+              text={getText(i18nKeys.OVERVIEW__CLEAR_AND_IMPORT)}
               variant="primary"
             />
             <Button
@@ -102,7 +104,7 @@ const Overview: FC = () => {
                   fileType: "text/csv",
                 })
               }
-              text="Download CSV"
+              text={getText(i18nKeys.OVERVIEW__DOWNLOAD_CSV)}
               variant="secondary"
             />
           </div>

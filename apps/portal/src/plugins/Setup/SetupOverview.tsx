@@ -8,17 +8,16 @@ import { loadPlugins } from "../../utils";
 import { IPluginItem, LocationState } from "../../types";
 import { SetupPluginRenderer } from "../core/SetupPluginRenderer";
 import "./SetupOverview.scss";
+import { useTranslation } from "../../contexts";
 
 const plugins = loadPlugins();
 
 export const SetupOverview: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as LocationState;
-  const enabledPlugins = useMemo(
-    () => plugins.setup?.filter((plugin: IPluginItem) => plugin.enabled) || [],
-    []
-  );
+  const enabledPlugins = useMemo(() => plugins.setup?.filter((plugin: IPluginItem) => plugin.enabled) || [], []);
   const state = useMemo(() => locationState || { state: { tab: "setup", subTab: null } }, [locationState]);
 
   const handleOpenPlugin = useCallback(
@@ -47,14 +46,14 @@ export const SetupOverview: FC = () => {
       {state.subTab && (
         <div className="setup-overview__back-header">
           <IconButton startIcon={<ArrowBackIcon />} onClick={handleBack} />
-          <div>Back to Setup</div>
+          <div>{getText(i18nKeys.SETUP_OVERVIEW__BACK)}</div>
         </div>
       )}
       <div className={classNames("setup-overview__wrapper", { "setup-overview__plugin": Boolean(state.subTab) })}>
         {!state.subTab && (
           <>
             <div className="setup-overview__header">
-              <Title>Setup</Title>
+              <Title>{getText(i18nKeys.SETUP_OVERVIEW__SETUP)}</Title>
             </div>
             <div className="setup-overview__list">
               {enabledPlugins.map((plugin: IPluginItem) => {

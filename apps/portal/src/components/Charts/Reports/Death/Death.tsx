@@ -12,12 +12,14 @@ import { parsePieChartData } from "../../util";
 
 import { DEATH_REPORT_TYPE, WEBAPI_CDMRESULTS_SOURCE_KEYS } from "../../../DQD/types";
 import "./Death.scss";
+import { useTranslation } from "../../../../contexts";
 
 interface DeathProps {
   flowRunId: string;
 }
 
 const Death: FC<DeathProps> = ({ flowRunId }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [deathData, setDeathData] = useState<DEATH_REPORT_TYPE>({
     ageAtDeath: [],
     deathByType: [],
@@ -37,9 +39,9 @@ const Death: FC<DeathProps> = ({ flowRunId }) => {
     } catch (error) {
       console.error(error);
       setIsLoadingDeathData(false);
-      setErrDeath(`Error occured when fetching data characterization death data`);
+      setErrDeath(getText(i18nKeys.DEATH__ERROR_MESSAGE));
     }
-  }, [flowRunId]);
+  }, [flowRunId, getText]);
 
   useEffect(() => {
     // Fetch data for charts
@@ -49,7 +51,7 @@ const Death: FC<DeathProps> = ({ flowRunId }) => {
   return (
     <>
       {isloadingDeathData ? (
-        <Loader text="Loading Death Reports" />
+        <Loader text={getText(i18nKeys.DEATH__LOADER)} />
       ) : errDeath ? (
         <div className="info__section">{errDeath}</div>
       ) : (
@@ -57,12 +59,15 @@ const Death: FC<DeathProps> = ({ flowRunId }) => {
           <DrilldownTrellisChart data={deathData.prevalenceByGenderAgeYear} trellisXAxisKey="Y_PREVALENCE_1000PP" />
           <DeathPrevalenceByMonthChart data={deathData.prevalenceByMonth} />
           <div className="chart__container">
-            <PieChart data={parsePieChartData(deathData.deathByType)} title="Death By Type" />
+            <PieChart
+              data={parsePieChartData(deathData.deathByType)}
+              title={getText(i18nKeys.DEATH__PIE_CHART_TITLE)}
+            />
             <BoxPlotChart
               data={deathData.ageAtDeath}
-              title={"Age at Death"}
-              xAxisName={"Gender"}
-              yAxisName={"Age at first occurence"}
+              title={getText(i18nKeys.DEATH__BOX_PLOT_CHART_TITLE)}
+              xAxisName={getText(i18nKeys.DEATH__BOX_PLOT_CHART_X_AXIS_NAME)}
+              yAxisName={getText(i18nKeys.DEATH__ERROR_MESSAGE)}
             />
           </div>
         </>
