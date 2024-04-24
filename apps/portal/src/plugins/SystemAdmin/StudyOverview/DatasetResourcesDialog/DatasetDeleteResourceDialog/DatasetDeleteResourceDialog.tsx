@@ -4,6 +4,7 @@ import Divider from "@mui/material/Divider";
 import { Button, Dialog } from "@portal/components";
 import { api } from "../../../../../axios/api";
 import "./DatasetDeleteResourceDialog.scss";
+import { useTranslation } from "../../../../../contexts";
 
 interface DatasetDeleteResourceDialogProps {
   datasetId: string;
@@ -13,6 +14,7 @@ interface DatasetDeleteResourceDialogProps {
 }
 
 const DatasetDeleteResourceDialog: FC<DatasetDeleteResourceDialogProps> = ({ datasetId, resource, open, onClose }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [loading, setLoading] = useState(false);
 
@@ -39,19 +41,19 @@ const DatasetDeleteResourceDialog: FC<DatasetDeleteResourceDialogProps> = ({ dat
       } else {
         setFeedback({
           type: "error",
-          message: "An error has occurred.",
-          description: "Please try again. To report the error, please send an email to help@data4life.care.",
+          message: getText(i18nKeys.DATASET_DELETE_RESOURCE_DIALOG__ERROR),
+          description: getText(i18nKeys.DATASET_DELETE_RESOURCE_DIALOG__ERROR_DESCRIPTION),
         });
       }
     } finally {
       setLoading(false);
     }
-  }, [datasetId, resource, handleClose]);
+  }, [datasetId, resource, handleClose, getText]);
 
   return (
     <Dialog
       className="dataset-delete-resource-dialog"
-      title="Delete file"
+      title={getText(i18nKeys.DATASET_DELETE_RESOURCE_DIALOG__DELETE_FILE)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -59,13 +61,24 @@ const DatasetDeleteResourceDialog: FC<DatasetDeleteResourceDialogProps> = ({ dat
     >
       <Divider />
       <div className="dataset-delete-resource-dialog__content">
-        <div>Are you sure you want to delete the following file:</div>
+        <div>{getText(i18nKeys.DATASET_DELETE_RESOURCE_DIALOG__CONFIRM)}:</div>
         <strong>&quot;{resource.name}&quot;</strong>
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={loading} />
-        <Button text="Delete" onClick={handleDelete} block loading={loading} />
+        <Button
+          text={getText(i18nKeys.CREATE_RELEASE_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="secondary"
+          block
+          disabled={loading}
+        />
+        <Button
+          text={getText(i18nKeys.DATASET_DELETE_RESOURCE_DIALOG__DELETE)}
+          onClick={handleDelete}
+          block
+          loading={loading}
+        />
       </div>
     </Dialog>
   );

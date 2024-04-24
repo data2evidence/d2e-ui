@@ -6,6 +6,7 @@ import { FormControl } from "@mui/material";
 import { Study } from "../../../../types";
 import { SxProps } from "@mui/system";
 import { useUserInfo } from "../../../../contexts/UserContext";
+import { useTranslation } from "../../../../contexts";
 
 interface ActionSelectorProps {
   study: Study;
@@ -23,16 +24,6 @@ interface Action {
   name: string;
   value: string;
 }
-
-const actionsList: Action[] = [
-  { name: "Update dataset", value: "metadata" },
-  { name: "Create data mart", value: "version" },
-  { name: "Permissions", value: "permissions" },
-  { name: "Resources", value: "resources" },
-  { name: "Update schema", value: "update" },
-  { name: "Delete dataset", value: "delete" },
-  { name: "Create release", value: "release" },
-];
 
 const styles: SxProps = {
   color: "#000080",
@@ -67,8 +58,19 @@ const ActionSelector: FC<ActionSelectorProps> = ({
   handleUpdate,
   handleRelease,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const { user } = useUserInfo();
   const isUserAdmin = user.isUserAdmin;
+
+  const actionsList: Action[] = [
+    { name: getText(i18nKeys.ACTION_SELECTOR__UPDATE_DATASET), value: "metadata" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__CREATE_DATA_MART), value: "version" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__PERMISSIONS), value: "permissions" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__RESOURCES), value: "resources" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__UPDATE_SCHEMA), value: "update" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__DELETE_DATASET), value: "delete" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__CREATE_RELEASE), value: "release" },
+  ];
 
   const handleActionChange = useCallback(
     (event: SelectChangeEvent<string>) => {
@@ -132,7 +134,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
     <FormControl sx={styles}>
       <Select value="" onChange={handleActionChange} displayEmpty sx={styles}>
         <MenuItem value="" sx={styles} disableRipple>
-          Select action
+          {getText(i18nKeys.ACTION_SELECTOR__SELECT_ACTION)}
         </MenuItem>
         {actionsList.map((action: Action) => (
           <MenuItem

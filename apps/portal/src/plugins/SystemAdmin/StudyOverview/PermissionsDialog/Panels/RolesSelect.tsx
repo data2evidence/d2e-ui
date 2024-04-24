@@ -8,6 +8,7 @@ import Select from "@mui/material/Select";
 import { getRoleChanges } from "../../../../../utils";
 import { RoleEdit } from "../PermissionsDialog";
 import { SxProps } from "@mui/system";
+import { useTranslation } from "../../../../../contexts";
 
 interface RolesSelectProps {
   user: UserWithRoles;
@@ -47,6 +48,7 @@ const RolesSelect: FC<RolesSelectProps> = ({
   setGrantRolesList,
   setWithdrawRolesList,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [newRoles, setNewRoles] = useState<string[]>(user?.roles || []);
   const userId = user.userId || "";
 
@@ -147,7 +149,7 @@ const RolesSelect: FC<RolesSelectProps> = ({
       <FormControl sx={styles}>
         <Select value="" displayEmpty onClose={handleClose} sx={styles}>
           <MenuItem value="" disabled sx={styles}>
-            Edit role
+            {getText(i18nKeys.ROLES_SELECT__EDIT)}
           </MenuItem>
           {Object.keys(STUDY_ROLES).map((role, index) => (
             <MenuItem

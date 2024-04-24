@@ -32,6 +32,7 @@ import {
   EMPTY_DASHBOARD_FORM_ERROR,
 } from "./DashboardForm/DashboardForm";
 import "./UpdateStudyDialog.scss";
+import { useTranslation } from "../../../../contexts";
 
 interface UpdateStudyDialogProps {
   dataset: Study;
@@ -109,6 +110,7 @@ const styles: SxProps = {
 const EMPTY_STUDY_METADATA: NewStudyMetadataInput = { attributeId: "", value: "" };
 
 const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose }) => {
+  const { getText, i18nKeys } = useTranslation();
   const datasetId = dataset.id;
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [formError, setFormError] = useState<FormError>(EMPTY_FORM_ERROR);
@@ -323,7 +325,7 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
   return (
     <Dialog
       className="update-study-dialog"
-      title="Update dataset"
+      title={getText(i18nKeys.UPDATE_STUDY_DIALOG__UPDATE_DATASET)}
       closable
       fullWidth
       maxWidth="md"
@@ -334,24 +336,26 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
       <Divider />
       <div className="update-study-dialog__content">
         <Box mt={4} fontWeight="bold">
-          Dataset info configuration
+          {getText(i18nKeys.UPDATE_STUDY_DIALOG__DATASET_INFO_CONFIG)}
         </Box>
         <Box mb={4}>
           <TextField
             fullWidth
             variant="standard"
-            label="Dataset name - Displayed on buttons and headers"
+            label={getText(i18nKeys.UPDATE_STUDY_DIALOG__DATASET_NAME)}
             value={formData.name}
             onChange={(event) => handleFormDataChange({ name: event.target.value })}
             error={formError.name.required}
           />
-          {formError.name.required && <FormHelperText error={true}>This is required</FormHelperText>}
+          {formError.name.required && (
+            <FormHelperText error={true}>{getText(i18nKeys.UPDATE_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+          )}
         </Box>
         <Box mb={4}>
           <TextField
             fullWidth
             variant="standard"
-            label="Dataset summary"
+            label={getText(i18nKeys.UPDATE_STUDY_DIALOG__DATASET_SUMMARY)}
             value={formData.summary}
             onChange={(event) => handleFormDataChange({ summary: event.target.value })}
           />
@@ -360,13 +364,13 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
           <Checkbox
             checked={formData.showRequestAccess}
             checkbox-id="request-access"
-            label="Show request access button"
+            label={getText(i18nKeys.UPDATE_STUDY_DIALOG__REQUEST)}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               handleFormDataChange({ showRequestAccess: event.target.checked });
             }}
           />
         </div>
-        <div>Description</div>
+        <div>{getText(i18nKeys.UPDATE_STUDY_DIALOG__DESCRIPTION)}</div>
         <SimpleMdeReact
           value={formData.description}
           onChange={(value) => handleFormDataChange({ description: value })}
@@ -378,7 +382,7 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
           <TextField
             fullWidth
             variant="standard"
-            label="Type"
+            label={getText(i18nKeys.UPDATE_STUDY_DIALOG__TYPE)}
             value={formData.type}
             onChange={(event) => handleFormDataChange({ type: event.target.value })}
           />
@@ -388,16 +392,18 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
           <TextField
             fullWidth
             variant="standard"
-            label="Token dataset code"
+            label={getText(i18nKeys.UPDATE_STUDY_DIALOG__TOKEN_CODE)}
             value={formData.tokenStudyCode}
             onChange={(event) => handleFormDataChange({ tokenStudyCode: event.target.value })}
             error={formError.tokenStudyCode.required || formError.tokenStudyCode.valid}
           />
-          {formError.tokenStudyCode.required && <FormHelperText error={true}>This is required</FormHelperText>}
-          {formError.tokenStudyCode.valid && (
-            <FormHelperText error={true}>Please enter a valid Token dataset code</FormHelperText>
+          {formError.tokenStudyCode.required && (
+            <FormHelperText error={true}>{getText(i18nKeys.UPDATE_STUDY_DIALOG__REQUIRED)}</FormHelperText>
           )}
-          <FormHelperText>Should only contain letters, numbers, and underscores</FormHelperText>
+          {formError.tokenStudyCode.valid && (
+            <FormHelperText error={true}>{getText(i18nKeys.UPDATE_STUDY_DIALOG__VALID_TOKEN_CODE)}</FormHelperText>
+          )}
+          <FormHelperText>{getText(i18nKeys.UPDATE_STUDY_DIALOG__CODE_REQUIREMENT)}</FormHelperText>
         </Box>
 
         <Box mb={4}>
@@ -408,7 +414,7 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
             fullWidth
             {...(formError.paConfigId.required ? { error: true } : {})}
           >
-            <InputLabel htmlFor="pa-config-option">PA Config</InputLabel>
+            <InputLabel htmlFor="pa-config-option">{getText(i18nKeys.UPDATE_STUDY_DIALOG__PA_CONFIG)}</InputLabel>
             <Select
               sx={styles}
               value={formData.paConfigId}
@@ -427,12 +433,14 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
                 </MenuItem>
               ))}
             </Select>
-            {formError.paConfigId.required && <FormHelperText>This is required</FormHelperText>}
+            {formError.paConfigId.required && (
+              <FormHelperText>{getText(i18nKeys.UPDATE_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+            )}
           </FormControl>
         </Box>
 
         <Box mb={4}>
-          <Box fontWeight="bold">Metadata</Box>
+          <Box fontWeight="bold">{getText(i18nKeys.UPDATE_STUDY_DIALOG__METADATA)}</Box>
           {attributeConfigs.length !== 0 &&
             studyMetadata.map((data, index) => (
               <MetadataForm
@@ -445,10 +453,14 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
                 error={formMetadataErrorIndex.includes(index)}
               />
             ))}
-          <IconButton startIcon={<AddSquareIcon />} title="add metadata" onClick={handleAddMetadataForm} />
+          <IconButton
+            startIcon={<AddSquareIcon />}
+            title={getText(i18nKeys.UPDATE_STUDY_DIALOG__ADD_METADATA)}
+            onClick={handleAddMetadataForm}
+          />
         </Box>
 
-        <Box fontWeight="bold">Tags</Box>
+        <Box fontWeight="bold">{getText(i18nKeys.UPDATE_STUDY_DIALOG__TAGS)}</Box>
         <Box mb={4}>
           <Autocomplete
             multiple
@@ -468,7 +480,7 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
 
         <Box mb={4}>
           <FormControl component="fieldset">
-            <FormLabel component="legend">Dataset Visibility</FormLabel>
+            <FormLabel component="legend">{getText(i18nKeys.UPDATE_STUDY_DIALOG__DATASET_VISIBILITY)}</FormLabel>
             <RadioGroup
               name="visibilityStatusGroup"
               value={formData.visibilityStatus}
@@ -476,12 +488,20 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
                 handleFormDataChange({ visibilityStatus: event.target.value });
               }}
             >
-              <FormControlLabel value="PUBLIC" control={<Radio />} label="Public" />
-              <FormControlLabel value="DEFAULT" control={<Radio />} label="Private (only users from the tenant)" />
+              <FormControlLabel
+                value="PUBLIC"
+                control={<Radio />}
+                label={getText(i18nKeys.UPDATE_STUDY_DIALOG__PUBLIC)}
+              />
+              <FormControlLabel
+                value="DEFAULT"
+                control={<Radio />}
+                label={getText(i18nKeys.UPDATE_STUDY_DIALOG__PRIVATE)}
+              />
               <FormControlLabel
                 value="HIDDEN"
                 control={<Radio />}
-                label="Hidden (only researchers and the tenant admin)"
+                label={getText(i18nKeys.UPDATE_STUDY_DIALOG__HIDDEN)}
               />
             </RadioGroup>
           </FormControl>
@@ -489,7 +509,7 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
 
         <Box mb={4}>
           <Box fontWeight="bold" mb={1}>
-            Dashboard
+            {getText(i18nKeys.UPDATE_STUDY_DIALOG__DASHBOARD)}
           </Box>
           {dashboards.length !== 0 &&
             dashboards.map((data, index) => (
@@ -518,7 +538,7 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
           <Box mt={2}>
             <IconButton
               startIcon={<AddSquareIcon />}
-              title="add dashboard"
+              title={getText(i18nKeys.UPDATE_STUDY_DIALOG__ADD_DASHBOARD)}
               onClick={() => setDashboards([...dashboards, EMPTY_DASHBOARD_FORM_DATA])}
             />
           </Box>
@@ -527,8 +547,14 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
 
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={updating} />
-        <Button text="Save" onClick={handleSubmit} block loading={updating} />
+        <Button
+          text={getText(i18nKeys.UPDATE_STUDY_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="secondary"
+          block
+          disabled={updating}
+        />
+        <Button text={getText(i18nKeys.UPDATE_STUDY_DIALOG__SAVE)} onClick={handleSubmit} block loading={updating} />
       </div>
     </Dialog>
   );

@@ -4,7 +4,7 @@ import { StarboardNotebook } from "./utils/notebook";
 import { StarboardEmbed } from "@alp-os/alp-starboard-wrap";
 import { Loader } from "@portal/components";
 import { api } from "../../axios/api";
-import { useFeedback } from "../../contexts";
+import { useFeedback, useTranslation } from "../../contexts";
 import { EmptyNotebook } from "./components/EmptyNotebook";
 import { Header } from "./components/Header";
 import { convertJupyterToStarboard, notebookContentToText } from "./utils/jupystar";
@@ -16,6 +16,7 @@ const zipUrl = `${uiFilesUrl}starboard-notebook-base/alp-starboard-notebook-base
 interface StarboardProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const Starboard: FC<StarboardProps> = ({ metadata }) => {
+  const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [loading, setLoading] = useState(true);
 
@@ -47,13 +48,13 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
         console.error(err);
         setFeedback({
           type: "error",
-          message: "An error has occured while fetching notebooks",
+          message: getText(i18nKeys.STARBOARD__ERROR_FETCH),
         });
       } finally {
         setLoading(false);
       }
     },
-    [setFeedback]
+    [setFeedback, getText]
   );
 
   useEffect(() => {
@@ -109,10 +110,10 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
       console.error(err);
       setFeedback({
         type: "error",
-        message: "An error has occured while creating a new notebook",
+        message: getText(i18nKeys.STARBOARD__ERROR_CREATE),
       });
     }
-  }, [fetchNotebooks, setFeedback]);
+  }, [fetchNotebooks, setFeedback, getText]);
 
   // Check Jupyter Notebook Name if it exist in the database
   const checkNotebookName = async (name: string) => {
@@ -156,7 +157,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
       console.error(err);
       setFeedback({
         type: "error",
-        message: "An error has occured. Please import Jupyter files(.ipynb) only.",
+        message: getText(i18nKeys.STARBOARD__ERROR_IMPORT),
       });
     }
   };

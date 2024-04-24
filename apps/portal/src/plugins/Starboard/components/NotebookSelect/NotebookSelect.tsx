@@ -5,6 +5,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { FormControl } from "@mui/material";
 import { SxProps } from "@mui/system";
 import { StarboardNotebook } from "../../utils/notebook";
+import { useTranslation } from "../../../../contexts";
 
 interface NotebookSelectProps {
   notebooks: StarboardNotebook[] | undefined;
@@ -36,6 +37,7 @@ const styles: SxProps = {
 };
 
 const NotebookSelect: FC<NotebookSelectProps> = ({ notebooks, activeNotebook, updateActiveNotebook, setIsShared }) => {
+  const { getText, i18nKeys } = useTranslation();
   const handleNotebookChange = useCallback(
     (event: SelectChangeEvent<string>) => {
       const findNb = notebooks && notebooks.find((nb) => nb.id === event.target.value);
@@ -51,7 +53,7 @@ const NotebookSelect: FC<NotebookSelectProps> = ({ notebooks, activeNotebook, up
         {notebooks &&
           notebooks.map((nb: StarboardNotebook) => (
             <MenuItem value={nb.id} key={nb.id} sx={styles} disableRipple>
-              {`${nb.name} ${nb.isShared ? "(Shared)" : ""}`}
+              {`${nb.name} ${nb.isShared ? getText(i18nKeys.NOTEBOOK_SELECT__SHARED) : ""}`}
             </MenuItem>
           ))}
       </Select>

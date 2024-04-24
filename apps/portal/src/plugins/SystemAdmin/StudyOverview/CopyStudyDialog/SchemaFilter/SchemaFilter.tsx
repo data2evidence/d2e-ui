@@ -7,6 +7,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Alert from "@mui/material/Alert";
 
 import "./SchemaFilter.scss";
+import { useTranslation } from "../../../../../contexts";
 
 interface SchemaFilterProps {
   copyStudySchemaMetadata: CopyStudyTableMetadata[];
@@ -23,8 +24,9 @@ const SchemaFilter: FC<SchemaFilterProps> = ({
   loading,
   error,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   if (!copyStudySchemaMetadata || loading) {
-    return <Loader text={"Loading Schema Definition..."}></Loader>;
+    return <Loader text={getText(i18nKeys.SCHEMA_FILTER__LOADER)}></Loader>;
   }
   if (error) {
     return (
@@ -37,7 +39,7 @@ const SchemaFilter: FC<SchemaFilterProps> = ({
   return (
     <Accordion variant="outlined" className="schema-filter-form" disableGutters={true} defaultExpanded={true}>
       <AccordionSummary className="title" expandIcon={<ChevronDownIcon />}>
-        Select table filter
+        {getText(i18nKeys.SCHEMA_FILTER__TEXT)}
       </AccordionSummary>
       <AccordionDetails className="table-accordion">
         {copyStudySchemaMetadata.map((tableMetadata: CopyStudyTableMetadata) => (

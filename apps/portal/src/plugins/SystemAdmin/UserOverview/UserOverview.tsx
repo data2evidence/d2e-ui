@@ -18,7 +18,7 @@ import {
   ALP_DASHBOARD_VIEWER,
 } from "../../../config";
 import { useTenants, useGroupCleanUp, useDialogHelper } from "../../../hooks";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import { useUserInfo } from "../../../contexts/UserContext";
 import { api } from "../../../axios/api";
 import DeleteUserDialog from "./DeleteUserDialog/DeleteUserDialog";
@@ -35,6 +35,7 @@ const isManagedUser = idpRelyingParty === "azure";
 interface UserOverviewProps extends PageProps<SystemAdminPageMetadata> {}
 
 export const UserOverview: FC<UserOverviewProps> = () => {
+  const { getText, i18nKeys } = useTranslation();
   const { user: userInfo } = useUserInfo();
   const [loading, setLoading] = useState(false);
 
@@ -212,10 +213,10 @@ export const UserOverview: FC<UserOverviewProps> = () => {
     <div className="users__container">
       <div className="users">
         <div className="users__actions">
-          <h3 className="users__actions-title">Users</h3>
+          <h3 className="users__actions-title">{getText(i18nKeys.USER_OVERVIEW__USERS)}</h3>
           {userInfo.isUserAdmin && !isManagedUser && (
             <>
-              <Button text="Add user" onClick={openAddUserDialog} />
+              <Button text={getText(i18nKeys.USER_OVERVIEW__ADD_USER)} onClick={openAddUserDialog} />
               <AddUserDialog open={showAddUser} onClose={closeAddUser} />
             </>
           )}
@@ -225,9 +226,9 @@ export const UserOverview: FC<UserOverviewProps> = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell style={{ width: emailWidth }}>Username</TableCell>
-                  <TableCell style={{ width: roleWidth }}>Role</TableCell>
-                  <TableCell style={{ width: "14%" }}>Tenant</TableCell>
+                  <TableCell style={{ width: emailWidth }}>{getText(i18nKeys.USER_OVERVIEW__USERNAME)}</TableCell>
+                  <TableCell style={{ width: roleWidth }}>{getText(i18nKeys.USER_OVERVIEW__ROLE)}</TableCell>
+                  <TableCell style={{ width: "14%" }}>{getText(i18nKeys.USER_OVERVIEW__TENANT)}</TableCell>
                   <TableCell width={buttonColWidth}></TableCell>
                 </TableRow>
               </TableHead>
@@ -235,7 +236,7 @@ export const UserOverview: FC<UserOverviewProps> = () => {
                 {userOverview?.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={4} align="center">
-                      No data available
+                      {getText(i18nKeys.USER_OVERVIEW__NO_DATA)}
                     </TableCell>
                   </TableRow>
                 )}
@@ -257,12 +258,12 @@ export const UserOverview: FC<UserOverviewProps> = () => {
                               <>
                                 <IconButton
                                   startIcon={<EditIcon />}
-                                  title="Edit"
+                                  title={getText(i18nKeys.USER_OVERVIEW__EDIT)}
                                   onClick={() => handleEditRole(user)}
                                 />
                                 <IconButton
                                   startIcon={<TrashIcon />}
-                                  title="Delete"
+                                  title={getText(i18nKeys.USER_OVERVIEW__DELETE)}
                                   onClick={() => handleDelete(user)}
                                 />
                               </>

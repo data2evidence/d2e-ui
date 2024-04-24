@@ -22,6 +22,7 @@ import { tabNames } from "./utils/constants";
 import { TabName, ConceptSet } from "./utils/types";
 import { terminologyApi } from "../../../axios/terminology";
 import { useDatasets } from "../../../hooks";
+import { useTranslation } from "../../../contexts";
 
 export interface TerminologyProps extends PageProps<SystemAdminPageMetadata> {
   onConceptIdSelect?: (conceptData: any) => void;
@@ -79,6 +80,8 @@ const NameSection = ({
   onClickClose(): void;
   errorMsg: string;
 }) => {
+  const { getText, i18nKeys } = useTranslation();
+
   return (
     <Box sx={{ borderBottom: "1px solid #d4d4d4" }}>
       <Box
@@ -90,9 +93,9 @@ const NameSection = ({
           "& .MuiTextField-root": { width: "50%" },
         }}
       >
-        <Typography>Name:</Typography>
+        <Typography>{getText(i18nKeys.TERMINOLOGY__NAME)}:</Typography>
         <TextField
-          placeholder="Concept set name"
+          placeholder={getText(i18nKeys.TERMINOLOGY__CONCEPT_SET_NAME)}
           sx={{ marginLeft: "5px", width: "100%" }}
           id="standard-basic"
           variant="standard"
@@ -112,12 +115,17 @@ const NameSection = ({
           }}
         >
           <Button
-            text={conceptSetId ? "Update" : "Create"}
+            text={conceptSetId ? getText(i18nKeys.TERMINOLOGY__UPDATE) : getText(i18nKeys.TERMINOLOGY__CREATE)}
             style={{ marginLeft: 10 }}
             onClick={saveConceptSet}
             disabled={isLoading}
           />
-          <Button variant="secondary" text="Close" style={{ marginLeft: 10 }} onClick={onClickClose} />
+          <Button
+            variant="secondary"
+            text={getText(i18nKeys.TERMINOLOGY__CLOSE)}
+            style={{ marginLeft: 10 }}
+            onClick={onClickClose}
+          />
         </Box>
       </Box>
       {errorMsg ? <div style={{ color: "red", textAlign: "center" }}>{errorMsg}</div> : null}
@@ -133,6 +141,7 @@ const TabSection = ({
   changeTab(tabName: TabName): void;
   selectedConceptsCount: number;
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const tabWidthPx = 220;
   return (
     <div style={{ height: "60px" }}>
@@ -150,7 +159,7 @@ const TabSection = ({
           },
         }}
       >
-        <Tab sx={{ width: `${tabWidthPx}px` }} label="Search" value={tabNames.SEARCH} />
+        <Tab sx={{ width: `${tabWidthPx}px` }} label={getText(i18nKeys.TERMINOLOGY__SEARCH)} value={tabNames.SEARCH} />
         <Tab
           sx={{ width: `${tabWidthPx}px` }}
           label={
@@ -172,13 +181,17 @@ const TabSection = ({
                     <div style={{ paddingLeft: "5px", paddingRight: "5px" }}>{selectedConceptsCount}</div>
                   </div>
                 ) : null}
-                <div style={{ marginLeft: "10px" }}>Selected concepts</div>
+                <div style={{ marginLeft: "10px" }}>{getText(i18nKeys.TERMINOLOGY__SELECTED_CONCEPTS)}</div>
               </div>
             </>
           }
           value={tabNames.SELECTED}
         />
-        <Tab sx={{ width: `${tabWidthPx}px` }} label="Related concepts" value={tabNames.RELATED} />
+        <Tab
+          sx={{ width: `${tabWidthPx}px` }}
+          label={getText(i18nKeys.TERMINOLOGY__RELATED_CONCEPTS)}
+          value={tabNames.RELATED}
+        />
       </Tabs>
     </div>
   );
@@ -196,6 +209,7 @@ export const Terminology: FC<TerminologyProps> = ({
   mode = "CONCEPT_SEARCH",
   selectedDatasetId,
 }: TerminologyProps) => {
+  const { getText, i18nKeys } = useTranslation();
   const userId = baseUserId || metadata?.userId;
   const [conceptId, setConceptId] = useState<null | number>(null);
   const [showDetails, setShowDetails] = useState(false);
@@ -251,7 +265,11 @@ export const Terminology: FC<TerminologyProps> = ({
         : await terminologyApi.createConceptSet(conceptSet);
       if (typeof updatedConceptSetId !== "string") {
         if (updatedConceptSetId?.statusCode === 500) {
-          setErrorMsg(`Error ${conceptSetId ? "updating" : "creating"} concept set.`);
+          setErrorMsg(
+            getText(i18nKeys.TERMINOLOGY__ERROR, [
+              conceptSetId ? getText(i18nKeys.TERMINOLOGY__UPDATING) : getText(i18nKeys.TERMINOLOGY__CREATING),
+            ])
+          );
         }
         return;
       }
@@ -408,7 +426,7 @@ export const Terminology: FC<TerminologyProps> = ({
           }}
         >
           <div style={{ color: "#000080", marginLeft: 10, fontWeight: 500 }}>
-            {isConceptSet ? "Concept Sets" : "Concepts"}
+            {isConceptSet ? getText(i18nKeys.TERMINOLOGY__CONCEPT_SETS) : getText(i18nKeys.TERMINOLOGY__CONCEPTS)}
           </div>
           {isDrawer && (
             <div style={{ color: "#000080", marginRight: 10, cursor: "pointer" }} onClick={onClickClose}>
@@ -426,7 +444,7 @@ export const Terminology: FC<TerminologyProps> = ({
               height: `${datasetSelectorHeightPx}px`,
             }}
           >
-            <div>Reference concepts from dataset:</div>
+            <div>{getText(i18nKeys.TERMINOLOGY__REFERENCE_CONCEPTS)}:</div>
             <FormControl sx={{ marginLeft: "10px" }}>
               <Select
                 value={datasetId}
@@ -470,7 +488,7 @@ export const Terminology: FC<TerminologyProps> = ({
             className="terminology__search"
             style={{ height: showDetails ? "65%" : "100%", display: "flex", flexDirection: "column" }}
           >
-            {!userId && <div>Missing User Id</div>}
+            {!userId && <div>{getText(i18nKeys.TERMINOLOGY__MISSING_USER_ID)}</div>}
             {userId && (
               <TerminologyList
                 userId={userId}

@@ -7,8 +7,10 @@ import dayjs from "dayjs";
 import DeleteFlowDialog from "../DeleteFlowDialog/DeleteFlowDialog";
 import ExecuteFlowDialog from "../ExecuteFlowDialog/ExecuteFlowDialog";
 import "./JobTable.scss";
+import { useTranslation } from "../../../../contexts";
 
 const JobTable: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [flows, setFlows] = useState<Flow[]>([]);
   const [flowMetadata, setFlowMetadata] = useState<MetaData[]>([]);
@@ -105,10 +107,10 @@ const JobTable: FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Execution ID</TableCell>
-              <TableCell>Job Name</TableCell>
-              <TableCell>Start Date</TableCell>
-              <TableCell>End Date</TableCell>
+              <TableCell>{getText(i18nKeys.JOB_TABLE__EXECUTION_ID)}</TableCell>
+              <TableCell>{getText(i18nKeys.JOB_TABLE__JOB_NAME)}</TableCell>
+              <TableCell>{getText(i18nKeys.JOB_TABLE__START_DATE)}</TableCell>
+              <TableCell>{getText(i18nKeys.JOB_TABLE__END_DATE)}</TableCell>
               <TableCell />
               <TableCell />
               <TableCell />
@@ -118,7 +120,7 @@ const JobTable: FC = () => {
             {(!flows || flows.length === 0) && (
               <TableRow>
                 <TableCell colSpan={2} align="center">
-                  No data available
+                  {getText(i18nKeys.JOB_TABLE__NO_DATA)}
                 </TableCell>
               </TableRow>
             )}
@@ -132,12 +134,16 @@ const JobTable: FC = () => {
                   <Button text="Execute" variant="secondary" onClick={() => handleOpenExecuteFlow(flow)} />
                 </TableCell>
                 <TableCell>
-                  <IconButton startIcon={<TrashIcon />} title="Delete" onClick={() => handleDelete(flow)} />
+                  <IconButton
+                    startIcon={<TrashIcon />}
+                    title={getText(i18nKeys.JOB_TABLE__DELETE)}
+                    onClick={() => handleDelete(flow)}
+                  />
                 </TableCell>
                 <TableCell>
                   {isFlowDeployFromGit(flow, flowMetadata) && (
                     <Button
-                      text="Update deployment"
+                      text={getText(i18nKeys.JOB_TABLE__UPDATE_DEPLOYMENT)}
                       onClick={() => handleUpdateDeployment(retrieveFlowUrl(flow, flowMetadata))}
                       disabled={deploying}
                     />

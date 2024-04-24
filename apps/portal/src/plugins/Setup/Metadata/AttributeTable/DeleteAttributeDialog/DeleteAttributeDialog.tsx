@@ -2,7 +2,7 @@ import React, { FC, useCallback, useState } from "react";
 import Divider from "@mui/material/Divider";
 import { Box, Button, Dialog } from "@portal/components";
 import { api } from "../../../../../axios/api";
-import { useFeedback } from "../../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../../contexts";
 import { CloseDialogType } from "../../../../../types";
 import { DatasetAttributeConfig } from "../../../../../types";
 import "./DeleteAttributeDialog.scss";
@@ -15,6 +15,7 @@ interface DeleteAttributeDialogProps {
 }
 
 export const DeleteAttributeDialog: FC<DeleteAttributeDialogProps> = ({ open, onClose, attribute, setRefetch }) => {
+  const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [deleting, setDeleting] = useState(false);
 
@@ -34,7 +35,7 @@ export const DeleteAttributeDialog: FC<DeleteAttributeDialogProps> = ({ open, on
       await api.systemPortal.deleteDatasetAttributeConfig(attributeId);
       setFeedback({
         type: "success",
-        message: `Attribute Config deleted successfully.`,
+        message: getText(i18nKeys.DELETE_ATTRIBUTE_DIALOG__SUCCESS),
         autoClose: 6000,
       });
       setRefetch((refetch) => refetch + 1);
@@ -49,12 +50,12 @@ export const DeleteAttributeDialog: FC<DeleteAttributeDialogProps> = ({ open, on
     } finally {
       setDeleting(false);
     }
-  }, [handleClose, attributeId, setRefetch, setFeedback]);
+  }, [handleClose, attributeId, setRefetch, setFeedback, getText]);
 
   return (
     <Dialog
       className="delete-attribute-dialog"
-      title="Delete Attribute"
+      title={getText(i18nKeys.DELETE_ATTRIBUTE_DIALOG__DELETE_ATTRIBUTE)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -63,15 +64,19 @@ export const DeleteAttributeDialog: FC<DeleteAttributeDialogProps> = ({ open, on
       <div className="delete-attribute-dialog__content">
         <div className="delete-attribute-dialog__content-text">
           <div>
-            Are you sure you want to delete the following <br />
-            Attribute: <strong>&quot;{attributeId}&quot;</strong>? <br />
+            {getText(i18nKeys.DELETE_ATTRIBUTE_DIALOG__CONFIRMATION)} <br />
+            {getText(i18nKeys.DELETE_ATTRIBUTE_DIALOG__ATTRIBUTES)}: <strong>&quot;{attributeId}&quot;</strong>? <br />
           </div>
         </div>
       </div>
       <div className="delete-attribute-dialog__footer">
         <Box display="flex" gap={1} className="delete-attribute-dialog__footer-actions">
-          <Button text="Cancel" variant="secondary" onClick={() => handleClose("cancelled")} />
-          <Button text="Delete" onClick={handleDelete} loading={deleting} />
+          <Button
+            text={getText(i18nKeys.DELETE_ATTRIBUTE_DIALOG__CANCEL)}
+            variant="secondary"
+            onClick={() => handleClose("cancelled")}
+          />
+          <Button text={getText(i18nKeys.DELETE_ATTRIBUTE_DIALOG__DELETE)} onClick={handleDelete} loading={deleting} />
         </Box>
       </div>
     </Dialog>

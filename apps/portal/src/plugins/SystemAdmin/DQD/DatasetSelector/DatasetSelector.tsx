@@ -6,6 +6,7 @@ import { FormControl, InputLabel } from "@mui/material";
 import { useDatasets } from "../../../../hooks";
 import { SxProps } from "@mui/system";
 import { Study } from "../../../../types";
+import { useTranslation } from "../../../../contexts";
 interface DatasetSelectorProps {
   handleStudySelect: (study: string, studyId: string) => void;
 }
@@ -34,6 +35,7 @@ const styles: SxProps = {
 };
 
 const DatasetSelector: FC<DatasetSelectorProps> = ({ handleStudySelect }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [studyId, setStudyId] = useState("");
   const studies = useDatasets("systemAdmin")[0];
 
@@ -48,13 +50,13 @@ const DatasetSelector: FC<DatasetSelectorProps> = ({ handleStudySelect }) => {
 
   return (
     <FormControl sx={styles} size="small">
-      <InputLabel id="study-selector-label">Select Study</InputLabel>
+      <InputLabel id="study-selector-label">{getText(i18nKeys.DATASET_SELECTOR__SELECT_STUDY)}</InputLabel>
       <Select
         labelId="study-selector-label"
         id="study-selector"
         value={studyId}
         onChange={handleDatasetSelection}
-        label="Select Study"
+        label={getText(i18nKeys.DATASET_SELECTOR__SELECT_STUDY)}
       >
         {studies?.map((dataset: Study) => (
           <MenuItem value={dataset.id} key={dataset.id} sx={styles} disableRipple>

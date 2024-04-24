@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FC, HTMLAttributes, useCallback } from "react";
 import * as PapaParse from "papaparse";
 import "./CsvReader.scss";
+import { useTranslation } from "../../contexts";
 
 export interface CsvReaderProps extends Omit<HTMLAttributes<HTMLDivElement>, "onError"> {
   fileEncoding?: string;
@@ -17,13 +18,14 @@ export const CsvReader: FC<CsvReaderProps> = ({
   onError,
   parseOptions = {},
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const handleChangeFile = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const reader = new FileReader();
       const files: FileList = e.target.files!;
       if (files.length > 0) {
         if (!["text/csv", "text/plain"].includes(files[0].type)) {
-          typeof onError === "function" && onError(new Error("Unsupported file type"));
+          typeof onError === "function" && onError(new Error(getText(i18nKeys.CSV_READER__UNSUPPORTED_FILE_TYPE)));
           return;
         }
 
@@ -41,7 +43,7 @@ export const CsvReader: FC<CsvReaderProps> = ({
         reader.readAsText(files[0], fileEncoding);
       }
     },
-    [onFileLoaded, onError, parseOptions, fileEncoding]
+    [onFileLoaded, onError, parseOptions, fileEncoding, getText]
   );
 
   return (
@@ -57,8 +59,8 @@ export const CsvReader: FC<CsvReaderProps> = ({
           onChange={handleChangeFile}
         />
         <label htmlFor="file">
-          <strong>Click here to choose a file, or drop a file</strong>
-          <div>Supported file types: CSV</div>
+          <strong>{getText(i18nKeys.CSV_READER__CLICK_MESSAGE)}</strong>
+          <div>{getText(i18nKeys.CSV_READER__SUPPORTED_FILE_TYPES)}</div>
         </label>
       </div>
     </div>
