@@ -8,8 +8,8 @@ import { CohortGeneratorDrawer } from "./CohortGeneratorDrawer";
 import "./CohortGeneratorNode.scss";
 
 export interface CohortGeneratorNodeData extends NodeDataState {
-  incremental: string;
-  generateStats: string;
+  incremental: boolean;
+  generateStats: boolean;
 }
 
 export const CohortGeneratorNode = (

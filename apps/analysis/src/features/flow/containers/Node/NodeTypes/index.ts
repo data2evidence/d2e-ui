@@ -62,8 +62,8 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run cohort generator code.",
     tag: NodeTag.Lightgrey,
     defaultData: {
-      incremental: "TRUE",
-      generateStats: "TRUE",
+      incremental: true,
+      generateStats: true,
     },
   },
   cohort_diagnostic_node: {
@@ -71,16 +71,16 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run cohort diagnostic starboard.",
     tag: NodeTag.Grey,
     defaultData: {
-      runInclusionStatistics: "TRUE",
-      runIncludedSourceConcepts: "TRUE",
-      runOrphanConcepts: "TRUE",
-      runTimeSeries: "FALSE",
-      runVisistContext: "TRUE",
-      runBreakdownIndexEvents: "TRUE",
-      runIncidenceRate: "TRUE",
-      runCohortRelationship: "TRUE",
-      runTemporalCohortCharacterization: "TRUE",
-      incremental: "FALSE",
+      runInclusionStatistics: true,
+      runIncludedSourceConcepts: true,
+      runOrphanConcepts: true,
+      runTimeSeries: false,
+      runVisistContext: true,
+      runBreakdownIndexEvents: true,
+      runIncidenceRate: true,
+      runCohortRelationship: true,
+      runTemporalCohortCharacterization: true,
+      incremental: false,
     },
   },
   negative_control_outcome_cohort_node: {
@@ -89,7 +89,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     tag: NodeTag.Lime,
     defaultData: {
       occurenceType: "all",
-      detectOnDescendants: "TRUE",
+      detectOnDescendants: true,
     },
   },
   cohort_incidence_node: {
@@ -177,7 +177,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     tag: NodeTag.Darkred,
     defaultData: {
-      combineDataFetchAcrossOutcomes: "FALSE",
+      combineDataFetchAcrossOutcomes: false,
     },
   },
   patient_level_prediction_node: {

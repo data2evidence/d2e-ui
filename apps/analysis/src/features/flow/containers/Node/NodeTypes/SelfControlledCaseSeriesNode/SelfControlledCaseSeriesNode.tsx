@@ -8,7 +8,7 @@ import { SelfControlledCaseSeriesDrawer } from "./SelfControlledCaseSeriesDrawer
 import "./SelfControlledCaseSeriesNode.scss";
 
 export interface SelfControlledCaseSeriesNodeData extends NodeDataState {
-  combineDataFetchAcrossOutcomes: string;
+  combineDataFetchAcrossOutcomes: boolean;
 }
 
 export const SelfControlledCaseSeriesNode = (

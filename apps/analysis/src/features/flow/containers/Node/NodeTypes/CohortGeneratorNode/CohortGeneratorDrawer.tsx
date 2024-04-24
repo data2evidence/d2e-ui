@@ -1,15 +1,7 @@
 import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TextInput,
-} from "@portal/components";
+import { Box, Checkbox, TextInput } from "@portal/components";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -28,15 +20,13 @@ export interface CohortGeneratorDrawerProps
   onClose: () => void;
 }
 
-const booleanOptions: string[] = ["TRUE", "FALSE"];
-
 interface FormData extends CohortGeneratorNodeData {}
 
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  incremental: "",
-  generateStats: "",
+  incremental: true,
+  generateStats: true,
 };
 
 export const CohortGeneratorDrawer: FC<CohortGeneratorDrawerProps> = ({
@@ -98,40 +88,26 @@ export const CohortGeneratorDrawer: FC<CohortGeneratorDrawerProps> = ({
         />
       </Box>
       <Box mb={4}>
-        <FormControl variant="standard" fullWidth>
-          <InputLabel shrink>Incremental</InputLabel>
-          <Select
-            value={formData.incremental}
-            onChange={(e: SelectChangeEvent) =>
-              onFormDataChange({ incremental: e.target.value })
-            }
-          >
-            <MenuItem value="">&nbsp;</MenuItem>
-            {booleanOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Checkbox
+          checked={formData.incremental}
+          label="Incremental"
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({
+              incremental: e.target.checked,
+            })
+          }
+        />
       </Box>
       <Box mb={4}>
-        <FormControl variant="standard" fullWidth>
-          <InputLabel shrink>GenerateStats</InputLabel>
-          <Select
-            value={formData.generateStats}
-            onChange={(e: SelectChangeEvent) =>
-              onFormDataChange({ generateStats: e.target.value })
-            }
-          >
-            <MenuItem value="">&nbsp;</MenuItem>
-            {booleanOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Checkbox
+          checked={formData.generateStats}
+          label="GenerateStats"
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({
+              generateStats: e.target.checked,
+            })
+          }
+        />
       </Box>
     </NodeDrawer>
   );

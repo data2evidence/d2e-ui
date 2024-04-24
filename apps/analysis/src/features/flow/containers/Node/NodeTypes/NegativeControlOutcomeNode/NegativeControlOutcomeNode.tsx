@@ -9,7 +9,7 @@ import "./NegativeControlOutcomeNode.scss";
 
 export interface NegatveControlOutcomeNodeData extends NodeDataState {
   occurenceType: string;
-  detectOnDescendants: string;
+  detectOnDescendants: boolean;
 }
 
 export const NegatveControlOutcomeNode = (

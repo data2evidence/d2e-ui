@@ -1,15 +1,7 @@
 import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TextInput,
-} from "@portal/components";
+import { Box, TextInput, Checkbox } from "@portal/components";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -28,14 +20,12 @@ export interface SelfControlledCaseSeriesDrawerProps
   onClose: () => void;
 }
 
-const booleanOptions: string[] = ["TRUE", "FALSE"];
-
 interface FormData extends SelfControlledCaseSeriesNodeData {}
 
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  combineDataFetchAcrossOutcomes: "FALSE",
+  combineDataFetchAcrossOutcomes: false,
 };
 
 export const SelfControlledCaseSeriesDrawer: FC<
@@ -95,24 +85,15 @@ export const SelfControlledCaseSeriesDrawer: FC<
         />
       </Box>
       <Box mb={4}>
-        <FormControl variant="standard" fullWidth>
-          <InputLabel shrink>CombineDataFetchAcrossOutcomes</InputLabel>
-          <Select
-            value={formData.combineDataFetchAcrossOutcomes}
-            onChange={(e: SelectChangeEvent) =>
-              onFormDataChange({
-                combineDataFetchAcrossOutcomes: e.target.value,
-              })
-            }
-          >
-            <MenuItem value="">&nbsp;</MenuItem>
-            {booleanOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Checkbox
+          checked={formData.combineDataFetchAcrossOutcomes}
+          label="CombineDataFetchAcrossOutcomes"
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({
+              combineDataFetchAcrossOutcomes: e.target.checked,
+            })
+          }
+        />
       </Box>
     </NodeDrawer>
   );

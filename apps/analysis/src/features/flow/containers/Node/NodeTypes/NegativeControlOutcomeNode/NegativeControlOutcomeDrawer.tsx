@@ -1,15 +1,7 @@
 import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TextInput,
-} from "@portal/components";
+import { Box, Checkbox, TextInput } from "@portal/components";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -28,15 +20,13 @@ export interface NegatveControlOutcomeDrawerProps
   onClose: () => void;
 }
 
-const booleanOptions: string[] = ["TRUE", "FALSE"];
-
 interface FormData extends NegatveControlOutcomeNodeData {}
 
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
   occurenceType: "",
-  detectOnDescendants: "",
+  detectOnDescendants: true,
 };
 
 export const NegatveControlOutcomeDrawer: FC<
@@ -105,22 +95,15 @@ export const NegatveControlOutcomeDrawer: FC<
         />
       </Box>
       <Box mb={4}>
-        <FormControl variant="standard" fullWidth>
-          <InputLabel shrink>DetectOnDescendants</InputLabel>
-          <Select
-            value={formData.detectOnDescendants}
-            onChange={(e: SelectChangeEvent) =>
-              onFormDataChange({ detectOnDescendants: e.target.value })
-            }
-          >
-            <MenuItem value="">&nbsp;</MenuItem>
-            {booleanOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Checkbox
+          checked={formData.detectOnDescendants}
+          label="DetectOnDescendants"
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({
+              DetectOnDescendants: e.target.checked,
+            })
+          }
+        />
       </Box>
     </NodeDrawer>
   );

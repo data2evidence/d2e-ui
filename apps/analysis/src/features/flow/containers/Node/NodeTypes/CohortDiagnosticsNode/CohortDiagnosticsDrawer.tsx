@@ -1,15 +1,7 @@
 import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
-import {
-  Box,
-  TextInput,
-  FormControl,
-  Select,
-  InputLabel,
-  MenuItem,
-  SelectChangeEvent,
-} from "@portal/components";
+import { Box, TextInput, Checkbox } from "@portal/components";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -28,23 +20,21 @@ export interface CohortIncidentDrawerProps
   onClose: () => void;
 }
 
-const booleanOptions: string[] = ["TRUE", "FALSE"];
-
 interface FormData extends CohortDiagnosticsNodeData {}
 
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  runInclusionStatistics: "TRUE",
-  runIncludedSourceConcepts: "TRUE",
-  runOrphanConcepts: "TRUE",
-  runTimeSeries: "FALSE",
-  runVisistContext: "TRUE",
-  runBreakdownIndexEvents: "TRUE",
-  runIncidenceRate: "TRUE",
-  runCohortRelationship: "TRUE",
-  runTemporalCohortCharacterization: "TRUE",
-  incremental: "FALSE",
+  runInclusionStatistics: true,
+  runIncludedSourceConcepts: true,
+  runOrphanConcepts: true,
+  runTimeSeries: false,
+  runVisistContext: true,
+  runBreakdownIndexEvents: true,
+  runIncidenceRate: true,
+  runCohortRelationship: true,
+  runTemporalCohortCharacterization: true,
+  incremental: false,
 };
 
 export const CohortDiagnosticsDrawer: FC<CohortIncidentDrawerProps> = ({
@@ -61,60 +51,60 @@ export const CohortDiagnosticsDrawer: FC<CohortIncidentDrawerProps> = ({
     {
       label: "RunInclusionStatistics",
       value: formData.runInclusionStatistics,
-      onChange: (value: string) =>
+      onChange: (value: boolean) =>
         onFormDataChange({ runInclusionStatistics: value }),
     },
     {
       label: "RunIncludedSourceConcepts",
       value: formData.runIncludedSourceConcepts,
-      onChange: (value: string) =>
+      onChange: (value: boolean) =>
         onFormDataChange({ runIncludedSourceConcepts: value }),
     },
     {
       label: "RunOrphanConcepts",
       value: formData.runOrphanConcepts,
-      onChange: (value: string) =>
+      onChange: (value: boolean) =>
         onFormDataChange({ runOrphanConcepts: value }),
     },
     {
       label: "RunTimeSeries",
       value: formData.runTimeSeries,
-      onChange: (value: string) => onFormDataChange({ runTimeSeries: value }),
+      onChange: (value: boolean) => onFormDataChange({ runTimeSeries: value }),
     },
     {
       label: "RunVisistContext",
       value: formData.runVisistContext,
-      onChange: (value: string) =>
+      onChange: (value: boolean) =>
         onFormDataChange({ runVisistContext: value }),
     },
     {
       label: "RunBreakdownIndexEvents",
       value: formData.runBreakdownIndexEvents,
-      onChange: (value: string) =>
+      onChange: (value: boolean) =>
         onFormDataChange({ runBreakdownIndexEvents: value }),
     },
     {
       label: "RunIncidenceRate",
       value: formData.runIncidenceRate,
-      onChange: (value: string) =>
+      onChange: (value: boolean) =>
         onFormDataChange({ runIncidenceRate: value }),
     },
     {
       label: "RunCohortRelationship",
       value: formData.runCohortRelationship,
-      onChange: (value: string) =>
+      onChange: (value: boolean) =>
         onFormDataChange({ runCohortRelationship: value }),
     },
     {
       label: "RunTemporalCohortCharacterization",
       value: formData.runTemporalCohortCharacterization,
-      onChange: (value: string) =>
+      onChange: (value: boolean) =>
         onFormDataChange({ runTemporalCohortCharacterization: value }),
     },
     {
       label: "Incremental",
       value: formData.incremental,
-      onChange: (value: string) => onFormDataChange({ incremental: value }),
+      onChange: (value: boolean) => onFormDataChange({ incremental: value }),
     },
   ];
 
@@ -156,26 +146,17 @@ export const CohortDiagnosticsDrawer: FC<CohortIncidentDrawerProps> = ({
 
   const renderSelectBox = (
     label: string,
-    value: string,
-    onChange: (value: string) => void
+    value: boolean,
+    onChange: (value: boolean) => void
   ) => (
     <Box mb={4}>
-      <FormControl variant="standard" fullWidth>
-        <InputLabel shrink>{label}</InputLabel>
-        <Select
-          value={value}
-          onChange={(e: SelectChangeEvent) =>
-            onChange(e.target.value as string)
-          }
-        >
-          <MenuItem value="">&nbsp;</MenuItem>
-          {booleanOptions.map((option) => (
-            <MenuItem key={option} value={option}>
-              {option}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Checkbox
+        checked={value}
+        label={label}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          onChange(e.target.checked)
+        }
+      />
     </Box>
   );
 

@@ -8,16 +8,16 @@ import { CohortDiagnosticsDrawer } from "./CohortDiagnosticsDrawer";
 import "./CohortDiagnosticsNode.scss";
 
 export interface CohortDiagnosticsNodeData extends NodeDataState {
-  runInclusionStatistics: string;
-  runIncludedSourceConcepts: string;
-  runOrphanConcepts: string;
-  runTimeSeries: string;
-  runVisistContext: string;
-  runBreakdownIndexEvents: string;
-  runIncidenceRate: string;
-  runCohortRelationship: string;
-  runTemporalCohortCharacterization: string;
-  incremental: string;
+  runInclusionStatistics: boolean;
+  runIncludedSourceConcepts: boolean;
+  runOrphanConcepts: boolean;
+  runTimeSeries: boolean;
+  runVisistContext: boolean;
+  runBreakdownIndexEvents: boolean;
+  runIncidenceRate: boolean;
+  runCohortRelationship: boolean;
+  runTemporalCohortCharacterization: boolean;
+  incremental: boolean;
 }
 
 export const CohortDiagnosticsNode = (
