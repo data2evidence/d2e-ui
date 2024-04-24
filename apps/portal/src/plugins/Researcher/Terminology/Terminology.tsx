@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { PageProps, SystemAdminPageMetadata } from "@portal/plugin";
+import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
 import { Button } from "@portal/components";
 
 import TerminologyList from "./components/TerminologyList/TerminologyList";
@@ -23,7 +23,7 @@ import { TabName, ConceptSet } from "./utils/types";
 import { terminologyApi } from "../../../axios/terminology";
 import { useDatasets } from "../../../hooks";
 
-export interface TerminologyProps extends PageProps<SystemAdminPageMetadata> {
+export interface TerminologyProps extends PageProps<ResearcherStudyMetadata> {
   onConceptIdSelect?: (conceptData: any) => void;
   initialInput?: string;
   baseUserId?: string;
@@ -417,34 +417,7 @@ export const Terminology: FC<TerminologyProps> = ({
             )
           </div>
         )}
-        {!selectedDatasetId ? (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              paddingLeft: "20px",
-              paddingTop: "10px",
-              height: `${datasetSelectorHeightPx}px`,
-            }}
-          >
-            <div>Reference concepts from dataset:</div>
-            <FormControl sx={{ marginLeft: "10px" }}>
-              <Select
-                value={datasetId}
-                onChange={(e: SelectChangeEvent) => {
-                  setDatasetId(e.target.value);
-                }}
-                sx={{ "& .MuiSelect-outlined": { paddingTop: "8px", paddingBottom: "8px" } }}
-              >
-                {datasets?.map((dataset) => (
-                  <MenuItem value={dataset.id} key={dataset.id} sx={{}} disableRipple>
-                    {dataset.studyDetail?.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-        ) : null}
+
         {isConceptSet ? (
           <NameSection
             conceptSetName={conceptSetName}
