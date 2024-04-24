@@ -218,7 +218,7 @@ const StudyOverview: FC = () => {
 
         <div className="studyoverview__actions">
           <h3 className="studyoverview__actions-title">{getText(i18nKeys.STUDY_OVERVIEW__DATASETS)}</h3>
-          <Button text="Add dataset" onClick={openAddStudyDialog}></Button>
+          <Button text="Add dataset" onClick={openAddStudyDialog} />
           <AddStudyDialog
             open={showAddStudyDialog}
             onClose={handleCloseAddStudyDialog}

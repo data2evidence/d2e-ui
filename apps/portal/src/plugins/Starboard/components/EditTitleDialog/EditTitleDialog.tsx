@@ -72,7 +72,7 @@ export const EditTitleDialog: FC<EditTitleDialogProps> = ({ title, open, onClose
         <Button
           text={getText(i18nKeys.EDIT_TITLE_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
-          variant="secondary"
+          variant="outlined"
           block
         />
         <Button text={getText(i18nKeys.EDIT_TITLE_DIALOG__SAVE)} onClick={handleRename} block />

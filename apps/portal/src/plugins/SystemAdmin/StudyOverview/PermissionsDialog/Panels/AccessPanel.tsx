@@ -160,7 +160,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
       <div className="access-panel__container">
         <div className="access-panel__header">
           <div className="access-panel__title">{getText(i18nKeys.ACCESS_PANEL__ACCESS)}</div>
-          <Button text={getText(i18nKeys.ACCESS_PANEL__ADD_EXISTING)} onClick={openMenu}></Button>
+          <Button text={getText(i18nKeys.ACCESS_PANEL__ADD_EXISTING)} onClick={openMenu} />
           <Menu
             className="access-panel__menu"
             onClose={closeMenu}

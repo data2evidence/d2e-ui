@@ -70,7 +70,7 @@ export const DeleteTagDialog: FC<DeleteTagDialogProps> = ({ open, onClose, name,
           <Box display="flex" gap={1} className="delete-tag-dialog__footer-actions">
             <Button
               text={getText(i18nKeys.DELETE_TAG_DIALOG__CANCEL)}
-              variant="secondary"
+              variant="outlined"
               onClick={() => handleClose("cancelled")}
             />
             <Button text={getText(i18nKeys.DELETE_TAG_DIALOG__DELETE)} onClick={handleDelete} loading={deleting} />

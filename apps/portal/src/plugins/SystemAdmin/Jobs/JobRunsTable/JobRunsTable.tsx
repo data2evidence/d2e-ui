@@ -93,8 +93,8 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
                 className="cancel-job-button"
                 onClick={() => handleCancelJobClick(row.flowRunId)}
                 text={getText(i18nKeys.JOB_RUNS_TABLE__CANCEL)}
-                variant="secondary"
-              ></Button>
+                variant="outlined"
+              />
             ) : (
               "-"
             )

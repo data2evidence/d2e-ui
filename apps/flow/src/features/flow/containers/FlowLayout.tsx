@@ -86,7 +86,7 @@ export const FlowLayout: FC<FlowLayoutProps> = ({ isStandalone }) => {
         </Box>
         <Box display="flex" gap={1} alignItems="center">
           <SaveFlowButton />
-          <Button variant="secondary" text="Add node" onClick={handleAddNode} />
+          <Button variant="outlined" text="Add node" onClick={handleAddNode} />
           <CreateGroupButton />
           <Box display="flex" alignItems="center">
             <FlowSettingsButton />

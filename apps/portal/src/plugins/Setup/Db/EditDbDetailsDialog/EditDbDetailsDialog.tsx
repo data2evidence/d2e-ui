@@ -143,7 +143,7 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
 
       <div className="edit-db-dialog__footer">
         <Box display="flex" gap={1} className="edit-db-dialog__footer-actions">
-          <Button text="Cancel" variant="secondary" onClick={() => handleClose("cancelled")} disabled={loading} />
+          <Button text="Cancel" variant="outlined" onClick={() => handleClose("cancelled")} disabled={loading} />
           <Button text="Update" onClick={handleUpdate} loading={loading} disabled={!hasChanges} />
         </Box>
       </div>
