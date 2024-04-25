@@ -23,12 +23,12 @@ export const EmptyNotebook: FC<EmptyNotebookProps> = ({ createNotebook, importJu
     <div className="notebook-main">
       <div>
         <h1>{getText(i18nKeys.EMPTY_NOTEBOOK__TITLE)}</h1>
-        <Button text={getText(i18nKeys.EMPTY_NOTEBOOK__ADD)} onClick={createNotebook}></Button>
+        <Button text={getText(i18nKeys.EMPTY_NOTEBOOK__ADD)} onClick={createNotebook} />
         <Button
           className="button-import"
           text={getText(i18nKeys.EMPTY_NOTEBOOK__IMPORT)}
           onClick={handleJupyterInput}
-        ></Button>
+        />
         <input
           type="file"
           name="jupyterFile"

@@ -44,7 +44,7 @@ export const DeleteFlowRevisionDialog: FC<DeleteFlowRevisionDialogProps> = ({
           gap={1}
           className="delete-flow-revision-dialog__footer-actions"
         >
-          <Button text="Cancel" variant="secondary" onClick={handleClose} />
+          <Button text="Cancel" variant="outlined" onClick={handleClose} />
           <Button text="Delete" onClick={handleDelete} loading={isLoading} />
         </Box>
       </div>

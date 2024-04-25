@@ -300,7 +300,7 @@ const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose })
         <Button
           text={getText(i18nKeys.PERMISSIONS_DIALOG__CLOSE)}
           onClick={handleClose}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={loading}
         />

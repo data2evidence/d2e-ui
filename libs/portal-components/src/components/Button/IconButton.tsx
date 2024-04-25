@@ -20,8 +20,7 @@ export const IconButton: FC<IconButtonProps> = ({ loading, disabled, startIcon, 
 
   return (
     <MuiButton
-      disableRipple
-      disableFocusRipple
+      disableElevation
       startIcon={icon}
       className={classes}
       style={{ textTransform: "none" }}

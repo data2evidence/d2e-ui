@@ -82,7 +82,7 @@ const CohortDeleteDialog: FC<CohortDeleteDialogProps> = ({
         <Button
           text={getText(i18nKeys.COHORT_DELETE_DIALOG__CANCEL)}
           onClick={handleClose}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={isLoading}
         />

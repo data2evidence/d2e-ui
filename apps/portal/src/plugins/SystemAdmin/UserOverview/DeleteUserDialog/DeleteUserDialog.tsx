@@ -68,7 +68,7 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({ user, open, onClose }) =>
         <Button
           text={getText(i18nKeys.DELETE_USER_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={loading}
         />

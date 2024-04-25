@@ -140,7 +140,7 @@ const NameSection = ({
             />
           )}
           <Button
-            variant="secondary"
+            variant="outlined"
             text={getText(i18nKeys.TERMINOLOGY__CLOSE)}
             style={{ marginLeft: 10 }}
             onClick={onClickClose}

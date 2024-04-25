@@ -74,7 +74,7 @@ export const Account: FC = () => {
                   <span>{claims.email || "-"}</span>
                 </div>
                 <div>
-                  <Button variant="secondary" text="Delete my account" onClick={openDeleteAccount} />
+                  <Button variant="outlined" text="Delete my account" onClick={openDeleteAccount} />
                 </div>
               </div>
             </Card>

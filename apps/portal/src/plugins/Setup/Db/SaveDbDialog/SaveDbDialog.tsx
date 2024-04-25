@@ -485,7 +485,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         <Box display="flex" gap={1} className="save-db-dialog__footer-actions">
           <Button
             text={getText(i18nKeys.SAVE_DB_DIALOG__CANCEL)}
-            variant="secondary"
+            variant="outlined"
             onClick={() => handleClose("cancelled")}
           />
           <Button text={getText(i18nKeys.SAVE_DB_DIALOG__SAVE)} onClick={handleSave} loading={saving} />

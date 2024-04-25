@@ -72,7 +72,7 @@ const UpdateSchemaDialog: FC<UpdateSchemaDialogProps> = ({ study, open, onClose 
         <Button
           text={getText(i18nKeys.UPDATE_SCHEMA_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={updating}
         />
