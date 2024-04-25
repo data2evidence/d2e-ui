@@ -20,7 +20,7 @@ export const SetupMenuItem: FC<SetupMenuItemProps> = ({ name, description, notes
         {notes && <div className="setup-menu-item__notes">{notes}</div>}
       </div>
       <div className="setup-menu-item__action">
-        <Button variant="primary" text={getText(i18nKeys.SETUP_MENU_ITEM__CONFIGURE)} onClick={onClick} />
+        <Button text={getText(i18nKeys.SETUP_MENU_ITEM__CONFIGURE)} onClick={onClick} />
       </div>
     </div>
   );

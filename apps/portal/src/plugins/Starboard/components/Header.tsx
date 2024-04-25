@@ -226,13 +226,8 @@ export const Header: FC<HeaderProps> = ({
             }}
             disabled={isNotUserNotebook}
           />
-          <Button className="buttons" text={getText(i18nKeys.HEADER__EXPORT)} onClick={exportJupyterNb} />
-          <Button
-            className="buttons"
-            text={getText(i18nKeys.HEADER__IMPORT)}
-            type="file"
-            onClick={handleJupyterInput}
-          />
+          <Button variant="text" text={getText(i18nKeys.HEADER__EXPORT)} onClick={exportJupyterNb} />
+          <Button variant="text" text={getText(i18nKeys.HEADER__IMPORT)} onClick={handleJupyterInput} />
           <input
             type="file"
             name="jupyterFile"
@@ -240,10 +235,10 @@ export const Header: FC<HeaderProps> = ({
             onChange={importJupyterFile}
             style={{ display: "none" }}
           />
-          <Button className="buttons" text={getText(i18nKeys.HEADER__NEW)} onClick={createNotebook} />
-          <Button className="buttons" text={getText(i18nKeys.HEADER__SAVE)} onClick={saveNotebook} />
+          <Button variant="text" text={getText(i18nKeys.HEADER__NEW)} onClick={createNotebook} />
+          <Button variant="text" text={getText(i18nKeys.HEADER__SAVE)} onClick={saveNotebook} />
           <Button
-            className="buttons"
+            variant="text"
             text={getText(i18nKeys.HEADER__DELETE)}
             onClick={handleDeleteNotebook}
             disabled={isNotUserNotebook}

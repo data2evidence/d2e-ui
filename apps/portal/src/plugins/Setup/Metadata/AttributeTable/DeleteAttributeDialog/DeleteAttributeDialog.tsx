@@ -73,7 +73,7 @@ export const DeleteAttributeDialog: FC<DeleteAttributeDialogProps> = ({ open, on
         <Box display="flex" gap={1} className="delete-attribute-dialog__footer-actions">
           <Button
             text={getText(i18nKeys.DELETE_ATTRIBUTE_DIALOG__CANCEL)}
-            variant="secondary"
+            variant="outlined"
             onClick={() => handleClose("cancelled")}
           />
           <Button text={getText(i18nKeys.DELETE_ATTRIBUTE_DIALOG__DELETE)} onClick={handleDelete} loading={deleting} />

@@ -94,7 +94,6 @@ const Overview: FC = () => {
             <Button
               onClick={() => dispatch({ type: "CLEAR_CSV_DATA" })}
               text={getText(i18nKeys.OVERVIEW__CLEAR_AND_IMPORT)}
-              variant="primary"
             />
             <Button
               onClick={() =>
@@ -105,7 +104,7 @@ const Overview: FC = () => {
                 })
               }
               text={getText(i18nKeys.OVERVIEW__DOWNLOAD_CSV)}
-              variant="secondary"
+              variant="outlined"
             />
           </div>
 

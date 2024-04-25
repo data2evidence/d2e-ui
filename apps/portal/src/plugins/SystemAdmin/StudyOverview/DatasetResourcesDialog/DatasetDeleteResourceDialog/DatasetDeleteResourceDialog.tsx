@@ -69,7 +69,7 @@ const DatasetDeleteResourceDialog: FC<DatasetDeleteResourceDialogProps> = ({ dat
         <Button
           text={getText(i18nKeys.CREATE_RELEASE_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={loading}
         />

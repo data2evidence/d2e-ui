@@ -231,7 +231,7 @@ const TenantSettingsDialog: FC<TenantSettingsDialogProps> = ({ tenant, open, onC
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={handleClose} variant="secondary" block disabled={isLoading} />
+        <Button text="Cancel" onClick={handleClose} variant="outlined" block disabled={isLoading} />
         <Button text="Save" onClick={handleSave} block loading={isLoading} disabled={!hasChanges()} />
       </div>
     </Dialog>

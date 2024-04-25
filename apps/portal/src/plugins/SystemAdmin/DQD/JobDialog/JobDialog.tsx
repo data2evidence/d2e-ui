@@ -116,7 +116,7 @@ const JobDialog: FC<JobDialogProps> = ({
         ) : (
           <>
             <Button text={getText(i18nKeys.JOB_DIALOG__GENERATE)} onClick={runJob} block disabled={isLoading} />
-            <Button text={getText(i18nKeys.JOB_DIALOG__CANCEL)} onClick={handleClose} variant="secondary" block />
+            <Button text={getText(i18nKeys.JOB_DIALOG__CANCEL)} onClick={handleClose} variant="outlined" block />
           </>
         )}
       </div>

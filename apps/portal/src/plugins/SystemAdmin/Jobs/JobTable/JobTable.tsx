@@ -131,7 +131,7 @@ const JobTable: FC = () => {
                 <TableCell>{dayjs.utc(flow.created).format("YYYY-MM-DD HH:mm:ss A")}</TableCell>
                 <TableCell>{dayjs.utc(flow.updated).format("YYYY-MM-DD HH:mm:ss A")}</TableCell>
                 <TableCell>
-                  <Button text="Execute" variant="secondary" onClick={() => handleOpenExecuteFlow(flow)} />
+                  <Button text="Execute" variant="outlined" onClick={() => handleOpenExecuteFlow(flow)} />
                 </TableCell>
                 <TableCell>
                   <IconButton

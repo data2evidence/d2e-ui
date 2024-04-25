@@ -122,7 +122,7 @@ const DatasetResourceUploadConfirmDialog: FC<DatasetResourceUploadConfirmDialogP
         <Button
           text={getText(i18nKeys.DATASET_RESOURCE_UPLOAD_CONFIRM_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={loading}
         />

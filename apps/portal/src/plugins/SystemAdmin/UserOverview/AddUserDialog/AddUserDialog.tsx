@@ -126,7 +126,7 @@ const AddUserDialog: FC<AddUserDialogProps> = ({ open, onClose }) => {
               </Tooltip>
               <Button
                 text={getText(i18nKeys.ADD_USER_DIALOG__GENERATE)}
-                variant="tertiary"
+                variant="text"
                 onClick={handleGeneratePassword}
               />
             </Box>
@@ -138,7 +138,7 @@ const AddUserDialog: FC<AddUserDialogProps> = ({ open, onClose }) => {
         <Button
           text={getText(i18nKeys.ADD_USER_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={loading}
         />
