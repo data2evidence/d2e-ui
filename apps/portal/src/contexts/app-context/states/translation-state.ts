@@ -565,6 +565,7 @@ export const i18nDefault = {
     JOB_DIALOG__SUCCESS: "{0} job successfully started.",
     JOB_RUN_BUTTONS__RUN_DATA_CHARACTERIZATION: "Run Data Characterization",
     JOB_RUN_BUTTONS__RUN_DATA_QUALITY: "Run Data Quality",
+    JOB_RUN_BUTTONS__NO_DATA_QUALITY_JOB_TOOLTIP: "Run Data Quality",
     JOB_RUNS_TABLE__ACTION: "Action",
     JOB_RUNS_TABLE__CANCEL: "Cancel Job",
     JOB_RUNS_TABLE__COMPLETED_TIME: "Completed time",

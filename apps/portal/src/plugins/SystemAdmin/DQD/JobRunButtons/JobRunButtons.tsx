@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, useCallback } from "react";
-import { Button } from "@portal/components";
+import { Button, Tooltip } from "@portal/components";
 import { useDialogHelper } from "../../../../hooks";
 import JobDialog from "../JobDialog/JobDialog";
 import { JobRunTypes } from "../types";
@@ -55,11 +55,17 @@ const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGen
   return (
     <>
       <div className="selector__button">
-        <Button
-          onClick={handleRunDQDClick}
-          text={getText(i18nKeys.JOB_RUN_BUTTONS__RUN_DATA_QUALITY)}
-          disabled={isButtonDisabled(JobRunTypes.DQD)}
-        />
+        <Tooltip
+          title={isButtonDisabled(JobRunTypes.DQD) && getText(i18nKeys.JOB_RUN_BUTTONS__NO_DATA_QUALITY_JOB_TOOLTIP)}
+        >
+          <span>
+            <Button
+              onClick={handleRunDQDClick}
+              text={getText(i18nKeys.JOB_RUN_BUTTONS__RUN_DATA_QUALITY)}
+              disabled={isButtonDisabled(JobRunTypes.DQD)}
+            />
+          </span>
+        </Tooltip>
         <Button
           onClick={handleRunDataCharacterizationClick}
           text={getText(i18nKeys.JOB_RUN_BUTTONS__RUN_DATA_CHARACTERIZATION)}
