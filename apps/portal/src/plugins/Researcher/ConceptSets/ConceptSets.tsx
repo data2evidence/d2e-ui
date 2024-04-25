@@ -166,7 +166,10 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
                 return (
                   <TableRow key={row.id}>
                     <TableCell>{row.id}</TableCell>
-                    <TableCell>{row.name}</TableCell>
+                    <TableCell>
+                      {row.name}
+                      {row.shared ? ` (${getText(i18nKeys.CONCEPT_SETS__SHARED)})` : ""}
+                    </TableCell>
                     <TableCell>{row.createdDate}</TableCell>
                     <TableCell>{row.modifiedDate}</TableCell>
                     <TableCell>{row.createdBy}</TableCell>

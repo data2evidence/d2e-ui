@@ -217,6 +217,7 @@ export const Terminology: FC<TerminologyProps> = ({
   const [tab, setTab] = useState<TabName>(tabNames.SEARCH);
   const [conceptSetName, setConceptSetName] = useState("");
   const [conceptSetId, setConceptSetId] = useState<string | null>(null);
+  const [conceptSetShared, setConceptSetShared] = useState(false);
   const [isConceptSetLoading, setIsConceptSetLoading] = useState(false);
   const [currentConceptSet, setCurrentConceptSet] = useState<ConceptSet | null>(null);
   const [conceptsResult, setConceptsResult] = useState<TerminologyResult | null>(null);
@@ -257,6 +258,7 @@ export const Terminology: FC<TerminologyProps> = ({
         };
       }),
       name: conceptSetName,
+      shared: conceptSetShared,
     };
     setIsConceptSetLoading(true);
     try {
@@ -293,6 +295,7 @@ export const Terminology: FC<TerminologyProps> = ({
         setConceptSetName(conceptSet.name);
         sortAndSetSelectedConcepts(conceptSet.concepts);
         setCurrentConceptSet(conceptSet);
+        setConceptSetShared(conceptSet.shared);
         return;
       } finally {
         setIsConceptSetLoading(false);

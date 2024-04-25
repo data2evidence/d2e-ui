@@ -189,6 +189,7 @@ export const i18nDefault = {
     CONCEPT_SETS__LIST: "Concept Set List",
     CONCEPT_SETS__Name: "Name",
     CONCEPT_SETS__REFERENCE_CONCEPTS: "Reference concepts from dataset",
+    CONCEPT_SETS__SHARED: "Shared",
     CONCEPT_SETS__UPDATED: "Updated",
     COPY_STUDY_DIALOG__CANCEL: "Cancel",
     COPY_STUDY_DIALOG__COHORT_FILTER: "Cohort Filter",
