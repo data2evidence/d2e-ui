@@ -16,6 +16,7 @@ import { TargetComparatorOutcomesNode } from "./TargetComparatorOutcomesNode/Tar
 import { CohortMethodNode } from "./CohortMethodNode/CohortMethodNode";
 import { CohortMethodAnalysisNode } from "./CohortMethodAnalysisNode/CohortMethodAnalysisNode";
 import { StudyPopulationSettingsNode } from "./StudyPopulationSettingsNode/StudyPopulationSettingsNode";
+import { SelfControlledCaseSeriesAnalysisNode } from "./SelfControlledCaseSeriesAnalysisNode/SelfControlledCaseSeriesAnalysisNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -35,7 +36,8 @@ export const NODE_TYPES: {
   era_covariate_settings_node: EraCovariateSettingsNode,
   calendar_time_covariate_settings_node: CalendarTimeCovariateSettingsNode,
   seasonality_covariate_settings_node: SeasonalityCovariateSettingsNode,
-  self_controlled_case_series_analysis_node: RNode,
+  self_controlled_case_series_analysis_node:
+    SelfControlledCaseSeriesAnalysisNode,
   self_controlled_case_series_node: SelfControlledCaseSeriesNode,
   patient_level_prediction_node: RNode,
   study_population_settings_node: StudyPopulationSettingsNode,
@@ -215,7 +217,28 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Self Controlled Case Series Analysis",
     description: "Run self-controlled case series analysis code.",
     tag: NodeTag.Red,
-    defaultData: {},
+    defaultData: {
+      description: "SCCS age 18-",
+      dbSccsDataArgs: {
+        studyStartDate: "",
+        studyEndDate: "",
+        maxCasesPerOutcome: 100000,
+        useNestingCohort: true,
+        nestingCohortId: 1,
+        deleteCovariateSmallCount: 0,
+      },
+      sccsIntervalDataArgs: {
+        minCasesForTimeCovariates: 100000,
+      },
+      fitSccsModelArgs: {
+        cvType: "auto",
+        selectorType: "byPid",
+        startingVariance: 0.1,
+        seed: 1,
+        resetCoefficients: true,
+        noiseLevel: "quiet",
+      },
+    },
   },
   self_controlled_case_series_node: {
     title: "Self Controlled Case Series",
