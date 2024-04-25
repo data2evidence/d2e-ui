@@ -25,11 +25,13 @@ import { ConceptSetWithConceptDetails } from "../../SystemAdmin/Terminology/util
 import { TerminologyProps } from "../../SystemAdmin/Terminology/Terminology";
 import SearchBar from "./SearchBar";
 import "./ConceptSets.scss";
+import { useUserInfo } from "../../../contexts/UserContext";
 
 interface ConceptSetsProps {}
 
 export const ConceptSets: FC<ConceptSetsProps> = () => {
   const { getText, i18nKeys } = useTranslation();
+  const { user } = useUserInfo();
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
   const [page, setPage] = useState(0);
@@ -55,7 +57,24 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
       setIsLoading(true);
 
       const response = await api.terminology.getConceptSets();
-      setData(response);
+      const sortFn = (a: ConceptSetWithConceptDetails, b: ConceptSetWithConceptDetails) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        return 0;
+      };
+      const userConceptSets = response
+        .filter((conceptSet) => {
+          return conceptSet.createdBy === user.idpUserId;
+        })
+        .sort(sortFn);
+      const sharedConceptSets = response
+        .filter((conceptSet) => {
+          return conceptSet.createdBy !== user.idpUserId && conceptSet.shared;
+        })
+        .sort(sortFn);
+      const list = [...userConceptSets, ...sharedConceptSets];
+      setData(list);
     } catch (e) {
       console.error(e);
       setFeedback({
