@@ -85,12 +85,7 @@ export const TargetComparatorOutcomesDrawer: FC<
           }
         />
       </Box>
-      <Box
-        mb={4}
-        border={"0.5px solid grey"}
-        paddingLeft={"20px"}
-        paddingTop={"20px"}
-      >
+      <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
         <div style={{ paddingBottom: "20px" }}>Negative Control Outcomes</div>
         <Box mb={4}>
           <TextInput
