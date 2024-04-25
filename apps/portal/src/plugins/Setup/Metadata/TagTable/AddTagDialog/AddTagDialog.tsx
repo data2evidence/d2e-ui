@@ -87,7 +87,7 @@ export const AddTagDialog: FC<AddTagDialogProps> = ({ open, onClose, setRefetch 
           <Box display="flex" gap={1} className="add-tag-dialog__footer-actions">
             <Button
               text={getText(i18nKeys.ADD_TAG_DIALOG__CANCEL)}
-              variant="secondary"
+              variant="outlined"
               onClick={() => handleClose("cancelled")}
             />
             <Button text={getText(i18nKeys.ADD_TAG_DIALOG__SAVE)} onClick={handleSave} loading={saving} />

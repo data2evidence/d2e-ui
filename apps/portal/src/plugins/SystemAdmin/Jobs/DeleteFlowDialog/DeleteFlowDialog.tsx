@@ -105,7 +105,7 @@ const DeleteFlowDialog: FC<DeleteFlowDialogProps> = ({ flow, open, onClose }) =>
         <Button
           text={getText(i18nKeys.DELETE_FLOW_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={loading}
         />

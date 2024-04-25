@@ -231,7 +231,7 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
         <Button
           text={getText(i18nKeys.EDIT_TENANT_ROLE_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={loading}
         />

@@ -118,7 +118,7 @@ export const ChangeUserPasswordDialog: FC<ChangeUserPasswordDialogProps> = ({ us
               </Tooltip>
               <Button
                 text={getText(i18nKeys.CHANGE_USER_PASSWORD_DIALOG__GENERATE)}
-                variant="tertiary"
+                variant="text"
                 onClick={handleGeneratePassword}
               />
             </Box>
@@ -130,7 +130,7 @@ export const ChangeUserPasswordDialog: FC<ChangeUserPasswordDialogProps> = ({ us
         <Button
           text={getText(i18nKeys.CHANGE_USER_PASSWORD_DIALOG__CANCEL)}
           onClick={handleClose}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={loading}
         />

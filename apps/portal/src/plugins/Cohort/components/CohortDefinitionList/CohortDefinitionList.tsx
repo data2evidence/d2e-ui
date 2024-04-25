@@ -139,7 +139,7 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
                     </TableCell>
                     <TableCell>{cohort.owner}</TableCell>
                     <TableCell className="col-action">
-                      <Button onClick={() => handleDataQualityButtonPress(cohort)} text="Data Quality"></Button>
+                      <Button onClick={() => handleDataQualityButtonPress(cohort)} text="Data Quality" />
                     </TableCell>
                     <TableCell className="col-action">
                       <div className="table-button-container">

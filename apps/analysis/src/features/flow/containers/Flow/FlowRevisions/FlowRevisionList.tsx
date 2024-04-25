@@ -85,17 +85,17 @@ export const FlowRevisionList: FC<RevisionItemProps> = ({
                   >
                     <Button
                       text="View"
-                      variant="tertiary"
+                      variant="text"
                       onClick={() => handleView(item.id)}
                     />
                     <Button
                       text="Duplicate"
-                      variant="tertiary"
+                      variant="text"
                       onClick={() => handleDuplicate(item.id)}
                     />
                     <Button
                       text="Delete"
-                      variant="tertiary"
+                      variant="text"
                       onClick={() => handleDelete(item.id)}
                     />
                   </Box>
