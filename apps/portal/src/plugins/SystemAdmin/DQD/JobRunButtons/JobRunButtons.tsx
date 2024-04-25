@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useCallback } from "react";
+import React, { FC, useState, useEffect, useCallback, useMemo } from "react";
 import { Button, Tooltip } from "@portal/components";
 import { useDialogHelper } from "../../../../hooks";
 import JobDialog from "../JobDialog/JobDialog";
@@ -48,6 +48,13 @@ const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGen
     [studyName, flowMetadata]
   );
 
+  const getTooltipText = useCallback(() => {
+    if (isButtonDisabled(JobRunTypes.DQD) && studyName) {
+      return getText(i18nKeys.JOB_RUN_BUTTONS__NO_DATA_QUALITY_JOB_TOOLTIP);
+    }
+    return "";
+  }, [studyName]);
+
   useEffect(() => {
     getFlowMetadata();
   }, [getFlowMetadata]);
@@ -55,9 +62,7 @@ const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGen
   return (
     <>
       <div className="selector__button">
-        <Tooltip
-          title={isButtonDisabled(JobRunTypes.DQD) && getText(i18nKeys.JOB_RUN_BUTTONS__NO_DATA_QUALITY_JOB_TOOLTIP)}
-        >
+        <Tooltip title={getTooltipText()}>
           <span>
             <Button
               onClick={handleRunDQDClick}
