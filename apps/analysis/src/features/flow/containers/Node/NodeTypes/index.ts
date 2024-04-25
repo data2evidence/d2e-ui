@@ -12,8 +12,10 @@ import { EraCovariateSettingsNode } from "./EraCovariateSettingsNode/EraCovariat
 import { CalendarTimeCovariateSettingsNode } from "./CalendarTimeCovariateSettingsNode/CalendarTimeCovariateSettingsNode";
 import { SeasonalityCovariateSettingsNode } from "./SeasonalityCovariateSettingsNode/SeasonalityCovariateSettingsNode";
 import { CohortIncidentNode } from "./CohortIncidentNode/CohortIncidentNode";
-import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 import { TargetComparatorOutcomesNode } from "./TargetComparatorOutcomesNode/TargetComparatorOutcomesNode";
+import { CohortMethodNode } from "./CohortMethodNode/CohortMethodNode";
+import { CohortMethodAnalysisNode } from "./CohortMethodAnalysisNode/CohortMethodAnalysisNode";
+import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
   [key in NodeType]: ComponentType<NodeProps<any>>;
@@ -27,8 +29,8 @@ export const NODE_TYPES: {
   covariate_settings_node: RNode,
   characterization_node: CharacterizationNode,
   target_comparator_outcomes_node: TargetComparatorOutcomesNode,
-  cohort_method_analysis_node: RNode,
-  cohort_method_node: RNode,
+  cohort_method_analysis_node: CohortMethodAnalysisNode,
+  cohort_method_node: CohortMethodNode,
   era_covariate_settings_node: EraCovariateSettingsNode,
   calendar_time_covariate_settings_node: CalendarTimeCovariateSettingsNode,
   seasonality_covariate_settings_node: SeasonalityCovariateSettingsNode,
@@ -151,7 +153,21 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Cohort Method Analysis",
     description: "Run cohort method analysis code",
     tag: NodeTag.Lavender,
-    defaultData: {},
+    defaultData: {
+      covariant: {
+        addDescendantsToExclude: true,
+      },
+      dbCohortMethodDataArgs: {
+        washoutPeriod: 183,
+        firstExposureOnly: true,
+        removeDuplicateSubjects: "remove all",
+        maxCohortSize: 100000,
+      },
+      modelType: "cox",
+      stopOnError: false,
+      control: "Cyclops::createControl(cvRepetitions = 1",
+      covariateFilter: "FeatureExtraction::getDefaultTable1Specifications()",
+    },
   },
   cohort_method_node: {
     title: "Cohort Method",
