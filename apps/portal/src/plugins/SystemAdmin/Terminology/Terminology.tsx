@@ -131,12 +131,14 @@ const NameSection = ({
               disabled={!isUserConceptSet}
             />
           </div>
-          <Button
-            text={conceptSetId ? getText(i18nKeys.TERMINOLOGY__UPDATE) : getText(i18nKeys.TERMINOLOGY__CREATE)}
-            style={{ marginLeft: 10 }}
-            onClick={saveConceptSet}
-            disabled={isLoading}
-          />
+          {isUserConceptSet && (
+            <Button
+              text={conceptSetId ? getText(i18nKeys.TERMINOLOGY__UPDATE) : getText(i18nKeys.TERMINOLOGY__CREATE)}
+              style={{ marginLeft: 10 }}
+              onClick={saveConceptSet}
+              disabled={isLoading}
+            />
+          )}
           <Button
             variant="secondary"
             text={getText(i18nKeys.TERMINOLOGY__CLOSE)}

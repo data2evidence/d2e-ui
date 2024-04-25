@@ -17,6 +17,7 @@ import {
   TablePaginationActions,
   TableRow,
   Title,
+  VisibilityOnIcon,
 } from "@portal/components";
 import { api } from "../../../axios/api";
 import { useFeedback, useTranslation } from "../../../contexts";
@@ -193,7 +194,10 @@ export const ConceptSets: FC<ConceptSetsProps> = () => {
                     <TableCell>{row.modifiedDate}</TableCell>
                     <TableCell>{row.createdBy}</TableCell>
                     <TableCell>
-                      <IconButton startIcon={<EditIcon />} onClick={() => handleAddAndEditConceptSet(row.id)} />
+                      <IconButton
+                        startIcon={row.createdBy === user.idpUserId ? <EditIcon /> : <VisibilityOnIcon />}
+                        onClick={() => handleAddAndEditConceptSet(row.id)}
+                      />
                     </TableCell>
                   </TableRow>
                 );
