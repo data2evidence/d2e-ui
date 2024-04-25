@@ -16,7 +16,7 @@ export type NodeType =
   | "self_controlled_case_series_analysis_node"
   | "self_controlled_case_series_node"
   | "patient_level_prediction_node"
-  | "study_poplulation_settings_node";
+  | "study_population_settings_node";
 
 export type NodeTypeChoice = Exclude<NodeType, "start">;
 
@@ -66,7 +66,7 @@ export const ZERO_INCIDENCE_NODE = [
   "era_covariate_settings_node",
   "calendar_time_covariate_settings_node",
   "seasonality_covariate_settings_node",
-  "study_poplulation_settings_node",
+  "study_population_settings_node",
 ];
 export const ONE_INCIDENCE_NODE = [
   "negative_control_outcome_cohort_node",
@@ -233,7 +233,7 @@ export const NODE_CONNECTOR_MAPPING = {
       },
     ],
   },
-  study_poplulation_settings_node: { type: "lightpink", connector_list: [] },
+  study_population_settings_node: { type: "lightpink", connector_list: [] },
 };
 
 export const OUTBOUND_CONNECTOR_STYLE = {

@@ -15,6 +15,7 @@ import { CohortIncidentNode } from "./CohortIncidentNode/CohortIncidentNode";
 import { TargetComparatorOutcomesNode } from "./TargetComparatorOutcomesNode/TargetComparatorOutcomesNode";
 import { CohortMethodNode } from "./CohortMethodNode/CohortMethodNode";
 import { CohortMethodAnalysisNode } from "./CohortMethodAnalysisNode/CohortMethodAnalysisNode";
+import { StudyPopulationSettingsNode } from "./StudyPopulationSettingsNode/StudyPopulationSettingsNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -37,7 +38,7 @@ export const NODE_TYPES: {
   self_controlled_case_series_analysis_node: RNode,
   self_controlled_case_series_node: SelfControlledCaseSeriesNode,
   patient_level_prediction_node: RNode,
-  study_poplulation_settings_node: RNode,
+  study_population_settings_node: StudyPopulationSettingsNode,
 };
 
 export const NODE_COLORS: {
@@ -60,7 +61,7 @@ export const NODE_COLORS: {
   self_controlled_case_series_analysis_node: "red",
   self_controlled_case_series_node: "darkred",
   patient_level_prediction_node: "magenta",
-  study_poplulation_settings_node: "lightpink",
+  study_population_settings_node: "lightpink",
 };
 
 export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
@@ -231,11 +232,26 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     tag: NodeTag.Magenta,
     defaultData: {},
   },
-  study_poplulation_settings_node: {
+  study_population_settings_node: {
     title: "Study Population Settings",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     tag: NodeTag.Lightpink,
-    defaultData: {},
+    defaultData: {
+      startAnchor: ["cohort start", "cohort start"],
+      riskWindowStart: 1,
+      endAnchor: ["cohort end", "cohort end"],
+      riskWindowEnd: 365,
+      minTimeAtRisk: 1,
+      studyPopulationArgs: {
+        minDaysAtRisk: 1,
+        riskWindowStart: 0,
+        startAnchor: ["cohort start", "cohort start"],
+        riskWindowEnd: 30,
+        endAnchor: ["cohort end", "cohort end"],
+        minAge: 18,
+        naivePeriod: 365,
+      },
+    },
   },
 };
 

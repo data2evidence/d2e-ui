@@ -137,7 +137,7 @@ export const CohortMethodAnalysisDrawer: FC<
             label="First Exposure Only"
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               onFormDataChange({
-                DbCohortMethodDataArgs: {
+                dbCohortMethodDataArgs: {
                   ...formData.dbCohortMethodDataArgs,
                   firstExposureOnly: e.target.checked,
                 },
