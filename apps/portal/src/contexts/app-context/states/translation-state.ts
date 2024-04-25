@@ -823,6 +823,7 @@ export const i18nDefault = {
     TERMINOLOGY__RELATED_CONCEPTS: "Related concepts",
     TERMINOLOGY__SEARCH: "Search",
     TERMINOLOGY__SELECTED_CONCEPTS: "Selected concepts",
+    TERMINOLOGY__SHARED: "Shared",
     TERMINOLOGY__UPDATE: "Update",
     TERMINOLOGY__UPDATING: "updating",
     TERMINOLOGY_DETAIL__CONCEPT_CLASS_ID: "Concept Class ID",

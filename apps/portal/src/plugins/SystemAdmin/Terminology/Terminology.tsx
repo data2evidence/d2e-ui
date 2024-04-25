@@ -1,6 +1,6 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
 import { PageProps, SystemAdminPageMetadata } from "@portal/plugin";
-import { Button } from "@portal/components";
+import { Button, Checkbox } from "@portal/components";
 
 import TerminologyList from "./components/TerminologyList/TerminologyList";
 import TerminologyDetail from "./components/TerminologyDetail/TerminologyDetail";
@@ -23,6 +23,7 @@ import { TabName, ConceptSet } from "./utils/types";
 import { terminologyApi } from "../../../axios/terminology";
 import { useDatasets } from "../../../hooks";
 import { useTranslation } from "../../../contexts";
+import { useUserInfo } from "../../../contexts/UserContext";
 
 export interface TerminologyProps extends PageProps<SystemAdminPageMetadata> {
   onConceptIdSelect?: (conceptData: any) => void;
@@ -66,6 +67,9 @@ const WithDrawer = ({
 const NameSection = ({
   conceptSetName,
   setConceptSetName,
+  conceptSetShared,
+  setConceptSetShared,
+  isUserConceptSet,
   saveConceptSet,
   isLoading,
   conceptSetId,
@@ -74,6 +78,9 @@ const NameSection = ({
 }: {
   conceptSetName: string;
   setConceptSetName: React.Dispatch<React.SetStateAction<string>>;
+  conceptSetShared: boolean;
+  setConceptSetShared: React.Dispatch<React.SetStateAction<boolean>>;
+  isUserConceptSet: boolean;
   saveConceptSet(): void;
   isLoading: boolean;
   conceptSetId: string | null;
@@ -114,6 +121,16 @@ const NameSection = ({
             },
           }}
         >
+          <div style={{ marginBottom: -15, marginLeft: 10 }}>
+            <Checkbox
+              checked={conceptSetShared}
+              label={getText(i18nKeys.TERMINOLOGY__SHARED)}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                setConceptSetShared(event.target.checked);
+              }}
+              disabled={!isUserConceptSet}
+            />
+          </div>
           <Button
             text={conceptSetId ? getText(i18nKeys.TERMINOLOGY__UPDATE) : getText(i18nKeys.TERMINOLOGY__CREATE)}
             style={{ marginLeft: 10 }}
@@ -211,6 +228,7 @@ export const Terminology: FC<TerminologyProps> = ({
 }: TerminologyProps) => {
   const { getText, i18nKeys } = useTranslation();
   const userId = baseUserId || metadata?.userId;
+  const { user } = useUserInfo();
   const [conceptId, setConceptId] = useState<null | number>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedConcepts, setSelectedConcepts] = useState<FhirValueSetExpansionContainsWithExt[]>([]);
@@ -218,6 +236,7 @@ export const Terminology: FC<TerminologyProps> = ({
   const [conceptSetName, setConceptSetName] = useState("");
   const [conceptSetId, setConceptSetId] = useState<string | null>(null);
   const [conceptSetShared, setConceptSetShared] = useState(false);
+  const [isUserConceptSet, setIsUserConceptSet] = useState(false);
   const [isConceptSetLoading, setIsConceptSetLoading] = useState(false);
   const [currentConceptSet, setCurrentConceptSet] = useState<ConceptSet | null>(null);
   const [conceptsResult, setConceptsResult] = useState<TerminologyResult | null>(null);
@@ -282,7 +301,7 @@ export const Terminology: FC<TerminologyProps> = ({
     } finally {
       setIsConceptSetLoading(false);
     }
-  }, [selectedConcepts, conceptSetName, conceptSetId]);
+  }, [selectedConcepts, conceptSetName, conceptSetId, conceptSetShared]);
 
   const getConceptSet = useCallback(
     async (conceptSetId: string) => {
@@ -296,6 +315,7 @@ export const Terminology: FC<TerminologyProps> = ({
         sortAndSetSelectedConcepts(conceptSet.concepts);
         setCurrentConceptSet(conceptSet);
         setConceptSetShared(conceptSet.shared);
+        setIsUserConceptSet(conceptSet.createdBy === user.idpUserId);
         return;
       } finally {
         setIsConceptSetLoading(false);
@@ -469,6 +489,9 @@ export const Terminology: FC<TerminologyProps> = ({
           <NameSection
             conceptSetName={conceptSetName}
             setConceptSetName={setConceptSetName}
+            conceptSetShared={conceptSetShared}
+            setConceptSetShared={setConceptSetShared}
+            isUserConceptSet={isUserConceptSet}
             saveConceptSet={saveConceptSet}
             isLoading={isConceptSetLoading}
             conceptSetId={conceptSetId}
