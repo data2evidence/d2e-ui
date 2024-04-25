@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useCallback, useMemo } from "react";
+import React, { FC, useState, useEffect, useCallback } from "react";
 import { Button, Tooltip } from "@portal/components";
 import { useDialogHelper } from "../../../../hooks";
 import JobDialog from "../JobDialog/JobDialog";
