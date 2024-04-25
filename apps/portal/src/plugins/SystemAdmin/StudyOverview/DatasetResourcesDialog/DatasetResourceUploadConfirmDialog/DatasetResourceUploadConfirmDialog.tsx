@@ -9,6 +9,7 @@ import { api } from "../../../../../axios/api";
 import { getFileSizeDisplay, getFileExtension } from "../../../../../utils";
 import { CloseDialogType, DatasetResource, Feedback } from "../../../../../types";
 import "./DatasetResourceUploadConfirmDialog.scss";
+import { useTranslation } from "../../../../../contexts";
 
 interface DatasetResourceUploadConfirmDialogProps {
   datasetId: string;
@@ -42,6 +43,7 @@ const DatasetResourceUploadConfirmDialog: FC<DatasetResourceUploadConfirmDialogP
   open,
   onClose,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const extension = getFileExtension(file?.name).toUpperCase();
   const [loading, setLoading] = useState(false);
@@ -76,8 +78,8 @@ const DatasetResourceUploadConfirmDialog: FC<DatasetResourceUploadConfirmDialogP
           } else {
             setFeedback({
               type: "error",
-              message: "An error has occurred.",
-              description: "Please try again. To report the error, please send an email to help@data4life.care.",
+              message: getText(i18nKeys.DATASET_RESOURCE_UPLOAD_CONFIRM_DIALOG__ERROR),
+              description: getText(i18nKeys.DATASET_RESOURCE_UPLOAD_CONFIRM_DIALOG__ERROR_DESCRIPTION),
             });
           }
         } finally {
@@ -85,13 +87,13 @@ const DatasetResourceUploadConfirmDialog: FC<DatasetResourceUploadConfirmDialogP
         }
       }
     },
-    [datasetId, file, onClose, setFeedback, mapFileToResource]
+    [datasetId, file, onClose, setFeedback, mapFileToResource, getText]
   );
 
   return (
     <Dialog
       className="dataset-resource-upload-confirm-dialog"
-      title="Add file"
+      title={getText(i18nKeys.DATASET_RESOURCE_UPLOAD_CONFIRM_DIALOG__ADD_FILE)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -100,11 +102,11 @@ const DatasetResourceUploadConfirmDialog: FC<DatasetResourceUploadConfirmDialogP
       <Divider />
       <div className="dataset-resource-upload-confirm-dialog__content">
         <FormControl sx={styles} className="metadata-form" variant="standard" fullWidth>
-          <FormLabel>File</FormLabel>
+          <FormLabel>{getText(i18nKeys.DATASET_RESOURCE_UPLOAD_CONFIRM_DIALOG__FILE)}</FormLabel>
           <Grid container className="dataset-resource-upload-confirm-dialog__file">
             <Grid item xs={7}>
               <TermsOfUseIcon style={{ marginRight: 10 }} />
-              {file?.name || "Untitled"}
+              {file?.name || getText(i18nKeys.DATASET_RESOURCE_UPLOAD_CONFIRM_DIALOG__UNTITLED)}
             </Grid>
             <Grid item xs={2} justifyContent="flex-end">
               {getFileSizeDisplay(file?.size ?? 0)}
@@ -117,8 +119,19 @@ const DatasetResourceUploadConfirmDialog: FC<DatasetResourceUploadConfirmDialogP
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={loading} />
-        <Button text="Add" onClick={() => handleClose("success")} block loading={loading} />
+        <Button
+          text={getText(i18nKeys.DATASET_RESOURCE_UPLOAD_CONFIRM_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="secondary"
+          block
+          disabled={loading}
+        />
+        <Button
+          text={getText(i18nKeys.DATASET_RESOURCE_UPLOAD_CONFIRM_DIALOG__ADD)}
+          onClick={() => handleClose("success")}
+          block
+          loading={loading}
+        />
       </div>
     </Dialog>
   );

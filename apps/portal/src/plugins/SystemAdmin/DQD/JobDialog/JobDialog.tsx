@@ -6,7 +6,7 @@ import webComponentWrapper from "../../../../webcomponents/webComponentWrapper";
 import { JobRunTypes } from "../types";
 import { api } from "../../../../axios/api";
 import { useDatasets } from "../../../../hooks";
-import { useFeedback } from "../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../contexts";
 import ReleaseSelector from "../ReleaseSelector/ReleaseSelector";
 import "./JobDialog.scss";
 
@@ -27,9 +27,13 @@ const JobDialog: FC<JobDialogProps> = ({
   open,
   onClose,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const studies = useDatasets("systemAdmin")[0];
   // Set title based on jobRunType
-  const title = jobRunType === JobRunTypes.DQD ? "Generate Data Quality" : "Generate Data Characterization";
+  const title =
+    jobRunType === JobRunTypes.DQD
+      ? getText(i18nKeys.JOB_DIALOG__GENERATE_DATA_QUALITY)
+      : getText(i18nKeys.JOB_DIALOG__GENERATE_DATA_CHARACTERIZATION);
   const [isLoading, setIsLoading] = useState(false);
   const [releaseId, setReleaseId] = useState("");
   const [comment, setComment] = useState("");
@@ -55,7 +59,7 @@ const JobDialog: FC<JobDialogProps> = ({
       }
       setFeedback({
         type: "success",
-        message: `${jobRunType} job successfully started.`,
+        message: getText(i18nKeys.JOB_DIALOG__SUCCESS, [jobRunType]),
         autoClose: 6000,
       });
       handleGenerateJob();
@@ -64,8 +68,8 @@ const JobDialog: FC<JobDialogProps> = ({
     } catch {
       setFeedback({
         type: "error",
-        message: `An error has occurred when trying to create a ${jobRunType} Job`,
-        description: "Please try again. To report the error, please send an email to help@data4life.care.",
+        message: getText(i18nKeys.JOB_DIALOG__ERROR, [jobRunType]),
+        description: getText(i18nKeys.JOB_DIALOG__ERROR_DESCRIPTION),
         autoClose: 6000,
       });
     }
@@ -94,7 +98,7 @@ const JobDialog: FC<JobDialogProps> = ({
           {/* @ts-ignore */}
           <d4l-input
             value={comment}
-            label="Comment"
+            label={getText(i18nKeys.JOB_DIALOG__COMMENT)}
             required
             // @ts-ignore
             ref={webComponentWrapper({
@@ -108,11 +112,11 @@ const JobDialog: FC<JobDialogProps> = ({
       <Divider />
       <div className="button-group-actions">
         {isLoading ? (
-          <Loader text="Generating Job" />
+          <Loader text={getText(i18nKeys.JOB_DIALOG__GENERATING_JOB)} />
         ) : (
           <>
-            <Button text="Generate" onClick={runJob} block disabled={isLoading} />
-            <Button text="Cancel" onClick={handleClose} variant="secondary" block />
+            <Button text={getText(i18nKeys.JOB_DIALOG__GENERATE)} onClick={runJob} block disabled={isLoading} />
+            <Button text={getText(i18nKeys.JOB_DIALOG__CANCEL)} onClick={handleClose} variant="secondary" block />
           </>
         )}
       </div>

@@ -20,6 +20,7 @@ import {
 import { CloseDialogType } from "../../../../types";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
 import "./ImportDialog.scss";
+import { useTranslation } from "../../../../contexts";
 
 interface ImportDialogProps {
   open: boolean;
@@ -29,6 +30,7 @@ interface ImportDialogProps {
 }
 
 const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoading }) => {
+  const { getText, i18nKeys } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
   const [columnMappingState, setColumnMappingState] = useState({
@@ -153,11 +155,11 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
           <div className="import-dialog-selection__columns">
             <div className="import-dialog-selection__header">
               <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                Column Mapping
+                {getText(i18nKeys.IMPORT_DIALOG__COLUMN_MAPPING)}
               </Typography>
             </div>
             <FormControl component="fieldset" className="import-dialog__selector">
-              <Typography minWidth={200}>Source code column</Typography>
+              <Typography minWidth={200}>n{getText(i18nKeys.IMPORT_DIALOG__SOURCE_CODE_COLUMN)}</Typography>
               <Select
                 value={columnMappingState.sourceCode}
                 onChange={(e) => handleColumnMappingChange(e, "sourceCode")}
@@ -171,7 +173,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
               </Select>
             </FormControl>
             <FormControl component="fieldset" className="import-dialog__selector">
-              <Typography minWidth={200}>Source name column</Typography>
+              <Typography minWidth={200}>{getText(i18nKeys.IMPORT_DIALOG__SOURCE_CODE_NAME)}</Typography>
               <Select
                 value={columnMappingState.sourceName}
                 onChange={(e) => handleColumnMappingChange(e, "sourceName")}
@@ -186,7 +188,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
             </FormControl>
 
             <FormControl component="fieldset" className="import-dialog__selector">
-              <Typography minWidth={200}>Source frequency column</Typography>
+              <Typography minWidth={200}>{getText(i18nKeys.IMPORT_DIALOG__SOURCE_FREQUENCY_COLUMN)}</Typography>
               <Select
                 value={columnMappingState.sourceFrequency}
                 onChange={(e) => handleColumnMappingChange(e, "sourceFrequency")}
@@ -200,7 +202,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
               </Select>
             </FormControl>
             <FormControl component="fieldset" className="import-dialog__selector">
-              <Typography minWidth={200}>Additional info column</Typography>
+              <Typography minWidth={200}>{getText(i18nKeys.IMPORT_DIALOG__ADDITIONAL_INFO_COLUMN)}</Typography>
               <Select
                 value={columnMappingState.description}
                 onChange={(e) => handleColumnMappingChange(e, "description")}
@@ -226,8 +228,12 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
       </div>
       <Divider />
       <div className="import-dialog-selection__buttons">
-        <Button text="Cancel" onClick={() => handleCancel("cancelled")} variant="secondary"></Button>
-        <Button text="Import" onClick={handleImport}></Button>
+        <Button
+          text={getText(i18nKeys.IMPORT_DIALOG__CANCEL)}
+          onClick={() => handleCancel("cancelled")}
+          variant="secondary"
+        ></Button>
+        <Button text={getText(i18nKeys.IMPORT_DIALOG__IMPORT)} onClick={handleImport}></Button>
       </div>
     </Dialog>
   );

@@ -10,6 +10,7 @@ import { TrashIcon } from "@portal/components";
 import webComponentWrapper from "../../../../../webcomponents/webComponentWrapper";
 import { UsefulEvent, NewStudyMetadataInput, DatasetAttributeConfig } from "../../../../../types";
 import "./MetadataForm.scss";
+import { useTranslation } from "../../../../../contexts";
 
 interface MetadataFormProps {
   studyMetadata: NewStudyMetadataInput;
@@ -49,6 +50,7 @@ const MetadataForm: FC<MetadataFormProps> = ({
   handleMetadataChange,
   error,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [attributeId, setAttributeId] = useState<string>("");
   const [value, setValue] = useState<string>("");
   const [dataType, setDataType] = useState<FormType>("");
@@ -137,7 +139,7 @@ const MetadataForm: FC<MetadataFormProps> = ({
             value={value}
             error={error}
           />
-          {error && <FormHelperText className="form-error">This is required</FormHelperText>}
+          {error && <FormHelperText className="form-error">{getText(i18nKeys.METADATA_FORM__REQUIRED)}</FormHelperText>}
         </div>
       )}
     </div>

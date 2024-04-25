@@ -5,8 +5,10 @@ import { StudyCard } from "../../shared/StudyOverview/StudyCard/StudyCard";
 import { usePublicDatasets } from "../../../hooks";
 import { config } from "../../../config/index";
 import "./PublicOverview.scss";
+import { useTranslation } from "../../../contexts";
 
 export const PublicOverview: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const navigate = useNavigate();
 
   const [datasets, loading, error] = usePublicDatasets();
@@ -24,7 +26,7 @@ export const PublicOverview: FC = () => {
     <div className="public-overview">
       <div className="public-overview__content">
         <div className="public-overview__header">
-          <Title>Dataset overview</Title>
+          <Title>{getText(i18nKeys.PUBLIC_OVERVIEW__DATASET_OVERVIEW)}</Title>
         </div>
         <div className="public-overview__studies_container">
           <div className="public-overview__studies public-overview__single_tenant">

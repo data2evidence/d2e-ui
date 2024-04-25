@@ -14,18 +14,19 @@ import JobRunButtons from "./JobRunButtons/JobRunButtons";
 import { api } from "../../../axios/api";
 
 import "./DQD.scss";
-
-enum DataQualityDashboardTabs {
-  Overview = "Overview",
-  Detail = "Detail",
-  JobStatus = "Job Status",
-  DataCharacterization = "Data Characterization",
-}
+import { useTranslation } from "../../../contexts";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const DQD: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
+  const DataQualityDashboardTabs = {
+    Overview: getText(i18nKeys.DQD__OVERVIEW),
+    Detail: getText(i18nKeys.DQD__DETAIL),
+    JobStatus: getText(i18nKeys.DQD__JOB_STATUS),
+    DataCharacterization: getText(i18nKeys.DQD__DATA_CHARACTERIZATION),
+  };
   const [selectedStudy, setSelectedStudy] = useState("");
   const [studyId, setStudyId] = useState("");
   const [tabValue, setTabValue] = useState(DataQualityDashboardTabs.JobStatus);
@@ -39,7 +40,7 @@ const DQD: FC = () => {
   };
 
   const handleTabSelectionChange = async (event: React.SyntheticEvent, value: string) => {
-    setTabValue(value as DataQualityDashboardTabs);
+    setTabValue(value);
   };
 
   const handleRefreshJobStatus = () => {
@@ -95,13 +96,13 @@ const DQD: FC = () => {
     return (
       <>
         {loadingDqdJobs ? (
-          <Loader text="Loading DQD Jobs" />
+          <Loader text={getText(i18nKeys.DQD__LOADER)} />
         ) : errorDqdJobs ? (
           <div>{errorDqdJobs.message}</div>
         ) : (
           dqdJobs && (
             <>
-              <Button onClick={handleRefreshJobStatus} text="Refresh Table" />
+              <Button onClick={handleRefreshJobStatus} text={getText(i18nKeys.DQD__REFRESH)} />
               <HistoryTable
                 data={mapTime(dqdJobs)}
                 handleStudySelect={handleStudySelect}
@@ -139,7 +140,7 @@ const DQD: FC = () => {
         {/* If study is not selected and tab value is not JobStatus, prompt user to select a study*/}
         {!selectedStudy && tabValue !== DataQualityDashboardTabs.JobStatus ? (
           <div className="info__section">
-            <div>Select a Study to view {tabValue} results </div>
+            <div>{getText(i18nKeys.DQD__SELECT, [tabValue])}</div>
           </div>
         ) : tabValue === DataQualityDashboardTabs.Overview ? (
           <DQDJobResults

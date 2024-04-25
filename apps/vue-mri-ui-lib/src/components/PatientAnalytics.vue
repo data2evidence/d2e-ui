@@ -1,6 +1,5 @@
 <template>
   <div :class="['pa-component-wrapper', { hideFilterCard: hideLeftPane }]">
-    <splashScreen v-if="getInitialLoad" />
     <div class="fullHeight pa-splitter" v-split v-if="!showExpandedFilters">
       <div id="pane-left" class="split">
         <div class="panel-header filters-toolbar d-flex">

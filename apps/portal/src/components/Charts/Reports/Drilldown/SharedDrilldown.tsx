@@ -13,6 +13,7 @@ import { parseDrilldownPieChartData, parseDrilldownBarChartData } from "../../ut
 
 import { DRILLDOWN_REPORT_BASE_TYPE } from "../../../DQD/types";
 import "./SharedDrilldown.scss";
+import { useTranslation } from "../../../../contexts";
 
 interface SharedDrilldownProps {
   flowRunId: string;
@@ -20,6 +21,7 @@ interface SharedDrilldownProps {
 }
 
 const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [data, setData] = useState({
     treemap: [],
   });
@@ -41,9 +43,9 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
     } catch (error) {
       console.error(error);
       setIsLoadingData(false);
-      setErr(`Error occured when fetching data characterization ${sourceKey} data`);
+      setErr(getText(i18nKeys.TREE_MAP_CHART__PREVALENCE, [sourceKey]));
     }
-  }, [flowRunId, sourceKey]);
+  }, [flowRunId, sourceKey, getText]);
 
   const getDrilldownData = useCallback(async () => {
     if (selectedConceptId === "") return;
@@ -60,9 +62,9 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
     } catch (error) {
       console.error(error);
       setIsLoadingDrilldownData(false);
-      setErrDrilldown(`Error occured when fetching data characterization ${sourceKey} data`);
+      setErrDrilldown(getText(i18nKeys.TREE_MAP_CHART__PREVALENCE, [sourceKey]));
     }
-  }, [flowRunId, sourceKey, selectedConceptId]);
+  }, [flowRunId, sourceKey, selectedConceptId, getText]);
 
   useEffect(() => {
     // Fetch data for charts
@@ -87,37 +89,46 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
           {drilldownData.ageAtFirstOccurrence && (
             <BoxPlotChart
               data={drilldownData.ageAtFirstOccurrence}
-              title={"Age at First Occurrence"}
-              xAxisName={"Gender"}
-              yAxisName={"Age at First Occurrence"}
+              title={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_1_TITLE)}
+              xAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_1_X_AXIS_NAME)}
+              yAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_1_Y_AXIS_NAME)}
             />
           )}
           {drilldownData.lengthOfEra && (
             <BoxPlotChart
               data={drilldownData.lengthOfEra}
-              title={"Length of Era Distribution"}
-              xAxisName={"Length of Era"}
-              yAxisName={"Days"}
+              title={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_2_TITLE)}
+              xAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_2_X_AXIS_NAME)}
+              yAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BOX_PLOT_CHART_2_Y_AXIS_NAME)}
             />
           )}
         </div>
 
         <div className="chart__container">
           {drilldownData.byValueAsConcept && (
-            <PieChart title={"Value As Concept"} data={parseDrilldownPieChartData(drilldownData.byValueAsConcept)} />
+            <PieChart
+              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_1_TITLE)}
+              data={parseDrilldownPieChartData(drilldownData.byValueAsConcept)}
+            />
           )}
           {drilldownData.byOperator && (
-            <PieChart title={"Operator Concept"} data={parseDrilldownPieChartData(drilldownData.byOperator)} />
+            <PieChart
+              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_2_TITLE)}
+              data={parseDrilldownPieChartData(drilldownData.byOperator)}
+            />
           )}
           {drilldownData.byQualifier && (
-            <PieChart title={"Qualifier Concept"} data={parseDrilldownPieChartData(drilldownData.byQualifier)} />
+            <PieChart
+              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_3_TITLE)}
+              data={parseDrilldownPieChartData(drilldownData.byQualifier)}
+            />
           )}
         </div>
 
         <div className="chart__container">
           {drilldownData.measurementValueDistribution && (
             <PieChart
-              title={"Measurement Records by Unit"}
+              title={getText(i18nKeys.SHARED_DRILLDOWN__PIE_CHART_4_TITLE)}
               data={parseDrilldownPieChartData(drilldownData.measurementValueDistribution)}
             />
           )}
@@ -131,10 +142,10 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
         {drilldownData.frequencyDistribution && (
           <BarChart
             barChartData={parseDrilldownBarChartData(drilldownData.frequencyDistribution)}
-            title="Frequency Distribution"
-            xAxisName='Count ("x" or more Procedures)'
-            yAxisName="% of total number of persons"
-            tooltipFormat="Count: {b}<br />% of total number of persons: {c}"
+            title={getText(i18nKeys.SHARED_DRILLDOWN__BAR_CHART_TITLE)}
+            xAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BAR_CHART_X_AXIS_NAME)}
+            yAxisName={getText(i18nKeys.SHARED_DRILLDOWN__BAR_CHART_Y_AXIS_NAME)}
+            tooltipFormat={getText(i18nKeys.SHARED_DRILLDOWN__BAR_CHART_TOOLTIP_FORMAT)}
           />
         )}
       </>
@@ -144,17 +155,21 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
   return (
     <>
       {isloadingData ? (
-        <Loader text={`Loading ${sourceKey} Reports`} />
+        <Loader text={getText(i18nKeys.SHARED_DRILLDOWN__LOADER, [sourceKey])} />
       ) : err ? (
         <div className="info__section">{err}</div>
       ) : (
         <div className="treemap-chart-table__container">
           {isloadingDrilldownData && (
             <div className="drilldown-loader">
-              <Loader text={`Loading ${sourceKey} Drilldown for concept: ${selectedConceptId}`} />
+              <Loader text={getText(i18nKeys.SHARED_DRILLDOWN__LOADER, [sourceKey, selectedConceptId])} />
             </div>
           )}
-          <TreeMapChartTable title=" Tree Map" data={data.treemap} setSelectedConceptId={setSelectedConceptId} />
+          <TreeMapChartTable
+            title={getText(i18nKeys.SHARED_DRILLDOWN__TREE_MAP_CHART_TITLE)}
+            data={data.treemap}
+            setSelectedConceptId={setSelectedConceptId}
+          />
         </div>
       )}
 

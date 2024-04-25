@@ -2,6 +2,7 @@ import React, { FC } from "react";
 
 import ReactECharts from "echarts-for-react";
 import "./TreeMapChart.scss";
+import { useTranslation } from "../../../../contexts";
 
 interface TreeMapChartProps {
   data: any[];
@@ -11,6 +12,7 @@ interface TreeMapChartProps {
 }
 
 const TreeMapChart: FC<TreeMapChartProps> = ({ data, title, setSelectedConceptId, extraChartConfigs }) => {
+  const { getText, i18nKeys } = useTranslation();
   const option = {
     tooltip: {
       formatter: function (info: any) {
@@ -29,9 +31,9 @@ const TreeMapChart: FC<TreeMapChartProps> = ({ data, title, setSelectedConceptId
           .join("");
         return [
           `<div class="tooltip-title">${parsedConceptPath}</div>`,
-          `Prevalence: ${percentPersons}<br>`,
-          `Number of people: ${numPersons}<br>`,
-          `Records per person: ${recordsPerPerson}`,
+          `${getText(i18nKeys.TREE_MAP_CHART__PREVALENCE)}: ${percentPersons}<br>`,
+          `${getText(i18nKeys.TREE_MAP_CHART__NUMBER_OF_PEOPLE)}: ${numPersons}<br>`,
+          `${getText(i18nKeys.TREE_MAP_CHART__RECORDS_PER_PERSON)}: ${recordsPerPerson}`,
         ].join("");
       },
       confine: true,
@@ -95,7 +97,7 @@ const TreeMapChart: FC<TreeMapChartProps> = ({ data, title, setSelectedConceptId
         option={option}
         onEvents={onEvents}
       />
-      <div>Box Size: Prevalence, Color: Records per person (Green to Grey = High to Low)</div>
+      <div>{getText(i18nKeys.TREE_MAP_CHART__CHART_LEGEND)}</div>
     </>
   );
 };

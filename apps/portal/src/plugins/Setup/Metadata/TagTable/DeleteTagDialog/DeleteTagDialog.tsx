@@ -2,7 +2,7 @@ import React, { FC, useCallback, useState } from "react";
 import Divider from "@mui/material/Divider";
 import { Box, Button, Dialog } from "@portal/components";
 import { api } from "../../../../../axios/api";
-import { useFeedback } from "../../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../../contexts";
 import { CloseDialogType } from "../../../../../types";
 import "./DeleteTagDialog.scss";
 
@@ -14,6 +14,7 @@ interface DeleteTagDialogProps {
 }
 
 export const DeleteTagDialog: FC<DeleteTagDialogProps> = ({ open, onClose, name, setRefetch }) => {
+  const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [deleting, setDeleting] = useState(false);
 
@@ -30,7 +31,7 @@ export const DeleteTagDialog: FC<DeleteTagDialogProps> = ({ open, onClose, name,
       await api.systemPortal.deleteDatasetTagConfig(name);
       setFeedback({
         type: "success",
-        message: `Tag Config deleted successfully.`,
+        message: getText(i18nKeys.DELETE_TAG_DIALOG__SUCCESS),
         autoClose: 6000,
       });
       setRefetch((refetch) => refetch + 1);
@@ -45,12 +46,12 @@ export const DeleteTagDialog: FC<DeleteTagDialogProps> = ({ open, onClose, name,
     } finally {
       setDeleting(false);
     }
-  }, [handleClose, name, setRefetch, setFeedback]);
+  }, [handleClose, name, setRefetch, setFeedback, getText]);
 
   return (
     <Dialog
       className="delete-tag-dialog"
-      title="Delete Tag"
+      title={getText(i18nKeys.DELETE_TAG_DIALOG__DELETE_TAG)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -60,15 +61,19 @@ export const DeleteTagDialog: FC<DeleteTagDialogProps> = ({ open, onClose, name,
         <div className="delete-tag-dialog__content">
           <div className="delete-tag-dialog__content-text">
             <div>
-              Are you sure you want to delete the following <br />
-              Tag: <strong>&quot;{name}&quot;</strong>? <br />
+              {getText(i18nKeys.DELETE_TAG_DIALOG__CONFIRM_1)} <br />
+              {getText(i18nKeys.DELETE_TAG_DIALOG__CONFIRM_2)}: <strong>&quot;{name}&quot;</strong>? <br />
             </div>
           </div>
         </div>
         <div className="delete-tag-dialog__footer">
           <Box display="flex" gap={1} className="delete-tag-dialog__footer-actions">
-            <Button text="Cancel" variant="secondary" onClick={() => handleClose("cancelled")} />
-            <Button text="Delete" onClick={handleDelete} loading={deleting} />
+            <Button
+              text={getText(i18nKeys.DELETE_TAG_DIALOG__CANCEL)}
+              variant="secondary"
+              onClick={() => handleClose("cancelled")}
+            />
+            <Button text={getText(i18nKeys.DELETE_TAG_DIALOG__DELETE)} onClick={handleDelete} loading={deleting} />
           </Box>
         </div>
       </>

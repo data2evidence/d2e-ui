@@ -1,7 +1,8 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import env from "../../../env";
 import { loadScript, loadStyleSheet, loadSapScript } from "../../../utils/loadScript";
 import PluginContainer from "./PluginContainer";
+import { Loader } from "@portal/components";
 
 interface PAPluginProps {
   tenantId?: string;
@@ -16,6 +17,7 @@ const VUE_APP_HOST = env.REACT_APP_DN_BASE_URL.endsWith("/")
 const APPROUTER_ORIGIN = new URL(PA_ASSETS_URL).origin;
 
 const PAPlugin: FC<PAPluginProps> = ({ studyId, getToken }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const isLocalDev = window.location.hostname === "localhost";
 
   const addOrigin = (arr: string[]) => {
@@ -33,6 +35,7 @@ const PAPlugin: FC<PAPluginProps> = ({ studyId, getToken }) => {
 
   useEffect(() => {
     let callbacks: (() => void)[] = [];
+    setIsLoading(true);
     fetch(PA_ASSETS_URL)
       .then((response) => response.json())
       .then(({ css, js }) => {
@@ -42,14 +45,20 @@ const PAPlugin: FC<PAPluginProps> = ({ studyId, getToken }) => {
           hideLogoutButton();
           callbacks = [...scriptCallbacks, ...styleSheetCallbacks];
         });
-      });
+      })
+      .then(() => setIsLoading(false));
+
     //Remove scripts and links upon component unmounting
-    return () => callbacks.forEach((callback) => callback());
+    return () => {
+      callbacks.forEach((callback) => callback());
+    };
   }, [isLocalDev]);
 
   return (
     <PluginContainer studyId={studyId} getToken={getToken} qeSvcUrl={VUE_APP_HOST}>
-      <div className="vue-main" />
+      <div className="vue-main" style={{ height: "100%" }}>
+        {isLoading && <Loader />}
+      </div>
     </PluginContainer>
   );
 };
