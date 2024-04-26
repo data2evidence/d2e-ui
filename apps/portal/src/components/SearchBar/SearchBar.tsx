@@ -2,7 +2,7 @@ import React, { FC, useState } from "react";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { ArrowcirclerightIcon } from "@portal/components";
+import { ArrowCircleRightIcon } from "@portal/components";
 import { useTranslation } from "../../contexts";
 interface SearchBarProps {
   keyword?: any;
@@ -48,7 +48,7 @@ const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter, width = 480 }) => {
           aria-label={getText(i18nKeys.SEARCH_BAR__SEARCH)}
           onClick={() => onEnter(searchString)}
         >
-          <ArrowcirclerightIcon />
+          <ArrowCircleRightIcon />
         </IconButton>
       </div>
     </div>
