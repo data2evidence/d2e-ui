@@ -1,7 +1,16 @@
 import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
-import { Box, Checkbox, TextInput } from "@portal/components";
+import {
+  Box,
+  Checkbox,
+  TextInput,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+} from "@portal/components";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -22,10 +31,11 @@ export interface NegatveControlOutcomeDrawerProps
 
 interface FormData extends NegatveControlOutcomeNodeData {}
 
+const OCCURENCE_TYPE_OPTIONS = ["first", "all"];
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  occurenceType: "",
+  occurenceType: "all",
   detectOnDescendants: true,
 };
 
@@ -86,13 +96,22 @@ export const NegatveControlOutcomeDrawer: FC<
         />
       </Box>
       <Box mb={4}>
-        <TextInput
-          label="OccurenceType"
-          value={formData.occurenceType}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({ occurenceType: e.target.value })
-          }
-        />
+        <FormControl variant="standard" fullWidth>
+          <InputLabel shrink>OccurenceType</InputLabel>
+          <Select
+            value={formData.occurenceType}
+            onChange={(e: SelectChangeEvent) =>
+              onFormDataChange({ occurenceType: e.target.value })
+            }
+          >
+            <MenuItem value="">&nbsp;</MenuItem>
+            {OCCURENCE_TYPE_OPTIONS.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
       <Box mb={4}>
         <Checkbox
