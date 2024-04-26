@@ -87,7 +87,8 @@ export const NodeLayout = <T extends NodeDataState>({
         <div className="node__footer">
           <Button
             text={`View ${resultType === "error" ? "error" : "output"}`}
-            variant={resultType === "error" ? "alarm" : "secondary"}
+            variant="outlined"
+            color={resultType === "error" ? "error" : "primary"}
             onClick={onResultClick}
           />
         </div>
