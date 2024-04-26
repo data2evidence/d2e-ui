@@ -76,6 +76,13 @@ RUN --mount=type=cache,target=build \
     npx nx build flow
 RUN ls -l /usr/src/services/app/alp-ui/resources/
 
+FROM portal-base-build AS analysis-ui-build
+
+RUN --mount=type=cache,target=build \
+    --mount=type=cache,target=dist \
+    npx nx build analysis_flow
+RUN ls -l /usr/src/services/app/alp-ui/resources/
+
 FROM base-build AS ui5-build
 
 RUN yarn ui5 build -a --clean-dest --dest ./resources/ui5
@@ -129,6 +136,7 @@ COPY --from=portal-ui-build /usr/src/services/app/alp-ui/resources/portal servic
 COPY --from=mri-portal-build /usr/src/services/app/alp-ui/resources/mri-ui5 services/app/alp-ui/resources/mri-ui5
 COPY --from=superadmin-ui-build /usr/src/services/app/alp-ui/resources/superadmin services/app/alp-ui/resources/superadmin
 COPY --from=flow-ui-build /usr/src/services/app/alp-ui/resources/flow services/app/alp-ui/resources/flow
+COPY --from=analysis-ui-build /usr/src/services/app/alp-ui/resources/analysis services/app/alp-ui/resources/analysis
 COPY --from=ui5-build /usr/src/services/app/alp-ui/resources/ui5 services/app/alp-ui/resources/ui5
 COPY --from=starboard-build /usr/src/services/app/alp-ui/resources/starboard-notebook-base services/app/alp-ui/resources/starboard-notebook-base
 COPY --from=pyqe-build /usr/src/services/app/alp-ui/resources/pyodidepyqe-0.0.2-py3-none-any.whl services/app/alp-ui/resources/starboard-notebook-base

@@ -1,7 +1,7 @@
-import React, { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
+import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Button, Checkbox, Loader, Title } from "@portal/components";
 import { useFeatures } from "../../../hooks";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import { api } from "../../../axios/api";
 import { IFeature } from "../../../types";
 import "./Feature.scss";
@@ -14,35 +14,39 @@ const EMPTY_FORM_DATA: FormData = {
   features: [],
 };
 
-const FEATURES: Record<string, { name: string }> = {
-  datasetFilter: {
-    name: "Dataset filter",
-  },
-  terminology: {
-    name: "Terminology",
-  },
-  pa: {
-    name: "Patient Analytics",
-  },
-  conceptSets: {
-    name: "Concepts",
-  },
-  cohort: {
-    name: "Cohort",
-  },
-  starboard: {
-    name: "Notebooks",
-  },
-  dataflow: {
-    name: "Dataflow",
-  },
-};
-
 export const Feature: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [saving, setSaving] = useState(false);
   const [features, loading, error] = useFeatures();
   const { setFeedback } = useFeedback();
+
+  const FEATURES: Record<string, { name: string }> = useMemo(
+    () => ({
+      datasetFilter: {
+        name: getText(i18nKeys.FEATURE__DATASET_FILTER),
+      },
+      terminology: {
+        name: getText(i18nKeys.FEATURE__TERMINOLOGY),
+      },
+      pa: {
+        name: getText(i18nKeys.FEATURE__PATIENT_ANALYTICS),
+      },
+      conceptSets: {
+        name: getText(i18nKeys.FEATURE__CONCEPTS),
+      },
+      cohort: {
+        name: getText(i18nKeys.FEATURE__COHORT),
+      },
+      starboard: {
+        name: getText(i18nKeys.FEATURE__NOTEBOOKS),
+      },
+      dataflow: {
+        name: getText(i18nKeys.FEATURE__DATAFLOW),
+      },
+    }),
+    [getText]
+  );
 
   useEffect(() => {
     setFormData({ features });
@@ -56,7 +60,7 @@ export const Feature: FC = () => {
     try {
       setSaving(true);
       await api.systemPortal.setFeatures(formData.features);
-      setFeedback({ type: "success", message: "Changes saved", autoClose: 6000 });
+      setFeedback({ type: "success", message: getText(i18nKeys.FEATURE__SUCCESS), autoClose: 6000 });
     } catch (err: any) {
       console.error(err);
 
@@ -65,14 +69,14 @@ export const Feature: FC = () => {
       } else {
         setFeedback({
           type: "error",
-          message: "An error has occurred.",
-          description: "Please try again. To report the error, please send an email to help@data4life.care.",
+          message: getText(i18nKeys.FEATURE__ERROR),
+          description: getText(i18nKeys.FEATURE__ERROR_DESCRIPTION),
         });
       }
     } finally {
       setSaving(false);
     }
-  }, [formData]);
+  }, [formData, getText]);
 
   if (error) console.error(error.message);
 
@@ -83,7 +87,7 @@ export const Feature: FC = () => {
       ) : (
         <div className="feature">
           <div className="feature__header">
-            <Title>Feature flags</Title>
+            <Title>{getText(i18nKeys.FEATURE__FEATURE_FLAGS)}</Title>
           </div>
           <div className="feature__content">
             {formData.features
@@ -107,7 +111,7 @@ export const Feature: FC = () => {
           </div>
           <div className="feature__footer">
             <Box display="flex" gap={1} className="feature__footer-actions">
-              <Button text="Save" onClick={handleSave} loading={saving} />
+              <Button text={getText(i18nKeys.FEATURE__SAVE)} onClick={handleSave} loading={saving} />
             </Box>
           </div>
         </div>

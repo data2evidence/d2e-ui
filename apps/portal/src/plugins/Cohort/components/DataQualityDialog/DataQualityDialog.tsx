@@ -13,7 +13,7 @@ import {
   JobRunTypes,
 } from "../../../SystemAdmin/DQD/types";
 import { useDialogHelper } from "../../../../hooks";
-import { useFeedback } from "../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../contexts";
 import { useUserInfo } from "../../../../contexts/UserContext";
 
 import "./DataQualityDialog.scss";
@@ -26,6 +26,7 @@ interface DataQualityDialogProps {
 }
 
 const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open, onClose }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [refetchLatestFlowRun, setRefetchLatestFlowRun] = useState(0);
   const [latestFlowRun, loadingLatestFlowRun, errorLatestFlowRun] = useDataQualityDatasetLatestCohortFlowRun(
     datasetId,
@@ -57,15 +58,15 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
   const renderDataQualityJobState = () => {
     // Flow has not completed succesfully
     if (FlowRunFailedJobTypes.includes(latestFlowRun.state.type)) {
-      return <SubTitle>Latest job failed</SubTitle>;
+      return <SubTitle>{getText(i18nKeys.DATA_QUALITY_DIALOG__LATEST_JOB_FAILED)}</SubTitle>;
     }
 
     if (FlowRunCancelledJobTypes.includes(latestFlowRun.state.type)) {
-      return <SubTitle>Latest job cancelled</SubTitle>;
+      return <SubTitle>{getText(i18nKeys.DATA_QUALITY_DIALOG__LATEST_JOB_CANCELLED)}</SubTitle>;
     }
 
     if (FlowRunInProgressJobStateTypes.includes(latestFlowRun.state.type)) {
-      return <Loader text={`Latest Data Quality job is ${latestFlowRun.state.type}`} />;
+      return <Loader text={`${getText(i18nKeys.DATA_QUALITY_DIALOG__LATEST_JOB)} ${latestFlowRun.state.type}`} />;
     }
 
     if (FlowRunJobStateTypes.COMPLETED) {
@@ -84,7 +85,7 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
   return (
     <Dialog
       className="results-dialog"
-      title={`Data Quality results for Cohort: ${cohort.name}`}
+      title={`${getText(i18nKeys.DATA_QUALITY_DIALOG__RESULTS)}: ${cohort.name}`}
       closable
       open={open}
       onClose={handleClose}
@@ -96,21 +97,19 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
         <div className="results-dialog__button_container">
           <Button
             onClick={openJobDialog}
-            text="Run Data Quality"
+            text={getText(i18nKeys.DATA_QUALITY_DIALOG__RUN_DATA_QUALITY)}
             disabled={FlowRunInProgressJobStateTypes.includes(latestFlowRun?.state?.type) || !userInfo.isSystemAdmin}
-          ></Button>
+          />
         </div>
         <div>
           {loadingLatestFlowRun ? (
-            <Loader text="Loading Data Quality Latest Flow Run" />
+            <Loader text={getText(i18nKeys.DATA_QUALITY_DIALOG__LOAD_LATEST_RUN)} />
           ) : errorLatestFlowRun ? (
             <div>{errorLatestFlowRun.message}</div>
           ) : latestFlowRun ? (
             renderDataQualityJobState()
           ) : (
-            <SubTitle>
-              No Data Quality Job found for cohort, click Run Data Quality button to generate Data Quality results
-            </SubTitle>
+            <SubTitle>{getText(i18nKeys.DATA_QUALITY_DIALOG__NO_JOB_FOUND)}</SubTitle>
           )}
         </div>
         <JobDialog

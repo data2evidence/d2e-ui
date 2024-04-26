@@ -6,6 +6,7 @@ import { Button, Dialog } from "@portal/components";
 import { Loader } from "@portal/components";
 import { CohortMgmt } from "../../../../axios/cohort-mgmt";
 import "./CohortDeleteDialog.scss";
+import { useTranslation } from "../../../../contexts";
 interface CohortDeleteDialogProps {
   cohort?: CohortMapping;
   cohortMgmtClient: CohortMgmt;
@@ -23,6 +24,7 @@ const CohortDeleteDialog: FC<CohortDeleteDialogProps> = ({
   onClose,
   setRefetch,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,17 +40,17 @@ const CohortDeleteDialog: FC<CohortDeleteDialogProps> = ({
       await cohortMgmtClient.deleteCohort(cohort.id);
       setMainFeedback({
         type: "success",
-        message: `Cohort deleted successfully.`,
+        message: getText(i18nKeys.COHORT_DELETE_DIALOG__DELETE_SUCCESSFUL),
         autoClose: 6000,
       });
       setRefetch(true);
       handleClose();
     } catch (err) {
-      console.error("An error occured while deleting cohort");
+      console.error("An error occurred while deleting cohort");
       setFeedback({
         type: "error",
-        message: "An error has occurred.",
-        description: "Please try again. To report the error, please send an email to help@data4life.care.",
+        message: getText(i18nKeys.COHORT_DELETE_DIALOG__ERROR_OCCURRED),
+        description: getText(i18nKeys.COHORT_DELETE_DIALOG__ERROR_OCCURRED_DESCRIPTION),
       });
     } finally {
       setIsLoading(false);
@@ -58,7 +60,7 @@ const CohortDeleteDialog: FC<CohortDeleteDialogProps> = ({
   return (
     <Dialog
       className="delete-cohort-dialog"
-      title="Delete Cohort"
+      title={getText(i18nKeys.COHORT_DELETE_DIALOG__DELETE_COHORT)}
       closable
       open={open}
       onClose={handleClose}
@@ -66,19 +68,30 @@ const CohortDeleteDialog: FC<CohortDeleteDialogProps> = ({
     >
       <Divider />
       <div className="delete-cohort-dialog__content">
-        <div>Are you sure you want to delete the following cohort:</div>
+        <div>{getText(i18nKeys.COHORT_DELETE_DIALOG__ARE_YOU_SURE)}:</div>
         <div>
-          Name: <strong>&quot;{cohort?.name}&quot;</strong>
+          {getText(i18nKeys.COHORT_DELETE_DIALOG__NAME)}: <strong>&quot;{cohort?.name}&quot;</strong>
           <br />
-          Description: <strong>&quot;{cohort?.description}&quot;</strong>
+          {getText(i18nKeys.COHORT_DELETE_DIALOG__DESCRIPTION)}: <strong>&quot;{cohort?.description}&quot;</strong>
         </div>
       </div>
 
       {isLoading && <Loader />}
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={handleClose} variant="secondary" block disabled={isLoading} />
-        <Button text="Yes, delete" onClick={handleDelete} block disabled={isLoading} />
+        <Button
+          text={getText(i18nKeys.COHORT_DELETE_DIALOG__CANCEL)}
+          onClick={handleClose}
+          variant="outlined"
+          block
+          disabled={isLoading}
+        />
+        <Button
+          text={getText(i18nKeys.COHORT_DELETE_DIALOG__CONFIRM)}
+          onClick={handleDelete}
+          block
+          disabled={isLoading}
+        />
       </div>
     </Dialog>
   );

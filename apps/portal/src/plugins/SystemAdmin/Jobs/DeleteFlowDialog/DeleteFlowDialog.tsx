@@ -6,6 +6,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import webComponentWrapper from "../../../../webcomponents/webComponentWrapper";
 import { api } from "../../../../axios/api";
 import "./DeleteFlowDialog.scss";
+import { useTranslation } from "../../../../contexts";
 
 interface DeleteFlowDialogProps {
   flow?: Flow;
@@ -14,6 +15,7 @@ interface DeleteFlowDialogProps {
 }
 
 const DeleteFlowDialog: FC<DeleteFlowDialogProps> = ({ flow, open, onClose }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [inputData, setInputData] = useState("");
   const [inputError, setInputError] = useState(false);
@@ -47,14 +49,14 @@ const DeleteFlowDialog: FC<DeleteFlowDialogProps> = ({ flow, open, onClose }) =>
         console.log(error);
         setFeedback({
           type: "error",
-          message: `Flow ${flow?.name} failed to delete`,
+          message: getText(i18nKeys.DELETE_FLOW_DIALOG__ERROR, [String(flow?.name)]),
           description: error.data.message,
         });
       } finally {
         setLoading(false);
       }
     },
-    [flow]
+    [flow, getText]
   );
 
   const handleDelete = useCallback(async () => {
@@ -67,7 +69,7 @@ const DeleteFlowDialog: FC<DeleteFlowDialogProps> = ({ flow, open, onClose }) =>
   return (
     <Dialog
       className="delete-flow-dialog"
-      title="Delete flow"
+      title={getText(i18nKeys.DELETE_FLOW_DIALOG__DELETE)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -77,11 +79,11 @@ const DeleteFlowDialog: FC<DeleteFlowDialogProps> = ({ flow, open, onClose }) =>
       <div className="delete-flow-dialog__content">
         <div className="delete-flow-dialog__content-text">
           <div>
-            Are you sure you want to permanently delete the following <br />
-            flow: <strong>&quot;{flow!.name}&quot;</strong>? <br />
+            {getText(i18nKeys.DELETE_FLOW_DIALOG__CONFIRM_1)} <br />
+            {getText(i18nKeys.DELETE_FLOW_DIALOG__CONFIRM_2)}: <strong>&quot;{flow!.name}&quot;</strong>? <br />
           </div>
-          <div>This action cannot be undone. Deleted data cannot be recovered.</div>
-          <div>Type the flow name to confirm.</div>
+          <div>{getText(i18nKeys.DELETE_FLOW_DIALOG__CONFIRM_3)}</div>
+          <div>{getText(i18nKeys.DELETE_FLOW_DIALOG__CONFIRM_4)}</div>
         </div>
         <div className="delete-flow-dialog__content-input">
           <d4l-input
@@ -91,17 +93,28 @@ const DeleteFlowDialog: FC<DeleteFlowDialogProps> = ({ flow, open, onClose }) =>
                 setInputData(event.target.value);
               },
             })}
-            label="Enter flow name"
+            label={getText(i18nKeys.DELETE_FLOW_DIALOG__ENTER_FLOW_NAME)}
             error={inputError}
             value={inputData}
           />
-          {inputError && <FormHelperText>Enter the exact flow name</FormHelperText>}
+          {inputError && <FormHelperText>{getText(i18nKeys.DELETE_FLOW_DIALOG__ENTER_EXACT_FLOW_NAME)}</FormHelperText>}
         </div>
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={loading} />
-        <Button text="Confirm deletion" onClick={handleDelete} block loading={loading} />
+        <Button
+          text={getText(i18nKeys.DELETE_FLOW_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="outlined"
+          block
+          disabled={loading}
+        />
+        <Button
+          text={getText(i18nKeys.DELETE_FLOW_DIALOG__CONFIRM_DELETION)}
+          onClick={handleDelete}
+          block
+          loading={loading}
+        />
       </div>
     </Dialog>
   );

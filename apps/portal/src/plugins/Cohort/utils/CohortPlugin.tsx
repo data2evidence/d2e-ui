@@ -4,7 +4,7 @@ import CohortDefinitionList from "../components/CohortDefinitionList/CohortDefin
 import CohortDeleteDialog from "../components/CohortDeleteDialog/CohortDeleteDialog";
 import DataQualityDialog from "../components/DataQualityDialog/DataQualityDialog";
 import { useDialogHelper } from "../../../hooks";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import { CohortMapping } from "../../../types/cohort";
 import "./CohortPlugin.scss";
 
@@ -17,6 +17,7 @@ interface CohortPluginProps {
 }
 
 const CohortPlugin: FC<CohortPluginProps> = ({ userId, cohortMgmtClient, studyName, schemaName, databaseCode }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [activeCohort, setActiveCohort] = useState<CohortMapping>();
   const [refetch, setRefetch] = useState(false);
   const { setFeedback } = useFeedback();
@@ -28,10 +29,10 @@ const CohortPlugin: FC<CohortPluginProps> = ({ userId, cohortMgmtClient, studyNa
   return (
     <div className="cohort__container">
       <div className="cohort__container__header">{studyName}</div>
-      <div className="cohort__container__title">Cohort Management</div>
+      <div className="cohort__container__title">{getText(i18nKeys.COHORT_PLUGIN__COHORT_MANAGEMENT)}</div>
 
       <div className="cohort__content">
-        <div className="cohort__content__header">Cohorts</div>
+        <div className="cohort__content__header">{getText(i18nKeys.COHORT_PLUGIN__COHORTS)}</div>
         {userId && (
           <CohortDefinitionList
             userId={userId}

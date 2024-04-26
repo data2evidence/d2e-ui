@@ -47,6 +47,7 @@ import {
 } from "../UpdateStudyDialog/DashboardForm/DashboardForm";
 import "./AddStudyDialog.scss";
 import { api } from "../../../../axios/api";
+import { useTranslation } from "../../../../contexts";
 
 interface AddStudyDialogProps {
   open: boolean;
@@ -166,25 +167,6 @@ export const SchemaTypes = {
   ExistingCDM: "existing_cdm",
 };
 
-const SchemaOptions: dropdownOption[] = [
-  {
-    title: "Create new schema",
-    type: SchemaTypes.CreateCDM,
-  },
-  {
-    title: "Create new schema with existing name",
-    type: SchemaTypes.CustomCDM,
-  },
-  {
-    title: "No schema",
-    type: SchemaTypes.NoCDM,
-  },
-  {
-    title: "Use existing schema",
-    type: SchemaTypes.ExistingCDM,
-  },
-];
-
 const styles: SxProps = {
   color: "#000080",
   "&::after, &:hover:not(.Mui-disabled)::before": {
@@ -210,6 +192,7 @@ const styles: SxProps = {
  * @returns The dialog object
  */
 const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLoading, studies, databases }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [tenant] = useTenant();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [formError, setFormError] = useState<FormError>(EMPTY_FORM_ERROR);
@@ -226,6 +209,25 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
   const [feedback, setFeedback] = useState<Feedback>({});
   const [formMetadataErrorIndex, setFormMetadataErrorIndex] = useState<Array<Number>>([]);
   const [dashboardErrorIndex, setDashboardErrorIndex] = useState<Record<number, DashboardFormError>>({});
+
+  const SchemaOptions: dropdownOption[] = [
+    {
+      title: getText(i18nKeys.ADD_STUDY_DIALOG__CREATE_NEW_SCHEMA),
+      type: SchemaTypes.CreateCDM,
+    },
+    {
+      title: getText(i18nKeys.ADD_STUDY_DIALOG__CREATE_NEW_SCHEMA_EXISTING_NAME),
+      type: SchemaTypes.CustomCDM,
+    },
+    {
+      title: getText(i18nKeys.ADD_STUDY_DIALOG__NO_SCHEMA),
+      type: SchemaTypes.NoCDM,
+    },
+    {
+      title: getText(i18nKeys.ADD_STUDY_DIALOG__EXISTING_SCHEMA),
+      type: SchemaTypes.ExistingCDM,
+    },
+  ];
 
   const displayDatabases = useMemo(
     () => [SchemaTypes.CreateCDM, SchemaTypes.CustomCDM, SchemaTypes.ExistingCDM].includes(formData.schemaOption),
@@ -529,7 +531,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
   return (
     <Dialog
       className="add-study-dialog"
-      title="Add dataset"
+      title={getText(i18nKeys.ADD_STUDY_DIALOG__ADD_DATASET)}
       closable
       fullWidth
       maxWidth="md"
@@ -540,24 +542,26 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
       <Divider />
       <div className="add-study-dialog__content">
         <Box mt={4} fontWeight="bold">
-          Dataset info configuration
+          {getText(i18nKeys.ADD_STUDY_DIALOG__INFO_CONFIG)}
         </Box>
         <Box mb={4}>
           <TextField
             fullWidth
             variant="standard"
-            label="Dataset name - Displayed on buttons and headers"
+            label={getText(i18nKeys.ADD_STUDY_DIALOG__DATASET_NAME)}
             value={formData.name}
             onChange={(event) => handleFormDataChange({ name: event.target.value })}
             error={formError.name.required}
           />
-          {formError.name.required && <FormHelperText error={true}>This is required</FormHelperText>}
+          {formError.name.required && (
+            <FormHelperText error={true}>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+          )}
         </Box>
         <Box mb={4}>
           <TextField
             fullWidth
             variant="standard"
-            label="Dataset summary"
+            label={getText(i18nKeys.ADD_STUDY_DIALOG__DATASET_SUMMARY)}
             value={formData.summary}
             onChange={(event) => handleFormDataChange({ summary: event.target.value })}
           />
@@ -566,13 +570,13 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
           <Checkbox
             checked={formData.showRequestAccess}
             checkbox-id="request-access"
-            label="Show request access button"
+            label={getText(i18nKeys.ADD_STUDY_DIALOG__SHOW_REQUEST_ACCESS)}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               handleFormDataChange({ showRequestAccess: event.target.checked });
             }}
           />
         </div>
-        <div>Description</div>
+        <div>{getText(i18nKeys.ADD_STUDY_DIALOG__DESCRIPTION)}</div>
         <SimpleMDE
           value={formData.description}
           onChange={(value) => handleFormDataChange({ description: value })}
@@ -588,7 +592,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
             fullWidth
             {...(formError.schemaOption.required ? { error: true } : {})}
           >
-            <InputLabel htmlFor="schema-option">CDM Schema Option</InputLabel>
+            <InputLabel htmlFor="schema-option">{getText(i18nKeys.ADD_STUDY_DIALOG__CDM_SCHEMA_OPTION)}</InputLabel>
             <Select
               sx={styles}
               value={formData.schemaOption}
@@ -616,7 +620,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
                 </MenuItem>
               ))}
             </Select>
-            {formError.schemaOption.required && <FormHelperText>This is required</FormHelperText>}
+            {formError.schemaOption.required && (
+              <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+            )}
           </FormControl>
         </Box>
 
@@ -630,7 +636,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
               fullWidth
               {...(formError.databaseCode.required ? { error: true } : {})}
             >
-              <InputLabel htmlFor="data-model-option">Databases</InputLabel>
+              <InputLabel htmlFor="data-model-option">{getText(i18nKeys.ADD_STUDY_DIALOG__DATABASES)}</InputLabel>
               <Select
                 sx={styles}
                 value={formData.databaseCode}
@@ -658,7 +664,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
                   </MenuItem>
                 ))}
               </Select>
-              {formError.databaseCode.required && <FormHelperText>This is required</FormHelperText>}
+              {formError.databaseCode.required && (
+                <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+              )}
             </FormControl>
           </Box>
         )}
@@ -669,12 +677,14 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
             <TextField
               fullWidth
               variant="standard"
-              label="Schema name"
+              label={getText(i18nKeys.ADD_STUDY_DIALOG__SCHEMA_NAME)}
               value={formData.cdmSchemaValue}
               onChange={(event) => handleFormDataChange({ cdmSchemaValue: event.target.value })}
               error={formError.cdmSchemaValue.required}
             />
-            {formError.cdmSchemaValue.required && <FormHelperText error={true}>This is required</FormHelperText>}
+            {formError.cdmSchemaValue.required && (
+              <FormHelperText error={true}>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+            )}
           </Box>
         ) : (
           formData.schemaOption === SchemaTypes.CustomCDM && (
@@ -692,11 +702,11 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
                 disabled={schemas.length === 0}
               />
               {schemas.length === 0 && (
-                <FormHelperText error={true}>
-                  No available schemas found. Please select another schema option.
-                </FormHelperText>
+                <FormHelperText error={true}>{getText(i18nKeys.ADD_STUDY_DIALOG__NO_AVAILABLE_SCHEMA)}</FormHelperText>
               )}
-              {formError.cdmSchemaValue.required && <FormHelperText error={true}>Invalid schema name</FormHelperText>}
+              {formError.cdmSchemaValue.required && (
+                <FormHelperText error={true}>{getText(i18nKeys.ADD_STUDY_DIALOG__INVALID_SCHEMA_NAME)}</FormHelperText>
+              )}
             </Box>
           )
         )}
@@ -706,7 +716,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
             <Checkbox
               checked={formData.isSameCdmSchemaForVocab}
               checkbox-id="is-same-cdm-schema-for-vocab-checkbox"
-              label="Use same CDM schema for vocab schema"
+              label={getText(i18nKeys.ADD_STUDY_DIALOG__USE_SAME_SCHEMA)}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 const isSameCdmSchemaForVocab = event.target.checked;
                 handleFormDataChange(
@@ -729,7 +739,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
               fullWidth
               {...(formError.vocabSchemaValue.required ? { error: true } : {})}
             >
-              <InputLabel htmlFor="vocab-schema-option">Vocab Schema Name</InputLabel>
+              <InputLabel htmlFor="vocab-schema-option">
+                {getText(i18nKeys.ADD_STUDY_DIALOG__VOCAB_SCHEMA_NAME)}
+              </InputLabel>
               <Select
                 sx={styles}
                 value={formData.vocabSchemaValue}
@@ -750,7 +762,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
                   </MenuItem>
                 ))}
               </Select>
-              {formError.vocabSchemaValue.required && <FormHelperText>This is required</FormHelperText>}
+              {formError.vocabSchemaValue.required && (
+                <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+              )}
             </FormControl>
           </Box>
         ) : (
@@ -760,12 +774,14 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
               <TextField
                 fullWidth
                 variant="standard"
-                label="Vocab schema name"
+                label={getText(i18nKeys.ADD_STUDY_DIALOG__VOCAB_SCHEMA_NAME)}
                 value={formData.vocabSchemaValue}
                 onChange={(event) => handleFormDataChange({ vocabSchemaValue: event.target.value })}
                 error={formError.vocabSchemaValue.required}
               />
-              {formError.vocabSchemaValue.required && <FormHelperText error={true}>This is required</FormHelperText>}
+              {formError.vocabSchemaValue.required && (
+                <FormHelperText error={true}>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+              )}
             </Box>
           )
         )}
@@ -780,7 +796,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
               fullWidth
               {...(formError.dataModel.required ? { error: true } : {})}
             >
-              <InputLabel htmlFor="data-model-option">Data Model Option</InputLabel>
+              <InputLabel htmlFor="data-model-option">
+                {getText(i18nKeys.ADD_STUDY_DIALOG__DATA_MODEL_OPTION)}
+              </InputLabel>
               <Select
                 sx={styles}
                 value={formData.dataModel}
@@ -799,7 +817,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
                   </MenuItem>
                 ))}
               </Select>
-              {formError.dataModel.required && <FormHelperText>This is required</FormHelperText>}
+              {formError.dataModel.required && (
+                <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+              )}
             </FormControl>
           </Box>
         )}
@@ -811,7 +831,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
             fullWidth
             {...(formError.paConfigId.required ? { error: true } : {})}
           >
-            <InputLabel htmlFor="pa-config-option">PA Config</InputLabel>
+            <InputLabel htmlFor="pa-config-option">{getText(i18nKeys.ADD_STUDY_DIALOG__PA_CONFIG)}</InputLabel>
             <Select
               sx={styles}
               value={formData.paConfigId}
@@ -830,14 +850,16 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
                 </MenuItem>
               ))}
             </Select>
-            {formError.paConfigId.required && <FormHelperText>This is required</FormHelperText>}
+            {formError.paConfigId.required && (
+              <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Box mb={4}>
           <TextField
             fullWidth
             variant="standard"
-            label="Type"
+            label={getText(i18nKeys.ADD_STUDY_DIALOG__TYPE)}
             value={formData.type}
             onChange={(event) => handleFormDataChange({ type: event.target.value })}
           />
@@ -846,23 +868,25 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
           <TextField
             fullWidth
             variant="standard"
-            label="Token dataset code"
+            label={getText(i18nKeys.ADD_STUDY_DIALOG__TOKEN_DATASET_CODE)}
             value={formData.tokenStudyCode}
             onChange={(event) => handleFormDataChange({ tokenStudyCode: event.target.value })}
             error={formError.tokenStudyCode.required || formError.tokenStudyCode.valid}
           />
-          {formError.tokenStudyCode.required && <FormHelperText error={true}>This is required</FormHelperText>}
-          {formError.tokenStudyCode.valid && (
-            <FormHelperText error={true}>Please enter a valid Token dataset code</FormHelperText>
+          {formError.tokenStudyCode.required && (
+            <FormHelperText error={true}>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
           )}
-          <FormHelperText>Should only contain letters, numbers, and underscores</FormHelperText>
+          {formError.tokenStudyCode.valid && (
+            <FormHelperText error={true}>{getText(i18nKeys.ADD_STUDY_DIALOG__ENTER_VALID_DATASET_CODE)}</FormHelperText>
+          )}
+          <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__DATASET_CODE_ALLOWED_VALUES)}</FormHelperText>
         </Box>
         {formData?.schemaOption !== "" && formData?.schemaOption !== SchemaTypes.NoCDM && (
           <div>
             <Checkbox
               checked={formData.cleansedSchemaOption}
               checkbox-id="isCreateCleansedSchemaOptionSelected"
-              label="Create second CDM for data cleansing"
+              label={getText(i18nKeys.ADD_STUDY_DIALOG__CREATE_DATA_CLEANSING)}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 handleFormDataChange({ cleansedSchemaOption: event.target.checked });
               }}
@@ -871,7 +895,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
         )}
 
         <Box mb={4}>
-          <Box fontWeight="bold">Metadata</Box>
+          <Box fontWeight="bold">{getText(i18nKeys.ADD_STUDY_DIALOG__METADATA)}</Box>
           {attributeConfigs.length !== 0 &&
             studyMetadata.map((data, index) => (
               <MetadataForm
@@ -884,10 +908,14 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
                 error={formMetadataErrorIndex.includes(index)}
               />
             ))}
-          <IconButton startIcon={<AddSquareIcon />} title="add metadata" onClick={handleAddMetadataForm} />
+          <IconButton
+            startIcon={<AddSquareIcon />}
+            title={getText(i18nKeys.ADD_STUDY_DIALOG__ADD_METADATA)}
+            onClick={handleAddMetadataForm}
+          />
         </Box>
 
-        <Box fontWeight="bold">Tags</Box>
+        <Box fontWeight="bold">{getText(i18nKeys.ADD_STUDY_DIALOG__TAGS)}</Box>
         <Box mb={4}>
           <Autocomplete
             multiple
@@ -907,28 +935,28 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
 
         <Box mb={4}>
           <FormControl component="fieldset">
-            <FormLabel component="legend">Dataset Visibility</FormLabel>
+            <FormLabel component="legend">{getText(i18nKeys.ADD_STUDY_DIALOG__DATA_VISIBILITY)}</FormLabel>
             <RadioGroup
-              name="visibilityStatusGroup"
+              name={getText(i18nKeys.ADD_STUDY_DIALOG__VISIBILITY_STATUS_GROUP)}
               value={formData.visibilityStatus}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 handleFormDataChange({ visibilityStatus: event.target.value });
               }}
             >
-              <FormControlLabel value="PUBLIC" control={<Radio />} label="Public" />
-              <FormControlLabel value="DEFAULT" control={<Radio />} label="Private (only users from the tenant)" />
+              <FormControlLabel value="PUBLIC" control={<Radio />} label={getText(i18nKeys.ADD_STUDY_DIALOG__PUBLIC)} />
               <FormControlLabel
-                value="HIDDEN"
+                value="DEFAULT"
                 control={<Radio />}
-                label="Hidden (only researchers and the tenant admin)"
+                label={getText(i18nKeys.ADD_STUDY_DIALOG__PRIVATE)}
               />
+              <FormControlLabel value="HIDDEN" control={<Radio />} label={getText(i18nKeys.ADD_STUDY_DIALOG__HIDDEN)} />
             </RadioGroup>
           </FormControl>
         </Box>
 
         <Box mb={4}>
           <Box fontWeight="bold" mb={1}>
-            Dashboard
+            {getText(i18nKeys.ADD_STUDY_DIALOG__DASHBOARD)}
           </Box>
           {dashboards.length !== 0 &&
             dashboards.map((data, index) => (
@@ -957,7 +985,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
           <Box mt={2}>
             <IconButton
               startIcon={<AddSquareIcon />}
-              title="add dashboard"
+              title={getText(i18nKeys.ADD_STUDY_DIALOG__ADD_DASHBOARD)}
               onClick={() => setDashboards([...dashboards, EMPTY_DASHBOARD_FORM_DATA])}
             />
           </Box>
@@ -965,8 +993,14 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={loading} />
-        <Button text="Add" onClick={handleSubmit} block loading={loading} />
+        <Button
+          text={getText(i18nKeys.ADD_STUDY_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="outlined"
+          block
+          disabled={loading}
+        />
+        <Button text={getText(i18nKeys.ADD_STUDY_DIALOG__ADD)} onClick={handleSubmit} block loading={loading} />
       </div>
     </Dialog>
   );

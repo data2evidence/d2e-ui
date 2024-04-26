@@ -8,6 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Tooltip from "@mui/material/Tooltip";
 import { CollapsibleDrawer, MenuIcon, StudyInformationIcon } from "@portal/components";
 import { Study } from "../../../../types";
+import { useTranslation } from "../../../../contexts";
 
 interface StudyMenuProps {
   activeStudy?: Study;
@@ -46,6 +47,7 @@ const listStyles: SxProps = {
 };
 
 export const PublicStudyMenu: FC<StudyMenuProps> = ({ activeTab, onClick }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [open, setOpen] = useState(true);
 
   const handleDrawerToggle = useCallback(() => {
@@ -67,7 +69,7 @@ export const PublicStudyMenu: FC<StudyMenuProps> = ({ activeTab, onClick }) => {
         </List>
         <Divider />
         <List sx={listStyles}>
-          <Tooltip title={open ? "" : "Dataset information"} placement="right" arrow>
+          <Tooltip title={open ? "" : getText(i18nKeys.PUBLIC_STUDY_MENU__DATASET_INFORMATION)} placement="right" arrow>
             <ListItem
               button
               onClick={() => onClick(StudyInfoTab.DataInfo)}
@@ -76,7 +78,7 @@ export const PublicStudyMenu: FC<StudyMenuProps> = ({ activeTab, onClick }) => {
               <ListItemIcon>
                 <StudyInformationIcon />
               </ListItemIcon>
-              <ListItemText primary="Dataset information" />
+              <ListItemText primary={getText(i18nKeys.PUBLIC_STUDY_MENU__DATASET_INFORMATION)} />
             </ListItem>
           </Tooltip>
         </List>

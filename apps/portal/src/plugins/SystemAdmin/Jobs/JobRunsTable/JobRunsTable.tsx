@@ -9,6 +9,7 @@ import "./JobRunsTable.scss";
 import { useDatasets } from "../../../../hooks";
 import { FlowRunJobStateTypes } from "../types";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "../../../../contexts";
 
 const JobStatusColorMapping = {
   // Blue
@@ -49,6 +50,7 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
   handleCancelJobClick,
   handleViewLogsClick,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const study = studies.find((s) => s.id === row.datasetId);
   return (
     <>
@@ -77,7 +79,7 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
         <TableCell sx={{ color: "#050080" }} align="left">
           <IconButton
             startIcon={<FileIcon />}
-            title="View"
+            title={getText(i18nKeys.JOB_RUNS_TABLE__VIEW)}
             onClick={() => {
               handleViewLogsClick(row.flowRunId);
             }}
@@ -90,9 +92,9 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
               <Button
                 className="cancel-job-button"
                 onClick={() => handleCancelJobClick(row.flowRunId)}
-                text="Cancel Job"
-                variant="secondary"
-              ></Button>
+                text={getText(i18nKeys.JOB_RUNS_TABLE__CANCEL)}
+                variant="outlined"
+              />
             ) : (
               "-"
             )
@@ -103,7 +105,7 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
             // If status is COMPLETED, show view detail button
             <IconButton
               startIcon={<FileIcon />}
-              title="View"
+              title={getText(i18nKeys.JOB_RUNS_TABLE__VIEW)}
               onClick={() => {
                 const studyId = row.datasetId ?? (studies.find((s) => s.schemaName === row.schemaName)?.id || "");
                 handleStudySelect(row.schemaName, studyId);
@@ -111,7 +113,7 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
               }}
             ></IconButton>
           ) : (
-            "Not available"
+            getText(i18nKeys.JOB_RUNS_TABLE__NOT_AVAILABLE)
           )}
         </TableCell>
       </TableRow>
@@ -127,6 +129,7 @@ interface JobRunsTableProps {
 }
 
 const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCancelJobClick, setMode }) => {
+  const { getText, i18nKeys } = useTranslation();
   const studies = useDatasets("systemAdmin")[0];
   // Dialog show hooks
   const [showResultsDialog, openResultsDialog, closeResultsDialog] = useDialogHelper(false);
@@ -159,7 +162,7 @@ const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCa
   }, []);
 
   if (data.length === 0) {
-    return <div className="info__section">No Jobs Found</div>;
+    return <div className="info__section">{getText(i18nKeys.JOB_RUNS_TABLE__NO_JOBS_FOUND)}</div>;
   }
 
   const pageData = data.slice(rowsPerPage * page, rowsPerPage * (page + 1));
@@ -171,34 +174,34 @@ const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCa
           <TableHead>
             <TableRow>
               <TableCell align="left" colSpan={1}>
-                Datasets
+                {getText(i18nKeys.JOB_RUNS_TABLE__DATASETS)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                Type
+                {getText(i18nKeys.JOB_RUNS_TABLE__TYPE)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                Name
+                {getText(i18nKeys.JOB_RUNS_TABLE__NAME)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                Data Characterization Schema
+                {getText(i18nKeys.JOB_RUNS_TABLE__DATA_CHARACTERIZATION_SCHEMA)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                Created time
+                {getText(i18nKeys.JOB_RUNS_TABLE__CREATED_TIME)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                Completed time
+                {getText(i18nKeys.JOB_RUNS_TABLE__COMPLETED_TIME)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                Status
+                {getText(i18nKeys.JOB_RUNS_TABLE__STATUS)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                Logs
+                {getText(i18nKeys.JOB_RUNS_TABLE__LOGS)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                Action
+                {getText(i18nKeys.JOB_RUNS_TABLE__ACTION)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                Results
+                {getText(i18nKeys.JOB_RUNS_TABLE__RESULTS)}
               </TableCell>
             </TableRow>
           </TableHead>

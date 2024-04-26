@@ -10,6 +10,7 @@ import AccessPanel from "./Panels/AccessPanel";
 import { api } from "../../../../axios/api";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useUserGroups, useUserInfo } from "../../../../contexts/UserContext";
+import { useTranslation } from "../../../../contexts";
 
 interface PermissionsDialogProps {
   study?: Study;
@@ -34,6 +35,7 @@ export interface RoleEdit {
 }
 
 const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [tabIndex, setTabIndex] = useState(0);
   const [users, setUsers] = useState<UserWithRoles[]>([]);
   const [feedback, setFeedback] = useState<Feedback>({});
@@ -185,7 +187,7 @@ const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose })
       .then(() => {
         setFeedback({
           type: "success",
-          message: "Saved successfully",
+          message: getText(i18nKeys.PERMISSIONS_DIALOG__SUCCESS),
         });
         fetchStudyUsers();
         fetchStudyAccessRequests();
@@ -194,7 +196,7 @@ const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose })
       .catch((e) => {
         setFeedback({
           type: "error",
-          message: `Error while saving. ${e}`,
+          message: getText(i18nKeys.PERMISSIONS_DIALOG__ERROR, [e]),
         });
       })
       .finally(() => {
@@ -212,6 +214,7 @@ const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose })
     handleWithdrawEditRoles,
     rejectedReqs,
     withdrawRolesList,
+    getText,
   ]);
 
   const handleSave = useCallback(() => {
@@ -227,7 +230,7 @@ const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose })
   return (
     <Dialog
       className="permissions-dialog"
-      title="Permissions"
+      title={getText(i18nKeys.PERMISSIONS_DIALOG__PERMISSIONS)}
       closable
       open={open}
       onClose={onClose}
@@ -247,7 +250,7 @@ const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose })
           }}
         >
           <Tab
-            label="Request"
+            label={getText(i18nKeys.PERMISSIONS_DIALOG__REQUEST)}
             disableRipple
             sx={{
               "&.MuiTab-root": {
@@ -256,7 +259,7 @@ const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose })
             }}
           />
           <Tab
-            label="Access"
+            label={getText(i18nKeys.PERMISSIONS_DIALOG__ACCESS)}
             disableRipple
             sx={{
               "&.MuiTab-root": {
@@ -294,8 +297,20 @@ const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose })
 
       <Divider />
       <div className="button-group-actions">
-        <Button text="Close" onClick={handleClose} variant="secondary" block disabled={loading} />
-        <Button text="Save" onClick={handleSave} block loading={loading} disabled={!hasChanges()} />
+        <Button
+          text={getText(i18nKeys.PERMISSIONS_DIALOG__CLOSE)}
+          onClick={handleClose}
+          variant="outlined"
+          block
+          disabled={loading}
+        />
+        <Button
+          text={getText(i18nKeys.PERMISSIONS_DIALOG__SAVE)}
+          onClick={handleSave}
+          block
+          loading={loading}
+          disabled={!hasChanges()}
+        />
       </div>
     </Dialog>
   );

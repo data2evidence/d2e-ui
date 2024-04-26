@@ -17,6 +17,7 @@ import { CloseDialogType } from "../../../../types";
 import { api } from "../../../../axios/api";
 import { generateRandom } from "../../../../utils";
 import "./AddUserDialog.scss";
+import { useTranslation } from "../../../../contexts";
 
 interface AddUserDialogProps {
   open: boolean;
@@ -31,6 +32,7 @@ interface FormData {
 const EMPTY_FORM_DATA: FormData = { username: "", password: "" };
 
 const AddUserDialog: FC<AddUserDialogProps> = ({ open, onClose }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
@@ -58,15 +60,15 @@ const AddUserDialog: FC<AddUserDialogProps> = ({ open, onClose }) => {
       } else {
         setFeedback({
           type: "error",
-          message: "An error has occurred.",
-          description: "Please try again. To report the error, please send an email to help@data4life.care.",
+          message: getText(i18nKeys.ADD_USER_DIALOG__ERROR),
+          description: getText(i18nKeys.ADD_USER_DIALOG__ERROR_DESCRIPTION),
         });
       }
       console.error("err", err);
     } finally {
       setLoading(false);
     }
-  }, [formData, handleClose]);
+  }, [formData, handleClose, getText]);
 
   const handleTogglePassword = useCallback(() => {
     setPasswordShown((passwordShown) => !passwordShown);
@@ -80,7 +82,7 @@ const AddUserDialog: FC<AddUserDialogProps> = ({ open, onClose }) => {
   return (
     <Dialog
       className="add-user-dialog"
-      title="Add user"
+      title={getText(i18nKeys.ADD_USER_DIALOG__ADD_USER)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -92,10 +94,10 @@ const AddUserDialog: FC<AddUserDialogProps> = ({ open, onClose }) => {
           <FormControl fullWidth>
             <TextField
               variant="standard"
-              label="Username"
+              label={getText(i18nKeys.ADD_USER_DIALOG__USERNAME)}
               value={formData.username}
               onChange={(event) => setFormData((formData) => ({ ...formData, username: event.target.value }))}
-              helperText="Username should only contain letters, numbers, or underscore."
+              helperText={getText(i18nKeys.ADD_USER_DIALOG__USERNAME_HELPER)}
             />
           </FormControl>
         </div>
@@ -106,25 +108,41 @@ const AddUserDialog: FC<AddUserDialogProps> = ({ open, onClose }) => {
                 fullWidth
                 type={passwordShown ? "text" : "password"}
                 variant="standard"
-                label="Password"
+                label={getText(i18nKeys.ADD_USER_DIALOG__PASSWORD)}
                 value={formData.password}
                 onChange={(event) => setFormData((formData) => ({ ...formData, password: event.target.value }))}
               />
-              <Tooltip title={passwordShown ? "Hide password" : "Show password"}>
+              <Tooltip
+                title={
+                  passwordShown
+                    ? getText(i18nKeys.ADD_USER_DIALOG__HIDE_PASSWORD)
+                    : getText(i18nKeys.ADD_USER_DIALOG__SHOW_PASSWORD)
+                }
+              >
                 <IconButton
                   startIcon={passwordShown ? <VisibilityOffIcon /> : <VisibilityOnIcon />}
                   onClick={handleTogglePassword}
                 />
               </Tooltip>
-              <Button text="Generate" variant="tertiary" onClick={handleGeneratePassword} />
+              <Button
+                text={getText(i18nKeys.ADD_USER_DIALOG__GENERATE)}
+                variant="text"
+                onClick={handleGeneratePassword}
+              />
             </Box>
           </FormControl>
         </div>
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={() => handleClose("cancelled")} variant="secondary" block disabled={loading} />
-        <Button text="Add" onClick={handleAdd} block loading={loading} />
+        <Button
+          text={getText(i18nKeys.ADD_USER_DIALOG__CANCEL)}
+          onClick={() => handleClose("cancelled")}
+          variant="outlined"
+          block
+          disabled={loading}
+        />
+        <Button text={getText(i18nKeys.ADD_USER_DIALOG__ADD)} onClick={handleAdd} block loading={loading} />
       </div>
     </Dialog>
   );

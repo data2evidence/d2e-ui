@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import { Button, IconButton, Loader, TableCell, TableRow, TablePaginationActions, TrashIcon } from "@portal/components";
-import { useFeedback } from "../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../contexts";
 import { CohortMapping } from "../../../../types";
 import { CohortMgmt } from "../../../../axios/cohort-mgmt";
 import "./CohortDefinitionList.scss";
@@ -33,6 +33,7 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
   refetch,
   setRefetch,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
   const [cohortDefinitionCount, setCohortDefinitionCount] = useState(0);
@@ -54,8 +55,8 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
           console.error(err);
           setFeedback({
             type: "error",
-            message: "An error has occurred.",
-            description: "Please try again. To report the error, please send an email to help@data4life.care.",
+            message: getText(i18nKeys.COHORT_DEFINITION_LIST__ERROR_OCCURRED),
+            description: getText(i18nKeys.COHORT_DEFINITION_LIST__TRY_AGAIN),
           });
         } finally {
           setIsLoading(false);
@@ -101,14 +102,14 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Patient Count</TableCell>
-                <TableCell>Creation Timestamp</TableCell>
-                <TableCell>Modification Timestamp</TableCell>
-                <TableCell>Owner</TableCell>
-                <TableCell>Jobs</TableCell>
+                <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__ID)}</TableCell>
+                <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__NAME)}</TableCell>
+                <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__DESCRIPTION)}</TableCell>
+                <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__PATIENT_COUNT)}</TableCell>
+                <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__CREATION_TIMESTAMP)}</TableCell>
+                <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__MODIFICATION_TIMESTAMP)}</TableCell>
+                <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__OWNER)}</TableCell>
+                <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__JOBS)}</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -138,13 +139,13 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
                     </TableCell>
                     <TableCell>{cohort.owner}</TableCell>
                     <TableCell className="col-action">
-                      <Button onClick={() => handleDataQualityButtonPress(cohort)} text="Data Quality"></Button>
+                      <Button onClick={() => handleDataQualityButtonPress(cohort)} text="Data Quality" />
                     </TableCell>
                     <TableCell className="col-action">
                       <div className="table-button-container">
                         <IconButton
                           startIcon={<TrashIcon />}
-                          title="Delete"
+                          title={getText(i18nKeys.COHORT_DEFINITION_LIST__DELETE)}
                           disabled={cohort.owner !== userId}
                           onClick={() => handleDeleteCohort(cohort)}
                         />

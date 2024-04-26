@@ -5,7 +5,7 @@ import { Header } from "../../components";
 import { PublicOverview } from "./PublicOverview/PublicOverview";
 import { PublicInformation } from "./PublicInformation/PublicInformation";
 import { Legal } from "../shared/Legal/Legal";
-import { useFeedback } from "../../contexts";
+import { useFeedback, useTranslation } from "../../contexts";
 import { NavLink } from "../../types";
 import "./Public.scss";
 
@@ -17,22 +17,23 @@ const ROUTES = {
   logout: "/logout",
 };
 
-const navigations: NavLink[] = [
-  {
-    id: "legal",
-    path: ROUTES.legal,
-    title: "Legal",
-  },
-  {
-    id: "login",
-    path: ROUTES.login,
-    title: "Login",
-  },
-];
-
 export const Public: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const { clearFeedback, getFeedback } = useFeedback();
   const feedback = getFeedback();
+
+  const navigations: NavLink[] = [
+    {
+      id: "legal",
+      path: ROUTES.legal,
+      title: getText(i18nKeys.PUBLIC__NAVIGATION_LEGAL),
+    },
+    {
+      id: "login",
+      path: ROUTES.login,
+      title: getText(i18nKeys.PUBLIC__NAVIGATION_LOGIN),
+    },
+  ];
 
   useEffect(() => {
     if ((feedback?.autoClose || 0) > 0) setTimeout(() => clearFeedback(), feedback?.autoClose);

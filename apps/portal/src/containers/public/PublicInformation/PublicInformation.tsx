@@ -12,6 +12,7 @@ import { StudyAttribute, StudyTag, LocationState } from "../../../types";
 import { PublicStudyMenu } from "./StudyMenu/PublicStudyMenu";
 import "./PublicInformation.scss";
 import { usePublicDatasets } from "../../../hooks";
+import { useTranslation } from "../../../contexts";
 
 export const StudyInfoTab = {
   DataInfo: "data_info",
@@ -19,6 +20,7 @@ export const StudyInfoTab = {
 };
 
 export const PublicInformation: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const [datasets, loading, error] = usePublicDatasets();
 
   const location = useLocation();
@@ -60,7 +62,9 @@ export const PublicInformation: FC = () => {
             {activeTab === StudyInfoTab.DataInfo && (
               <div className="tab__content__container">
                 <div className="tab__content__title">
-                  {activeStudy?.studyDetail?.name ? activeStudy?.studyDetail?.name : "Untitled"}
+                  {activeStudy?.studyDetail?.name
+                    ? activeStudy?.studyDetail?.name
+                    : getText(i18nKeys.PUBLIC_INFORMATION__UNTITLED)}
                 </div>
 
                 <div className="tab__content__info">
@@ -71,7 +75,7 @@ export const PublicInformation: FC = () => {
                   {tags.length > 0 && (
                     <>
                       <div className="tags__content">
-                        <SubTitle>Tags</SubTitle>
+                        <SubTitle>{getText(i18nKeys.PUBLIC_INFORMATION__TAGS)}</SubTitle>
                         <Paper component="ul" className="tag__list" elevation={0}>
                           {tags.map((tag: StudyTag) => (
                             <li key={tag.id}>
@@ -85,7 +89,7 @@ export const PublicInformation: FC = () => {
                   {attributes.length > 0 && (
                     <>
                       <div className="metadata__content">
-                        <SubTitle>Metadata</SubTitle>
+                        <SubTitle>{getText(i18nKeys.PUBLIC_INFORMATION__METADATA)}</SubTitle>
                         <TableContainer className="study-metadata">
                           <Table>
                             <colgroup>
@@ -94,8 +98,8 @@ export const PublicInformation: FC = () => {
                             </colgroup>
                             <TableHead>
                               <TableRow>
-                                <TableCell>Resource Type</TableCell>
-                                <TableCell>Dataset</TableCell>
+                                <TableCell>{getText(i18nKeys.PUBLIC_INFORMATION__RESOURCE_TYPE)}</TableCell>
+                                <TableCell>{getText(i18nKeys.PUBLIC_INFORMATION__DATASET)}</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>

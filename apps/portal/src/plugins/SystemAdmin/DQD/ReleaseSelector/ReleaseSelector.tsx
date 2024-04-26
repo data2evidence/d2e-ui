@@ -5,6 +5,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { SxProps } from "@mui/system";
 import { SystemPortal } from "../../../../axios/system-portal";
 import { DatasetRelease } from "../types";
+import { useTranslation } from "../../../../contexts";
 
 interface ReleaseSelectorProps {
   datasetId: string;
@@ -35,6 +36,7 @@ const styles: SxProps = {
 };
 
 const ReleaseSelector: FC<ReleaseSelectorProps> = ({ datasetId, handleReleaseSelect }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [releases, setReleases] = useState([]);
   const [releaseId, setReleaseId] = useState("");
   const isLoading = false;
@@ -59,7 +61,7 @@ const ReleaseSelector: FC<ReleaseSelectorProps> = ({ datasetId, handleReleaseSel
     <div className="update-account-dialog__edit-input u-padding-vertical--normal">
       <Select value={releaseId} onChange={handleReleaseSelection} displayEmpty sx={styles} disabled={isLoading}>
         <MenuItem value="" sx={styles} disableRipple>
-          Release Selection
+          {getText(i18nKeys.RELEASE_SELECTOR__RELEASE_SELECTION)}
         </MenuItem>
         {releases?.map((release: DatasetRelease) => (
           <MenuItem value={release.id} key={release.id} sx={styles} disableRipple>

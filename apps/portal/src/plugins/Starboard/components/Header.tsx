@@ -2,7 +2,7 @@ import React, { ChangeEvent, FC, useCallback, useMemo } from "react";
 import { saveAs } from "file-saver";
 import { Button, EditIcon, IconButton, Checkbox, DownloadIcon, Tooltip } from "@portal/components";
 import { useDialogHelper } from "../../../hooks";
-import { useFeedback } from "../../../contexts";
+import { useFeedback, useTranslation } from "../../../contexts";
 import { useUserInfo } from "../../../contexts/UserContext";
 import {
   convertStarboardToJupyter,
@@ -42,6 +42,7 @@ export const Header: FC<HeaderProps> = ({
   isShared,
   setIsShared,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const { user } = useUserInfo();
   const isNotUserNotebook = useMemo(() => user.idpUserId !== activeNotebook?.userId, [activeNotebook]);
   const { setFeedback } = useFeedback();
@@ -54,7 +55,7 @@ export const Header: FC<HeaderProps> = ({
         await api.studyNotebook.deleteNotebook(activeNotebook.id);
         setFeedback({
           type: "success",
-          message: "File Deleted",
+          message: getText(i18nKeys.HEADER__FILE_DELETED),
         });
       }
       fetchNotebooks();
@@ -62,10 +63,10 @@ export const Header: FC<HeaderProps> = ({
       console.error(err);
       setFeedback({
         type: "error",
-        message: "An error has occured while deleting notebook",
+        message: getText(i18nKeys.HEADER__ERROR_DELETE),
       });
     }
-  }, [activeNotebook, fetchNotebooks, setFeedback]);
+  }, [activeNotebook, fetchNotebooks, setFeedback, getText]);
 
   // Save to database
   const saveNotebook = useCallback(async () => {
@@ -83,17 +84,17 @@ export const Header: FC<HeaderProps> = ({
         updateActiveNotebook(newNotebook);
         setFeedback({
           type: "success",
-          message: "Changes saved",
+          message: getText(i18nKeys.HEADER__SAVED),
         });
       }
     } catch (err) {
       console.error(err);
       setFeedback({
         type: "error",
-        message: "An error has occured while saving notebook",
+        message: getText(i18nKeys.HEADER__ERROR_SAVED),
       });
     }
-  }, [currentContent, activeNotebook, fetchNotebooks, updateActiveNotebook, setFeedback, isShared]);
+  }, [currentContent, activeNotebook, fetchNotebooks, updateActiveNotebook, setFeedback, isShared, getText]);
 
   // Rename activeNotebook Name
   const renameNotebookName = useCallback(
@@ -110,18 +111,18 @@ export const Header: FC<HeaderProps> = ({
           updateActiveNotebook(newNotebook);
           setFeedback({
             type: "success",
-            message: "Changes saved",
+            message: getText(i18nKeys.HEADER__RENAME_SUCCESS),
           });
         }
       } catch (err) {
         console.error(err);
         setFeedback({
           type: "error",
-          message: "An error has occured. Please try again.",
+          message: getText(i18nKeys.HEADER__RENAME_ERROR),
         });
       }
     },
-    [activeNotebook, fetchNotebooks, updateActiveNotebook, setFeedback, isShared]
+    [activeNotebook, fetchNotebooks, updateActiveNotebook, setFeedback, isShared, getText]
   );
 
   const setNotebookShared = useCallback(
@@ -179,7 +180,7 @@ export const Header: FC<HeaderProps> = ({
     } catch (err) {
       setFeedback({
         type: "error",
-        message: "An error has occured. Please import Jupyter files(.ipynb) only.",
+        message: getText(i18nKeys.HEADER__IMPORT_ERROR),
       });
     }
   };
@@ -219,14 +220,14 @@ export const Header: FC<HeaderProps> = ({
         <div className="title-edit-button">
           <Checkbox
             checked={isShared}
-            label="Share notebook"
+            label={getText(i18nKeys.HEADER__SHARE)}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               setNotebookShared(event.target.checked);
             }}
             disabled={isNotUserNotebook}
           />
-          <Button className="buttons" text="Export Notebook" onClick={exportJupyterNb} />
-          <Button className="buttons" text="Import Notebook" type="file" onClick={handleJupyterInput} />
+          <Button variant="text" text={getText(i18nKeys.HEADER__EXPORT)} onClick={exportJupyterNb} />
+          <Button variant="text" text={getText(i18nKeys.HEADER__IMPORT)} onClick={handleJupyterInput} />
           <input
             type="file"
             name="jupyterFile"
@@ -234,10 +235,15 @@ export const Header: FC<HeaderProps> = ({
             onChange={importJupyterFile}
             style={{ display: "none" }}
           />
-          <Button className="buttons" text="New Notebook" onClick={createNotebook} />
-          <Button className="buttons" text="Save" onClick={saveNotebook} />
-          <Button className="buttons" text="Delete" onClick={handleDeleteNotebook} disabled={isNotUserNotebook} />
-          <Tooltip title="Download source code">
+          <Button variant="text" text={getText(i18nKeys.HEADER__NEW)} onClick={createNotebook} />
+          <Button variant="text" text={getText(i18nKeys.HEADER__SAVE)} onClick={saveNotebook} />
+          <Button
+            variant="text"
+            text={getText(i18nKeys.HEADER__DELETE)}
+            onClick={handleDeleteNotebook}
+            disabled={isNotUserNotebook}
+          />
+          <Tooltip title={getText(i18nKeys.HEADER__DOWNLOAD)}>
             <div>
               <IconButton startIcon={<DownloadIcon />} onClick={() => window.open(zipUrl, "_blank")} />
             </div>

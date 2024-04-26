@@ -3,6 +3,7 @@ import { Box, Button, Loader, TextField, Title } from "@portal/components";
 import { useAzureAdConfigs } from "../../../hooks";
 import { api } from "../../../axios/api";
 import "./AzureAD.scss";
+import { useTranslation } from "../../../contexts";
 
 interface FormData {
   tenantViewerGroupId: string;
@@ -17,6 +18,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const AzureAD: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [saving, setSaving] = useState(false);
   const [configs, loading, error] = useAzureAdConfigs();
@@ -56,12 +58,12 @@ export const AzureAD: FC = () => {
       ) : (
         <div className="azure-ad">
           <div className="azure-ad__header">
-            <Title>Azure AD integration</Title>
+            <Title>{getText(i18nKeys.AZURE_AD__TITLE)}</Title>
           </div>
           <div className="azure-ad__content">
             <Box mb={4}>
               <TextField
-                label="Azure Group ID for Tenant Viewer"
+                label={getText(i18nKeys.AZURE_AD__TEXT_FIELD_1_LABEL)}
                 variant="standard"
                 sx={{ width: "100%" }}
                 value={formData.tenantViewerGroupId}
@@ -70,7 +72,7 @@ export const AzureAD: FC = () => {
             </Box>
             <Box mb={4}>
               <TextField
-                label="Azure Group ID for System Admin"
+                label={getText(i18nKeys.AZURE_AD__TEXT_FIELD_2_LABEL)}
                 variant="standard"
                 sx={{ width: "100%" }}
                 value={formData.systemAdminGroupId}
@@ -79,7 +81,7 @@ export const AzureAD: FC = () => {
             </Box>
             <Box mb={4}>
               <TextField
-                label="Azure Group ID for User Admin"
+                label={getText(i18nKeys.AZURE_AD__TEXT_FIELD_3_LABEL)}
                 variant="standard"
                 sx={{ width: "100%" }}
                 value={formData.userAdminGroupId}
@@ -89,7 +91,7 @@ export const AzureAD: FC = () => {
           </div>
           <div className="azure-ad__footer">
             <Box display="flex" gap={1} className="azure-ad__footer-actions">
-              <Button text="Save" onClick={handleSave} loading={saving} />
+              <Button text={getText(i18nKeys.AZURE_AD__SAVE)} onClick={handleSave} loading={saving} />
             </Box>
           </div>
         </div>

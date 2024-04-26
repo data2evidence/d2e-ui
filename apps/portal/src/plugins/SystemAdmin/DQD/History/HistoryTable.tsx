@@ -8,6 +8,7 @@ import ResultsDialog from "../ResultsDialog/ResultsDialog";
 import "./HistoryTable.scss";
 import { useDatasets } from "../../../../hooks";
 import { FlowRunJobStateTypes } from "../types";
+import { useTranslation } from "../../../../contexts";
 
 const JobStatusColorMapping = {
   // Blue
@@ -46,6 +47,7 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
   handleStudySelect,
   handleCancelJobClick,
 }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [statusDetailShowMore, setStatusDetailShowMore] = useState(false);
 
   const study = studies.find((s) => s.id === row.datasetId);
@@ -114,16 +116,16 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
                 handleStudySelect(row.schemaName, studyId);
                 handleViewDetailClick(row);
               }}
-              text="View detail"
-            ></Button>
+              text={getText(i18nKeys.HISTORY_TABLE__VIEW_DETAIL)}
+            />
           ) : // If status is "in progress", show abort button
           inProgressJobStates.includes(row.status) ? (
             <Button
               className="cancel-job-button"
               onClick={() => handleCancelJobClick(row.flowRunId)}
-              text="Cancel Job"
-              variant="secondary"
-            ></Button>
+              text={getText(i18nKeys.HISTORY_TABLE__CANCEL_JOB)}
+              variant="outlined"
+            />
           ) : (
             "-"
           )}

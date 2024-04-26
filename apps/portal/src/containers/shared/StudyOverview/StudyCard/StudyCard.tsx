@@ -5,6 +5,7 @@ import { Study, StudyTag, StudyAttribute } from "../../../../types";
 import { StudyInfoTab } from "../../../researcher/Information/Information";
 import { Chip } from "@mui/material";
 import "./StudyCard.scss";
+import { useTranslation } from "../../../../contexts";
 
 export interface StudyCardProps {
   study: Study;
@@ -13,6 +14,7 @@ export interface StudyCardProps {
 
 export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
   const navigate = useNavigate();
+  const { getText, i18nKeys } = useTranslation();
 
   const handleInformationClick = useCallback(
     (study: Study) => {
@@ -32,11 +34,11 @@ export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
       <div className="study-card__buttons">
         <div className="study-card__button" onClick={() => handleInformationClick(study)}>
           <FileIcon />
-          <p>Dataset information</p>
+          <p>{getText(i18nKeys.STUDY_CARD__DATASET_INFORMATION)}</p>
         </div>
       </div>
     );
-  }, [handleInformationClick, study]);
+  }, [handleInformationClick, study, getText]);
 
   const studyTagsRender = useMemo(() => {
     return (
@@ -66,7 +68,12 @@ export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
   }, [study]);
 
   return (
-    <Card title={study.studyDetail?.name || "Untitled"} icon={DatabaseIcon} className="study-card" borderRadius={20}>
+    <Card
+      title={study.studyDetail?.name || getText(i18nKeys.STUDY_CARD__UNTITLED)}
+      icon={DatabaseIcon}
+      className="study-card"
+      borderRadius={20}
+    >
       <div className="study-card__summary">
         {study.studyDetail?.summary ? (
           <div className="study-card__summary_container">
@@ -78,7 +85,7 @@ export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
         ) : (
           <div className="study-card__no_summary">
             <div className="study-card__no_summary_text">
-              <div>No dataset summary available</div>
+              <div>{getText(i18nKeys.STUDY_CARD__NO_DATASET_SUMMARY)}</div>
             </div>
             {studyTagsRender}
           </div>
@@ -87,7 +94,9 @@ export const StudyCard: FC<StudyCardProps> = ({ study, path }) => {
       </div>
 
       <div className="study-card__metadata">
-        <div className="metadata-study-code">Study code: {study.tokenStudyCode}</div>
+        <div className="metadata-study-code">
+          {getText(i18nKeys.STUDY_CARD__STUDY_CODE)}: {study.tokenStudyCode}
+        </div>
         {studyAttributesRender}
       </div>
     </Card>

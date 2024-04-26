@@ -12,12 +12,14 @@ import {
   HistoricalDataQualityMultiSeries,
 } from "../../../../components/DQD/types";
 import "./DataQualityHistory.scss";
+import { useTranslation } from "../../../../contexts";
 
 interface DataQualityHistoryProps {
   activeDatasetId: string;
 }
 
 const DataQualityHistory: FC<DataQualityHistoryProps> = ({ activeDatasetId }) => {
+  const { getText, i18nKeys } = useTranslation();
   const [historicalDataQuality, setHistoricalDataQuality] = useState<HistoricalDataQuality[]>([]);
   const [historicalDataQualityByCategory, setHistoricalDataQualityByCategory] = useState<
     HistoricalDataQualityMultiSeries[]
@@ -47,7 +49,7 @@ const DataQualityHistory: FC<DataQualityHistoryProps> = ({ activeDatasetId }) =>
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      setError("Failed to retrieve data for charts. To report the error, please send an email to help@data4life.care.");
+      setError(getText(i18nKeys.DATA_QUALITY_HISTORY__ERROR));
     }
   }, [activeDatasetId]);
 
@@ -80,7 +82,7 @@ const DataQualityHistory: FC<DataQualityHistoryProps> = ({ activeDatasetId }) =>
         </div>
       </div>
       <div className="domain-continuity__container">
-        <SubTitle>Domain Continuity</SubTitle>
+        <SubTitle>{getText(i18nKeys.DATA_QUALITY_HISTORY__DOMAIN_CONTINUITY)}</SubTitle>
         {domainContinuity &&
           domainContinuity.map((domainData) => {
             return (

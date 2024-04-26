@@ -26,6 +26,7 @@ import PermissionsDialog from "./PermissionsDialog/PermissionsDialog";
 import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
 import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
 import "./StudyOverview.scss";
+import { useTranslation } from "../../../contexts";
 
 const enum StudyAttributeConfigIds {
   LATEST_SCHEMA_VERSION = "latest_schema_version",
@@ -34,6 +35,7 @@ const enum StudyAttributeConfigIds {
 const MISSING_ATTRIBUTE_ERROR = "Not Available";
 
 const StudyOverview: FC = () => {
+  const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, refetch);
   const [databases] = useDatabases();
@@ -215,8 +217,8 @@ const StudyOverview: FC = () => {
         <Title>Dataset overview</Title>
 
         <div className="studyoverview__actions">
-          <h3 className="studyoverview__actions-title">Datasets</h3>
-          <Button text="Add dataset" onClick={openAddStudyDialog}></Button>
+          <h3 className="studyoverview__actions-title">{getText(i18nKeys.STUDY_OVERVIEW__DATASETS)}</h3>
+          <Button text="Add dataset" onClick={openAddStudyDialog} />
           <AddStudyDialog
             open={showAddStudyDialog}
             onClose={handleCloseAddStudyDialog}
@@ -243,20 +245,20 @@ const StudyOverview: FC = () => {
               <TableHead>
                 <TableRow>
                   <TableCell></TableCell>
-                  <TableCell>Study ID</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Schema name</TableCell>
-                  <TableCell>Schema version</TableCell>
-                  <TableCell>Latest available schema version</TableCell>
-                  <TableCell>Data model</TableCell>
-                  <TableCell>Actions</TableCell>
+                  <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__STUDY_ID)}</TableCell>
+                  <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__NAME)}</TableCell>
+                  <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__SCHEMA_NAME)}</TableCell>
+                  <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__SCHEMA_VERSION)}</TableCell>
+                  <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__LATEST_AVAILABLE)}</TableCell>
+                  <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__DATA_MODEL)}</TableCell>
+                  <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__ACTIONS)}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {(!datasets || datasets.length === 0) && (
                   <TableRow>
                     <TableCell colSpan={8} align="center">
-                      No data available
+                      {getText(i18nKeys.STUDY_OVERVIEW__NO_DATA)}
                     </TableCell>
                   </TableRow>
                 )}
@@ -268,7 +270,11 @@ const StudyOverview: FC = () => {
                         {dataset.id}
                       </Text>
                     </TableCell>
-                    <TableCell>{dataset.studyDetail?.name ? dataset.studyDetail.name : "Untitled"}</TableCell>
+                    <TableCell>
+                      {dataset.studyDetail?.name
+                        ? dataset.studyDetail.name
+                        : getText(i18nKeys.STUDY_OVERVIEW__UNTITLED)}
+                    </TableCell>
                     <TableCell style={{ maxWidth: "120px" }}>
                       <Text
                         textFormat="wrap"

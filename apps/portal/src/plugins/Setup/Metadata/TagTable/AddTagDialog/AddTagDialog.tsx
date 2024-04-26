@@ -2,7 +2,7 @@ import React, { FC, useCallback, useState } from "react";
 import Divider from "@mui/material/Divider";
 import { Box, Button, Dialog, TextField } from "@portal/components";
 import { api } from "../../../../../axios/api";
-import { useFeedback } from "../../../../../contexts";
+import { useFeedback, useTranslation } from "../../../../../contexts";
 import { CloseDialogType } from "../../../../../types";
 import "./AddTagDialog.scss";
 
@@ -21,6 +21,7 @@ const EMPTY_FORM_DATA: FormData = {
 };
 
 export const AddTagDialog: FC<AddTagDialogProps> = ({ open, onClose, setRefetch }) => {
+  const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [saving, setSaving] = useState(false);
@@ -43,7 +44,7 @@ export const AddTagDialog: FC<AddTagDialogProps> = ({ open, onClose, setRefetch 
       await api.systemPortal.addDatasetTagConfig(formData);
       setFeedback({
         type: "success",
-        message: `Tag Config added successfully.`,
+        message: getText(i18nKeys.ADD_TAG_DIALOG__SUCCESS),
         autoClose: 6000,
       });
       setRefetch((refetch) => refetch + 1);
@@ -59,16 +60,22 @@ export const AddTagDialog: FC<AddTagDialogProps> = ({ open, onClose, setRefetch 
     } finally {
       setSaving(false);
     }
-  }, [handleClose, formData, setRefetch, setFeedback]);
+  }, [handleClose, formData, setRefetch, setFeedback, getText]);
 
   return (
-    <Dialog className="add-tag-dialog" title="Add Tag" closable open={open} onClose={() => handleClose("cancelled")}>
+    <Dialog
+      className="add-tag-dialog"
+      title={getText(i18nKeys.ADD_TAG_DIALOG__ADD_TAG)}
+      closable
+      open={open}
+      onClose={() => handleClose("cancelled")}
+    >
       <Divider />
       <>
         <div className="add-tag-dialog__content">
           <Box mb={4}>
             <TextField
-              label="Tag Name"
+              label={getText(i18nKeys.ADD_TAG_DIALOG__TAG_NAME)}
               variant="standard"
               sx={{ width: "100%" }}
               value={formData.name}
@@ -78,8 +85,12 @@ export const AddTagDialog: FC<AddTagDialogProps> = ({ open, onClose, setRefetch 
         </div>
         <div className="add-tag-dialog__footer">
           <Box display="flex" gap={1} className="add-tag-dialog__footer-actions">
-            <Button text="Cancel" variant="secondary" onClick={() => handleClose("cancelled")} />
-            <Button text="Save" onClick={handleSave} loading={saving} />
+            <Button
+              text={getText(i18nKeys.ADD_TAG_DIALOG__CANCEL)}
+              variant="outlined"
+              onClick={() => handleClose("cancelled")}
+            />
+            <Button text={getText(i18nKeys.ADD_TAG_DIALOG__SAVE)} onClick={handleSave} loading={saving} />
           </Box>
         </div>
       </>

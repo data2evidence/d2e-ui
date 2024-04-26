@@ -5,7 +5,7 @@ import { Button } from "../Button";
 
 it("has text prop set", () => {
   const { queryByTestId } = render(<Button text="Save" />);
-  expect(queryByTestId("button")?.getAttribute("text")).toBe("Save");
+  expect(queryByTestId("button")).toHaveTextContent("Save");
 });
 
 it("should trigger click", () => {
@@ -24,10 +24,10 @@ it("is not in loading state", () => {
 it("is in loading state and also disabled", () => {
   const { queryByTestId } = render(<Button loading={true} />);
   expect(queryByTestId("button-loading")).toBeTruthy();
-  expect(queryByTestId("button")?.getAttribute("disabled")).toBeTruthy();
+  expect(queryByTestId("button")).toHaveAttribute("disabled");
 });
 
 it("has disabled state", () => {
   const { queryByTestId } = render(<Button disabled={true} />);
-  expect(queryByTestId("button")?.getAttribute("disabled")).toBeTruthy();
+  expect(queryByTestId("button")).toHaveAttribute("disabled");
 });
