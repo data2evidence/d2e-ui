@@ -132,7 +132,7 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
             <>
               <div className="concept-sets__header">
                 <div className="concept-sets__search">
-                  <SearchBar keyword={searchText} onEnter={updateSearchResult} />
+                  <SearchBar keyword={searchText} onEnter={updateSearchResult} width={"480px"} />
                 </div>
                 <Button
                   text={getText(i18nKeys.CONCEPT_SETS__ADD_CONCEPT_SET)}

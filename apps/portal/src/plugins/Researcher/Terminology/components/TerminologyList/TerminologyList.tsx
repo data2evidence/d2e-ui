@@ -506,7 +506,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
     <>
       {tab === "SEARCH" ? (
         <div className="terminology__list-search">
-          <SearchBar keyword={searchText} onEnter={updateSearchResult} width={860} />
+          <SearchBar keyword={searchText} onEnter={updateSearchResult} width={"806px"} />
         </div>
       ) : null}
       <MaterialReactTable table={table} />
