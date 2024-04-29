@@ -73,7 +73,7 @@
         <d4l-button
           :text="getText('MRI_PA_COHORT_ADD_TEXT')"
           :title="getText('MRI_PA_COHORT_ADD_TEXT')"
-          classes="button--block"
+          classes="button--block button-radius"
           @click="openAddNewCohort"
         />
       </div>

@@ -5,6 +5,7 @@
   width: 100%;
   height: 96%;
   position: static !important;
+  background-color: #f2f0f1;
   input.mri-bookmark-id {
     width: 1px;
     height: 0px;
@@ -171,6 +172,14 @@
     overflow-x: hidden;
     overflow-y: auto;
     text-align: left;
+    &__break {
+      opacity: 0.5;
+      margin: 10px -1rem 0 -1rem;
+      border-bottom: solid 1px #acaba8;
+    }
+    .button-radius {
+      border-radius: 6px;
+    }
     .bookmark-noContent {
       color: $UiDarkText;
       font-size: 14px;
@@ -196,7 +205,8 @@
         box-sizing: border-box;
         background-color: $UiLightestBG;
         border: 1px solid $UiMediumBorder;
-        border-radius: 3px;
+        border-radius: 18px;
+        box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.08);
         font-size: 12px;
         padding: 5px;
         width: 290px;
@@ -226,6 +236,7 @@
             font-weight: bold;
             position: relative;
             top: 30%;
+            color: #ff5e59;
             span.selectable {
               user-select: all;
               font-weight: normal;
@@ -268,7 +279,11 @@
           }
           .bookmark-item-footer {
             bottom: 5px;
-            width: calc(100% - 10px);
+            &__break {
+              opacity: 0.5;
+              margin: 0 -5px 0 -5px;
+              border-bottom: solid 1px #acaba8;
+            }
             .bookmark-item-buttons {
               width: 100%;
               td {
