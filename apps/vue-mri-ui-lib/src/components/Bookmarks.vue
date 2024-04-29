@@ -76,6 +76,7 @@
           classes="button--block button-radius"
           @click="openAddNewCohort"
         />
+        <div class="bookmark-content__break"/>
       </div>
 
       <div v-if="!bookmarksDisplay || bookmarksDisplay.length === 0" class="bookmark-noContent">
@@ -220,6 +221,7 @@
                 <tr>
                   <td>
                     <div class="bookmark-item-footer">
+                      <div class="bookmark-item-footer__break"/>
                       <table class="bookmark-item-buttons">
                         <tr>
                           <td colspan="3">
