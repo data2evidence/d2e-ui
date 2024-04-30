@@ -180,6 +180,7 @@ export const i18nDefault = {
     COHORT_FILTER__SELECT_COHORT_FILTER: "Select cohort filter",
     COHORT_PLUGIN__COHORT_MANAGEMENT: "Cohort Management",
     COHORT_PLUGIN__COHORTS: "Cohorts",
+    CONCEPT_SETS__SEARCH: "Concept Search",
     CONCEPT_SETS__ADD_CONCEPT_SET: "Add concept set",
     CONCEPT_SETS__AUTHOR: "Author",
     CONCEPT_SETS__CREATED: "Created",
