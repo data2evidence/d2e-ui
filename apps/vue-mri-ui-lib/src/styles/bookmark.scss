@@ -208,7 +208,7 @@
         border-radius: 18px;
         box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.08);
         font-size: 12px;
-        padding: 5px;
+        padding: 10px;
         width: 290px;
         height: 100%;
         overflow-wrap: anywhere;
@@ -281,7 +281,7 @@
             bottom: 5px;
             &__break {
               opacity: 0.5;
-              margin: 0 -5px 0 -5px;
+              margin: 10px -10px;
               border-bottom: solid 1px #acaba8;
             }
             .bookmark-item-buttons {
