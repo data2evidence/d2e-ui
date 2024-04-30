@@ -39,10 +39,5 @@
 		<Switch state="{analyticsModel>config/panelOptions/calcViewAccessPoint}" 
 			tooltip="{i18n>MRI_PA_CFG_ACCESS_POINT_CALCVIEW_TOOLTIP}">
 		</Switch>
-
-		<Label text="{i18n>MRI_PA_CFG_NON_INTERACTIVE_MODE_LABEL}"/>
-		<Switch state="{analyticsModel>config/panelOptions/nonInteractiveMode}" 
-			tooltip="{i18n>MRI_PA_CFG_NON_INTERACTIVE_MODE_TOOLTIP}">
-		</Switch>
 	</f:SimpleForm>
 </mvc:View>
