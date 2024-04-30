@@ -86,7 +86,7 @@
       <ul class="bookmark-list">
         <template v-for="bookmark in bookmarksDisplay" :key="bookmark.name">
           <li class="bookmark-item" ref="bookmarkItem">
-            <div class="bookmark-item-container" ref="bookmarkItemContainer" v-on:click="loadBookmarkCheck(bookmark.id, bookmark.chartType)">
+            <div class="bookmark-item-container" ref="bookmarkItemContainer">
               <table class="bookmark-item-table">
                 <tr>
                   <td>
@@ -95,6 +95,7 @@
                         v-model="bookmark.selected"
                         @checkEv="onSelectBookmark(bookmark)"
                         :text="`${bookmark.name} ${bookmark.shared ? '(Shared)' : ''}`"
+                        :labelClass="'font-color-red'"
                       ></appCheckbox>
                     </div>
                   </td>
@@ -129,7 +130,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <div class="bookmark-item-content">
+                    <div class="bookmark-item-content" v-on:click="loadBookmarkCheck(bookmark.id, bookmark.chartType)">
                       <table class="bookmark-item-cards">
                         <thead>
                           <th style="width: 25px"></th>
