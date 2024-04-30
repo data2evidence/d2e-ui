@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
 import { conceptDataType } from "../types";
-import { TerminologyProps } from "../../../SystemAdmin/Terminology/Terminology";
+import { TerminologyProps } from "../../../Researcher/Terminology/Terminology";
 
 const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => {
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
