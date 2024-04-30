@@ -119,8 +119,12 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
         <div className="concept-sets__content">
           <div className="concept-sets__tabs">
             <Tabs value={tabValue} onChange={handleTabSelectionChange}>
-              <Tab disableRipple label="Concept Search" value={ConceptSetTab.ConceptSearch}></Tab>
-              <Tab disableRipple label="Concept Sets" value={ConceptSetTab.ConceptSets}></Tab>
+              <Tab
+                disableRipple
+                label={getText(i18nKeys.CONCEPT_SETS__SEARCH)}
+                value={ConceptSetTab.ConceptSearch}
+              ></Tab>
+              <Tab disableRipple label={getText(i18nKeys.TERMINOLOGY__CONCEPT_SETS)}></Tab>
             </Tabs>
           </div>
 
