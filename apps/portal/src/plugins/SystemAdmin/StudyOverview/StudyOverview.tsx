@@ -222,7 +222,6 @@ const StudyOverview: FC = () => {
             <Button text="Check for updates" onClick={() => alert("hello")} />
             <Button text="Add dataset" onClick={openAddStudyDialog} />
           </div>
-          {/* <Button text="Add dataset" onClick={openAddStudyDialog} /> */}
           <AddStudyDialog
             open={showAddStudyDialog}
             onClose={handleCloseAddStudyDialog}
