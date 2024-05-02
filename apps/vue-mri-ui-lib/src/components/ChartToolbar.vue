@@ -1,9 +1,8 @@
 <template>
-  <!-- hiding the toolbar when isNonInteractiveMode to use the functionality for patient list count -->
-  <div class="chartToolbar-main-container" :style="isNonInteractiveMode ? 'height: 0px; visibility: hidden' : ''">
+  <div class="chartToolbar-main-container">
     <div class="d-flex">
       <button
-        v-if="!isNonInteractiveMode && !showUnHideFilters"
+        v-if="!showUnHideFilters"
         class="actionButton"
         @click="hideLeftPanel"
         :title="getText('MRI_PA_TOOLTIP_COLLAPSE_FILTER_BAR')"
@@ -11,12 +10,12 @@
         <span class="icon" style="font-family: app-icons">{{ hideIcon }}</span>
       </button>
       <button
-        v-if="!isNonInteractiveMode && showUnHideFilters"
+        v-if="showUnHideFilters"
         class="actionButton"
         @click="unHideClicked"
         :title="getText('MRI_PA_TOOLTIP_EXPAND_FILTER_BAR')"
       >
-        <span v-if="!isNonInteractiveMode" class="icon" style="font-family: app-icons">{{ unHideIcon }}</span>
+        <span class="icon" style="font-family: app-icons">{{ unHideIcon }}</span>
       </button>
 
       <span class="separator"></span>
@@ -174,9 +173,6 @@ export default {
     ]),
     chartSelection() {
       return this.getChartSelection()
-    },
-    isNonInteractiveMode() {
-      return this.getMriFrontendConfig.isNonInteractiveMode()
     },
     drilldownEnabled() {
       if (

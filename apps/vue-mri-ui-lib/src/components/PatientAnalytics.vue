@@ -1,6 +1,6 @@
 <template>
   <div :class="['pa-component-wrapper', { hideFilterCard: hideLeftPane }]">
-    <div class="fullHeight pa-splitter" v-split v-if="showPaSplitter">
+    <div class="fullHeight pa-splitter" v-split v-if="!showExpandedFilters">
       <div id="pane-left" class="split">
         <div class="panel-header filters-toolbar d-flex">
           <div>
@@ -41,7 +41,7 @@
         <filters v-bind:class="{ hidden: displayCohorts || displaySharedBookmarks }"></filters>
         <resizeObserver @notify="onSplitterResize" />
       </div>
-      <div v-if="!isNonInteractiveMode" id="pane-right" ref="rightPanel" class="split">
+      <div id="pane-right" ref="rightPanel" class="split">
         <chartToolbar
           :showUnHideFilters="hideLeftPane"
           @expandEv="toggleExpandedFilters"
@@ -64,11 +64,11 @@
         </div>
       </div>
     </div>
-    <div class="fullHeight" v-if="isNonInteractiveMode || showExpandedFilters">
+    <div class="fullHeight" v-if="showExpandedFilters">
       <expandedFilters @hideEv="toggleExpandedFilters" @toggleChartAndListModal="toggleChartAndListModal" />
     </div>
     <div
-      v-if="showChartAndListModal && isNonInteractiveMode"
+      v-if="showChartAndListModal"
       style="
         height: 100vh;
         width: 100vw;
@@ -92,19 +92,6 @@
           overflow: hidden;
         "
       >
-        <div
-          v-if="isNonInteractiveMode"
-          style="display: flex; justify-content: space-between; padding: 10px 20px; border-bottom: 1px solid lightgray"
-        >
-          <div style="margin-top: 3px; color: #000080; font-size: 14px; font-weight: 500">
-            {{ getActiveChart === 'stacked' ? getText('MRI_PA_BAR_CHART') : getText('MRI_PA_PATIENT_LIST') }}
-          </div>
-          <div>
-            <button class="btn btn-sm" @click="closeChartListModal">
-              <appIcon icon="close"></appIcon>
-            </button>
-          </div>
-        </div>
         <chartToolbar
           :showUnHideFilters="hideLeftPane"
           @expandEv="toggleExpandedFilters"
@@ -124,31 +111,6 @@
             v-if="displayFilterCardSummary"
           >
           </filterCardSummary>
-        </div>
-        <div
-          v-if="isNonInteractiveMode"
-          style="display: flex; justify-content: center; width: 100%; padding-bottom: 10px; margin-top: 5px"
-        >
-          <d4l-button
-            :text="getText('MRI_PA_BACK_TO_FILTERS')"
-            :title="getText('MRI_PA_BACK_TO_FILTERS')"
-            style="margin-left: 8px"
-            @click="onClickBackToFiltering"
-          />
-          <d4l-button
-            v-if="getActiveChart === 'stacked'"
-            :text="getText('MRI_PA_BMK_VIEW_LIST')"
-            :title="getText('MRI_PA_BMK_VIEW_LIST')"
-            style="margin-left: 8px"
-            @click="onClickShowList"
-          />
-          <d4l-button
-            v-if="getActiveChart === 'list'"
-            :text="getText('MRI_PA_BMK_VIEW_CHART')"
-            :title="getText('MRI_PA_BMK_VIEW_CHART')"
-            style="margin-left: 8px"
-            @click="onClickShowChart"
-          />
         </div>
       </div>
     </div>
@@ -333,16 +295,10 @@ export default {
         return bookmarkId
       },
     },
-    isNonInteractiveMode() {
-      return this.getMriFrontendConfig.isNonInteractiveMode()
-    },
     displayCohorts() {
       if (this.displayCohorts) {
         return this.loadAllBookmark().then(() => (this.querystring.bmkId = this.initBookmarkId))
       }
-    },
-    showPaSplitter(){
-      return !this.showExpandedFilters && !this.isNonInteractiveMode
     }
   },
   methods: {

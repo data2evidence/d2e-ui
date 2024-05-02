@@ -1,8 +1,7 @@
 <template>
-  <div class="patientcount-wrapper" :style="isNonInteractiveMode ? 'text-align: center' : ''">
+  <div class="patientcount-wrapper">
     <div class="patientCount" ref="patientCount" @mouseenter="openPatientPopover">
       <span class="patientIcon" style="font-family: app-icons"></span>
-      <span v-if="isNonInteractiveMode" class="patientCountTotalText"> Patient Count:</span>
       <span class="patientCountTotalText">{{ patientCount }} / {{ totalPatientCount }}</span>
       <span class="icon" style="font-family: app-icons"></span>
       <span class="separator" v-if="getActiveChart === 'vb'" />
@@ -81,19 +80,12 @@ export default {
     getTotalPatientCountText() {
       return `${this.getText('MRI_PA_PATIENT_COUNT_TOOLTIP_TOTAL')}: ${this.totalPatientCount}`
     },
-    isNonInteractiveMode() {
-      return this.getMriFrontendConfig.isNonInteractiveMode()
-    },
   },
   methods: {
     openPatientPopover() {
       const boundingBox = this.$refs.patientCount.getBoundingClientRect()
       this.showPatientCount = true
       this.popOverPosition.top = `${boundingBox.bottom + 12}px`
-      if (this.isNonInteractiveMode) {
-        this.popOverPosition.left = `${boundingBox.left}px`
-        this.popOverPosition.right = `auto`
-      }
     },
   },
   components: {
