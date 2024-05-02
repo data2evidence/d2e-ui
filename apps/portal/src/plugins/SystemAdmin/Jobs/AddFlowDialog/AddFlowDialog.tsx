@@ -180,7 +180,7 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
                         <Button
                           text={getText(i18nKeys.ADD_FLOW_DIALOG__SELECT_FILE)}
                           onClick={handleAddFile}
-                          variant="secondary"
+                          variant="outlined"
                         />
                         <input
                           type="file"
@@ -218,7 +218,7 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
         <Button
           text={getText(i18nKeys.ADD_FLOW_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
-          variant="secondary"
+          variant="outlined"
           block
           disabled={loading}
         />

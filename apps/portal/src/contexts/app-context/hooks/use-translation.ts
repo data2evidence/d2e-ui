@@ -70,11 +70,5 @@ export const useTranslation = (): {
     [translations, translation.locale]
   );
 
-  useEffect(() => {
-    if (env.REACT_APP_LOCALE) {
-      changeLocale(env.REACT_APP_LOCALE);
-    }
-  }, []);
-
   return { getText, changeLocale, i18nKeys, locale: translation.locale };
 };

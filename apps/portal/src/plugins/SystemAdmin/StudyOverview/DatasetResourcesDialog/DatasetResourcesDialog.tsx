@@ -196,7 +196,7 @@ const DatasetResourcesDialog: FC<DatasetResourcesDialogProps> = ({ study, open, 
           <Button
             text={getText(i18nKeys.DATASET_RESOURCES_DIALOG__CANCEL)}
             onClick={handleClose}
-            variant="secondary"
+            variant="outlined"
             block
             disabled={hasChanges}
           />

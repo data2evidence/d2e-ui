@@ -231,9 +231,9 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
         <Button
           text={getText(i18nKeys.IMPORT_DIALOG__CANCEL)}
           onClick={() => handleCancel("cancelled")}
-          variant="secondary"
-        ></Button>
-        <Button text={getText(i18nKeys.IMPORT_DIALOG__IMPORT)} onClick={handleImport}></Button>
+          variant="outlined"
+        />
+        <Button text={getText(i18nKeys.IMPORT_DIALOG__IMPORT)} onClick={handleImport} />
       </div>
     </Dialog>
   );

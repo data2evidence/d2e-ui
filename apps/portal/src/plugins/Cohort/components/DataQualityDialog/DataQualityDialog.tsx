@@ -99,7 +99,7 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
             onClick={openJobDialog}
             text={getText(i18nKeys.DATA_QUALITY_DIALOG__RUN_DATA_QUALITY)}
             disabled={FlowRunInProgressJobStateTypes.includes(latestFlowRun?.state?.type) || !userInfo.isSystemAdmin}
-          ></Button>
+          />
         </div>
         <div>
           {loadingLatestFlowRun ? (

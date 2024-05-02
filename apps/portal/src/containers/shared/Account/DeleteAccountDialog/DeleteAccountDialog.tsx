@@ -50,7 +50,7 @@ const DeleteAccountDialog: FC<DeleteAccountDialogProps> = ({ open, onClose }) =>
         You can&apos;t undo this action
       </div>
       <div className="button-group-actions">
-        <Button text="Cancel" onClick={onClose} variant="secondary" block disabled={deleting} />
+        <Button text="Cancel" onClick={onClose} variant="outlined" block disabled={deleting} />
         <Button text="Yes, delete" onClick={handleDeleteUser} block loading={deleting} data-testid="button-delete" />
       </div>
     </Dialog>

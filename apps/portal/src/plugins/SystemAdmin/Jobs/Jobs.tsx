@@ -179,9 +179,9 @@ const Jobs: FC = () => {
                   <Button
                     className="jobs__button"
                     text={getText(i18nKeys.JOBS__UPLOAD)}
-                    variant="secondary"
+                    variant="outlined"
                     onClick={handleOpenAddFlow}
-                  ></Button>
+                  />
                   <AddFlowDialog open={showAddFlow} onClose={handleCloseAddFlow} />
                 </div>
                 <div className="jobs_content__container">

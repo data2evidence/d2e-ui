@@ -274,7 +274,7 @@ export const EditDbCredentialsDialog: FC<EditDbCredentialDialogProps> = ({ open,
         <Box display="flex" gap={1} className="edit-db-dialog__footer-actions">
           <Button
             text={getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__CANCEL)}
-            variant="secondary"
+            variant="outlined"
             onClick={() => handleClose("cancelled")}
             disabled={loading}
           />

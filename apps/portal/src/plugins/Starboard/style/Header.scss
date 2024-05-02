@@ -30,19 +30,6 @@
     justify-content: center;
   }
 
-  .buttons {
-    background-color: transparent;
-    color: var(--color-primary);
-    border: 0px;
-    padding: 5px;
-    .button--disabled {
-      background-color: transparent !important;
-      span {
-        color: lightgray;
-      }
-    }
-  }
-
   .buttons:hover {
     background-color: transparent;
     color: var(--color-primary);

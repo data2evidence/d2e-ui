@@ -78,7 +78,7 @@ export const DeleteFlowDialog: FC<DeleteFlowDialogProps> = ({
           gap={1}
           className="delete-flow-dialog__footer-actions"
         >
-          <Button text="Cancel" variant="secondary" onClick={onClose} />
+          <Button text="Cancel" variant="outlined" onClick={onClose} />
           <Button
             text="Delete"
             onClick={handleDelete}

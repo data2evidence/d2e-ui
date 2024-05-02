@@ -7,7 +7,7 @@ import { useFeedback, useTranslation } from "../../../../../contexts";
 import { FilterOptions, TabName, FhirValueSetExpansionContainsWithExt, TerminologyResult } from "../../utils/types";
 import { Terminology } from "../../../../../axios/terminology";
 import { tabNames } from "../../utils/constants";
-import SearchBar from "../SearchBar/SearchBar";
+import SearchBar from "../../../../../components/SearchBar/SearchBar";
 import "./TerminologyList.scss";
 
 interface TerminologyListProps {
@@ -294,19 +294,19 @@ const TerminologyList: FC<TerminologyListProps> = ({
       {
         accessorKey: "conceptId",
         header: getText(i18nKeys.TERMINOLOGY_LIST__ID),
-        grow: false,
+        grow: true,
         size: 100,
       },
       {
         accessorKey: "code",
         header: getText(i18nKeys.TERMINOLOGY_LIST__CODE),
-        grow: false,
+        grow: true,
         size: 180,
       },
       {
         accessorKey: "display",
         header: getText(i18nKeys.TERMINOLOGY_LIST__NAME),
-        grow: false,
+        grow: true,
         size: isDrawer ? 250 : 350,
       },
       {
@@ -315,7 +315,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.conceptClassId ? mapFilterOptions(filterOptions.conceptClassId) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
-        grow: false,
+        grow: true,
         size: 180,
       },
       {
@@ -324,7 +324,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.concept ? mapFilterOptions(filterOptions.concept) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
-        grow: false,
+        grow: true,
         size: 180,
       },
       {
@@ -333,7 +333,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.domainId ? mapFilterOptions(filterOptions.domainId) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
-        grow: false,
+        grow: true,
         size: 180,
       },
       {
@@ -342,7 +342,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.vocabularyId ? mapFilterOptions(filterOptions.vocabularyId) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
-        grow: false,
+        grow: true,
         size: 180,
       },
       {
@@ -351,7 +351,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.validity ? mapFilterOptions(filterOptions.validity) : [],
         enableColumnFilter: tab === tabNames.SEARCH,
-        grow: false,
+        grow: true,
         size: 180,
       },
     ];
@@ -477,7 +477,6 @@ const TerminologyList: FC<TerminologyListProps> = ({
         whiteSpace: "normal",
         wordWrap: "break-word",
         color: "#000080",
-        padding: "6px",
       },
     },
     muiTableContainerProps: {
@@ -505,7 +504,11 @@ const TerminologyList: FC<TerminologyListProps> = ({
   });
   return (
     <>
-      {tab === "SEARCH" ? <SearchBar keyword={searchText} onEnter={updateSearchResult} /> : null}
+      {tab === "SEARCH" ? (
+        <div className="terminology__list-search">
+          <SearchBar keyword={searchText} onEnter={updateSearchResult} width={"806px"} />
+        </div>
+      ) : null}
       <MaterialReactTable table={table} />
       {terminologiesCount ? (
         <TablePagination
