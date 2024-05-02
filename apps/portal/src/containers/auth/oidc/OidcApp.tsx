@@ -10,7 +10,7 @@ import env from "../../../env";
 import { useLocation } from "react-router-dom";
 import { PostLoginRedirectUrlContext } from "../../../contexts/PostLoginRedirectUrlContext";
 import { isValidRedirectUrl } from "../../../utils";
-import { AppProvider } from "../../../contexts";
+import { AppProvider, useTranslation } from "../../../contexts";
 
 let oidcConfig: any;
 try {
@@ -20,6 +20,7 @@ try {
 }
 
 const OidcAppInternal: FC = () => {
+  const { changeLocale } = useTranslation();
   const { isAuthenticated } = useOidc();
   const location = useLocation();
   const redirectUrl = localStorage.getItem("redirectUrl") || "";
@@ -29,6 +30,12 @@ const OidcAppInternal: FC = () => {
       localStorage.setItem("redirectUrl", location.pathname);
     }
   }, [location, redirectUrl]);
+
+  useEffect(() => {
+    if (env.REACT_APP_LOCALE) {
+      changeLocale(env.REACT_APP_LOCALE);
+    }
+  }, []);
 
   if (!isAuthenticated) {
     return <PublicApp />;
