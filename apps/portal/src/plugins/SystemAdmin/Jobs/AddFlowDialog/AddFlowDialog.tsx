@@ -201,7 +201,9 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
                 ) : (
                   <TableRow key={selectedFile.name}>
                     <TableCell style={{ color: "#000e7e" }}>{selectedFile.name}</TableCell>
-                    <TableCell style={{ color: "#000e7e" }}>{selectedFile.size} bytes</TableCell>
+                    <TableCell style={{ color: "#000e7e" }}>
+                      {selectedFile.size} {getText(i18nKeys.ADD_FLOW_DIALOG__BYTES)}
+                    </TableCell>
                     <TableCell style={{ color: "#000e7e" }}>{selectedFile.type}</TableCell>
                     <TableCell>
                       <IconButton startIcon={<TrashIcon />} title="Delete" onClick={() => setSelectedFile(undefined)} />
