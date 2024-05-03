@@ -235,27 +235,12 @@
             font-size: 16px;
             font-weight: bold;
             position: relative;
-            top: 30%;
             color: #ff5e59;
             span.selectable {
               user-select: all;
               font-weight: normal;
-            }
-            .app-checkbox {
-              padding-left: 24px;
-              height: 32px;
-              line-height: 32px;
-              display: flex;
-              align-items: center;
-              .app-checkbox-container {
-                left: 0;
-                top: 7px;
-              }
-              .app-label {
-                color: $MriButtonHoverDark;
               }
             }
-          }
           .bookmark-item-content {
             padding-left: 9px;
             padding-right: 9px;
