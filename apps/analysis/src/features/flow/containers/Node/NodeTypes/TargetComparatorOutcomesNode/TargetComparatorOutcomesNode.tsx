@@ -8,8 +8,12 @@ import { TargetComparatorOutcomesDrawer } from "./TargetComparatorOutcomesDrawer
 import "./TargetComparatorOutcomesNode.scss";
 
 export interface TargetComparatorOutcomesNodeData extends NodeDataState {
+  targetId: number;
+  comparatorId: number;
   trueEffectSize: number;
   priorOutcomeLookback: number;
+  excludedCovariateConceptIds: string[];
+  includedCovariateConceptIds: string[];
 }
 
 export const TargetComparatorOutcomesNode = (

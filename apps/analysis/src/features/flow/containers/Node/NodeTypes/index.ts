@@ -155,8 +155,12 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run target comparator outcomes code",
     tag: NodeTag.Indigo,
     defaultData: {
+      targetId: 1,
+      comparatorId: 1,
       trueEffectSize: 1,
       priorOutcomeLookback: 30,
+      excludedCovariateConceptIds: [],
+      includedCovariateConceptIds: [],
     },
   },
   cohort_method_analysis_node: {

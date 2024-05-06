@@ -1,7 +1,8 @@
 import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
-import { Box, Checkbox, TextInput } from "@portal/components";
+import { Box, TextInput, Autocomplete, TextField } from "@portal/components";
+import { SxProps } from "@mui/system";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -25,8 +26,31 @@ interface FormData extends TargetComparatorOutcomesNodeData {}
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
+  targetId: 1,
+  comparatorId: 1,
   trueEffectSize: 1,
   priorOutcomeLookback: 30,
+  excludedCovariateConceptIds: [],
+  includedCovariateConceptIds: [],
+};
+
+const styles: SxProps = {
+  ".MuiInputLabel-root": {
+    color: "#000080",
+    "&.MuiInputLabel-shrink, &.Mui-focused": {
+      color: "var(--color-neutral)",
+    },
+  },
+  ".MuiInput-input:focus": {
+    backgroundColor: "transparent",
+    color: "#000080",
+  },
+  ".MuiInput-root": {
+    color: "var(--color-neutral)",
+    "&::after, &:hover:not(.Mui-disabled)::before": {
+      borderBottom: "2px solid #000080",
+    },
+  },
 };
 
 export const TargetComparatorOutcomesDrawer: FC<
@@ -43,8 +67,12 @@ export const TargetComparatorOutcomesDrawer: FC<
       setFormData({
         name: node.data.name,
         description: node.data.description,
+        targetId: node.data.targetId,
+        comparatorId: node.data.comparatorId,
         trueEffectSize: node.data.trueEffectSize,
         priorOutcomeLookback: node.data.priorOutcomeLookback,
+        excludedCovariateConceptIds: node.data.excludedCovariateConceptIds,
+        includedCovariateConceptIds: node.data.includedCovariateConceptIds,
       });
     } else {
       setFormData({
@@ -64,6 +92,26 @@ export const TargetComparatorOutcomesDrawer: FC<
 
     typeof onClose === "function" && onClose();
   }, [formData]);
+
+  const handleExcludedCovariateConceptIdsChange = (
+    event: any,
+    value: string[]
+  ) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      excludedCovariateConceptIds: value,
+    }));
+  };
+
+  const handleIncludedCovariateConceptIdsChange = (
+    event: any,
+    value: string[]
+  ) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      includedCovariateConceptIds: value,
+    }));
+  };
 
   return (
     <NodeDrawer {...props} width="500px" onOk={handleOk} onClose={onClose}>
@@ -85,6 +133,27 @@ export const TargetComparatorOutcomesDrawer: FC<
           }
         />
       </Box>
+      <Box mb={4}>
+        <TextInput
+          label="targetId"
+          value={formData.targetId}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({ targetId: e.target.value })
+          }
+          type="number"
+        />
+      </Box>
+      <Box mb={4}>
+        <TextInput
+          label="comparatorId"
+          value={formData.comparatorId}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({ comparatorId: e.target.value })
+          }
+          type="number"
+        />
+      </Box>
+
       <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
         <div style={{ paddingBottom: "20px" }}>Negative Control Outcomes</div>
         <Box mb={4}>
@@ -111,6 +180,40 @@ export const TargetComparatorOutcomesDrawer: FC<
             type="number"
           />
         </Box>
+      </Box>
+      <Box mb={4}>
+        <Autocomplete
+          multiple
+          sx={styles}
+          value={formData.excludedCovariateConceptIds}
+          onChange={handleExcludedCovariateConceptIdsChange}
+          options={[]}
+          freeSolo
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="ExcludedCovariateConceptIds"
+              placeholder="Enter Excluded Covariate Concept ID"
+            />
+          )}
+        />
+      </Box>
+      <Box mb={4}>
+        <Autocomplete
+          multiple
+          sx={styles}
+          value={formData.includedCovariateConceptIds}
+          onChange={handleIncludedCovariateConceptIdsChange}
+          options={[]}
+          freeSolo
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="IncludedCovariateConceptIds"
+              placeholder="Enter Included Covariate Concept ID"
+            />
+          )}
+        />
       </Box>
     </NodeDrawer>
   );
