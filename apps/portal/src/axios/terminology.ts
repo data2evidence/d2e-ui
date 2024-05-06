@@ -8,7 +8,7 @@ import {
   FilterOptions,
   HybridSearchConfig,
   Concept,
-} from "../plugins/SystemAdmin/Terminology/utils/types";
+} from "../plugins/Researcher/Terminology/utils/types";
 
 const TERMINOLOGY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}terminology`;
 

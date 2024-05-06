@@ -1,22 +1,10 @@
 import React, { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
-import { PageProps, SystemAdminPageMetadata } from "@portal/plugin";
+import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
 import { Button, Checkbox } from "@portal/components";
-
 import TerminologyList from "./components/TerminologyList/TerminologyList";
 import TerminologyDetail from "./components/TerminologyDetail/TerminologyDetail";
 import "./Terminology.scss";
-import {
-  Box,
-  Drawer,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Drawer, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { OnCloseReturnValues, FhirValueSetExpansionContainsWithExt, TerminologyResult } from "./utils/types";
 import { tabNames } from "./utils/constants";
 import { TabName, ConceptSet } from "./utils/types";
@@ -25,7 +13,7 @@ import { useDatasets } from "../../../hooks";
 import { useTranslation } from "../../../contexts";
 import { useUserInfo } from "../../../contexts/UserContext";
 
-export interface TerminologyProps extends PageProps<SystemAdminPageMetadata> {
+export interface TerminologyProps extends PageProps<ResearcherStudyMetadata> {
   onConceptIdSelect?: (conceptData: any) => void;
   initialInput?: string;
   baseUserId?: string;
@@ -440,53 +428,27 @@ export const Terminology: FC<TerminologyProps> = ({
   return (
     <WithDrawer onClose={onClickClose} isDrawer={isDrawer} open={open}>
       <div className="terminology__container">
-        <div
-          style={{
-            height: "40px",
-            width: "100%",
-            backgroundColor: "#edf2f7",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ color: "#000080", marginLeft: 10, fontWeight: 500 }}>
-            {isConceptSet ? getText(i18nKeys.TERMINOLOGY__CONCEPT_SETS) : getText(i18nKeys.TERMINOLOGY__CONCEPTS)}
-          </div>
-          {isDrawer && (
+        {isDrawer && (
+          <div
+            style={{
+              height: "40px",
+              width: "100%",
+              backgroundColor: "#edf2f7",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ color: "#000080", marginLeft: 10, fontWeight: 500 }}>
+              {isConceptSet ? getText(i18nKeys.TERMINOLOGY__CONCEPT_SETS) : getText(i18nKeys.TERMINOLOGY__CONCEPTS)}
+            </div>
+
             <div style={{ color: "#000080", marginRight: 10, cursor: "pointer" }} onClick={onClickClose}>
               x
             </div>
-          )}
-        </div>
-        {!selectedDatasetId ? (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              paddingLeft: "20px",
-              paddingTop: "10px",
-              height: `${datasetSelectorHeightPx}px`,
-            }}
-          >
-            <div>{getText(i18nKeys.TERMINOLOGY__REFERENCE_CONCEPTS)}:</div>
-            <FormControl sx={{ marginLeft: "10px" }}>
-              <Select
-                value={datasetId}
-                onChange={(e: SelectChangeEvent) => {
-                  setDatasetId(e.target.value);
-                }}
-                sx={{ "& .MuiSelect-outlined": { paddingTop: "8px", paddingBottom: "8px" } }}
-              >
-                {datasets?.map((dataset) => (
-                  <MenuItem value={dataset.id} key={dataset.id} sx={{}} disableRipple>
-                    {dataset.studyDetail?.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
           </div>
-        ) : null}
+        )}
+
         {isConceptSet ? (
           <NameSection
             conceptSetName={conceptSetName}
