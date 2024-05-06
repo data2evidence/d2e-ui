@@ -29,6 +29,7 @@ export const SelectDataset: FC<SelectDatasetProps> = ({ onChange, ...props }) =>
       variant="outlined"
       sx={{
         minWidth: "100px",
+        maxWidth: "200px",
         borderRadius: "6px",
         backgroundColor: "#000080",
         color: "white",

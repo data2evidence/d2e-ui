@@ -31,6 +31,7 @@ export const SelectRelease: FC<SelectReleaseProps> = ({ onChange, ...props }) =>
       variant="outlined"
       sx={{
         minWidth: "100px",
+        maxWidth: "200px",
         borderRadius: "6px",
         ".MuiSelect-select": {
           padding: "8px 14px",
