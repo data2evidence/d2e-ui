@@ -71,11 +71,11 @@ export const ZERO_INCIDENCE_NODE = [
 export const ONE_INCIDENCE_NODE = [
   "negative_control_outcome_cohort_node",
   "cohort_incidence_target_cohorts_node",
-  "characterization_node",
   "cohort_method_analysis_node",
 ];
 export const TWO_INCIDENCE_NODE = [
   "cohort_method_node",
+  "characterization_node",
   "self_controlled_case_series_analysis_node",
 ];
 export const THREE_INCIDENCE_NODE = [
@@ -134,6 +134,11 @@ export const NODE_CONNECTOR_MAPPING = {
         name: "Covariate Settings",
         type: "darkgreen",
         classifier: "covariate_settings",
+      },
+      {
+        name: "Time At Risk",
+        type: "wheat",
+        classifier: "time_at_risk",
       },
     ],
   },
