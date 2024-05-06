@@ -1,11 +1,6 @@
 <template>
   <div class="chartController" v-bind:class="{ withoutAxis: withoutAxis, genomics: getActiveChart === 'vb' }">
     <div v-if="getChartCover" class="chartCover"></div>
-    <div class="chartControllerHeader" :style="isNonInteractiveMode ? 'display: flex' : ''">
-      <div v-if="isNonInteractiveMode" style="width: 100%; margin-left: 200px">
-        <patientCount />
-      </div>
-    </div>
     <div class="chartControllerContent">
       <div class="axisContainer" ref="axisContainer">
         <!-- <div class="kaplanAxis-label" v-if="getActiveChart === 'vb'">{{ getText('MRI_PA_KAPLAN_AXIS_TITLE') }}</div> -->
@@ -136,9 +131,6 @@ export default {
     },
     chartSelection() {
       return this.getChartSelection()
-    },
-    isNonInteractiveMode() {
-      return this.getMriFrontendConfig.isNonInteractiveMode()
     },
   },
   methods: {

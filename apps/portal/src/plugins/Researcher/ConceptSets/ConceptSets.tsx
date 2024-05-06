@@ -31,6 +31,11 @@ enum ConceptSetTab {
   ConceptSets = "ConceptSets",
 }
 
+enum ConceptSetTab {
+  ConceptSearch = "ConceptSearch",
+  ConceptSets = "ConceptSets",
+}
+
 interface ConceptSetsProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
