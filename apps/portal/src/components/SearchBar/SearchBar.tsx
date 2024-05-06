@@ -8,14 +8,17 @@ import "./SearchBar.scss";
 
 interface SearchBarProps {
   keyword?: any;
+  placeholder?: string;
   onEnter: (keyword: any) => void;
   width?: string;
   height?: string;
 }
 
-const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter, width = "100%", height = "40px" }) => {
+const SearchBar: FC<SearchBarProps> = ({ keyword, placeholder, onEnter, width = "100%", height = "40px" }) => {
   const { getText, i18nKeys } = useTranslation();
   const [searchString, setSearchString] = useState("");
+  const placeholderText = placeholder || getText(i18nKeys.SEARCH_BAR__SEARCH);
+
   return (
     <div className="search-bar" style={{ width, height }}>
       <IconButton sx={{ p: "16px" }}>
@@ -23,7 +26,7 @@ const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter, width = "100%", heigh
       </IconButton>
       <InputBase
         sx={{ width: "100%" }}
-        placeholder={getText(i18nKeys.SEARCH_BAR__SEARCH)}
+        placeholder={placeholderText}
         inputProps={{ "aria-label": getText(i18nKeys.SEARCH_BAR__SEARCH_TERMS) }}
         defaultValue={keyword}
         onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {

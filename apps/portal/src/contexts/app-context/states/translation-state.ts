@@ -767,6 +767,7 @@ export const i18nDefault = {
     SCHEMA_FILTER__TEXT: "Select table filter",
     SEARCH_BAR__SEARCH_TERMS: "search terms",
     SEARCH_BAR__SEARCH: "Search",
+    SEARCH_BAR_DATASET__PLACEHOLDER: "Search datasets",
     SETUP_MENU_ITEM__CONFIGURE: "Configure",
     SETUP_OVERVIEW__BACK: "Back to Setup",
     SETUP_OVERVIEW__SETUP: "Setup",
