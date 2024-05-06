@@ -36,38 +36,6 @@ const colorPalette = [
   "#07609F",
 ];
 
-const getOptions = (data: { [key: string]: any }) => {
-  const labels = Object.keys(data);
-  const counts = Object.values(data).map(Number);
-
-  return {
-    tooltip: {
-      trigger: "item",
-      formatter: "{a} <br/>{b}: {c} ({d}%)",
-    },
-    series: [
-      {
-        name: "Statistic",
-        type: "pie",
-        radius: ["40%", "80%"],
-        avoidLabelOverlap: false,
-        label: {
-          show: false,
-          position: "center",
-        },
-        labelLine: {
-          show: false,
-        },
-        color: colorPalette,
-        data: labels.map((label, index) => ({
-          value: counts[index],
-          name: label,
-        })),
-      },
-    ],
-  };
-};
-
 export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
   const navigate = useNavigate();
   const { user } = useUserInfo();
@@ -76,13 +44,48 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
 
   const getAttributeValue = useCallback(
     (id: string) => dataset.attributes?.find((att) => att.attributeId === id)?.value,
-    []
+    [dataset.attributes]
   );
 
   const patientCount = getAttributeValue(DatasetAttribute.PATIENT_COUNT);
   const createdDate = getAttributeValue(DatasetAttribute.CREATED_DATE);
   const version = getAttributeValue(DatasetAttribute.VERSION);
   const dataModel = dataset.dataModel;
+
+  const getOptions = useCallback(
+    (data: { [key: string]: any }) => {
+      const labels = Object.keys(data);
+      const counts = Object.values(data).map(Number);
+
+      return {
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} <br/>{b}: {c} ({d}%)",
+        },
+        series: [
+          {
+            name: getText(i18nKeys.DATASET_CARD__CHART_NAME),
+            type: "pie",
+            radius: ["40%", "80%"],
+            avoidLabelOverlap: false,
+            label: {
+              show: false,
+              position: "center",
+            },
+            labelLine: {
+              show: false,
+            },
+            color: colorPalette,
+            data: labels.map((label, index) => ({
+              value: counts[index],
+              name: label,
+            })),
+          },
+        ],
+      };
+    },
+    [getText, i18nKeys]
+  );
 
   const entityCounts = getAttributeValue(DatasetAttribute.ENTITY_COUNT_DISTRIBUTION);
   const chartData = useMemo(() => {
@@ -102,7 +105,7 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
         tenantId: dataset.tenant.id,
       },
     });
-  }, [navigate, path, dataset]);
+  }, [setActiveDatasetId, navigate, path, dataset]);
 
   return (
     <Card className="dataset-card" borderRadius={18} onClick={handleCardClick}>

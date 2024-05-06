@@ -260,6 +260,7 @@ export const i18nDefault = {
     DATASET_ATTRIBUTE__DATE: "Date",
     DATASET_ATTRIBUTE__PATIENT_COUNT: "Total subjects",
     DATASET_ATTRIBUTE__VERSION: "Version",
+    DATASET_CARD__CHART_NAME: "Entity distribution",
     DATASET_DASHBOARDS__DASHBOARD: "Dashboard",
     DATASET_DASHBOARDS__SELECT_DASHBOARD: "Select dashboard",
     DATASET_DELETE_RESOURCE_DIALOG__CONFIRM: "Are you sure you want to delete the following file",
