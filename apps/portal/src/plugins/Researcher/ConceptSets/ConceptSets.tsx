@@ -4,8 +4,17 @@ import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
+import {
+  Button,
+  EditIcon,
+  IconButton,
+  Loader,
+  TableCell,
+  TablePaginationActions,
+  TableRow,
+  VisibilityOnIcon,
+} from "@portal/components";
 import { Tabs, Tab } from "@mui/material";
-import { Button, EditIcon, IconButton, Loader, TableCell, TablePaginationActions, TableRow } from "@portal/components";
 import { api } from "../../../axios/api";
 import { useUserInfo } from "../../../contexts/UserContext";
 import Terminology from "../../Researcher/Terminology/Terminology";
@@ -15,6 +24,7 @@ import SearchBar from "../../../components/SearchBar/SearchBar";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
 import { useFeedback, useTranslation } from "../../../contexts";
 import "./ConceptSets.scss";
+import { useDatasets } from "../../../hooks";
 
 enum ConceptSetTab {
   ConceptSearch = "ConceptSearch",
@@ -25,6 +35,8 @@ interface ConceptSetsProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
   const { getText, i18nKeys } = useTranslation();
+  const { user } = useUserInfo();
+  const [datasets] = useDatasets("researcher");
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
   const [page, setPage] = useState(0);
@@ -32,8 +44,19 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
   const { setFeedback } = useFeedback();
   const [data, setData] = useState<ConceptSetWithConceptDetails[]>([]);
   const [tabValue, setTabValue] = useState(ConceptSetTab.ConceptSearch);
+  const [datasetId, setDatasetId] = useState<string | undefined>();
   const userId = useUserInfo().user?.userId;
-  const datasetId = metadata?.studyId;
+
+  useEffect(() => {
+    if (metadata?.studyId) {
+      setDatasetId(metadata.studyId);
+      return;
+    }
+    if (datasets?.[0]?.id) {
+      setDatasetId(datasets[0].id);
+      return;
+    }
+  }, [metadata?.studyId, datasets]);
 
   const handleTabSelectionChange = async (event: React.SyntheticEvent, value: ConceptSetTab) => {
     setTabValue(value);
@@ -55,7 +78,24 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
       setIsLoading(true);
 
       const response = await api.terminology.getConceptSets();
-      setData(response);
+      const sortFn = (a: ConceptSetWithConceptDetails, b: ConceptSetWithConceptDetails) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        return 0;
+      };
+      const userConceptSets = response
+        .filter((conceptSet) => {
+          return conceptSet.createdBy === user.idpUserId;
+        })
+        .sort(sortFn);
+      const sharedConceptSets = response
+        .filter((conceptSet) => {
+          return conceptSet.createdBy !== user.idpUserId && conceptSet.shared;
+        })
+        .sort(sortFn);
+      const list = [...userConceptSets, ...sharedConceptSets];
+      setData(list);
     } catch (e) {
       console.error(e);
       setFeedback({
@@ -74,7 +114,7 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
 
   const handleAddAndEditConceptSet = useCallback(
     (conceptSetId?: string) => {
-      if (datasetId) {
+      if (!datasetId) {
         return;
       }
       const event = new CustomEvent<{ props: TerminologyProps }>("alp-terminology-open", {
@@ -107,7 +147,7 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
   const filteredData = data.filter((row) => row.name.toLowerCase().includes(searchText));
   const pageData = filteredData.slice(rowsPerPage * page, rowsPerPage * (page + 1));
 
-  if (isLoading || datasetId) return <Loader />;
+  if (isLoading || !datasetId) return <Loader />;
 
   if (!userId) {
     return null;
@@ -124,7 +164,11 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
                 label={getText(i18nKeys.CONCEPT_SETS__SEARCH)}
                 value={ConceptSetTab.ConceptSearch}
               ></Tab>
-              <Tab disableRipple label={getText(i18nKeys.TERMINOLOGY__CONCEPT_SETS)}></Tab>
+              <Tab
+                disableRipple
+                label={getText(i18nKeys.TERMINOLOGY__CONCEPT_SETS)}
+                value={ConceptSetTab.ConceptSets}
+              ></Tab>
             </Tabs>
           </div>
 
@@ -143,7 +187,6 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
                   onClick={() => handleAddAndEditConceptSet()}
                 />
               </div>
-              {}
               <TableContainer className="concept-sets__table">
                 <Table>
                   <TableHead>
@@ -161,12 +204,18 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
                       return (
                         <TableRow key={row.id}>
                           <TableCell>{row.id}</TableCell>
-                          <TableCell>{row.name}</TableCell>
+                          <TableCell>
+                            {row.name}
+                            {row.shared ? ` (${getText(i18nKeys.CONCEPT_SETS__SHARED)})` : ""}
+                          </TableCell>
                           <TableCell>{row.createdDate}</TableCell>
                           <TableCell>{row.modifiedDate}</TableCell>
                           <TableCell>{row.createdBy}</TableCell>
                           <TableCell>
-                            <IconButton startIcon={<EditIcon />} onClick={() => handleAddAndEditConceptSet(row.id)} />
+                            <IconButton
+                              startIcon={row.createdBy === user.idpUserId ? <EditIcon /> : <VisibilityOnIcon />}
+                              onClick={() => handleAddAndEditConceptSet(row.id)}
+                            />
                           </TableCell>
                         </TableRow>
                       );
