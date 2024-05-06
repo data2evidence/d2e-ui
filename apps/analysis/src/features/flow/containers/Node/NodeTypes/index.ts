@@ -122,10 +122,14 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run time at risk code.",
     tag: NodeTag.Wheat,
     defaultData: {
-      riskWindowStart: [1, 1],
-      riskWindowEnd: [1, 1],
-      startAnchor: ["cohort start", "cohort start"],
-      endAnchor: ["cohort end", "cohort end"],
+      timeAtRiskConfigs: [
+        {
+          riskWindowStart: 1,
+          riskWindowEnd: 1,
+          startAnchor: "cohort start",
+          endAnchor: "cohort end",
+        },
+      ],
     },
   },
   covariate_settings_node: {
@@ -141,6 +145,9 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     defaultData: {
       dechallengeStopiterval: 0,
       dechallengeEvaluationWindow: 0,
+      minPriorObservation: 0,
+      targetIds: ["1", "2"],
+      outcomeIds: [],
     },
   },
   target_comparator_outcomes_node: {
