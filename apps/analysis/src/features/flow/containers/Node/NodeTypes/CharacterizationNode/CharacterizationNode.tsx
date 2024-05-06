@@ -10,6 +10,9 @@ import "./CharacterizationNode.scss";
 export interface CharacterizationNodeData extends NodeDataState {
   dechallengeStopInterval: number;
   dechallengeEvaluationWindow: number;
+  minPriorObservation: number;
+  targetIds: string[];
+  outcomeIds: string[];
 }
 
 export const CharacterizationNode = (

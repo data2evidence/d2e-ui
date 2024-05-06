@@ -143,11 +143,11 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "JSON analysis specification for executing HADES modules",
     tag: NodeTag.Darkgreen,
     defaultData: {
-      dechallengeStopiterval: 0,
+      dechallengeStopInterval: 0,
       dechallengeEvaluationWindow: 0,
       minPriorObservation: 0,
       targetIds: ["1", "2"],
-      outcomeIds: [],
+      outcomeIds: ["3", "2"],
     },
   },
   target_comparator_outcomes_node: {
