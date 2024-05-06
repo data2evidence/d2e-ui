@@ -4,11 +4,15 @@
 
   &.button--block {
     display: block;
+
+    .alp-button {
+      width: 100%;
+    }
   }
 
   .alp-button {
     font-size: 1rem;
-    border-radius: 6px;
+    border-radius: 8px;
 
     &--loading {
       position: absolute;

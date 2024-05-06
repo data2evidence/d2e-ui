@@ -10,14 +10,15 @@ interface SearchBarProps {
   keyword?: any;
   onEnter: (keyword: any) => void;
   width?: string;
+  height?: string;
 }
 
-const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter, width = "100%" }) => {
+const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter, width = "100%", height = "40px" }) => {
   const { getText, i18nKeys } = useTranslation();
   const [searchString, setSearchString] = useState("");
   return (
-    <div className="SearchBar" style={{ width: `${width}` }}>
-      <IconButton sx={{ p: "5px" }}>
+    <div className="search-bar" style={{ width, height }}>
+      <IconButton sx={{ p: "16px" }}>
         <SearchIcon sx={{ color: "#000080" }} />
       </IconButton>
       <InputBase
@@ -36,7 +37,7 @@ const SearchBar: FC<SearchBarProps> = ({ keyword, onEnter, width = "100%" }) => 
       />
       <IconButton
         type="button"
-        sx={{ p: "5px" }}
+        sx={{ p: "16px" }}
         aria-label={getText(i18nKeys.SEARCH_BAR__SEARCH)}
         onClick={() => onEnter(searchString)}
       >

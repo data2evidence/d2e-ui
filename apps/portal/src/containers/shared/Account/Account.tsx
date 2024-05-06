@@ -1,27 +1,36 @@
 import React, { FC, useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Card, Tab, Tabs } from "@portal/components";
+import { PortalType, User } from "../../../types";
+import { useMsalInfo } from "../../../contexts/UserContext";
+import { useDialogHelper } from "../../../hooks";
+import { useTranslation } from "../../../contexts";
+import env from "../../../env";
+import { config } from "../../../config";
+import { ChangeMyPasswordDialog } from "./ChangeMyPasswordDialog/ChangeMyPasswordDialog";
+import DeleteAccountDialog from "./DeleteAccountDialog/DeleteAccountDialog";
 import TermsOfUse from "../LegalPages/TermsOfUse";
 import PrivacyPolicy from "../LegalPages/PrivacyPolicy";
 import Imprint from "../LegalPages/Imprint";
-import { Button, Card, Tab, Tabs, Title } from "@portal/components";
-import { User } from "../../../types";
-import { useMsalInfo } from "../../../contexts/UserContext";
-import DeleteAccountDialog from "./DeleteAccountDialog/DeleteAccountDialog";
-import { useDialogHelper } from "../../../hooks";
-import env from "../../../env";
 import "./Account.scss";
-import { useTranslation } from "../../../contexts";
+
+interface AccountProps {
+  portalType: PortalType;
+}
 
 const subProp = env.REACT_APP_IDP_SUBJECT_PROP;
 const nameProp = env.REACT_APP_IDP_NAME_PROP;
 
 const EMPTY_MY_USER: User = { id: "", name: "" };
 
-export const Account: FC = () => {
+export const Account: FC<AccountProps> = ({ portalType }) => {
   const { getText, i18nKeys } = useTranslation();
+  const navigate = useNavigate();
   const { claims } = useMsalInfo();
   const [tabValue, setTabValue] = useState(0);
   const [myUser, setMyUser] = useState(EMPTY_MY_USER);
   const [showDeleteAccount, openDeleteAccount, closeDeleteAccount] = useDialogHelper(false);
+  const [showPwd, openPwdDialog, closePwdDialog] = useDialogHelper(false);
 
   const legalTabs = [
     getText(i18nKeys.ACCOUNT__TERMS_OF_USE),
@@ -42,6 +51,14 @@ export const Account: FC = () => {
     setTabValue(newValue);
   }, []);
 
+  const handleSwitch = useCallback(() => {
+    navigate(portalType === "researcher" ? config.ROUTES.systemadmin : config.ROUTES.researcher);
+  }, [navigate, portalType]);
+
+  const handleLogout = useCallback(() => {
+    navigate(config.ROUTES.logout);
+  }, [navigate]);
+
   const renderTabContent = useCallback(() => {
     switch (tabValue) {
       case 0:
@@ -58,9 +75,6 @@ export const Account: FC = () => {
   return (
     <div className="account">
       <div className="account__container">
-        <div className="account__title">
-          <Title>{getText(i18nKeys.ACCOUNT__ACCOUNT)}</Title>
-        </div>
         <div className="account__content">
           <div className="account__content_account">
             <Card title={getText(i18nKeys.ACCOUNT__ACCOUNT)}>
@@ -73,31 +87,42 @@ export const Account: FC = () => {
                   <span>{getText(i18nKeys.ACCOUNT__EMAIL)}</span>
                   <span>{claims.email || "-"}</span>
                 </div>
-                <div>
-                  <Button variant="outlined" text="Delete my account" onClick={openDeleteAccount} />
-                </div>
               </div>
             </Card>
+            <div className="account__content_actions">
+              <Button
+                block
+                text={getText(
+                  portalType === "researcher"
+                    ? i18nKeys.ACCOUNT__SWITCH_TO_ADMIN_PORTAL
+                    : i18nKeys.ACCOUNT__SWITCH_TO_RESEARCHER_PORTAL
+                )}
+                onClick={handleSwitch}
+              />
+              <Button block text={getText(i18nKeys.ACCOUNT__CHANGE_PASSWORD)} onClick={openPwdDialog} />
+              <Button block text={getText(i18nKeys.ACCOUNT__LOGOUT)} onClick={handleLogout} />
+              <Button block text={getText(i18nKeys.ACCOUNT__DELETE_ACCOUNT)} onClick={openDeleteAccount} />
+            </div>
           </div>
           <div className="account__content_legal">
-            <Card title={getText(i18nKeys.ACCOUNT__LEGAL)}>
-              <div className="tab__container">
+            <Card
+              title={
                 <Tabs value={tabValue} onChange={handleTabSelectionChange} centered>
                   {legalTabs.map((tab, index) => (
                     <Tab
                       label={tab}
                       key={index}
                       value={index}
-                      disableRipple
                       sx={{
                         "&.MuiTab-root": {
-                          width: "200px",
+                          width: "180px",
                         },
                       }}
                     />
                   ))}
                 </Tabs>
-              </div>
+              }
+            >
               <div className="tab__content">
                 <div className="tab__content__container">{renderTabContent()}</div>
               </div>
@@ -106,6 +131,7 @@ export const Account: FC = () => {
         </div>
       </div>
       <DeleteAccountDialog open={showDeleteAccount} onClose={closeDeleteAccount} />
+      <ChangeMyPasswordDialog open={showPwd} onClose={closePwdDialog} />
     </div>
   );
 };
