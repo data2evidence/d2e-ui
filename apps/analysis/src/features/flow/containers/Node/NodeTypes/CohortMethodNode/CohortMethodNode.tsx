@@ -6,10 +6,14 @@ import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
 import { CohortMethodDrawer } from "./CohortMethodDrawer";
 import "./CohortMethodNode.scss";
-
+export interface CohortMethodConfigs {
+  analysisId: string;
+  targetId: string;
+}
 export interface CohortMethodNodeData extends NodeDataState {
   trueEffectSize: number;
   priorOutcomeLookback: number;
+  cohortMethodConfigs: CohortMethodConfigs[];
 }
 
 export const CohortMethodNode = (node: NodeProps<CohortMethodNodeData>) => {

@@ -187,7 +187,11 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Cohort Method",
     description: "Run cohort method code.",
     tag: NodeTag.Mediumpurple,
-    defaultData: {},
+    defaultData: {
+      trueEffectSize: 1,
+      priorOutcomeLookback: 30,
+      cohortMethodConfigs: [],
+    },
   },
   era_covariate_settings_node: {
     title: "Era Covariate Settings",
