@@ -2,7 +2,7 @@
 import { LogInfo } from '@/types'
 import { getLogsByTaskRunId } from '@/api'
 import { ref, watchEffect } from 'vue'
-import Logs from '../components/Logs.vue'
+import LogScroller from '../components/LogScroller.vue'
 import { useParamsStore } from '@/stores'
 
 type TabName = 'LOGS' | 'TASK_RUNS' | 'DETAILS' | 'PARAMETERS'
@@ -43,7 +43,9 @@ watchEffect(() => {
       padding: 0px 20px;
     "
   >
-    <div style="color: white; cursor: pointer" @click="onClickBackToJobs">< back to Jobs list</div>
+    <div style="color: white; cursor: pointer" @click="onClickBackToJobs">
+      &#60; back to Jobs list
+    </div>
     <div style="font-size: small">
       <div style="color: white">Task Run ID: {{ paramsStore.taskRunId }}</div>
     </div>
@@ -64,7 +66,7 @@ watchEffect(() => {
     </div>
   </div>
 
-  <Logs v-if="selected === 'LOGS'" :logs="logs" />
+  <LogScroller v-if="selected === 'LOGS'" :logs="logs" />
 </template>
 
 <style scoped>

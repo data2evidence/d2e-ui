@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Router from './Router.vue'
+import AppRouter from './AppRouter.vue'
 </script>
 
 <template>
   <div class="router">
-    <Router />
+    <AppRouter />
   </div>
 </template>
 
