@@ -7,6 +7,8 @@ import LogScroller from '../components/LogScroller.vue'
 import { format } from 'date-fns'
 import { PCodeHighlight } from '@prefecthq/prefect-design'
 import { useParamsStore } from '@/stores'
+import { getPortalAPI } from '../utils/portalApi'
+const { backToJobs } = getPortalAPI()
 
 const logs = ref<LogInfo[]>([])
 const selected = ref<FlowRunTabName>('LOGS')
@@ -45,7 +47,7 @@ const onClickTaskRunId = (taskRunId: string) => {
 
 const onClickBackToJobs = () => {
   paramsStore.updateParams({ flowRunId: undefined, taskRunId: undefined, mode: undefined })
-  location.reload()
+  backToJobs()
 }
 
 watchEffect(() => {

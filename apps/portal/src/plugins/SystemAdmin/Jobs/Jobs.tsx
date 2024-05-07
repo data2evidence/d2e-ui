@@ -16,7 +16,7 @@ import { loadPlugins } from "../../../utils";
 import { SystemAdminPluginRenderer } from "../../core/SystemAdminPluginRenderer";
 import env from "../../../env";
 import classNames from "classnames";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LogViewer from "./LogViewer/LogViewer";
 import { FeatureGate } from "../../../config/FeatureGate";
 import { FEATURE_DATAFLOW } from "../../../config";
@@ -44,6 +44,7 @@ const Jobs: FC = () => {
   const [logViewerScriptsLoaded, setLogViewerScriptsLoaded] = useState(false);
   const [logViewerDivLoaded, setLogViewerDivLoaded] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const dataflowPlugin = useMemo(
     () => plugins.systemadmin.find((plugin: IPluginItem) => plugin.name === "Dataflow"),
@@ -119,11 +120,17 @@ const Jobs: FC = () => {
     );
   };
 
+  const backToJobs = () => {
+    navigate(location.pathname, { replace: true });
+  };
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const incomingMode = searchParams.get("mode") || null;
-    if (incomingMode === "flowRun" || incomingMode === "taskRun" || incomingMode === null) {
+    if (incomingMode === "flowRun" || incomingMode === "taskRun") {
       setMode(incomingMode);
+    } else {
+      setMode(null);
     }
   }, [location.search]);
 
@@ -145,6 +152,7 @@ const Jobs: FC = () => {
         <LogViewer
           setLogViewerScriptsLoaded={setLogViewerScriptsLoaded}
           setLogViewerDivLoaded={setLogViewerDivLoaded}
+          backToJobs={backToJobs}
         />
       ) : null}
       {!showLogViewer ? (

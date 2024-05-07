@@ -12,7 +12,8 @@ const APPROUTER_ORIGIN = new URL(LOG_VIEWER_ASSETS_URL).origin;
 const LogViewer: FC<{
   setLogViewerScriptsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
   setLogViewerDivLoaded: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ setLogViewerScriptsLoaded, setLogViewerDivLoaded }) => {
+  backToJobs: () => void;
+}> = ({ setLogViewerScriptsLoaded, setLogViewerDivLoaded, backToJobs }) => {
   const isLocalDev = window.location.hostname === "localhost";
 
   const addOrigin = (arr: string[]) => {
@@ -49,6 +50,7 @@ const LogViewer: FC<{
             baseUrl: env.REACT_APP_DN_BASE_URL,
             getAuthToken,
             browserBaseUrl,
+            backToJobs,
           };
         }
       }}

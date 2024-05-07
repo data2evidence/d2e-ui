@@ -4,6 +4,8 @@ import { getLogsByTaskRunId } from '@/api'
 import { ref, watchEffect } from 'vue'
 import LogScroller from '../components/LogScroller.vue'
 import { useParamsStore } from '@/stores'
+import { getPortalAPI } from '../utils/portalApi'
+const { backToJobs } = getPortalAPI()
 
 type TabName = 'LOGS' | 'TASK_RUNS' | 'DETAILS' | 'PARAMETERS'
 
@@ -17,7 +19,7 @@ const onClickTab = (tabName: TabName) => {
 
 const onClickBackToJobs = () => {
   paramsStore.updateParams({ flowRunId: undefined, taskRunId: undefined, mode: undefined })
-  location.reload()
+  backToJobs()
 }
 
 watchEffect(() => {

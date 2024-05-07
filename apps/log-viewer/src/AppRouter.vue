@@ -31,25 +31,6 @@ paramsStore.updateParams(
   },
   false
 )
-
-onMounted(() => {
-  const handlePopState = () => {
-    const { flowRunId, taskRunId, mode } = getParamsFromUrl()
-    paramsStore.updateParams({
-      flowRunId,
-      taskRunId,
-      mode
-    })
-  }
-
-  // Add event listener when the component is mounted
-  window.addEventListener('popstate', handlePopState)
-
-  // Remove the event listener when the component is unmounted
-  onUnmounted(() => {
-    window.removeEventListener('popstate', handlePopState)
-  })
-})
 </script>
 
 <template>
