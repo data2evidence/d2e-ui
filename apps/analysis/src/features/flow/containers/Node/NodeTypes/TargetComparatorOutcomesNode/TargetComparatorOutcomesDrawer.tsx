@@ -2,7 +2,6 @@ import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
 import { Box, TextInput, Autocomplete, TextField } from "@portal/components";
-import { SxProps } from "@mui/system";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -14,6 +13,7 @@ import { RootState, dispatch } from "~/store";
 import { NodeDrawer, NodeDrawerProps } from "../../NodeDrawer/NodeDrawer";
 import { NodeChoiceMap } from "..";
 import { TargetComparatorOutcomesNodeData } from "./TargetComparatorOutcomesNode";
+import { CONFIGS_USER_INPUT_ARRAY_STYLES } from "../common";
 
 export interface TargetComparatorOutcomesDrawerProps
   extends Omit<NodeDrawerProps, "children"> {
@@ -32,25 +32,6 @@ const EMPTY_FORM_DATA: FormData = {
   priorOutcomeLookback: 30,
   excludedCovariateConceptIds: [],
   includedCovariateConceptIds: [],
-};
-
-const styles: SxProps = {
-  ".MuiInputLabel-root": {
-    color: "#000080",
-    "&.MuiInputLabel-shrink, &.Mui-focused": {
-      color: "var(--color-neutral)",
-    },
-  },
-  ".MuiInput-input:focus": {
-    backgroundColor: "transparent",
-    color: "#000080",
-  },
-  ".MuiInput-root": {
-    color: "var(--color-neutral)",
-    "&::after, &:hover:not(.Mui-disabled)::before": {
-      borderBottom: "2px solid #000080",
-    },
-  },
 };
 
 export const TargetComparatorOutcomesDrawer: FC<
@@ -184,7 +165,7 @@ export const TargetComparatorOutcomesDrawer: FC<
       <Box mb={4}>
         <Autocomplete
           multiple
-          sx={styles}
+          sx={CONFIGS_USER_INPUT_ARRAY_STYLES}
           value={formData.excludedCovariateConceptIds}
           onChange={handleExcludedCovariateConceptIdsChange}
           options={[]}
@@ -201,7 +182,7 @@ export const TargetComparatorOutcomesDrawer: FC<
       <Box mb={4}>
         <Autocomplete
           multiple
-          sx={styles}
+          sx={CONFIGS_USER_INPUT_ARRAY_STYLES}
           value={formData.includedCovariateConceptIds}
           onChange={handleIncludedCovariateConceptIdsChange}
           options={[]}

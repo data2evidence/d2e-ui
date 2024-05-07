@@ -9,11 +9,15 @@ import "./EraCovariateSettingsNode.scss";
 
 export interface EraCovariateSettingsNodeData extends NodeDataState {
   label: string;
-  includeEraIds: string;
+  includeEraIds: string[];
+  excludedEraIds: string[];
   start: number;
   end: number;
-  startAnchor: string[];
-  endAnchor: string[];
+  startAnchor: string;
+  endAnchor: string;
+  stratifyById: boolean;
+  firstOccurenceOnly: boolean;
+  allowRegularization: boolean;
   profileLikelihood: boolean;
   exposureOfInterest: boolean;
 }
