@@ -4,13 +4,13 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { ChevronDownIcon } from "@portal/components";
 import { Roles, config } from "../../../config";
-import { Study, LocationState, Plugins } from "../../../types";
+import { Plugins } from "../../../types";
 import { StudyInfoTab } from "../../../containers/researcher/Information/Information";
 import { useDatasets, useEnabledFeatures, useMenuAnchor } from "../../../hooks";
 import { useUserInfo } from "../../../contexts/UserContext";
 import { getPluginChildPath } from "../../../utils";
+import { useActiveDataset, useTranslation } from "../../../contexts";
 import "../Header.scss";
-import { useTranslation } from "../../../contexts";
 
 export enum MenuType {
   Dataset,
@@ -23,12 +23,20 @@ interface MenuNavProps {
   isSysAdmin?: boolean;
 }
 
+const toCamelCase = (string: string) => {
+  return string.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (match, chr) => chr.toUpperCase());
+};
+
 const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
   const { getText, i18nKeys } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();
+
+  const { activeDataset } = useActiveDataset();
   const [datasets] = useDatasets("researcher");
+  const dataset = useMemo(() => datasets.find((d) => d.id === activeDataset.id), [datasets, activeDataset.id]);
+
   const { user } = useUserInfo();
   const featureFlags = useEnabledFeatures();
   const requiredRoles = useMemo(() => plugin?.requiredRoles || [], [plugin?.requiredRoles]);
@@ -40,7 +48,7 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
     if (!allowed && requiredRoles) {
       for (const role of requiredRoles) {
         if (role === Roles.STUDY_RESEARCHER) {
-          allowed = allowed || datasets.some((dataset) => user.isStudyResearcher(dataset.id));
+          allowed = allowed || user.isDatasetResearcher(activeDataset.id);
         }
       }
     }
@@ -53,7 +61,7 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
       allowed = featureFlags.includes(featureFlag);
     }
     return allowed;
-  }, [datasets, featureFlag, featureFlags, isSysAdmin, plugin?.children, requiredRoles, type, user]);
+  }, [activeDataset.id, featureFlag, featureFlags, isSysAdmin, plugin?.children, requiredRoles, type, user]);
 
   const portalTypePath = useMemo(() => {
     if (isSysAdmin) {
@@ -70,20 +78,6 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
       return `${portalTypePath}/information`;
     }
   }, [plugin, portalTypePath, type]);
-
-  const handleDatasetClick = useCallback(
-    (study: Study) => {
-      navigate(menuLink, {
-        state: {
-          studyId: study.id,
-          tab: StudyInfoTab.DataInfo,
-          tenantId: study.tenant.id,
-        },
-        replace: location.pathname === menuLink,
-      });
-    },
-    [navigate, menuLink, location.pathname]
-  );
 
   const handlePluginClick = useCallback(
     (plugin: Plugins, stateStr?: string) => {
@@ -108,13 +102,6 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
     [navigate]
   );
 
-  const toCamelCase = useCallback(
-    (string: string) => {
-      return string.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (match, chr) => chr.toUpperCase());
-    },
-    [navigate]
-  );
-
   const isActiveTab = useCallback((): boolean => {
     const currLocation = location.pathname;
     if (plugin && plugin.children) {
@@ -125,14 +112,6 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
     }
   }, [location.pathname, menuLink, plugin]);
 
-  const isActiveDataset = useCallback(
-    (studyId: string | undefined) => {
-      const locationState = location.state as LocationState;
-      return locationState && locationState.studyId === studyId && location.pathname === menuLink;
-    },
-    [menuLink, location]
-  );
-
   const isActivePlugin = useCallback(
     (plugin: Plugins) => {
       return location.pathname === `${portalTypePath}/${getPluginChildPath(plugin)}`;
@@ -140,113 +119,84 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
     [location.pathname, portalTypePath]
   );
 
-  const renderMenuDropdown = useCallback(
-    (plugin?: Plugins) => {
-      return (
-        <>
-          {plugin && plugin.children ? (
-            <a data-text={plugin.name} className="plugin-type-title">
-              {plugin.name}
-            </a>
-          ) : plugin && plugin.menus ? (
-            <Link to={menuLink} data-text={plugin.name} className="overview-title">
-              {plugin.name}
-            </Link>
-          ) : (
-            <Link to={`${config.ROUTES.researcher}/overview`} data-text="Dataset overview" className="overview-title">
-              {getText(i18nKeys.MENU_NAV__DATASETS)}
-            </Link>
-          )}
-
-          <ChevronDownIcon />
-          <Menu
-            className="portal__menu"
-            elevation={5}
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            transformOrigin={{ vertical: "top", horizontal: "left" }}
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={closeMenu}
-            hideBackdrop={true}
-            style={{ pointerEvents: "none" }}
-            PaperProps={{
-              style: {
-                maxHeight: "calc(100% - 85px)",
-              },
-            }}
-          >
-            <div className="portal__menu-content" onMouseLeave={closeMenu}>
-              {plugin && plugin.children ? (
-                <>
-                  {plugin.children.map((p) => (
-                    <MenuItem key={p.name} onClick={() => handlePluginClick(p)}>
-                      <div
-                        className={
-                          isActivePlugin(p) ? "portal__menu-item portal__menu-item__is-active" : "portal__menu-item"
-                        }
-                      >
-                        <span data-text={p.name}>{p.name}</span>
-                      </div>
-                    </MenuItem>
-                  ))}
-                </>
-              ) : plugin && plugin.menus ? (
-                <>
-                  {plugin.menus.map((p) => (
-                    <MenuItem key={p} onClick={() => handlePluginClick(plugin, p)}>
-                      <div className="portal__menu-item">
-                        <span data-text={p}>{p}</span>
-                      </div>
-                    </MenuItem>
-                  ))}
-                </>
-              ) : (
-                <>
-                  {datasets.map((study) => (
-                    <MenuItem key={study.id} onClick={() => handleDatasetClick(study)}>
-                      <div
-                        className={
-                          isActiveDataset(study.id)
-                            ? "portal__menu-item portal__menu-item__is-active"
-                            : "portal__menu-item"
-                        }
-                      >
-                        <span data-text={study.studyDetail?.name || getText(i18nKeys.MENU_NAV__UNTITLED)}>
-                          {study.studyDetail?.name ? study.studyDetail?.name : getText(i18nKeys.MENU_NAV__UNTITLED)}
-                        </span>
-                      </div>
-                    </MenuItem>
-                  ))}
-                </>
-              )}
-            </div>
-          </Menu>
-        </>
-      );
-    },
-    [anchorEl, closeMenu, datasets, handleDatasetClick, handlePluginClick, isActiveDataset, isActivePlugin, getText]
-  );
-
   const renderPluginMenu = useCallback(
     (plugin: Plugins) => {
       if (plugin.children || plugin.menus) {
-        return renderMenuDropdown(plugin);
-      } else {
         return (
-          <Link to={menuLink} data-text={plugin.name} className="overview-title">
-            {plugin.name}
-          </Link>
+          <>
+            {plugin && plugin.children ? (
+              <a data-text={plugin.name} className="plugin-type-title">
+                {plugin.name}
+              </a>
+            ) : plugin && plugin.menus ? (
+              <Link to={menuLink} data-text={plugin.name} className="overview-title">
+                {plugin.name}
+              </Link>
+            ) : null}
+
+            <ChevronDownIcon className="portal__menu__chevron-down" />
+            <Menu
+              className="portal__menu"
+              elevation={5}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={closeMenu}
+              hideBackdrop={true}
+              style={{ pointerEvents: "none" }}
+              PaperProps={{
+                style: {
+                  maxHeight: "calc(100% - 85px)",
+                },
+              }}
+            >
+              <div className="portal__menu-content" onMouseLeave={closeMenu}>
+                {plugin && plugin.children ? (
+                  <>
+                    {plugin.children.map((p) => (
+                      <MenuItem key={p.name} onClick={() => handlePluginClick(p)}>
+                        <div
+                          className={
+                            isActivePlugin(p) ? "portal__menu-item portal__menu-item__is-active" : "portal__menu-item"
+                          }
+                        >
+                          <span data-text={p.name}>{p.name}</span>
+                        </div>
+                      </MenuItem>
+                    ))}
+                  </>
+                ) : plugin && plugin.menus ? (
+                  <>
+                    {plugin.menus.map((p) => (
+                      <MenuItem key={p} onClick={() => handlePluginClick(plugin, p)}>
+                        <div className="portal__menu-item">
+                          <span data-text={p}>{p}</span>
+                        </div>
+                      </MenuItem>
+                    ))}
+                  </>
+                ) : null}
+              </div>
+            </Menu>
+          </>
         );
       }
+
+      return (
+        <Link to={menuLink} data-text={plugin.name} className="overview-title">
+          {plugin.name}
+        </Link>
+      );
     },
-    [menuLink, renderMenuDropdown]
+    [anchorEl, closeMenu, handlePluginClick, isActivePlugin]
   );
 
-  if (
-    (type === MenuType.Dataset && datasets.length === 0) ||
-    (type === MenuType.Plugin && !isResearcherPluginAllowed())
-  ) {
+  if (type === MenuType.Plugin && !isResearcherPluginAllowed()) {
+    if (isActiveTab()) {
+      navigate(`${portalTypePath}/information`);
+    }
     return null;
   }
 
@@ -256,7 +206,17 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
       onMouseLeave={closeMenu}
       className={isActiveTab() ? "header__menu-overview header__menu-item--active" : "header__menu-overview"}
     >
-      {type === MenuType.Plugin && plugin ? renderPluginMenu(plugin) : renderMenuDropdown()}
+      {type === MenuType.Dataset && (
+        <Link
+          to={`${config.ROUTES.researcher}/information`}
+          state={{ tab: StudyInfoTab.DataInfo, tenantId: dataset?.tenant.id }}
+          data-text="Dataset overview"
+          className="overview-title"
+        >
+          {getText(i18nKeys.MENU_NAV__DATASETS)}
+        </Link>
+      )}
+      {type === MenuType.Plugin && plugin && renderPluginMenu(plugin)}
     </li>
   );
 };
