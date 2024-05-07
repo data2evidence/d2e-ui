@@ -17,6 +17,7 @@ import { CohortMethodNode } from "./CohortMethodNode/CohortMethodNode";
 import { CohortMethodAnalysisNode } from "./CohortMethodAnalysisNode/CohortMethodAnalysisNode";
 import { StudyPopulationSettingsNode } from "./StudyPopulationSettingsNode/StudyPopulationSettingsNode";
 import { SelfControlledCaseSeriesAnalysisNode } from "./SelfControlledCaseSeriesAnalysisNode/SelfControlledCaseSeriesAnalysisNode";
+import { CohortIncidentTargetCohortNode } from "./CohortIncidentTargetCohortNode/CohortIncidentTargetCohortNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -26,7 +27,7 @@ export const NODE_TYPES: {
   cohort_diagnostic_node: CohortDiagnosticsNode,
   negative_control_outcome_cohort_node: NegatveControlOutcomeNode,
   cohort_incidence_node: CohortIncidentNode,
-  cohort_incidence_target_cohorts_node: RNode,
+  cohort_incidence_target_cohorts_node: CohortIncidentTargetCohortNode,
   time_at_risk_node: TimeAtRiskNode,
   covariate_settings_node: RNode,
   characterization_node: CharacterizationNode,
@@ -115,7 +116,10 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Cohort Incidence Target Cohorts",
     description: "Run cohort incidence target cohorts code.",
     tag: NodeTag.Aquamarine,
-    defaultData: {},
+    defaultData: {
+      cohortId: 3,
+      cleanWindow: 9999,
+    },
   },
   time_at_risk_node: {
     title: "Time At Risk",
