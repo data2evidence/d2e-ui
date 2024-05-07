@@ -16,7 +16,10 @@ export const useParamsStore = defineStore('params', () => {
     return params.value.flowRunId
   })
 
-  function updateParams(incomingParams: { mode?: Mode; taskRunId?: string; flowRunId?: string }) {
+  function updateParams(
+    incomingParams: { mode?: Mode; taskRunId?: string; flowRunId?: string },
+    shouldUpdateUrl: boolean = true
+  ) {
     const { mode, taskRunId, flowRunId } = incomingParams
     let newParams = JSON.parse(JSON.stringify(params)) as Params
     const searchParams = []
@@ -35,7 +38,7 @@ export const useParamsStore = defineStore('params', () => {
       newParams = { ...newParams, flowRunId }
       searchParams.push({ key: 'flowRunId', value: flowRunId })
     }
-    setSearchParams(searchParams)
+    if (shouldUpdateUrl) setSearchParams(searchParams)
     params.value = newParams
   }
 

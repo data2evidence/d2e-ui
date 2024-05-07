@@ -23,11 +23,14 @@ const {
   mode: initialMode
 } = getParamsFromUrl()
 
-paramsStore.updateParams({
-  mode: initialMode,
-  flowRunId: initialFlowRunId,
-  taskRunId: initialTaskRunId
-})
+paramsStore.updateParams(
+  {
+    mode: initialMode,
+    flowRunId: initialFlowRunId,
+    taskRunId: initialTaskRunId
+  },
+  false
+)
 
 onMounted(() => {
   const handlePopState = () => {
