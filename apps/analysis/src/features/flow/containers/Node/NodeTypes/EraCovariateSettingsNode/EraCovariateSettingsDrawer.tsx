@@ -236,61 +236,6 @@ export const EraCovariateSettingsDrawer: FC<
           </Select>
         </FormControl>
       </Box>
-
-      {/* <Box mb={4} display="flex">
-        <TextInput
-          label="startAnchor[0]"
-          value={formData.startAnchor[0]}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              startAnchor: [Number(e.target.value), formData.startAnchor[1]],
-            })
-          }
-          style={{ marginRight: "30px" }}
-        />
-        <TextInput
-          label="startAnchor[1]"
-          value={formData.startAnchor[1]}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              startAnchor: [formData.startAnchor[0], Number(e.target.value)],
-            })
-          }
-        />
-      </Box>
-      <Box mb={4}>
-        <TextInput
-          label="end"
-          value={formData.end}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              end: e.target.value,
-            })
-          }
-          type="number"
-        />
-      </Box>
-      <Box mb={4} display="flex">
-        <TextInput
-          label="endAnchor[0]"
-          value={formData.endAnchor[0]}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              endAnchor: [Number(e.target.value), formData.endAnchor[1]],
-            })
-          }
-          style={{ marginRight: "30px" }}
-        />
-        <TextInput
-          label="endAnchor[1]"
-          value={formData.endAnchor[1]}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              endAnchor: [formData.endAnchor[0], Number(e.target.value)],
-            })
-          }
-        />
-      </Box> */}
       <Box mb={4}>
         <Checkbox
           checked={formData.stratifyById}
