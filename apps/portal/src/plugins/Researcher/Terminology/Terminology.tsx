@@ -1,30 +1,19 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
-import { PageProps, SystemAdminPageMetadata } from "@portal/plugin";
-import { Button } from "@portal/components";
-
+import React, { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
+import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
+import { Button, Checkbox } from "@portal/components";
 import TerminologyList from "./components/TerminologyList/TerminologyList";
 import TerminologyDetail from "./components/TerminologyDetail/TerminologyDetail";
 import "./Terminology.scss";
-import {
-  Box,
-  Drawer,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Drawer, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { OnCloseReturnValues, FhirValueSetExpansionContainsWithExt, TerminologyResult } from "./utils/types";
 import { tabNames } from "./utils/constants";
 import { TabName, ConceptSet } from "./utils/types";
 import { terminologyApi } from "../../../axios/terminology";
 import { useDatasets } from "../../../hooks";
 import { useTranslation } from "../../../contexts";
+import { useUserInfo } from "../../../contexts/UserContext";
 
-export interface TerminologyProps extends PageProps<SystemAdminPageMetadata> {
+export interface TerminologyProps extends PageProps<ResearcherStudyMetadata> {
   onConceptIdSelect?: (conceptData: any) => void;
   initialInput?: string;
   baseUserId?: string;
@@ -66,6 +55,9 @@ const WithDrawer = ({
 const NameSection = ({
   conceptSetName,
   setConceptSetName,
+  conceptSetShared,
+  setConceptSetShared,
+  isUserConceptSet,
   saveConceptSet,
   isLoading,
   conceptSetId,
@@ -74,6 +66,9 @@ const NameSection = ({
 }: {
   conceptSetName: string;
   setConceptSetName: React.Dispatch<React.SetStateAction<string>>;
+  conceptSetShared: boolean;
+  setConceptSetShared: React.Dispatch<React.SetStateAction<boolean>>;
+  isUserConceptSet: boolean;
   saveConceptSet(): void;
   isLoading: boolean;
   conceptSetId: string | null;
@@ -114,12 +109,24 @@ const NameSection = ({
             },
           }}
         >
-          <Button
-            text={conceptSetId ? getText(i18nKeys.TERMINOLOGY__UPDATE) : getText(i18nKeys.TERMINOLOGY__CREATE)}
-            style={{ marginLeft: 10 }}
-            onClick={saveConceptSet}
-            disabled={isLoading}
-          />
+          <div style={{ marginBottom: -15, marginLeft: 10 }}>
+            <Checkbox
+              checked={conceptSetShared}
+              label={getText(i18nKeys.TERMINOLOGY__SHARED)}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                setConceptSetShared(event.target.checked);
+              }}
+              disabled={!isUserConceptSet}
+            />
+          </div>
+          {isUserConceptSet && (
+            <Button
+              text={conceptSetId ? getText(i18nKeys.TERMINOLOGY__UPDATE) : getText(i18nKeys.TERMINOLOGY__CREATE)}
+              style={{ marginLeft: 10 }}
+              onClick={saveConceptSet}
+              disabled={isLoading}
+            />
+          )}
           <Button
             variant="outlined"
             text={getText(i18nKeys.TERMINOLOGY__CLOSE)}
@@ -211,12 +218,15 @@ export const Terminology: FC<TerminologyProps> = ({
 }: TerminologyProps) => {
   const { getText, i18nKeys } = useTranslation();
   const userId = baseUserId || metadata?.userId;
+  const { user } = useUserInfo();
   const [conceptId, setConceptId] = useState<null | number>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedConcepts, setSelectedConcepts] = useState<FhirValueSetExpansionContainsWithExt[]>([]);
   const [tab, setTab] = useState<TabName>(tabNames.SEARCH);
   const [conceptSetName, setConceptSetName] = useState("");
   const [conceptSetId, setConceptSetId] = useState<string | null>(null);
+  const [conceptSetShared, setConceptSetShared] = useState(false);
+  const [isUserConceptSet, setIsUserConceptSet] = useState(false);
   const [isConceptSetLoading, setIsConceptSetLoading] = useState(false);
   const [currentConceptSet, setCurrentConceptSet] = useState<ConceptSet | null>(null);
   const [conceptsResult, setConceptsResult] = useState<TerminologyResult | null>(null);
@@ -257,6 +267,7 @@ export const Terminology: FC<TerminologyProps> = ({
         };
       }),
       name: conceptSetName,
+      shared: conceptSetShared,
     };
     setIsConceptSetLoading(true);
     try {
@@ -280,7 +291,7 @@ export const Terminology: FC<TerminologyProps> = ({
     } finally {
       setIsConceptSetLoading(false);
     }
-  }, [selectedConcepts, conceptSetName, conceptSetId]);
+  }, [selectedConcepts, conceptSetName, conceptSetId, conceptSetShared]);
 
   const getConceptSet = useCallback(
     async (conceptSetId: string) => {
@@ -293,6 +304,8 @@ export const Terminology: FC<TerminologyProps> = ({
         setConceptSetName(conceptSet.name);
         sortAndSetSelectedConcepts(conceptSet.concepts);
         setCurrentConceptSet(conceptSet);
+        setConceptSetShared(conceptSet.shared);
+        setIsUserConceptSet(conceptSet.createdBy === user.idpUserId);
         return;
       } finally {
         setIsConceptSetLoading(false);
@@ -415,57 +428,34 @@ export const Terminology: FC<TerminologyProps> = ({
   return (
     <WithDrawer onClose={onClickClose} isDrawer={isDrawer} open={open}>
       <div className="terminology__container">
-        <div
-          style={{
-            height: "40px",
-            width: "100%",
-            backgroundColor: "#edf2f7",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ color: "#000080", marginLeft: 10, fontWeight: 500 }}>
-            {isConceptSet ? getText(i18nKeys.TERMINOLOGY__CONCEPT_SETS) : getText(i18nKeys.TERMINOLOGY__CONCEPTS)}
-          </div>
-          {isDrawer && (
+        {isDrawer && (
+          <div
+            style={{
+              height: "40px",
+              width: "100%",
+              backgroundColor: "#edf2f7",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ color: "#000080", marginLeft: 10, fontWeight: 500 }}>
+              {isConceptSet ? getText(i18nKeys.TERMINOLOGY__CONCEPT_SETS) : getText(i18nKeys.TERMINOLOGY__CONCEPTS)}
+            </div>
+
             <div style={{ color: "#000080", marginRight: 10, cursor: "pointer" }} onClick={onClickClose}>
               x
             </div>
-          )}
-        </div>
-        {!selectedDatasetId ? (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              paddingLeft: "20px",
-              paddingTop: "10px",
-              height: `${datasetSelectorHeightPx}px`,
-            }}
-          >
-            <div>{getText(i18nKeys.TERMINOLOGY__REFERENCE_CONCEPTS)}:</div>
-            <FormControl sx={{ marginLeft: "10px" }}>
-              <Select
-                value={datasetId}
-                onChange={(e: SelectChangeEvent) => {
-                  setDatasetId(e.target.value);
-                }}
-                sx={{ "& .MuiSelect-outlined": { paddingTop: "8px", paddingBottom: "8px" } }}
-              >
-                {datasets?.map((dataset) => (
-                  <MenuItem value={dataset.id} key={dataset.id} sx={{}} disableRipple>
-                    {dataset.studyDetail?.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
           </div>
-        ) : null}
+        )}
+
         {isConceptSet ? (
           <NameSection
             conceptSetName={conceptSetName}
             setConceptSetName={setConceptSetName}
+            conceptSetShared={conceptSetShared}
+            setConceptSetShared={setConceptSetShared}
+            isUserConceptSet={isUserConceptSet}
             saveConceptSet={saveConceptSet}
             isLoading={isConceptSetLoading}
             conceptSetId={conceptSetId}

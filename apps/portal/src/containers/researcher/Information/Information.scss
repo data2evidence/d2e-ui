@@ -1,8 +1,10 @@
 .information__container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
+  height: calc(100% - 4rem);
+  margin: 2rem;
+
+  .alp-card__header {
+    justify-content: center;
+  }
 
   .information__studies {
     .config_title {
@@ -85,24 +87,14 @@
       padding: 0;
     }
   }
-  .information__study_content {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    min-width: 1050px;
-  }
+
   .tab__content {
-    margin: 0;
-    flex: auto;
+    width: 100%;
 
     &__container {
-      margin: 24px 41px;
-    }
-
-    &__study-name {
-      font-size: 18px;
-      letter-spacing: 0.3px;
-      color: var(--color-neutral);
+      margin: 24px auto;
+      max-width: 1080px;
+      padding: 0 32px;
     }
 
     &__title {
@@ -112,11 +104,6 @@
       font-size: 24px;
       font-weight: 500;
       color: var(--color-primary);
-    }
-
-    &__info {
-      width: 70%;
-      color: grey;
     }
 
     &__subtitle {

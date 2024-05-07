@@ -9,7 +9,7 @@ import { Logout } from "../containers/auth/Logout";
 import { LoginSilent } from "../containers/auth/LoginSilent";
 import { Dashboard } from "../containers/dashboard/Dashboard";
 import { config } from "../config";
-import { TerminologyWithEventListener } from "../plugins/SystemAdmin/Terminology/TerminologyWithEventListener";
+import { TerminologyWithEventListener } from "../plugins/Researcher/Terminology/TerminologyWithEventListener";
 import { ResultsDialogWithEventLister } from "../plugins/SystemAdmin/DQD/ResultsDialog/ResultsDialogWithEventListener";
 
 const PrivateAppInternal: FC = () => {
