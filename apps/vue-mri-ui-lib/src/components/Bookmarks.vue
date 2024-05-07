@@ -115,7 +115,7 @@
                               {{ bookmark.userId }}
                             </div>
                             <div style="display: block margin-right: 16px">
-                              <span class="bookmark-headelement bookmark-element">Version</span>
+                              <span class="bookmark-headelement bookmark-element">Version:</span>
                               {{ bookmark.version }}
                             </div>
                             <div style="display: block">
@@ -282,19 +282,19 @@
     <!-- Bookmark Footer -->
     <div class="bookmarkFooter">
       <!-- Footer Button  -->
-      <div class="d-flex">
         <appCheckbox
+          classes="app-checkbox-container--light"
           v-model="showSharedBookmarks"
           :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_BOOKMARKS_TEXT')"
           :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_BOOKMARKS_TITLE')"
         ></appCheckbox>
-        <appButton
+        <d4l-button
+          v-if="showCohortCompareBtn"
           :text="getText('MRI_COMP_COHORT_BUTTON')"
-          :click="openCompareDialog"
-          :disabled="!showCohortCompareBtn"
           :title="getText('MRI_COMP_COHORT_TOOLTIP_BTN')"
-        ></appButton>
-      </div>
+          classes="button--block button-radius button--light"
+          @click="openCompareDialog"
+        />
     </div>
 
     <cohortComparisonDialog

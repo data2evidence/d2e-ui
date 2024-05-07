@@ -3,7 +3,6 @@
 .bookmark-container,
 .filtercard-summary {
   width: 100%;
-  height: 96%;
   position: static !important;
   background-color: #f2f0f1;
   input.mri-bookmark-id {
@@ -18,7 +17,6 @@
   input.mri-bookmark-id::-moz-selection {
     background: $UiLightestBG;
   }
-
   .bookmark-button {
     font-size: 18px;
     width: 100%;
@@ -31,6 +29,9 @@
   .bookmark-button:hover {
     border-color: $MriButtonHoverDark;
     color: $MriButtonHoverDark;
+  }
+  .button-radius {
+    border-radius: 6px;
   }
   .bookmark-extension-container {
     display: flex;
@@ -177,9 +178,6 @@
       margin: 10px -1rem 0 -1rem;
       border-bottom: solid 1px #acaba8;
     }
-    .button-radius {
-      border-radius: 6px;
-    }
     .bookmark-noContent {
       color: $UiDarkText;
       font-size: 14px;
@@ -195,6 +193,7 @@
       margin-top: 0;
       margin-bottom: 0;
       display: flex;
+      justify-content: center;
       flex-wrap: wrap;
       margin: 5px;
       .bookmark-item {
@@ -312,24 +311,18 @@
     }
   }
   .bookmarkFooter {
-    height: 2.5rem;
+    height: 56px;
+    padding: 10px;
     background-color: $MriFooterBG;
-    bottom: 0px;
-    position: absolute;
-    width: 100%;
-  }
-  .bookmarkFooter > .d-flex {
-    top: 5px;
     display: flex;
+    width: 100%;
+    align-items: center;
     justify-content: space-between;
-  }
-  .bookmarkFooter > .d-flex > {
     .appButton {
       color: $FooterButtonTextLight;
     }
     .app-checkbox {
       display: flex;
-      align-items: center;
       line-height: 32px;
       .app-label {
         color: $FooterButtonTextLight;
