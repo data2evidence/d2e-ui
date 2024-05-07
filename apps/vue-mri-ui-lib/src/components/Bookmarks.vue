@@ -223,9 +223,8 @@
                     </div>
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <div class="bookmark-item-footer">
+              </table>
+              <div class="bookmark-item-footer">
                       <div class="bookmark-item-footer__break" />
                       <table class="bookmark-item-buttons">
                         <tr>
@@ -271,9 +270,6 @@
                         </tr>
                       </table>
                     </div>
-                  </td>
-                </tr>
-              </table>
             </div>
           </li>
         </template>
