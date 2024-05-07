@@ -18,30 +18,6 @@
       >
         <span v-if="!isNonInteractiveMode" class="icon" style="font-family: app-icons">{{ unHideIcon }}</span>
       </button>
-
-      <span class="separator"></span>
-
-      <div class="dataset-selection-container">
-        <label>Dataset:</label>
-        <b-dropdown class="dropdown-box dropdown-dataset" variant="link" :text="this.getSelectedDatasetText">
-          <template v-for="dataset in getUserStudies">
-            <b-dropdown-item @click="handleSelectDataset(dataset)">{{ dataset.name == "" ? "Untitled" : dataset.name}}</b-dropdown-item>
-          </template>
-        </b-dropdown>
-
-        <span class="separator"></span>
-
-        <template v-if="this.getDatasetVersions.length > 1">
-          <label>Version:</label>
-          <b-dropdown class="dropdown-box dropdown-version" variant="link" :text="this.getSelectedDatasetVersion.name">
-            <template v-for="datasetVersion in getDatasetVersions">
-              <b-dropdown-item @click="handleSelectDatasetVersion(datasetVersion)">{{
-                datasetVersion.name
-              }}</b-dropdown-item>
-            </template>
-          </b-dropdown>
-        </template>
-      </div>
     </div>
     <div class="d-flex">
       <template v-for="chart in chartConfig" :key="chart.name">
@@ -168,9 +144,6 @@ export default {
       'getText',
       'getSelectedUserStudy',
       'getMriFrontendConfig',
-      'getUserStudies',
-      'getDatasetVersions',
-      'getSelectedDatasetVersion',
     ]),
     chartSelection() {
       return this.getChartSelection()
@@ -373,26 +346,6 @@ export default {
     },
     hideLeftPanel() {
       this.$emit('unhideEv', true)
-    },
-    handleSelectDataset(dataset) {
-      if (dataset.name !== this.getSelectedUserStudy.name) {
-        this.setDataset(dataset)
-        this.requestDatasetVersions().then(()=>{
-          this.setFireRequest()
-          this.patientTotalRequested = false
-          this.patientListTotalRequested = false
-          this.refreshPatientCount()
-        })
-      }
-    },
-    handleSelectDatasetVersion(datasetVersion) {
-      if (datasetVersion.name !== this.getSelectedDatasetVersion.name) {
-        this.setDatasetVersion(datasetVersion)
-        this.setFireRequest()
-        this.patientTotalRequested = false
-        this.patientListTotalRequested = false
-        this.refreshPatientCount()
-      }
     },
     drillDownClicked() {
       this.$emit('drilldown')
