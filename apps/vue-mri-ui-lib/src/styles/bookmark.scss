@@ -3,6 +3,7 @@
 .bookmark-container,
 .filtercard-summary {
   width: 100%;
+  height: calc(100% - 40px);
   position: static !important;
   background-color: #f2f0f1;
   input.mri-bookmark-id {
