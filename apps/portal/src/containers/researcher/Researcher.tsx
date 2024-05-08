@@ -1,9 +1,10 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
+import classNames from "classnames";
 import { Snackbar, ErrorBoundary } from "@portal/components";
 import { PluginDropdownItem, SubFeatureFlags } from "@portal/plugin";
 import { Header } from "../../components";
-import { useFeedback } from "../../contexts";
+import { useActiveDataset, useFeedback } from "../../contexts";
 import { IPluginItem, PluginDropdown } from "../../types";
 import { getPluginChildPath, loadPlugins, sortPluginsByType } from "../../utils";
 import { ResearcherStudyPluginRenderer } from "../../plugins/core/ResearcherStudyPluginRenderer";
@@ -35,10 +36,14 @@ export const Researcher: FC = () => {
 
   const location = useLocation();
   const state = location.state as StateProps;
+  const isHome = location.pathname === "/researcher" || location.pathname === "/researcher/overview";
+  const classes = classNames("researcher__container", { "researcher__container--home": isHome });
+
+  const { activeDataset } = useActiveDataset();
+  const activeDatasetId = activeDataset.id;
 
   const [pluginDropdown, setPluginDropdown] = useState<PluginDropdown>({});
   const [activeTenantId, setActiveTenantId] = useState<string>(state?.tenantId || "");
-  const [activeStudyId, setActiveStudyId] = useState<string>(state?.studyId || "");
   const featureFlags = useEnabledFeatures();
 
   useEffect(() => {
@@ -47,7 +52,6 @@ export const Researcher: FC = () => {
 
   useEffect(() => {
     if (state) {
-      setActiveStudyId(state.studyId);
       setActiveTenantId(state.tenantId);
     }
   }, [state]);
@@ -77,8 +81,8 @@ export const Researcher: FC = () => {
   sortedPlugins.researcher = sortedResearcherPlugins;
 
   return (
-    <div className="researcher__container">
-      <Header portalType="researcher" plugins={sortedPlugins} />
+    <div className={classes}>
+      {!isHome && <Header portalType="researcher" plugins={sortedPlugins} />}
       <main>
         <Snackbar
           type={feedback?.type}
@@ -92,7 +96,7 @@ export const Researcher: FC = () => {
             <Route index element={<Overview />} />
             <Route path={ROUTES.overview} element={<Overview />} />
             <Route path={ROUTES.info} element={<Information />} />
-            <Route path={ROUTES.account} element={<Account />} />
+            <Route path={ROUTES.account} element={<Account portalType="researcher" />} />
             {plugins.researcher.map((item: IPluginItem) => {
               const subFeatureFlags = item.featureFlag ? featureFlagsDict[item.featureFlag] : {};
               return (
@@ -105,7 +109,7 @@ export const Researcher: FC = () => {
                         key={item.route}
                         path={item.pluginPath}
                         tenantId={activeTenantId}
-                        studyId={activeStudyId || ""}
+                        studyId={activeDatasetId}
                         data={item?.data}
                         fetchMenu={onFetchMenus}
                         subFeatureFlags={subFeatureFlags}

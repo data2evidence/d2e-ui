@@ -1,17 +1,19 @@
 .systemadmin__container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    
-    main {
-      flex: auto;
-    }
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px; // header size
+  background-color: white;
+
+  main {
+    flex: auto;
   }
-  .placeholder{
-    display: block;
-    width: 80px;
-    overflow: hidden;
-  }
-  .flex-container {
-    display: flex;
-  }
+}
+.placeholder {
+  display: block;
+  width: 80px;
+  overflow: hidden;
+}
+.flex-container {
+  display: flex;
+}

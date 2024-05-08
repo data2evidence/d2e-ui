@@ -7,17 +7,17 @@
       position: relative;
       left: 45px;
 
-      .config_list_item{
+      .config_list_item {
         width: 80%;
         border-radius: 6px;
         margin: 3px 0;
-        
-        .config_list_span{
+
+        .config_list_span {
           text-align: left;
           font-size: 18px;
           font-weight: 500;
           position: relative;
-          right:5px;
+          right: 5px;
         }
       }
     }
@@ -61,12 +61,6 @@
       margin: 24px 41px;
     }
 
-    &__study-name {
-      font-size: 18px;
-      letter-spacing: 0.3px;
-      color: var(--color-neutral);
-    }
-
     &__title {
       display: flex;
       align-items: center;
@@ -87,7 +81,7 @@
 
   .tags__content {
     width: 50%;
-    
+
     .tag__list {
       display: flex;
       margin-top: 0;

@@ -95,7 +95,7 @@ const SystemAdmin: FC = () => {
         <Routes>
           <Route path="/">
             <Route index element={<Navigate to={defaultRoute} />} />
-            <Route path={ROUTES.account} element={<Account />} />
+            <Route path={ROUTES.account} element={<Account portalType="system_admin" />} />
             {systemAdminPlugins.map((item: Plugins) => (
               <Route
                 key={item.name}

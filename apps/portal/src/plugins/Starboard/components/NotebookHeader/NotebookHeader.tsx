@@ -1,21 +1,21 @@
 import React, { ChangeEvent, FC, useCallback, useMemo } from "react";
 import { saveAs } from "file-saver";
 import { Button, EditIcon, IconButton, Checkbox, DownloadIcon, Tooltip } from "@portal/components";
-import { useDialogHelper } from "../../../hooks";
-import { useFeedback, useTranslation } from "../../../contexts";
-import { useUserInfo } from "../../../contexts/UserContext";
+import { useDialogHelper } from "../../../../hooks";
+import { useFeedback, useTranslation } from "../../../../contexts";
+import { useUserInfo } from "../../../../contexts/UserContext";
 import {
   convertStarboardToJupyter,
   convertJupyterToStarboard,
   notebookContentToText,
   textToNotebookContent,
-} from "../utils/jupystar";
-import { StarboardNotebook } from "../utils/notebook";
-import { api } from "../../../axios/api";
-import DeleteNotebookDialog from "./DeleteNotebookDialog/DeleteNotebookDialog";
-import { EditTitleDialog } from "./EditTitleDialog/EditTitleDialog";
-import NotebookSelect from "./NotebookSelect/NotebookSelect";
-import "../style/Header.scss";
+} from "../../utils/jupystar";
+import { StarboardNotebook } from "../../utils/notebook";
+import { api } from "../../../../axios/api";
+import DeleteNotebookDialog from "../DeleteNotebookDialog/DeleteNotebookDialog";
+import { EditTitleDialog } from "../EditTitleDialog/EditTitleDialog";
+import NotebookSelect from "../NotebookSelect/NotebookSelect";
+import "./NotebookHeader.scss";
 
 interface HeaderProps {
   metadata: any;
@@ -206,9 +206,9 @@ export const Header: FC<HeaderProps> = ({
   }, [openDeleteNotebookDialog]);
 
   return (
-    <div className="header">
-      <div className="header__content">
-        <div className="header__content_title">
+    <div className="notebook-header">
+      <div className="notebook-header__content">
+        <div className="notebook-header__content_title">
           <NotebookSelect
             notebooks={notebooks}
             activeNotebook={activeNotebook}

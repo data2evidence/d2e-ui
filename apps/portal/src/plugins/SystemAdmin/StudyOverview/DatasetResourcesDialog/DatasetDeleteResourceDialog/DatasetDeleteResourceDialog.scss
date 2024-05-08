@@ -9,12 +9,11 @@
   .button-group-actions {
     display: flex;
     justify-content: center;
-    margin: 1.5em 0;
+    margin: 24px 0;
 
-    button {
-      margin: 4px 10px;
+    .alp-button__container {
+      margin: 0 0 0 8px;
       width: 247px;
     }
   }
 }
-  

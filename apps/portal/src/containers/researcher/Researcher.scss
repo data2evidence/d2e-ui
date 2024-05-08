@@ -2,8 +2,17 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-top: 80px; // header size
+
+  &--home {
+    padding-top: 0;
+  }
 
   main {
     flex: auto;
+  }
+
+  .header--home {
+    visibility: hidden;
   }
 }

@@ -104,10 +104,7 @@ export const PublicInformation: FC = () => {
                             </TableHead>
                             <TableBody>
                               {attributes.map((studyAttribute: StudyAttribute, index) => (
-                                <TableRow
-                                  key={studyAttribute.attributeId}
-                                  style={index % 2 ? { background: "#edf2f7" } : { background: "white" }}
-                                >
+                                <TableRow key={studyAttribute.attributeId}>
                                   <TableCell>{studyAttribute.attributeConfig.name}</TableCell>
                                   <TableCell>{studyAttribute.value}</TableCell>
                                 </TableRow>

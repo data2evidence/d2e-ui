@@ -12,11 +12,11 @@
   .button-group-actions {
     display: flex;
     justify-content: center;
-    margin: 30px 0;
+    margin: 24px 0;
 
-    button {
-      margin: 16px 10px;
-      width: 235px;
+    .alp-button__container {
+      margin: 0 0 0 8px;
+      width: 247px;
     }
   }
 
