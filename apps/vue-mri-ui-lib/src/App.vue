@@ -42,7 +42,7 @@ export default {
     }
   },
   created() {
-    this.requestMriConfig()
+    this.requestMriConfig() // here
   },
   computed: {
     ...mapGetters(['getConfigSelectionDialogState', 'getFatalNotification', 'getAlertNotification', 'getText', 'getInitialLoad']),

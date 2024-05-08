@@ -5,10 +5,11 @@ interface PluginContainerProps {
   getToken?: () => Promise<string>;
   qeSvcUrl?: string;
   studyId?: string;
+  releaseId?: string;
   children?: ReactNode;
 }
 
-const PluginContainer: FC<PluginContainerProps> = ({ children, getToken, qeSvcUrl, studyId }) => {
+const PluginContainer: FC<PluginContainerProps> = ({ children, getToken, qeSvcUrl, studyId, releaseId }) => {
   const { user } = useUserInfo();
   return (
     <span
@@ -19,6 +20,7 @@ const PluginContainer: FC<PluginContainerProps> = ({ children, getToken, qeSvcUr
             getToken,
             qeSvcUrl,
             studyId,
+            releaseId,
             userId: user.userId,
           };
         }
