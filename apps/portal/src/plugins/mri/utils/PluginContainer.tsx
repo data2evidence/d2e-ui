@@ -1,16 +1,26 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
 import { useUserInfo } from "../../../contexts/UserContext";
 
 interface PluginContainerProps {
   getToken?: () => Promise<string>;
   qeSvcUrl?: string;
   studyId?: string;
+  datasetName?: string;
   releaseId?: string;
   children?: ReactNode;
 }
 
-const PluginContainer: FC<PluginContainerProps> = ({ children, getToken, qeSvcUrl, studyId, releaseId }) => {
+const PluginContainer: FC<PluginContainerProps> = ({
+  children,
+  getToken,
+  qeSvcUrl,
+  studyId,
+  datasetName,
+  releaseId,
+}) => {
   const { user } = useUserInfo();
+
+  // call event here
   return (
     <span
       className="plugin-container"
@@ -20,6 +30,7 @@ const PluginContainer: FC<PluginContainerProps> = ({ children, getToken, qeSvcUr
             getToken,
             qeSvcUrl,
             studyId,
+            datasetName,
             releaseId,
             userId: user.userId,
           };
