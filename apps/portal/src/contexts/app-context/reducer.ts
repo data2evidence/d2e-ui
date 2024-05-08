@@ -1,13 +1,14 @@
 import { AppState } from "./states";
 import { clearFeedback, setFeedback } from "./actions";
 import { changeLocale } from "./actions/translation";
-import { setActiveDatasetId, setActiveReleaseId } from "./actions/active-dataset";
+import { setActiveDatasetId, setActiveDatasetName, setActiveReleaseId } from "./actions/active-dataset";
 
 export enum ACTION_TYPES {
   SET_FEEDBACK = "SET_FEEDBACK",
   CLEAR_FEEDBACK = "CLEAR_FEEDBACK",
   CHANGE_LOCALE = "CHANGE_LOCALE",
   SET_ACTIVE_DATASET_ID = "SET_ACTIVE_DATASET_ID",
+  SET_ACTIVE_DATASET_NAME = "SET_ACTIVE_DATASET_NAME",
   SET_ACTIVE_RELEASE_ID = "SET_ACTIVE_RELEASE_ID",
 }
 
@@ -19,6 +20,7 @@ const actionMap = new Map<ActionType, ActionFunction>([
   [ACTION_TYPES.CLEAR_FEEDBACK, clearFeedback],
   [ACTION_TYPES.CHANGE_LOCALE, changeLocale],
   [ACTION_TYPES.SET_ACTIVE_DATASET_ID, setActiveDatasetId],
+  [ACTION_TYPES.SET_ACTIVE_DATASET_NAME, setActiveDatasetName],
   [ACTION_TYPES.SET_ACTIVE_RELEASE_ID, setActiveReleaseId],
 ]);
 

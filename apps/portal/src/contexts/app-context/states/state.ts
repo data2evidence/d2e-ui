@@ -16,6 +16,7 @@ export const initialState: AppState = {
   },
   activeDataset: {
     id: "",
+    name: "",
     releaseId: "",
   },
 };

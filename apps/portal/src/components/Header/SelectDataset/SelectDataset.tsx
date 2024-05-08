@@ -11,14 +11,23 @@ interface SelectDatasetProps extends Omit<SelectProps, "onChange"> {
 export const SelectDataset: FC<SelectDatasetProps> = ({ onChange, ...props }) => {
   const { getText, i18nKeys } = useTranslation();
   const [datasets, loading] = useDatasets("researcher");
-  const { activeDataset, setActiveDatasetId } = useActiveDataset();
+  const { activeDataset, setActiveDatasetId, setActiveDatasetName } = useActiveDataset();
+
+  const getDatasetName = useCallback(
+    (datasetId: string) => {
+      const d = datasets.find((dataset) => dataset["id"] == datasetId);
+      return d?.studyDetail?.name || "Untitled";
+    },
+    [datasets]
+  );
 
   const handleChange = useCallback(
     (datasetId: string) => {
       setActiveDatasetId(datasetId);
+      setActiveDatasetName(getDatasetName(datasetId));
       typeof onChange === "function" && onChange(datasetId);
     },
-    [onChange]
+    [onChange, getDatasetName, setActiveDatasetId, setActiveDatasetName]
   );
 
   if (datasets.length === 0) return null;
