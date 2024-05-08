@@ -47,7 +47,7 @@ export const SelectRelease: FC<SelectReleaseProps> = ({ onChange, ...props }) =>
       {...props}
     >
       <MenuItem value="" disabled>
-        {getText(i18nKeys.INFORMATION__SELECT_RELEASE)}
+        {getText(i18nKeys.SELECT_RELEASE__SELECT_RELEASE)}
       </MenuItem>
       {releases?.map((release: DatasetRelease) => (
         <MenuItem value={release.id} key={release.id}>

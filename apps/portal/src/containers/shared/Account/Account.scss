@@ -3,13 +3,9 @@
 
   .account__container {
     height: 100%;
-    padding: 2.5rem 2rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
-
-    .alp-title {
-      margin: 2rem 0 1rem;
-    }
   }
 
   .account__content {
@@ -46,19 +42,14 @@
     &_legal {
       display: flex;
       flex: 1 1 0;
-
-      .alp-card__header {
-        justify-content: center;
-      }
     }
   }
 
   .alp-card {
-    flex: 1 1 0;
+    flex: 1;
 
-    &__content {
-      display: flex;
-      flex: 1 1 0;
+    &__header {
+      justify-content: center;
     }
   }
 

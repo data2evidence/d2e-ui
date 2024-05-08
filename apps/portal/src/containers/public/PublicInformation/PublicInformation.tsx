@@ -1,5 +1,4 @@
-import React, { FC, useState, useCallback, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React, { FC, useState, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,120 +6,120 @@ import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
-import { Loader, TableCell, TableRow, SubTitle } from "@portal/components";
-import { StudyAttribute, StudyTag, LocationState } from "../../../types";
-import { PublicStudyMenu } from "./StudyMenu/PublicStudyMenu";
-import "./PublicInformation.scss";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { Loader, TableCell, TableRow, SubTitle, Card, Title } from "@portal/components";
+import { StudyAttribute, StudyTag } from "../../../types";
 import { usePublicDatasets } from "../../../hooks";
-import { useTranslation } from "../../../contexts";
+import { useActiveDataset, useTranslation } from "../../../contexts";
+import "./PublicInformation.scss";
 
-export const StudyInfoTab = {
-  DataInfo: "data_info",
-  DataExplore: "data_explore",
-};
+enum DatasetInfoTab {
+  DatasetInfo = "info",
+}
 
 export const PublicInformation: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const [datasets, loading, error] = usePublicDatasets();
 
-  const location = useLocation();
-  const state = location.state as LocationState;
+  const { activeDataset } = useActiveDataset();
+  const activeDatasetId = activeDataset.id;
 
-  const [activeStudyId, setActiveStudyId] = useState<string>(state?.studyId || "");
-  const [activeTab, setActiveTab] = useState(state?.tab || StudyInfoTab.DataInfo);
-  const activeStudy = datasets?.find((s) => s.id === activeStudyId);
-  const attributes = activeStudy?.attributes || [];
-  const tags = activeStudy?.tags || [];
+  const dataset = datasets?.find((s) => s.id === activeDatasetId);
 
-  useEffect(() => {
-    setActiveStudyId(state.studyId);
-    setActiveTab(state.tab);
-    window.scrollTo(0, 0);
-  }, [state]);
+  const [tabValue, setTabValue] = useState(DatasetInfoTab.DatasetInfo);
 
-  const handleTabChange = useCallback(
-    (value: string): void => {
-      if (value !== StudyInfoTab.DataExplore) {
-        setActiveTab(value);
-      }
-      setActiveTab(value);
-    },
-    [setActiveTab]
-  );
+  const attributes = dataset?.attributes || [];
+  const tags = dataset?.tags || [];
+
+  const handleTabSelectionChange = useCallback(async (event: React.SyntheticEvent, newValue: DatasetInfoTab) => {
+    setTabValue(newValue);
+  }, []);
 
   if (error) console.error(error.message);
   if (loading) return <Loader />;
 
   return (
-    <>
-      <div className="public-information__container">
-        <div className="public-information__studies">
-          <PublicStudyMenu activeStudy={activeStudy} activeTab={activeTab} onClick={handleTabChange} />
-        </div>
-        <div className="public-information__study_content">
-          <div className="tab__content">
-            {activeTab === StudyInfoTab.DataInfo && (
-              <div className="tab__content__container">
-                <div className="tab__content__title">
-                  {activeStudy?.studyDetail?.name
-                    ? activeStudy?.studyDetail?.name
-                    : getText(i18nKeys.PUBLIC_INFORMATION__UNTITLED)}
-                </div>
-
-                <div className="tab__content__info">
-                  <ReactMarkdown>{activeStudy?.studyDetail?.description || ""}</ReactMarkdown>
-                </div>
-
-                <div className="metadata_tags__container">
-                  {tags.length > 0 && (
-                    <>
-                      <div className="tags__content">
-                        <SubTitle>{getText(i18nKeys.PUBLIC_INFORMATION__TAGS)}</SubTitle>
-                        <Paper component="ul" className="tag__list" elevation={0}>
-                          {tags.map((tag: StudyTag) => (
-                            <li key={tag.id}>
-                              <Chip label={tag.name} />
-                            </li>
-                          ))}
-                        </Paper>
-                      </div>
-                    </>
-                  )}
-                  {attributes.length > 0 && (
-                    <>
-                      <div className="metadata__content">
-                        <SubTitle>{getText(i18nKeys.PUBLIC_INFORMATION__METADATA)}</SubTitle>
-                        <TableContainer className="study-metadata">
-                          <Table>
-                            <colgroup>
-                              <col style={{ width: "40%" }} />
-                              <col style={{ width: "60%" }} />
-                            </colgroup>
-                            <TableHead>
-                              <TableRow>
-                                <TableCell>{getText(i18nKeys.PUBLIC_INFORMATION__RESOURCE_TYPE)}</TableCell>
-                                <TableCell>{getText(i18nKeys.PUBLIC_INFORMATION__DATASET)}</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {attributes.map((studyAttribute: StudyAttribute, index) => (
-                                <TableRow key={studyAttribute.attributeId}>
-                                  <TableCell>{studyAttribute.attributeConfig.name}</TableCell>
-                                  <TableCell>{studyAttribute.value}</TableCell>
+    <Card
+      className="public-information__container"
+      title={
+        <Tabs value={tabValue} onChange={handleTabSelectionChange}>
+          <Tab
+            disableRipple
+            sx={{
+              "&.MuiTab-root": {
+                width: "200px",
+              },
+              marginRight: "8px",
+            }}
+            label={getText(i18nKeys.PUBLIC_INFORMATION__TAB_DATASET_INFO)}
+            id="tab-0"
+            value="info"
+          />
+        </Tabs>
+      }
+    >
+      <div className="tab__content">
+        <div className="tab__content__container">
+          <Title>{dataset?.studyDetail?.name || getText(i18nKeys.PUBLIC_INFORMATION__UNTITLED)}</Title>
+          {tabValue === DatasetInfoTab.DatasetInfo && (
+            <div className="dataset__info">
+              <ReactMarkdown>
+                {dataset?.studyDetail?.description || getText(i18nKeys.PUBLIC_INFORMATION__NO_DATASET_SUMMARY)}
+              </ReactMarkdown>
+              <div className="metadata_tags_files__container">
+                {(tags.length > 0 || attributes.length > 0) && (
+                  <div className="metadata_tags__container">
+                    {tags.length > 0 && (
+                      <>
+                        <div className="tags__content">
+                          <SubTitle>{getText(i18nKeys.PUBLIC_INFORMATION__TAGS)}</SubTitle>
+                          <Paper component="ul" className="tag__list" elevation={0}>
+                            {tags.map((tag: StudyTag) => (
+                              <li key={tag.name}>
+                                <Chip label={tag.name} />
+                              </li>
+                            ))}
+                          </Paper>
+                        </div>
+                      </>
+                    )}
+                    {attributes.length > 0 && (
+                      <>
+                        <div className="metadata__content">
+                          <SubTitle>{getText(i18nKeys.PUBLIC_INFORMATION__METADATA)}</SubTitle>
+                          <TableContainer className="study-metadata">
+                            <Table>
+                              <colgroup>
+                                <col style={{ width: "40%" }} />
+                                <col style={{ width: "60%" }} />
+                              </colgroup>
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>{getText(i18nKeys.PUBLIC_INFORMATION__RESOURCE_TYPE)}</TableCell>
+                                  <TableCell>{getText(i18nKeys.PUBLIC_INFORMATION__DATASET)}</TableCell>
                                 </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </div>
-                    </>
-                  )}
-                </div>
+                              </TableHead>
+                              <TableBody>
+                                {attributes.map((studyAttribute: StudyAttribute, index) => (
+                                  <TableRow key={studyAttribute.attributeId}>
+                                    <TableCell>{studyAttribute.attributeConfig.name}</TableCell>
+                                    <TableCell>{studyAttribute.value}</TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
-    </>
+    </Card>
   );
 };

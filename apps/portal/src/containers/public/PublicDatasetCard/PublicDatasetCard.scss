@@ -1,4 +1,4 @@
-.dataset-card {
+.public-dataset-card {
   min-height: 286px;
   width: 100%;
   cursor: pointer;
@@ -64,12 +64,6 @@
 
     path[fill="navy"] {
       fill: #d53939;
-    }
-
-    &--accessible {
-      path[fill="navy"] {
-        fill: navy;
-      }
     }
   }
 }

@@ -1,64 +1,18 @@
 .public-information__container {
-  display: flex;
-  height: 100%;
+  height: calc(100% - 4rem);
+  margin: 2rem;
 
-  .public-information__studies {
-    .config_list {
-      position: relative;
-      left: 45px;
-
-      .config_list_item {
-        width: 80%;
-        border-radius: 6px;
-        margin: 3px 0;
-
-        .config_list_span {
-          text-align: left;
-          font-size: 18px;
-          font-weight: 500;
-          position: relative;
-          right: 5px;
-        }
-      }
-    }
-
-    .MuiTouchRipple-root {
-      color: transparent;
-    }
-
-    .MuiDrawer-docked {
-      height: 100%;
-    }
-
-    .MuiDrawer-paper {
-      z-index: 0;
-      position: relative;
-      height: 100%;
-      overflow-x: hidden;
-      color: var(--color-primary);
-    }
-
-    .MuiListItemIcon-root {
-      min-width: 48px;
-    }
-
-    .MuiList-padding {
-      padding: 0;
-    }
-  }
-
-  .public-information__study_content {
-    border-left: 1px solid var(--color-neutral-lighter);
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+  .alp-card__header {
+    justify-content: center;
   }
 
   .tab__content {
-    margin: 0;
+    width: 100%;
 
     &__container {
-      margin: 24px 41px;
+      margin: 24px auto;
+      max-width: 1080px;
+      padding: 0 32px;
     }
 
     &__title {
@@ -67,11 +21,6 @@
       height: 32px;
       font-size: 24px;
       font-weight: 500;
-      color: var(--color-primary);
-    }
-
-    &__info {
-      width: 70%;
     }
   }
 }

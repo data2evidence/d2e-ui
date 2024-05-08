@@ -1,5 +1,4 @@
 import React, { FC, useState, useCallback, useEffect, useMemo } from "react";
-import { useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,8 +6,8 @@ import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
-import { Tabs, Tab } from "@mui/material";
-import { SxProps } from "@mui/system";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import {
   Button,
   Card,
@@ -55,68 +54,28 @@ interface StudyAccessRequest {
   role: string;
 }
 
-export const StudyInfoTab = {
-  DataInfo: "data_info",
-  DataExplore: "data_explore",
-  GenerateCode: "generate_code",
-  PatientAnalytics: "patient_analytics",
-  Search: "search",
-};
-
-interface StateProps {
-  tab: string;
-  tenantId: string;
-}
-
-const styles: SxProps = {
-  color: "#000080",
-  height: "70%",
-  minWidth: 220,
-  ".MuiInputLabel-root": {
-    color: "#000080",
-    "&.MuiInputLabel-shrink, &.Mui-focused": {
-      color: "var(--color-neutral)",
-    },
-  },
-  ".MuiInput-input:focus": {
-    backgroundColor: "transparent",
-    color: "#000080",
-  },
-  ".MuiInput-root": {
-    "&::after, &:hover:not(.Mui-disabled)::before": {
-      borderBottom: "2px solid #000080",
-    },
-  },
-  "&.MuiMenuItem-root:hover": {
-    backgroundColor: "#ebf2fa",
-  },
-};
-
 export const Information: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const { setFeedback } = useFeedback();
   const [requestLoading, setRequestLoading] = useState(false);
 
   const { user } = useUserInfo();
-  const location = useLocation();
-  const state = location.state as StateProps;
 
   const { activeDataset } = useActiveDataset();
   const activeDatasetId = activeDataset.id;
+  const activeReleaseId = activeDataset.releaseId;
 
   const [tabValue, setTabValue] = useState(DatasetInfoTab.DatasetInfo);
-  const [activeTenantId, setActiveTenantId] = useState<string>(state?.tenantId || "");
-  const [activeReleaseId, setActiveReleaseId] = useState("");
   const [downloading, setDownloading] = useState<string>();
   const [accessRequests, setAccessRequests] = useState<StudyAccessRequest[]>([]);
 
-  const [study, loading, error] = useDataset(activeDatasetId);
+  const [dataset, loading, error] = useDataset(activeDatasetId);
   const [dashboards] = useDatasetDashboards(activeDatasetId);
   const [resources, resourcesLoading, resourcesError] = useDatasetResources(activeDatasetId);
   const [releases] = useDatasetReleases(activeDatasetId);
 
-  const attributes = useMemo(() => study?.attributes || [], [study]);
-  const tags = useMemo(() => study?.tags || [], [study]);
+  const attributes = useMemo(() => dataset?.attributes || [], [dataset]);
+  const tags = useMemo(() => dataset?.tags || [], [dataset]);
 
   const loadAccessRequests = useCallback(async (): Promise<void> => {
     const accessRequests = await api.userMgmt.getMyStudyAccessRequests();
@@ -128,15 +87,13 @@ export const Information: FC = () => {
   }, [loadAccessRequests]);
 
   useEffect(() => {
-    setActiveTenantId(state?.tenantId);
-    setActiveReleaseId("");
     setTabValue(DatasetInfoTab.DatasetInfo);
     window.scrollTo(0, 0);
-  }, [state]);
+  }, []);
 
-  const handleTabSelectionChange = async (event: React.SyntheticEvent, newValue: DatasetInfoTab) => {
+  const handleTabSelectionChange = useCallback(async (event: React.SyntheticEvent, newValue: DatasetInfoTab) => {
     setTabValue(newValue);
-  };
+  }, []);
 
   const handleDownloadResource = useCallback(
     async (resource: DatasetResource) => {
@@ -158,12 +115,7 @@ export const Information: FC = () => {
       if (activeDatasetId && user?.userId) {
         try {
           setRequestLoading(true);
-          await api.userMgmt.addStudyAccessRequest(
-            user.userId,
-            activeTenantId,
-            activeDatasetId,
-            Roles.STUDY_RESEARCHER
-          );
+          await api.userMgmt.addStudyAccessRequest(user.userId, activeDatasetId, Roles.STUDY_RESEARCHER);
           loadAccessRequests();
 
           setFeedback({
@@ -266,10 +218,12 @@ export const Information: FC = () => {
     >
       <div className="tab__content">
         <div className="tab__content__container">
-          <Title>{study?.studyDetail?.name}</Title>
+          <Title>{dataset?.studyDetail?.name || getText(i18nKeys.INFORMATION__UNTITLED)}</Title>
           {tabValue === DatasetInfoTab.DatasetInfo && (
             <div className="dataset__info">
-              <ReactMarkdown>{study?.studyDetail?.description || ""}</ReactMarkdown>
+              <ReactMarkdown>
+                {dataset?.studyDetail?.description || getText(i18nKeys.STUDY_CARD__NO_DATASET_SUMMARY)}
+              </ReactMarkdown>
               <div className="metadata_tags_files__container">
                 {(tags.length > 0 || attributes.length > 0) && (
                   <div className="metadata_tags__container">
@@ -365,7 +319,7 @@ export const Information: FC = () => {
                 )}
               </div>
 
-              {study?.studyDetail?.showRequestAccess && [Access.None, Access.Pending].includes(getAccess()) && (
+              {dataset?.studyDetail?.showRequestAccess && [Access.None, Access.Pending].includes(getAccess()) && (
                 <>
                   <div className="tab__content__subtitle">{getText(i18nKeys.INFORMATION__REQUEST_ACCESS)}</div>
                   {getAccess() === Access.None && (
@@ -390,14 +344,14 @@ export const Information: FC = () => {
           )}
           {tabValue === DatasetInfoTab.DataCharacterization && (
             <>
-              {!study?.schemaName ? (
+              {!dataset?.schemaName ? (
                 <div className="info__section">
                   <div>{getText(i18nKeys.INFORMATION__SCHEMA_NAME_UNDEFINED)}</div>
                 </div>
               ) : (
                 <DQDJobResults
                   datasetId={activeDatasetId}
-                  datasetName={study?.schemaName}
+                  datasetName={dataset?.schemaName}
                   tableType={DQD_TABLE_TYPES.DATA_CHARACTERIZATION}
                 />
               )}
@@ -405,7 +359,7 @@ export const Information: FC = () => {
           )}
           {tabValue === DatasetInfoTab.DataQuality && (
             <>
-              {!study?.schemaName ? (
+              {!dataset?.schemaName ? (
                 <div className="info__section">
                   <div>{getText(i18nKeys.INFORMATION__DATABASE_NAME_UNDEFINED)}</div>
                 </div>
@@ -414,14 +368,14 @@ export const Information: FC = () => {
                   <SubTitle>{getText(i18nKeys.INFORMATION__OVERVIEW)}</SubTitle>
                   <DQDJobResults
                     datasetId={activeDatasetId}
-                    datasetName={study?.schemaName}
+                    datasetName={dataset?.schemaName}
                     tableType={DQD_TABLE_TYPES.DATA_QUALITY_OVERVIEW}
                     activeReleaseId={activeReleaseId}
                   />
                   <SubTitle>{getText(i18nKeys.INFORMATION__RESULTS)}</SubTitle>
                   <DQDJobResults
                     datasetId={activeDatasetId}
-                    datasetName={study?.schemaName}
+                    datasetName={dataset?.schemaName}
                     tableType={DQD_TABLE_TYPES.DATA_QUALITY_RESULTS}
                     activeReleaseId={activeReleaseId}
                   />
