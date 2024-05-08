@@ -38,6 +38,7 @@ export const i18nDefault = {
     ACTION_SELECTOR__UPDATE_SCHEMA: "Update schema",
     ADD_FLOW_DIALOG__ACTION: "Action",
     ADD_FLOW_DIALOG__ADD_FLOW: "Add flow",
+    ADD_FLOW_DIALOG__BYTES: "bytes",
     ADD_FLOW_DIALOG__CANCEL: "Cancel",
     ADD_FLOW_DIALOG__ERROR_DESCRIPTION:
       "Please try again. To report the error, please send an email to help@data4life.care.",
