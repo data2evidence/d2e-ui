@@ -88,6 +88,14 @@
       </div>
 
       <ul class="bookmark-list">
+        <div class="bookmark-list-header">
+          <appCheckbox
+            v-model="showSharedBookmarks"
+            :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_BOOKMARKS_TEXT')"
+            :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_BOOKMARKS_TITLE')"
+            :labelClass="'font-color-blue'"
+          ></appCheckbox>
+        </div>
         <template v-for="bookmark in bookmarksDisplay" :key="bookmark.name">
           <li class="bookmark-item" ref="bookmarkItem">
             <div class="bookmark-item-container" ref="bookmarkItemContainer">
@@ -225,72 +233,65 @@
                 </tr>
               </table>
               <div class="bookmark-item-footer">
-                      <div class="bookmark-item-footer__break" />
-                      <table class="bookmark-item-buttons">
-                        <tr>
-                          <td>
-                            <button
-                              :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
-                              class="bookmark-button"
-                              v-on:click.stop="this.openCohortListDialog(bookmark)"
-                            >
-                              <CohortIcon />
-                            </button>
-                          </td>
-                          <td v-if="enableAddToCohort">
-                            <button
-                              v-on:click.stop="addCohort(bookmark)"
-                              :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
-                              class="bookmark-button"
-                            >
-                              <!-- <span class="icon" style="font-family: app-icons"> </span> -->
-                              <AddPatientsIcon />
-                            </button>
-                          </td>
-                          <td v-if="!bookmark.disableUpdate">
-                            <button
-                              v-on:click.stop="renameBookmark(bookmark)"
-                              :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
-                              class="bookmark-button"
-                            >
-                              <EditIcon />
-                              <!-- <span class="icon"></span> -->
-                            </button>
-                          </td>
-                          <td v-if="!bookmark.disableUpdate">
-                            <button
-                              v-on:click.stop="deleteBookmark(bookmark)"
-                              :title="getText('MRI_PA_TOOLTIP_DELETE_BOOKMARK')"
-                              class="bookmark-button"
-                            >
-                              <TrashCanIcon />
-                              <!-- <span class="icon"></span> -->
-                            </button>
-                          </td>
-                        </tr>
-                      </table>
-                    </div>
+                <div class="bookmark-item-footer__break" />
+                <table class="bookmark-item-buttons">
+                  <tr>
+                    <td>
+                      <button
+                        :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
+                        class="bookmark-button"
+                        v-on:click.stop="this.openCohortListDialog(bookmark)"
+                      >
+                        <CohortIcon />
+                      </button>
+                    </td>
+                    <td v-if="enableAddToCohort">
+                      <button
+                        v-on:click.stop="addCohort(bookmark)"
+                        :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
+                        class="bookmark-button"
+                      >
+                        <!-- <span class="icon" style="font-family: app-icons"> </span> -->
+                        <AddPatientsIcon />
+                      </button>
+                    </td>
+                    <td v-if="!bookmark.disableUpdate">
+                      <button
+                        v-on:click.stop="renameBookmark(bookmark)"
+                        :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
+                        class="bookmark-button"
+                      >
+                        <EditIcon />
+                        <!-- <span class="icon"></span> -->
+                      </button>
+                    </td>
+                    <td v-if="!bookmark.disableUpdate">
+                      <button
+                        v-on:click.stop="deleteBookmark(bookmark)"
+                        :title="getText('MRI_PA_TOOLTIP_DELETE_BOOKMARK')"
+                        class="bookmark-button"
+                      >
+                        <TrashCanIcon />
+                        <!-- <span class="icon"></span> -->
+                      </button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
             </div>
           </li>
         </template>
       </ul>
     </div>
     <!-- Bookmark Footer -->
-    <div class="bookmarkFooter">
+    <div class="bookmark-footer">
       <!-- Footer Button  -->
-        <appCheckbox
-          classes="app-checkbox-container--light"
-          v-model="showSharedBookmarks"
-          :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_BOOKMARKS_TEXT')"
-          :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_BOOKMARKS_TITLE')"
-        ></appCheckbox>
         <d4l-button
-          v-if="showCohortCompareBtn"
-          :text="getText('MRI_COMP_COHORT_BUTTON')"
-          :title="getText('MRI_COMP_COHORT_TOOLTIP_BTN')"
-          classes="button--block button-radius button--light"
-          @click="openCompareDialog"
-        />
+        :text="getText('MRI_COMP_COHORT_BUTTON')"
+        :title="getText('MRI_COMP_COHORT_TOOLTIP_BTN')"
+        classes="button--block button-radius"
+        @click="openCompareDialog"
+      />
     </div>
 
     <cohortComparisonDialog
