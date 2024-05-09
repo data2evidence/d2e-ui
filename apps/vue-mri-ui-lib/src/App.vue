@@ -39,6 +39,7 @@ export default {
   data() {
     return {
       showDialog: false,
+      listener: null
     }
   },
   created() {
@@ -47,12 +48,15 @@ export default {
     this.requestMriConfig()
   },
   mounted() {
-    window.addEventListener('dataset', () => {
+    this.listener = window.addEventListener('dataset', () => {
       this.setDataset()
       this.setDatasetReleaseId()
       this.setFireRequest()
       this.refreshPatientCount()
     })
+  },
+  unmounted() {
+    window.removeEventListener('dataset', this.listener)
   },
   computed: {
     ...mapGetters([

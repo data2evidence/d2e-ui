@@ -238,7 +238,7 @@
                   <tr>
                     <td>
                       <button
-                        :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
+                        :title="getText('MRI_PA_BUTTON_SHOW_COLLECTION')"
                         class="bookmark-button"
                         v-on:click.stop="this.openCohortListDialog(bookmark)"
                       >
@@ -291,6 +291,7 @@
         :title="getText('MRI_COMP_COHORT_TOOLTIP_BTN')"
         classes="button--block button-radius"
         @click="openCompareDialog"
+        :disabled="!showCohortCompareBtn"
       />
     </div>
 
