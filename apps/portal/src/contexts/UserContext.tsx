@@ -51,7 +51,7 @@ export interface UserInfo {
   isUserAdmin: boolean;
   isSystemAdmin: boolean;
   isDashboardViewer: boolean;
-  isStudyResearcher: (studyId: string) => boolean;
+  isDatasetResearcher: (studyId: string) => boolean;
   isStudyManager: (studyId: string) => boolean;
 }
 
@@ -63,7 +63,7 @@ const initialUserInfo = {
   isUserAdmin: false,
   isSystemAdmin: false,
   isDashboardViewer: false,
-  isStudyResearcher: () => false,
+  isDatasetResearcher: () => false,
   isStudyManager: () => false,
 };
 
@@ -148,9 +148,9 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
     const isUserAdmin = Boolean(userGroups.alp_role_user_admin);
     const isDashboardViewer = Boolean(userGroups.alp_role_dashboard_viewer);
     const isTenantViewer = (userGroups.alp_role_tenant_viewer?.length || 0) > 0;
-    const isStudyResearcher = (userGroups.alp_role_study_researcher?.length || 0) > 0;
+    const isDatasetResearcher = (userGroups.alp_role_study_researcher?.length || 0) > 0;
     const isStudyManager = (userGroups.alp_role_study_mgr?.length || 0) > 0;
-    const isResearcher = isStudyManager || isStudyResearcher;
+    const isResearcher = isStudyManager || isDatasetResearcher;
 
     const canAccessSystemAdminPortal =
       Boolean(userGroups.alp_role_system_admin) || Boolean(userGroups.alp_role_user_admin);
@@ -165,7 +165,7 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
       isUserAdmin,
       isSystemAdmin,
       isDashboardViewer,
-      isStudyResearcher: (studyId: string) => userGroups.alp_role_study_researcher?.includes(studyId) || false,
+      isDatasetResearcher: (studyId: string) => userGroups.alp_role_study_researcher?.includes(studyId) || false,
       isStudyManager: (studyId: string) => userGroups.alp_role_study_mgr?.includes(studyId) || false,
     });
   }, [userGroups, getIdpUserId, setUser]);

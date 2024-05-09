@@ -5,7 +5,6 @@
         class="actionButton"
         @click="hideExpandedFilters"
         :title="getText('MRI_PA_TOOLTIP_EXIT_EXPANDED_FILTERS_VIEW')"
-        v-if="!isNonInteractiveMode"
       >
         <appIcon icon="exitFullScreen"></appIcon>
       </button>
@@ -29,7 +28,7 @@
           >
         </li>
       </ul>
-      <patientCount :popOverPosition="patientCountPosition" v-if="!isNonInteractiveMode" />
+      <patientCount :popOverPosition="patientCountPosition"/>
       <div class="separator" />
     </div>
     <template v-if="!displayCohorts">
@@ -144,9 +143,6 @@ export default {
         matchType: 'matchall', // TODO: remove this (not used)
       })
       return this.getText('MRI_PA_FILTERCARD_TITLE_EXCLUSION') + ' (' + filterCount + ')'
-    },
-    isNonInteractiveMode() {
-      return this.getMriFrontendConfig.isNonInteractiveMode()
     },
   },
   methods: {

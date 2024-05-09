@@ -48,20 +48,6 @@
             </template>
           </div>
         </b-dropdown>
-        <d4l-button
-          v-if="isNonInteractiveMode"
-          :text="getText('MRI_PA_BMK_VIEW_CHART')"
-          :title="getText('MRI_PA_BMK_VIEW_CHART')"
-          style="margin-left: 8px"
-          @click="showChart"
-        />
-        <d4l-button
-          v-if="isNonInteractiveMode"
-          :text="getText('MRI_PA_BMK_VIEW_LIST')"
-          :title="getText('MRI_PA_BMK_VIEW_LIST')"
-          style="margin-left: 8px"
-          @click="showPatientList"
-        />
       </div>
       <div>
         <d4l-button
@@ -195,10 +181,6 @@ export default {
       'getBookmark',
       'getBookmarkByNameAndUserId',
     ]),
-    isNonInteractiveMode() {
-      return this.getMriFrontendConfig.isNonInteractiveMode()
-    },
-    
     hasChanges() {
       const userId = getPortalAPI().userId
       if (this.getActiveBookmark.shared && userId !== this.getActiveBookmark.user_id) {        

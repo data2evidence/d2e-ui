@@ -34,6 +34,7 @@ export type ConceptSet = {
   concepts: ConceptSetConcept[];
   name: string;
   id: string;
+  shared: boolean;
   createdBy?: string;
   createdDate?: string;
   modifiedBy?: string;

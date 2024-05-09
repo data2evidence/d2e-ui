@@ -11,14 +11,18 @@ export type ButtonProps = MuiButtonProps & {
   loading?: boolean;
   onClick?: (event?: any) => void;
   block?: boolean;
+  containerClassName?: string;
 };
 
 export const Button = forwardRef<Ref, ButtonProps>(
-  ({ text, type, loading, className, disabled, block, onClick, variant = "contained", ...props }, ref) => {
+  (
+    { text, type, loading, className, containerClassName, disabled, block, onClick, variant = "contained", ...props },
+    ref
+  ) => {
     const containerClasses = classNames(
       "alp-button__container",
       { "button--block": block },
-      { [`${className}`]: !!className }
+      { [`${containerClassName}`]: !!containerClassName }
     );
     const classes = classNames(
       "alp-button",

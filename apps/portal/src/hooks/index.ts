@@ -14,6 +14,7 @@ export * from "./useGroupCleanUp";
 export * from "./useMenuAnchor";
 export * from "./usePaConfigs";
 export * from "./usePublicDatasets";
+export * from "./useScrollPosition";
 export * from "./useTenant";
 export * from "./useTenants";
 export * from "./dataflow/useHistoryTableJobs";
