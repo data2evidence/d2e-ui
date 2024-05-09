@@ -107,7 +107,7 @@ const getters = {
       }
       return {
         ...request,
-        selectedStudyEntityValue: getters.getSelectedUserStudy.id,
+        selectedStudyEntityValue: getters.getSelectedDataset.id,
       }
     },
   getPLRequestZIP: (state, getters) => {

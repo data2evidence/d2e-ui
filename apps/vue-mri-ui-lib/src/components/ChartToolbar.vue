@@ -141,7 +141,7 @@ export default {
       'getAllChartConfigs',
       'getMriFrontendConfig',
       'getText',
-      'getSelectedUserStudy',
+      'getSelectedDataset',
       'getMriFrontendConfig',
     ]),
     chartSelection() {
@@ -158,7 +158,7 @@ export default {
       return false
     },
     getSelectedDatasetText(){
-      return this.getSelectedUserStudy.name == "" ? "Untitled" : this.getSelectedUserStudy.name
+      return this.getSelectedDataset.name == "" ? "Untitled" : this.getSelectedDataset.name
     }
   },
   methods: {
@@ -197,7 +197,7 @@ export default {
             configId: configMetadata.configId,
             configVersion: configMetadata.configVersion,
           },
-          selectedStudyEntityValue: this.getSelectedUserStudy.id,
+          selectedStudyEntityValue: this.getSelectedDataset.id,
         }
         this.firePatientListCountQuery({
           type: 'total',
@@ -233,7 +233,7 @@ export default {
         metadata: {
           version: 3,
         },
-        selectedStudyEntityValue: this.getSelectedUserStudy.id,
+        selectedStudyEntityValue: this.getSelectedDataset.id,
       }
       this.firePatientCountQuery({
         type: 'total',
