@@ -147,8 +147,7 @@ const actions = {
   },
   setDataset({ commit }, dataset) {
     const datasetId = getPortalAPI().studyId
-    const datasetName = getPortalAPI().datasetName
-    commit(types.SET_SELECTED_DATASET, { id: datasetId, name: datasetName })
+    commit(types.SET_SELECTED_DATASET, { id: datasetId })
   },
   setDatasetReleaseId({ commit }) {
     const releaseId = getPortalAPI().releaseId

@@ -20,7 +20,10 @@ const PluginContainer: FC<PluginContainerProps> = ({
 }) => {
   const { user } = useUserInfo();
 
-  // call event here
+  useEffect(() => {
+    const pluginEvent = new CustomEvent("dataset");
+    window.dispatchEvent(pluginEvent);
+  }, [studyId, datasetName, releaseId]);
   return (
     <span
       className="plugin-container"
