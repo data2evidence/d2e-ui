@@ -242,6 +242,7 @@ const DQDTable: FC<DQDTableProps> = ({ data }) => {
       </Card>
     </Box>
   );
+
   return (
     <MaterialReactTable
       columns={columns}
@@ -251,12 +252,22 @@ const DQDTable: FC<DQDTableProps> = ({ data }) => {
         showColumnFilters: false,
         columnVisibility: { isError: false, notApplicable: false },
       }}
+      mrtTheme={(theme) => ({
+        baseBackgroundColor: "#fff",
+      })}
       enableFullScreenToggle={false}
       enableColumnResizing={true}
       enableDensityToggle={false}
       enableStickyHeader
       muiTableContainerProps={{ sx: { maxHeight: "600px" } }}
       columnResizeMode="onEnd"
+      muiTablePaperProps={{
+        elevation: 0,
+        sx: {
+          borderRadius: "0",
+          border: "1px solid #dadbde",
+        },
+      }}
       muiTableHeadCellProps={{
         style: {
           fontWeight: "bold",

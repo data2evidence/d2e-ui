@@ -1,7 +1,7 @@
 import React, { FC, useMemo, useState, useCallback } from "react";
 import classNames from "classnames";
 import debounce from "lodash/debounce";
-import { Button, Loader } from "@portal/components";
+import { Loader } from "@portal/components";
 import { useDatasets } from "../../../hooks";
 import { FEATURE_DATASET_FILTER, config } from "../../../config/index";
 import { DatasetFilters } from "./components/DatasetFilters";

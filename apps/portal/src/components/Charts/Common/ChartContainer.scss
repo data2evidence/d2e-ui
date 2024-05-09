@@ -4,6 +4,7 @@
   .chart__card {
     border: 1px solid #dedcda;
     height: 100%;
+    box-shadow: none;
   }
 
   .no_data_text {
@@ -13,7 +14,6 @@
 
   /* override base style */
   .alp-card__header {
-    background-color: #ccdef1;
     border-bottom: 0;
   }
   .alp-card__content {

@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowCircleLeftIcon, IconButton } from "@portal/components";
 import { IPlugin, NavLink, Plugins } from "../../types";
@@ -7,7 +7,7 @@ import PublicStudyOverviewNav from "./PublicStudyOverviewNav/PublicStudyOverview
 import MenuNav, { MenuType } from "./MenuNav/MenuNav";
 import { isAuthenticated } from "../../containers/auth";
 import { AccountTab } from "./AccountTab/AccountTab";
-import { SelectDataset } from "./SelectDataset/SelectDataset";
+import { SelectDataset, SelectPublicDataset } from "./SelectDataset/SelectDataset";
 import { SelectRelease } from "./SelectRelease/SelectRelease";
 import { config } from "../../config";
 import env from "../../env";
@@ -25,19 +25,32 @@ export const Header: FC<HeaderProps> = ({ nav, portalType, plugins, systemAdminP
   const location = useLocation();
   const isAuth = isAuthenticated();
 
-  const getClassNames = useCallback(
-    (link: NavLink): string =>
-      link.path === location.pathname ||
-      link.subpaths?.includes(location.pathname) ||
-      link.submenu?.some((path) => path.path === location.pathname)
-        ? "header__menu-item--active"
+  const subPath = useMemo(
+    () =>
+      portalType === "public"
+        ? config.ROUTES.public
+        : portalType === "researcher"
+        ? config.ROUTES.researcher
+        : portalType === "systemadmin"
+        ? config.ROUTES.systemadmin
         : "",
-    [location.pathname]
+    [portalType]
+  );
+
+  const getClassNames = useCallback(
+    (link: NavLink): string => {
+      return `${subPath}/${link.path}` === location.pathname ||
+        link.subpaths?.includes(location.pathname) ||
+        link.submenu?.some((path) => path.path === location.pathname)
+        ? "header__menu-item--active"
+        : "";
+    },
+    [location.pathname, subPath]
   );
 
   const handleLogoClick = useCallback(() => {
-    navigate(config.ROUTES.researcher);
-  }, [navigate]);
+    navigate(subPath);
+  }, [navigate, subPath]);
 
   return (
     <header className="portal__header" data-testid="header">
@@ -53,7 +66,15 @@ export const Header: FC<HeaderProps> = ({ nav, portalType, plugins, systemAdminP
 
       <div className="header__menu-group">
         <ul data-testid="nav">
-          {portalType === "public" && <PublicStudyOverviewNav />}
+          {portalType === "public" && (
+            <>
+              <li className="active-dataset-container">
+                <IconButton startIcon={<ArrowCircleLeftIcon />} onClick={handleLogoClick} />
+                <SelectPublicDataset />
+              </li>
+              <PublicStudyOverviewNav />
+            </>
+          )}
 
           {isAuth && portalType === "researcher" && (
             <>

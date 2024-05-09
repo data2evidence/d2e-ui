@@ -1,15 +1,13 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactECharts from "echarts-for-react";
-import classNames from "classnames";
 import { Card, CalendarIcon, DatabaseIcon, DocPlayIcon, PadlockEmptyIcon, UsersIcon } from "@portal/components";
 import { Study } from "../../../types";
-import { useUserInfo } from "../../../contexts/UserContext";
 import { DatasetAttribute } from "../../../constant";
 import { useActiveDataset, useTranslation } from "../../../contexts";
-import "./DatasetCard.scss";
+import "./PublicDatasetCard.scss";
 
-interface DatasetCardProps {
+interface PublicDatasetCardProps {
   dataset: Study;
   path: string;
 }
@@ -35,9 +33,8 @@ const colorPalette = [
   "#07609F",
 ];
 
-export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
+export const PublicDatasetCard: FC<PublicDatasetCardProps> = ({ dataset, path }) => {
   const navigate = useNavigate();
-  const { user } = useUserInfo();
   const { getText, i18nKeys } = useTranslation();
   const { setActiveDatasetId } = useActiveDataset();
 
@@ -106,39 +103,35 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
   }, [setActiveDatasetId, navigate, path, dataset]);
 
   return (
-    <Card className="dataset-card" borderRadius={18} onClick={handleCardClick}>
-      <div className="dataset-card__chart">
+    <Card className="public-dataset-card" borderRadius={18} onClick={handleCardClick}>
+      <div className="public-dataset-card__chart">
         <ReactECharts style={{ width: "248px", height: "264px" }} option={getOptions(chartData)} />
       </div>
-      <div className="dataset-card__content">
-        <div className="dataset-card__title">
+      <div className="public-dataset-card__content">
+        <div className="public-dataset-card__title">
           {dataset.visibilityStatus}
-          <PadlockEmptyIcon
-            className={classNames("dataset-card__permission-icon", {
-              "dataset-card__permission-icon--accessible": user.isDatasetResearcher(dataset.id),
-            })}
-          />
+          <PadlockEmptyIcon className={"public-dataset-card__permission-icon"} />
           {dataset.studyDetail?.name || "Untitled"}
         </div>
-        <div className="dataset-card__description">
-          {dataset.studyDetail?.description || getText(i18nKeys.DATASET_CARD__NO_DATASET_SUMMARY)}
+        <div className="public-dataset-card__description">
+          {dataset.studyDetail?.description || getText(i18nKeys.PUBLIC_DATASET_CARD__NO_DATASET_SUMMARY)}
         </div>
-        <div className="dataset-card__attributes">
-          <div className="dataset-card__attribute">
+        <div className="public-dataset-card__attributes">
+          <div className="public-dataset-card__attribute">
             <UsersIcon />
-            {getText(i18nKeys.DATASET_CARD__PATIENT_COUNT)}: {patientCount || 0}
+            {getText(i18nKeys.PUBLIC_DATASET_CARD__PATIENT_COUNT)}: {patientCount || 0}
           </div>
-          <div className="dataset-card__attribute">
+          <div className="public-dataset-card__attribute">
             <CalendarIcon />
-            {getText(i18nKeys.DATASET_CARD__DATE)}: {createdDate || "-"}
+            {getText(i18nKeys.PUBLIC_DATASET_CARD__DATE)}: {createdDate || "-"}
           </div>
-          <div className="dataset-card__attribute">
+          <div className="public-dataset-card__attribute">
             <DocPlayIcon />
-            {getText(i18nKeys.DATASET_CARD__VERSION)}: {version || "-"}
+            {getText(i18nKeys.PUBLIC_DATASET_CARD__VERSION)}: {version || "-"}
           </div>
-          <div className="dataset-card__attribute">
+          <div className="public-dataset-card__attribute">
             <DatabaseIcon />
-            {getText(i18nKeys.DATASET_CARD__DATA_MODEL)}: {dataModel || "-"}
+            {getText(i18nKeys.PUBLIC_DATASET_CARD__DATA_MODEL)}: {dataModel || "-"}
           </div>
         </div>
       </div>

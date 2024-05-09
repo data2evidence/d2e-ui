@@ -121,11 +121,7 @@ const RenderDataQualityOverviewTable: FC<RenderDataQualityOverviewTableProps> = 
       ) : errorDqdOverview ? (
         <div>{getText(i18nKeys.DQD_JOB_RESULTS__ERROR_DQD_OVERVIEW, [errorDqdOverview.message])}</div>
       ) : (
-        dqdOverview && (
-          <>
-            <OverviewTable data={dqdOverview}></OverviewTable>
-          </>
-        )
+        dqdOverview && <OverviewTable data={dqdOverview}></OverviewTable>
       )}
     </>
   );

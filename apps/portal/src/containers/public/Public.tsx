@@ -1,5 +1,6 @@
-import React, { FC, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import React, { FC, useEffect, useMemo } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import classNames from "classnames";
 import { Snackbar } from "@portal/components";
 import { Header } from "../../components";
 import { PublicOverview } from "./PublicOverview/PublicOverview";
@@ -21,27 +22,33 @@ export const Public: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const { clearFeedback, getFeedback } = useFeedback();
   const feedback = getFeedback();
+  const location = useLocation();
+  const isHome = location.pathname === "/public" || location.pathname === "/public/overview";
+  const classes = classNames("public__container", { "public__container--home": isHome });
 
-  const navigations: NavLink[] = [
-    {
-      id: "legal",
-      path: ROUTES.legal,
-      title: getText(i18nKeys.PUBLIC__NAVIGATION_LEGAL),
-    },
-    {
-      id: "login",
-      path: ROUTES.login,
-      title: getText(i18nKeys.PUBLIC__NAVIGATION_LOGIN),
-    },
-  ];
+  const navigations: NavLink[] = useMemo(
+    () => [
+      {
+        id: "legal",
+        path: ROUTES.legal,
+        title: getText(i18nKeys.PUBLIC__NAVIGATION_LEGAL),
+      },
+      {
+        id: "login",
+        path: ROUTES.login,
+        title: getText(i18nKeys.PUBLIC__NAVIGATION_LOGIN),
+      },
+    ],
+    [getText, i18nKeys]
+  );
 
   useEffect(() => {
     if ((feedback?.autoClose || 0) > 0) setTimeout(() => clearFeedback(), feedback?.autoClose);
   }, [feedback, clearFeedback]);
 
   return (
-    <div className="public__container">
-      <Header nav={navigations} portalType="public" />
+    <div className={classes}>
+      {!isHome && <Header nav={navigations} portalType="public" />}
       <main>
         <Snackbar
           type={feedback?.type}

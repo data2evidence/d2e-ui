@@ -18,6 +18,12 @@ interface AccountProps {
   portalType: PortalType;
 }
 
+enum LegalTab {
+  TermsOfUse,
+  PrivacyPolicy,
+  Imprint,
+}
+
 const subProp = env.REACT_APP_IDP_SUBJECT_PROP;
 const nameProp = env.REACT_APP_IDP_NAME_PROP;
 
@@ -27,7 +33,7 @@ export const Account: FC<AccountProps> = ({ portalType }) => {
   const { getText, i18nKeys } = useTranslation();
   const navigate = useNavigate();
   const { claims } = useMsalInfo();
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState<LegalTab>(LegalTab.TermsOfUse);
   const [myUser, setMyUser] = useState(EMPTY_MY_USER);
   const [showDeleteAccount, openDeleteAccount, closeDeleteAccount] = useDialogHelper(false);
   const [showPwd, openPwdDialog, closePwdDialog] = useDialogHelper(false);
@@ -58,19 +64,6 @@ export const Account: FC<AccountProps> = ({ portalType }) => {
   const handleLogout = useCallback(() => {
     navigate(config.ROUTES.logout);
   }, [navigate]);
-
-  const renderTabContent = useCallback(() => {
-    switch (tabValue) {
-      case 0:
-        return <TermsOfUse />;
-      case 1:
-        return <PrivacyPolicy />;
-      case 2:
-        return <Imprint />;
-      default:
-        return <TermsOfUse />;
-    }
-  }, [tabValue]);
 
   return (
     <div className="account">
@@ -124,7 +117,11 @@ export const Account: FC<AccountProps> = ({ portalType }) => {
               }
             >
               <div className="tab__content">
-                <div className="tab__content__container">{renderTabContent()}</div>
+                <div className="tab__content__container">
+                  {tabValue === LegalTab.TermsOfUse && <TermsOfUse />}
+                  {tabValue === LegalTab.PrivacyPolicy && <PrivacyPolicy />}
+                  {tabValue === LegalTab.Imprint && <Imprint />}
+                </div>
               </div>
             </Card>
           </div>

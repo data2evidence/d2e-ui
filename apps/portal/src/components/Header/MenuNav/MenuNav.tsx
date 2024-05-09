@@ -5,7 +5,6 @@ import MenuItem from "@mui/material/MenuItem";
 import { ChevronDownIcon } from "@portal/components";
 import { Roles, config } from "../../../config";
 import { Plugins } from "../../../types";
-import { StudyInfoTab } from "../../../containers/researcher/Information/Information";
 import { useDatasets, useEnabledFeatures, useMenuAnchor } from "../../../hooks";
 import { useUserInfo } from "../../../contexts/UserContext";
 import { getPluginChildPath } from "../../../utils";
@@ -207,13 +206,8 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
       className={isActiveTab() ? "header__menu-overview header__menu-item--active" : "header__menu-overview"}
     >
       {type === MenuType.Dataset && (
-        <Link
-          to={`${config.ROUTES.researcher}/information`}
-          state={{ tab: StudyInfoTab.DataInfo, tenantId: dataset?.tenant.id }}
-          data-text="Dataset overview"
-          className="overview-title"
-        >
-          {getText(i18nKeys.MENU_NAV__DATASETS)}
+        <Link to={`${config.ROUTES.researcher}/information`} data-text="Dataset" className="overview-title">
+          {getText(i18nKeys.MENU_NAV__DATASET)}
         </Link>
       )}
       {type === MenuType.Plugin && plugin && renderPluginMenu(plugin)}
