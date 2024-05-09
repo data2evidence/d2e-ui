@@ -156,7 +156,7 @@ export const CohortDiagnosticsDrawer: FC<CohortIncidentDrawerProps> = ({
         />
       </Box>
     ),
-    [selectBoxConfig]
+    []
   );
 
   return (

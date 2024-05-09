@@ -101,10 +101,6 @@ export const EraCovariateSettingsDrawer: FC<
 
   const handleExcludedEraIdsChange = useCallback(
     (event: any, value: string[]) => {
-      // setFormData((prevFormData) => ({
-      //   ...prevFormData,
-      //   excludedEraIds: value,
-      // }));
       onFormDataChange({ excludedEraIds: value });
     },
     [formData]
@@ -112,10 +108,6 @@ export const EraCovariateSettingsDrawer: FC<
 
   const handleIncludedEraIdsChange = useCallback(
     (event: any, value: string[]) => {
-      // setFormData((prevFormData) => ({
-      //   ...prevFormData,
-      //   includeEraIds: value,
-      // }));
       onFormDataChange({ includedEraIds: value });
     },
     [formData]

@@ -78,14 +78,14 @@ export const TargetComparatorOutcomesDrawer: FC<
     (event: any, value: string[]) => {
       onFormDataChange({ excludedCovariateConceptIds: value });
     },
-    [formData]
+    []
   );
 
   const handleIncludedCovariateConceptIdsChange = useCallback(
     (event: any, value: string[]) => {
       onFormDataChange({ includedCovariateConceptIds: value });
     },
-    [formData]
+    []
   );
 
   return (
