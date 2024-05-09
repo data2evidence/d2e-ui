@@ -48,6 +48,8 @@ export default {
   },
   mounted() {
     window.addEventListener('dataset', () => {
+      this.setDataset()
+      this.setDatasetReleaseId()
       this.setFireRequest()
       this.refreshPatientCount()
     })
