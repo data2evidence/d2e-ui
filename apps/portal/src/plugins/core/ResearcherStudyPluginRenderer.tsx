@@ -8,7 +8,6 @@ interface ResearcherStudyPluginRendererProps {
   path: string;
   tenantId: string;
   studyId: string;
-  datasetName: string;
   releaseId: string;
   data: any;
   fetchMenu: (route: string, menus: PluginDropdownItem[]) => void;
@@ -19,7 +18,6 @@ export const ResearcherStudyPluginRenderer: FC<ResearcherStudyPluginRendererProp
   path,
   tenantId,
   studyId,
-  datasetName,
   releaseId,
   data,
   fetchMenu,
@@ -46,13 +44,12 @@ export const ResearcherStudyPluginRenderer: FC<ResearcherStudyPluginRendererProp
       },
       tenantId,
       studyId,
-      datasetName,
       releaseId,
       data,
       fetchMenu,
       subFeatureFlags,
     }),
-    [tenantId, studyId, datasetName, releaseId, data, fetchMenu, getUserId, subFeatureFlags]
+    [tenantId, studyId, data, fetchMenu, getUserId, subFeatureFlags]
   );
 
   const PageComponent = component?.page;

@@ -9,7 +9,6 @@ export interface ResearcherStudyMetadata {
   getToken: () => Promise<string>
   tenantId: string
   studyId: string
-  datasetName: string
   releaseId: string
   data: any
   fetchMenu: (route: string, menus: PluginDropdownItem[]) => void

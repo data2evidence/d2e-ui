@@ -8,7 +8,6 @@ export const PatientAnalytics: FC<PatientAnalyticsProps> = ({ metadata }) => (
   <PAPlugin
     tenantId={metadata?.tenantId}
     studyId={metadata?.studyId}
-    datasetName={metadata?.datasetName}
     releaseId={metadata?.releaseId}
     getToken={metadata?.getToken}
   />

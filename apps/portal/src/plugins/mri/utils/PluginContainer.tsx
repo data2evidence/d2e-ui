@@ -5,25 +5,18 @@ interface PluginContainerProps {
   getToken?: () => Promise<string>;
   qeSvcUrl?: string;
   studyId?: string;
-  datasetName?: string;
   releaseId?: string;
   children?: ReactNode;
 }
 
-const PluginContainer: FC<PluginContainerProps> = ({
-  children,
-  getToken,
-  qeSvcUrl,
-  studyId,
-  datasetName,
-  releaseId,
-}) => {
+const PluginContainer: FC<PluginContainerProps> = ({ children, getToken, qeSvcUrl, studyId, releaseId }) => {
   const { user } = useUserInfo();
 
   useEffect(() => {
     const pluginEvent = new CustomEvent("dataset");
     window.dispatchEvent(pluginEvent);
-  }, [studyId, datasetName, releaseId]);
+  }, [studyId, releaseId]);
+
   return (
     <span
       className="plugin-container"
@@ -33,7 +26,6 @@ const PluginContainer: FC<PluginContainerProps> = ({
             getToken,
             qeSvcUrl,
             studyId,
-            datasetName,
             releaseId,
             userId: user.userId,
           };
