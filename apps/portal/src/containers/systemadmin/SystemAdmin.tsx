@@ -95,7 +95,7 @@ const SystemAdmin: FC = () => {
         <Routes>
           <Route path="/">
             <Route index element={<Navigate to={defaultRoute} />} />
-            <Route path={ROUTES.account} element={<Account />} />
+            <Route path={ROUTES.account} element={<Account portalType="system_admin" />} />
             {systemAdminPlugins.map((item: Plugins) => {
               // Log viewer (a vue app) uses path routing on jobs/* route. The app is mounted in the portal Jobs component.
               // Including "jobs/*" routes avoids a blank screen which is the default when a route cannot be found.

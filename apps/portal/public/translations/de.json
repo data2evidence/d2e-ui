@@ -31,6 +31,7 @@
   "ACTION_SELECTOR__UPDATE_SCHEMA": "Schema aktualisieren",
   "ADD_FLOW_DIALOG__ACTION": "Aktion",
   "ADD_FLOW_DIALOG__ADD_FLOW": "Fluss hinzufügen",
+  "ADD_FLOW_DIALOG__BYTES": "Bytes",
   "ADD_FLOW_DIALOG__CANCEL": "Stornieren",
   "ADD_FLOW_DIALOG__ERROR_DESCRIPTION": "Bitte versuche es erneut. Um den Fehler zu melden, senden Sie bitte eine E-Mail an help@data4life.care.",
   "ADD_FLOW_DIALOG__ERROR": "Ein Fehler ist aufgetreten.",

@@ -204,7 +204,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
                 </TableRow>
               )}
               {users?.map((user, index) => (
-                <TableRow key={user.username} style={index % 2 ? { background: "#ebf1f8" } : { background: "white" }}>
+                <TableRow key={user.username}>
                   <TableCell style={{ wordBreak: "break-all", color: "#000e7e" }}>{user.username}</TableCell>
                   <TableCell style={{ color: "#000e7e" }}>
                     {user.roles

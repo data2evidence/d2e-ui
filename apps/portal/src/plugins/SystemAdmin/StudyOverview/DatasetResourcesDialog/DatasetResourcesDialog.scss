@@ -11,10 +11,10 @@
     justify-content: flex-end;
 
     button {
-      width: 120px
+      width: 120px;
     }
   }
-  
+
   &__content-table {
     .MuiTable-root {
       border: 1px solid #dad7d7;
@@ -27,10 +27,10 @@
   .button-group-actions {
     display: flex;
     justify-content: center;
-    margin: 1.5em 0;
+    margin: 24px 0;
 
-    button {
-      margin: 16px 10px;
+    .alp-button__container {
+      margin: 0 0 0 8px;
       width: 247px;
     }
   }

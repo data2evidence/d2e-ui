@@ -34,6 +34,16 @@ const styles: SxProps = {
   "&.MuiMenuItem-root:hover": {
     backgroundColor: "#ebf2fa",
   },
+
+  ".MuiOutlinedInput-notchedOutline": {
+    borderWidth: "0",
+  },
+
+  "&.Mui-focused": {
+    ".MuiOutlinedInput-notchedOutline": {
+      borderWidth: "0",
+    },
+  },
 };
 
 const NotebookSelect: FC<NotebookSelectProps> = ({ notebooks, activeNotebook, updateActiveNotebook, setIsShared }) => {
@@ -52,7 +62,7 @@ const NotebookSelect: FC<NotebookSelectProps> = ({ notebooks, activeNotebook, up
       <Select value={activeNotebook?.id} onChange={handleNotebookChange} sx={styles}>
         {notebooks &&
           notebooks.map((nb: StarboardNotebook) => (
-            <MenuItem value={nb.id} key={nb.id} sx={styles} disableRipple>
+            <MenuItem value={nb.id} key={nb.id} sx={styles}>
               {`${nb.name} ${nb.isShared ? getText(i18nKeys.NOTEBOOK_SELECT__SHARED) : ""}`}
             </MenuItem>
           ))}

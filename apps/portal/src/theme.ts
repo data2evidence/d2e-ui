@@ -6,6 +6,9 @@ export const theme = createTheme({
       'GT-America, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
   },
   palette: {
+    background: {
+      default: "#f2f0f1",
+    },
     text: {
       primary: "#000080",
     },
@@ -14,11 +17,18 @@ export const theme = createTheme({
     },
   },
   components: {
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "white",
+        },
+      },
+    },
     MuiTableRow: {
       styleOverrides: {
         root: {
           "&:nth-of-type(even)": {
-            backgroundColor: "#ebf1f8",
+            backgroundColor: "#fafafa",
           },
         },
         head: {
@@ -40,10 +50,18 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          height: 4,
+        },
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {
           textTransform: "none",
+          color: "#000080",
         },
       },
     },

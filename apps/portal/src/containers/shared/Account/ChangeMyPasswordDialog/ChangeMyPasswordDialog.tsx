@@ -13,9 +13,9 @@ import {
 } from "@portal/components";
 import { Feedback } from "../../../../types";
 import { generateRandom } from "../../../../utils";
+import { useTranslation } from "../../../../contexts";
 import { api } from "../../../../axios/api";
 import "./ChangeMyPassword.scss";
-import { useTranslation } from "../../../../contexts";
 
 interface ChangeMyPasswordDialogProps {
   open: boolean;
