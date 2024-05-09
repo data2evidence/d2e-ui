@@ -6,26 +6,13 @@ export const useActiveDataset = () => {
   const { activeDataset } = useContext(AppContext);
   const dispatch = useContext(AppDispatchContext);
 
-  const setActiveDatasetId = useCallback(
-    (datasetId: string) => {
-      dispatch({ type: ACTION_TYPES.SET_ACTIVE_DATASET_ID, payload: datasetId });
-    },
-    [dispatch]
-  );
+  const setActiveDatasetId = useCallback((datasetId: string) => {
+    dispatch({ type: ACTION_TYPES.SET_ACTIVE_DATASET_ID, payload: datasetId });
+  }, []);
 
-  const setActiveDatasetName = useCallback(
-    (datasetName: string) => {
-      dispatch({ type: ACTION_TYPES.SET_ACTIVE_DATASET_NAME, payload: datasetName });
-    },
-    [dispatch]
-  );
+  const setActiveReleaseId = useCallback((releaseId: string) => {
+    dispatch({ type: ACTION_TYPES.SET_ACTIVE_RELEASE_ID, payload: releaseId });
+  }, []);
 
-  const setActiveReleaseId = useCallback(
-    (releaseId: string) => {
-      dispatch({ type: ACTION_TYPES.SET_ACTIVE_RELEASE_ID, payload: releaseId });
-    },
-    [dispatch]
-  );
-
-  return { activeDataset, setActiveDatasetId, setActiveDatasetName, setActiveReleaseId };
+  return { activeDataset, setActiveDatasetId, setActiveReleaseId };
 };
