@@ -203,7 +203,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     tag: NodeTag.Chocolate,
     defaultData: {
       label: "Main",
-      includeEraIds: [],
+      includedEraIds: [],
       excludedEraIds: [],
       start: 0,
       end: 0,

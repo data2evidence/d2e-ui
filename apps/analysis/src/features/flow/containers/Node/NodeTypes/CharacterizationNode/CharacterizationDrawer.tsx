@@ -74,19 +74,19 @@ export const CharacterizationDrawer: FC<CharacterizationDrawerProps> = ({
     typeof onClose === "function" && onClose();
   }, [formData]);
 
-  const handleTargetIdsChange = (event: any, value: string[]) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      targetIds: value,
-    }));
-  };
+  const handleTargetIdsChange = useCallback(
+    (event: any, value: string[]) => {
+      onFormDataChange({ targetIds: value });
+    },
+    [formData]
+  );
 
-  const handleOutcomeIdsChange = (event: any, value: string[]) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      outcomeIds: value,
-    }));
-  };
+  const handleOutcomeIdsChange = useCallback(
+    (event: any, value: string[]) => {
+      onFormDataChange({ outcomeIds: value });
+    },
+    [formData]
+  );
 
   return (
     <NodeDrawer {...props} width="500px" onOk={handleOk} onClose={onClose}>

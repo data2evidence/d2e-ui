@@ -9,7 +9,7 @@ import "./EraCovariateSettingsNode.scss";
 
 export interface EraCovariateSettingsNodeData extends NodeDataState {
   label: string;
-  includeEraIds: string[];
+  includedEraIds: string[];
   excludedEraIds: string[];
   start: number;
   end: number;

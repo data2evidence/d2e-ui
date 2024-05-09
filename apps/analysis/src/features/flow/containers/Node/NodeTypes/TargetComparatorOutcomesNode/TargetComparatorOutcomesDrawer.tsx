@@ -74,25 +74,19 @@ export const TargetComparatorOutcomesDrawer: FC<
     typeof onClose === "function" && onClose();
   }, [formData]);
 
-  const handleExcludedCovariateConceptIdsChange = (
-    event: any,
-    value: string[]
-  ) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      excludedCovariateConceptIds: value,
-    }));
-  };
+  const handleExcludedCovariateConceptIdsChange = useCallback(
+    (event: any, value: string[]) => {
+      onFormDataChange({ excludedCovariateConceptIds: value });
+    },
+    [formData]
+  );
 
-  const handleIncludedCovariateConceptIdsChange = (
-    event: any,
-    value: string[]
-  ) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      includedCovariateConceptIds: value,
-    }));
-  };
+  const handleIncludedCovariateConceptIdsChange = useCallback(
+    (event: any, value: string[]) => {
+      onFormDataChange({ includedCovariateConceptIds: value });
+    },
+    [formData]
+  );
 
   return (
     <NodeDrawer {...props} width="500px" onOk={handleOk} onClose={onClose}>

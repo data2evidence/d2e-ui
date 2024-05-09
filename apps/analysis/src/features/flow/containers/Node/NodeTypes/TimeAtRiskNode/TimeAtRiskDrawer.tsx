@@ -86,38 +86,42 @@ export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
     typeof onClose === "function" && onClose();
   }, [formData]);
 
-  const handleRemove = (indexToRemove: number) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      timeAtRiskConfigs: [
-        ...prevFormData.timeAtRiskConfigs.slice(0, indexToRemove),
-        ...prevFormData.timeAtRiskConfigs.slice(indexToRemove + 1),
-      ],
-    }));
-  };
+  const handleRemove = useCallback(
+    (indexToRemove: number) => {
+      onFormDataChange({
+        timeAtRiskConfigs: [
+          ...formData.timeAtRiskConfigs.slice(0, indexToRemove),
+          ...formData.timeAtRiskConfigs.slice(indexToRemove + 1),
+        ],
+      });
+    },
+    [formData]
+  );
 
-  const handleChange = (
-    indexToUpdate: number,
-    riskWindowStart: number,
-    riskWindowEnd: number,
-    startAnchor: string,
-    endAnchor: string
-  ) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      timeAtRiskConfigs: [
-        ...prevFormData.timeAtRiskConfigs.slice(0, indexToUpdate),
-        {
-          ...prevFormData.timeAtRiskConfigs[indexToUpdate],
-          riskWindowStart,
-          riskWindowEnd,
-          startAnchor,
-          endAnchor,
-        },
-        ...prevFormData.timeAtRiskConfigs.slice(indexToUpdate + 1),
-      ],
-    }));
-  };
+  const handleChange = useCallback(
+    (
+      indexToUpdate: number,
+      riskWindowStart: number,
+      riskWindowEnd: number,
+      startAnchor: string,
+      endAnchor: string
+    ) => {
+      onFormDataChange({
+        timeAtRiskConfigs: [
+          ...formData.timeAtRiskConfigs.slice(0, indexToUpdate),
+          {
+            ...formData.timeAtRiskConfigs[indexToUpdate],
+            riskWindowStart,
+            riskWindowEnd,
+            startAnchor,
+            endAnchor,
+          },
+          ...formData.timeAtRiskConfigs.slice(indexToUpdate + 1),
+        ],
+      });
+    },
+    [formData]
+  );
 
   return (
     <NodeDrawer {...props} width="800px" onOk={handleOk} onClose={onClose}>

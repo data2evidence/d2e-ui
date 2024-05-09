@@ -38,7 +38,7 @@ const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
   label: "",
-  includeEraIds: [],
+  includedEraIds: [],
   excludedEraIds: [],
   start: 0,
   end: 0,
@@ -68,7 +68,7 @@ export const EraCovariateSettingsDrawer: FC<
         name: node.data.name,
         description: node.data.description,
         label: node.data.label,
-        includeEraIds: node.data.includeEraIds,
+        includedEraIds: node.data.includedEraIds,
         excludedEraIds: node.data.excludedEraIds,
         start: node.data.start,
         end: node.data.end,
@@ -99,19 +99,27 @@ export const EraCovariateSettingsDrawer: FC<
     typeof onClose === "function" && onClose();
   }, [formData]);
 
-  const handleExcludedEraIdsChange = (event: any, value: string[]) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      excludedEraIds: value,
-    }));
-  };
+  const handleExcludedEraIdsChange = useCallback(
+    (event: any, value: string[]) => {
+      // setFormData((prevFormData) => ({
+      //   ...prevFormData,
+      //   excludedEraIds: value,
+      // }));
+      onFormDataChange({ excludedEraIds: value });
+    },
+    [formData]
+  );
 
-  const handleIncludedEraIdsChange = (event: any, value: string[]) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      includeEraIds: value,
-    }));
-  };
+  const handleIncludedEraIdsChange = useCallback(
+    (event: any, value: string[]) => {
+      // setFormData((prevFormData) => ({
+      //   ...prevFormData,
+      //   includeEraIds: value,
+      // }));
+      onFormDataChange({ includedEraIds: value });
+    },
+    [formData]
+  );
 
   return (
     <NodeDrawer {...props} width="500px" onOk={handleOk} onClose={onClose}>
@@ -146,7 +154,7 @@ export const EraCovariateSettingsDrawer: FC<
         <Autocomplete
           multiple
           sx={CONFIGS_USER_INPUT_ARRAY_STYLES}
-          value={formData.includeEraIds}
+          value={formData.includedEraIds}
           onChange={handleIncludedEraIdsChange}
           options={[]}
           freeSolo
