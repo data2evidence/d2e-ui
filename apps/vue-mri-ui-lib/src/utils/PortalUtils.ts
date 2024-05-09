@@ -2,6 +2,7 @@ export const getPortalAPI = (): {
   getToken
   qeSvcUrl?: string
   studyId?: string
+  releaseId?: string
   userId?: string
 } => {
   if (document.getElementsByClassName('plugin-container').length === 1) {

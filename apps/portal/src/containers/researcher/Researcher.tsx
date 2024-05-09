@@ -41,6 +41,7 @@ export const Researcher: FC = () => {
 
   const { activeDataset } = useActiveDataset();
   const activeDatasetId = activeDataset.id;
+  const activeReleaseId = activeDataset.releaseId;
 
   const [pluginDropdown, setPluginDropdown] = useState<PluginDropdown>({});
   const [activeTenantId, setActiveTenantId] = useState<string>(state?.tenantId || "");
@@ -110,6 +111,7 @@ export const Researcher: FC = () => {
                         path={item.pluginPath}
                         tenantId={activeTenantId}
                         studyId={activeDatasetId}
+                        releaseId={activeReleaseId}
                         data={item?.data}
                         fetchMenu={onFetchMenus}
                         subFeatureFlags={subFeatureFlags}

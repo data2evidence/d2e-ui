@@ -8,7 +8,7 @@
     >
       <input type="checkbox" :checked="checked" />
     </div>
-    <appLabel :text="text"></appLabel>
+    <appLabel :text="text" :cssClass="labelClass"></appLabel>
   </div>
 </template>
 <script lang="ts">
@@ -21,7 +21,7 @@ export default {
       checked: '',
     }
   },
-  props: ['tooltip', 'text', 'click', 'value', 'checkEv'],
+  props: ['tooltip', 'text', 'click', 'value', 'checkEv', 'labelClass'],
   watch: {
     value(val) {
       if (val !== this.checked) {
