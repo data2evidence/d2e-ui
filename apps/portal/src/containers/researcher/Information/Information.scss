@@ -6,88 +6,6 @@
     justify-content: center;
   }
 
-  .information__studies {
-    .config_title {
-      display: flex;
-
-      .MuiListItemIcon-root {
-        min-width: 48px;
-        padding: 8px 0px 8px 20px;
-      }
-
-      .MuiListItemText-root {
-        padding: 8px 0px 8px 20px;
-      }
-
-      .MuiListItem-gutters {
-        padding: 0px;
-      }
-
-      .config_list_external {
-        display: none;
-        border-left: 1px solid rgba(168, 187, 209, 0.4);
-
-        .MuiButton-startIcon {
-          margin: 0;
-        }
-        .MuiButton-root {
-          min-width: 0;
-          min-height: 48px;
-        }
-        &__is-active {
-          display: block;
-        }
-      }
-      &:hover {
-        .config_list_external {
-          display: block;
-        }
-      }
-    }
-    .config_list {
-      position: relative;
-      left: 45px;
-
-      .config_list_item {
-        width: 80%;
-        border-radius: 6px;
-        margin: 3px 0;
-
-        .config_list_span {
-          text-align: left;
-          font-size: 18px;
-          font-weight: 500;
-          position: relative;
-          right: 5px;
-        }
-      }
-    }
-
-    .MuiTouchRipple-root {
-      color: transparent;
-    }
-
-    .MuiDrawer-docked {
-      height: 100%;
-    }
-
-    .MuiDrawer-paper {
-      z-index: 0;
-      position: relative;
-      height: 100%;
-      overflow-x: hidden;
-      color: var(--color-primary);
-    }
-
-    .MuiListItemIcon-root {
-      min-width: 48px;
-    }
-
-    .MuiList-padding {
-      padding: 0;
-    }
-  }
-
   .tab__content {
     width: 100%;
 
@@ -103,7 +21,6 @@
       height: 32px;
       font-size: 24px;
       font-weight: 500;
-      color: var(--color-primary);
     }
 
     &__subtitle {

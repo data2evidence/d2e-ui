@@ -1,50 +1,61 @@
 import React, { FC, useState, useCallback } from "react";
-import LegalMenu from "./LegalMenu/LegalMenu";
+import { Card, Tab, Tabs } from "@portal/components";
+import { useTranslation } from "../../../contexts";
 import TermsOfUse from "../LegalPages/TermsOfUse";
 import PrivacyPolicy from "../LegalPages/PrivacyPolicy";
 import Imprint from "../LegalPages/Imprint";
 import "./Legal.scss";
 
-export const LegalTab = {
-  TermsOfUse: "terms_of_use",
-  PrivacyPolicy: "privacy_policy",
-  Imprint: "imprint",
-};
+enum LegalTab {
+  TermsOfUse,
+  PrivacyPolicy,
+  Imprint,
+}
 
 export const Legal: FC = () => {
-  const [activeTab, setActiveTab] = useState(LegalTab.TermsOfUse);
+  const { getText, i18nKeys } = useTranslation();
+  const [tabValue, setTabValue] = useState<LegalTab>(LegalTab.TermsOfUse);
 
-  const handleTabChange = useCallback(
-    (value: string): void => {
-      setActiveTab(value);
-    },
-    [setActiveTab]
-  );
+  const legalTabs = [
+    getText(i18nKeys.ACCOUNT__TERMS_OF_USE),
+    getText(i18nKeys.ACCOUNT__PRIVACY_POLICY),
+    getText(i18nKeys.ACCOUNT__IMPRINT),
+  ];
+
+  const handleTabSelectionChange = useCallback((event: React.SyntheticEvent, newValue: LegalTab) => {
+    setTabValue(newValue);
+  }, []);
 
   return (
-    <div className="legal__container">
-      <div className="legal__pages">
-        <LegalMenu activeTab={activeTab} onClick={handleTabChange} />
-      </div>
-      <div className="legal__content">
-        <div className="tab__content">
-          {activeTab === LegalTab.TermsOfUse && (
-            <div className="tab__content__container">
-              <TermsOfUse type="public" />
+    <div className="legal">
+      <div className="legal__container">
+        <div className="legal__content">
+          <Card
+            title={
+              <Tabs value={tabValue} onChange={handleTabSelectionChange} centered>
+                {legalTabs.map((tab, index) => (
+                  <Tab
+                    label={tab}
+                    key={index}
+                    value={index}
+                    sx={{
+                      "&.MuiTab-root": {
+                        width: "180px",
+                      },
+                    }}
+                  />
+                ))}
+              </Tabs>
+            }
+          >
+            <div className="tab__content">
+              <div className="tab__content__container">
+                {tabValue === LegalTab.TermsOfUse && <TermsOfUse />}
+                {tabValue === LegalTab.PrivacyPolicy && <PrivacyPolicy />}
+                {tabValue === LegalTab.Imprint && <Imprint />}
+              </div>
             </div>
-          )}
-
-          {activeTab === LegalTab.PrivacyPolicy && (
-            <div className="tab__content__container">
-              <PrivacyPolicy type="public" />
-            </div>
-          )}
-
-          {activeTab === LegalTab.Imprint && (
-            <div className="tab__content__container">
-              <Imprint type="public" />
-            </div>
-          )}
+          </Card>
         </div>
       </div>
     </div>

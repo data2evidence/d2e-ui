@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   alp-local-ui-file-server:
     image: alpcr.azurecr.io/alp-data-node/alp-local-ui-file-server:local # will build from local

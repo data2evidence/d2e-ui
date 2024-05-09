@@ -7,7 +7,6 @@ import { Study } from "../../../types";
 import { useUserInfo } from "../../../contexts/UserContext";
 import { DatasetAttribute } from "../../../constant";
 import { useActiveDataset, useTranslation } from "../../../contexts";
-import { StudyInfoTab } from "../Information/Information";
 import "./DatasetCard.scss";
 
 interface DatasetCardProps {
@@ -101,7 +100,6 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
 
     navigate(`${path}/information`, {
       state: {
-        tab: StudyInfoTab.DataInfo,
         tenantId: dataset.tenant.id,
       },
     });
@@ -123,24 +121,24 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
           {dataset.studyDetail?.name || "Untitled"}
         </div>
         <div className="dataset-card__description">
-          {dataset.studyDetail?.description || getText(i18nKeys.STUDY_CARD__NO_DATASET_SUMMARY)}
+          {dataset.studyDetail?.description || getText(i18nKeys.DATASET_CARD__NO_DATASET_SUMMARY)}
         </div>
         <div className="dataset-card__attributes">
           <div className="dataset-card__attribute">
             <UsersIcon />
-            {getText(i18nKeys.DATASET_ATTRIBUTE__PATIENT_COUNT)}: {patientCount || 0}
+            {getText(i18nKeys.DATASET_CARD__PATIENT_COUNT)}: {patientCount || 0}
           </div>
           <div className="dataset-card__attribute">
             <CalendarIcon />
-            {getText(i18nKeys.DATASET_ATTRIBUTE__DATE)}: {createdDate || "-"}
+            {getText(i18nKeys.DATASET_CARD__DATE)}: {createdDate || "-"}
           </div>
           <div className="dataset-card__attribute">
             <DocPlayIcon />
-            {getText(i18nKeys.DATASET_ATTRIBUTE__VERSION)}: {version || "-"}
+            {getText(i18nKeys.DATASET_CARD__VERSION)}: {version || "-"}
           </div>
           <div className="dataset-card__attribute">
             <DatabaseIcon />
-            {getText(i18nKeys.DATASET_ATTRIBUTE__DATA_MODEL)}: {dataModel || "-"}
+            {getText(i18nKeys.DATASET_CARD__DATA_MODEL)}: {dataModel || "-"}
           </div>
         </div>
       </div>

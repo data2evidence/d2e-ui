@@ -1,11 +1,17 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useMemo } from "react";
+import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
-import { Loader, Title } from "@portal/components";
-import { StudyCard } from "../../shared/StudyOverview/StudyCard/StudyCard";
+import { Loader } from "@portal/components";
 import { usePublicDatasets } from "../../../hooks";
 import { config } from "../../../config/index";
-import "./PublicOverview.scss";
 import { useTranslation } from "../../../contexts";
+import noStudyImg from "../../shared/StudyOverview/images/no-study.png";
+import { PublicDatasetCard } from "../PublicDatasetCard/PublicDatasetCard";
+import { SearchBarDataset } from "../../researcher/Overview/components/SearchBarDatasets";
+import { HomeHeader } from "../../researcher/Overview/components/HomeHeader";
+import { AccountButton } from "../../researcher/Overview/components/AccountButton";
+import env from "../../../env";
+import "./PublicOverview.scss";
 
 export const PublicOverview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
@@ -19,22 +25,46 @@ export const PublicOverview: FC = () => {
     }
   }, [datasets, navigate]);
 
+  const RenderDatasets = useMemo(() => {
+    const isEmpty = datasets == null || datasets.length === 0;
+    const classes = classNames("public-overview__datasets", { "public-overview__datasets--empty": isEmpty });
+
+    if (loading) return <Loader />;
+
+    return (
+      <div className={classes}>
+        {isEmpty ? (
+          <>
+            <img alt="No dataset" src={noStudyImg} height="160" width="270" />
+            <p>{getText(i18nKeys.OVERVIEW__NO_DATASET)}</p>
+          </>
+        ) : (
+          datasets.map((dataset) => (
+            <PublicDatasetCard key={dataset.id} dataset={dataset} path={config.ROUTES.public} />
+          ))
+        )}
+      </div>
+    );
+  }, [datasets, loading, getText]);
+
   if (error) console.error(error.message);
   if (loading) return <Loader />;
 
   return (
     <div className="public-overview">
-      <div className="public-overview__content">
-        <div className="public-overview__header">
-          <Title>{getText(i18nKeys.PUBLIC_OVERVIEW__DATASET_OVERVIEW)}</Title>
-        </div>
-        <div className="public-overview__studies_container">
-          <div className="public-overview__studies public-overview__single_tenant">
-            {datasets &&
-              datasets.map((study) => <StudyCard key={study.id} study={study} path={config.ROUTES.public} />)}
+      <HomeHeader />
+      <div className="public-overview__banner">
+        <div className="public-overview__banner-content">
+          <img alt="Illustration" src={`${env.PUBLIC_URL}/assets/landing-page-illustration.svg`} />
+          <div className="public-overview__banner-title">
+            <div className="public-overview__banner-title-text">Data2Evidence</div>
+            <div className="public-overview__banner-description">{getText(i18nKeys.HOME__DESCRIPTION)}</div>
+            <SearchBarDataset />
           </div>
         </div>
+        <AccountButton />
       </div>
+      <div className="public-overview__content">{RenderDatasets}</div>
     </div>
   );
 };

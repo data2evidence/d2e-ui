@@ -8,7 +8,6 @@
   border-bottom: 1px solid $UiMediumBorder;
   height: 40px;
   width: 100%;
-  padding-top:5px; 
   .spacer {
     flex-basis: auto;
     flex-grow: 1;
@@ -90,36 +89,6 @@
     margin: 0 20px;
     border-radius: 1px;
     background-color: $MriBrand;
-  }
-
-  .dataset-selection-container {
-    font-size: 16px;
-    line-height: 1.5;
-    color: #000e7e;
-
-    .dropdown-toggle {
-      color: inherit;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 12px;
-    }
-    .dropdown-box {
-      height: 32px;
-      padding-bottom: 6px;
-      margin: 0 10px;
-      border-radius: 4px;
-      border: solid 1px #979797;
-    }
-    .dropdown-dataset {
-      min-width: 180px;
-    }
-    .dropdown-version {
-      min-width: 80px;
-    }
-    a {
-      color: #000e7e;
-    }
   }
 
   .toolbarButton {

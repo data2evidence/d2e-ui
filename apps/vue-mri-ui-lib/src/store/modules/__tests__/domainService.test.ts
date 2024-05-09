@@ -47,7 +47,7 @@ describe('store - domainService', () => {
               configVersion: 'mock-config-version',
             },
           },
-          getSelectedUserStudy: {
+          getSelectedDataset: {
             id: 'mock-id',
           },
         }

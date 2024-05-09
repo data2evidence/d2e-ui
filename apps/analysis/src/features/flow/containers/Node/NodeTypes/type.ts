@@ -7,7 +7,7 @@ export type NodeType =
   | "time_at_risk_node"
   | "covariate_settings_node"
   | "characterization_node"
-  | "target_compartor_outcomes_node"
+  | "target_comparator_outcomes_node"
   | "cohort_method_analysis_node"
   | "cohort_method_node"
   | "era_covariate_settings_node"
@@ -16,7 +16,7 @@ export type NodeType =
   | "self_controlled_case_series_analysis_node"
   | "self_controlled_case_series_node"
   | "patient_level_prediction_node"
-  | "study_poplulation_settings_node";
+  | "study_population_settings_node";
 
 export type NodeTypeChoice = Exclude<NodeType, "start">;
 
@@ -66,16 +66,16 @@ export const ZERO_INCIDENCE_NODE = [
   "era_covariate_settings_node",
   "calendar_time_covariate_settings_node",
   "seasonality_covariate_settings_node",
-  "study_poplulation_settings_node",
+  "study_population_settings_node",
 ];
 export const ONE_INCIDENCE_NODE = [
   "negative_control_outcome_cohort_node",
   "cohort_incidence_target_cohorts_node",
-  "characterization_node",
   "cohort_method_analysis_node",
 ];
 export const TWO_INCIDENCE_NODE = [
   "cohort_method_node",
+  "characterization_node",
   "self_controlled_case_series_analysis_node",
 ];
 export const THREE_INCIDENCE_NODE = [
@@ -84,7 +84,7 @@ export const THREE_INCIDENCE_NODE = [
   "patient_level_prediction_node",
 ];
 export const FOUR_INCIDENCE_NODE = ["self_controlled_case_series_node"];
-export const FIVE_INCIDENCE_NODE = ["target_compartor_outcomes_node"];
+export const FIVE_INCIDENCE_NODE = ["target_comparator_outcomes_node"];
 
 export const NODE_CONNECTOR_MAPPING = {
   cohort_generator_node: { type: "lightgrey", connector_list: [] },
@@ -135,9 +135,14 @@ export const NODE_CONNECTOR_MAPPING = {
         type: "darkgreen",
         classifier: "covariate_settings",
       },
+      {
+        name: "Time At Risk",
+        type: "wheat",
+        classifier: "time_at_risk",
+      },
     ],
   },
-  target_compartor_outcomes_node: {
+  target_comparator_outcomes_node: {
     type: "indigo",
     connector_list: [
       {
@@ -233,7 +238,7 @@ export const NODE_CONNECTOR_MAPPING = {
       },
     ],
   },
-  study_poplulation_settings_node: { type: "lightpink", connector_list: [] },
+  study_population_settings_node: { type: "lightpink", connector_list: [] },
 };
 
 export const OUTBOUND_CONNECTOR_STYLE = {

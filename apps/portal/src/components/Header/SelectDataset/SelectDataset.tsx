@@ -1,16 +1,18 @@
 import React, { FC, useCallback } from "react";
 import { Select, SelectChangeEvent, SelectProps } from "@portal/components";
 import { MenuItem } from "@mui/material";
-import { useDatasets } from "../../../hooks";
+import { useDatasets, usePublicDatasets } from "../../../hooks";
 import { useActiveDataset, useTranslation } from "../../../contexts";
+import { Study } from "../../../types";
 
-interface SelectDatasetProps extends Omit<SelectProps, "onChange"> {
+interface SelectDatasetInternalProps extends Omit<SelectProps, "onChange"> {
+  datasets: Study[];
+  loading: boolean;
   onChange?: (datasetId: string) => void;
 }
 
-export const SelectDataset: FC<SelectDatasetProps> = ({ onChange, ...props }) => {
+const SelectDatasetInternal: FC<SelectDatasetInternalProps> = ({ datasets, loading, onChange, ...props }) => {
   const { getText, i18nKeys } = useTranslation();
-  const [datasets, loading] = useDatasets("researcher");
   const { activeDataset, setActiveDatasetId } = useActiveDataset();
 
   const handleChange = useCallback(
@@ -45,7 +47,7 @@ export const SelectDataset: FC<SelectDatasetProps> = ({ onChange, ...props }) =>
       {...props}
     >
       <MenuItem value="" disabled>
-        {getText(i18nKeys.INFORMATION__SELECT_DATASET)}
+        {getText(i18nKeys.SELECT_DATASET__SELECT_DATASET)}
       </MenuItem>
       {datasets.map((ds) => (
         <MenuItem key={ds.id} value={ds.id}>
@@ -54,4 +56,17 @@ export const SelectDataset: FC<SelectDatasetProps> = ({ onChange, ...props }) =>
       ))}
     </Select>
   );
+};
+
+interface SelectDatasetProps extends Omit<SelectDatasetInternalProps, "datasets" | "loading"> {}
+
+export const SelectDataset: FC<SelectDatasetProps> = (props) => {
+  const [datasets, loading] = useDatasets("researcher");
+  return <SelectDatasetInternal datasets={datasets} loading={loading} {...props} />;
+};
+
+export const SelectPublicDataset: FC<SelectDatasetProps> = (props) => {
+  const [datasets, loading] = usePublicDatasets();
+  if (datasets == null) return null;
+  return <SelectDatasetInternal datasets={datasets} loading={loading} {...props} />;
 };

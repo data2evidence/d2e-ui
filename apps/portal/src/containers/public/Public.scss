@@ -3,7 +3,10 @@
   display: flex;
   flex-direction: column;
   padding-top: 80px; // header size
-  background-color: white;
+
+  &--home {
+    padding-top: 0;
+  }
 
   main {
     flex: auto;
