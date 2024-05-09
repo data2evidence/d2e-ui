@@ -104,8 +104,8 @@ export default {
     getHasAssignedConfig(val) {
       if (val) {
         this.chartConfig = this.visibleChartTypes(this.getAllChartConfigs)
-        this.patientTotalRequested = false
-        this.patientListTotalRequested = false
+        this.setPatientTotalRequested(false)
+        this.setPatientListTotalRequested(false)
         this.refreshPatientCount()
       }
     },
@@ -117,13 +117,11 @@ export default {
     this.$nextTick(() => {
       window.addEventListener('click', this.closeSubMenu)
     })
-    this.getTotalPatientCount()
-    this.patientTotalRequested = true
+    this.requestTotalPatientCount()
     // The config is available when component mounts already to check if interactive mode is used
     this.chartConfig = this.visibleChartTypes(this.getAllChartConfigs)
-    this.patientTotalRequested = false
-    this.patientListTotalRequested = false
-    this.refreshPatientCount()
+    this.setPatientListTotalRequested(false)
+    this.refreshPatientCount() // actually on mounted, i can just refresh patient counts
     this.loadValuesForAttributePath({
       attributePathUid: 'conceptSets',
       searchQuery: '',
@@ -172,74 +170,11 @@ export default {
       'setDataset',
       'requestDatasetVersions',
       'loadValuesForAttributePath',
+      'setPatientListTotalRequested',
+      'setPatientTotalRequested',
+      'requestTotalPatientCount',
+      'refreshPatientCount'
     ]),
-    refreshPatientCount() {
-      if (!this.patientListTotalRequested) {
-        this.patientListTotalRequested = true
-        const configMetadata = this.getMriFrontendConfig.getConfigMetadata()
-        const request = {
-          cards: {
-            type: 'BooleanContainer',
-            op: 'AND',
-            content: [
-              {
-                type: 'BooleanContainer',
-                op: 'OR',
-                content: [],
-              },
-            ],
-          },
-          guarded: true,
-          limit: 20,
-          offset: 0,
-          axes: [],
-          configData: {
-            configId: configMetadata.configId,
-            configVersion: configMetadata.configVersion,
-          },
-          selectedStudyEntityValue: this.getSelectedDataset.id,
-        }
-        this.firePatientListCountQuery({
-          type: 'total',
-          params: request,
-        })
-      }
-      if (!this.patientTotalRequested) {
-        this.getTotalPatientCount()
-      }
-    },
-    getTotalPatientCount() {
-      this.patientTotalRequested = true
-      const configMetadata = this.getMriFrontendConfig.getConfigMetadata()
-      const bm = {
-        filter: {
-          configMetadata: {
-            id: configMetadata.configId,
-            version: configMetadata.configVersion,
-          },
-          cards: {
-            type: 'BooleanContainer',
-            op: 'AND',
-            content: [
-              {
-                type: 'BooleanContainer',
-                op: 'OR',
-                content: [],
-              },
-            ],
-          },
-        },
-        axisSelection: [],
-        metadata: {
-          version: 3,
-        },
-        selectedStudyEntityValue: this.getSelectedDataset.id,
-      }
-      this.firePatientCountQuery({
-        type: 'total',
-        params: bm,
-      })
-    },
     openSettingsConfig() {
       const eventBus = sap.ui.getCore().getEventBus()
       this.toggleConfigSelectionDialog()

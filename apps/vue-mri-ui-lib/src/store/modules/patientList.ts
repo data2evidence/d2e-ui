@@ -38,6 +38,7 @@ interface IPatientListState {
   }
   columnSelectionMenu: any[]
   columnWidths: any
+  patientListTotalRequested: boolean
 }
 
 const resultDefinition: IResultDefinition = {
@@ -77,10 +78,12 @@ const state: IPatientListState = {
   },
   columnSelectionMenu: [],
   columnWidths: {},
+  patientListTotalRequested: false,
 }
 
 const getters = {
   getTotalPatientListCount: modulestate => modulestate.totalPatientListCount,
+  getPatientListTotalRequested: modulestate => modulestate.patientListTotalRequested,
   getPLRequest:
     (state: IPatientListState, getters, rootState, rootGetters) =>
     ({ useLimit, bmkId }: { useLimit: boolean; bmkId: string } = { useLimit: false, bmkId: '' }) => {
@@ -339,6 +342,9 @@ const actions = {
       cohortDefinition: JSON.parse(JSON.stringify(cohortDefinition)),
     })
   },
+  setPatientListTotalRequested({ commit }, patientListTotalRequested) {
+    commit(types.PL_SET_PATIENT_LIST_TOTAL_REQUESTED, patientListTotalRequested)
+  },
   setTotalPatientListCount({ commit }, { totalPatientListCount }) {
     commit(types.SET_TOTAL_PATIENT_LIST_COUNT, { totalPatientListCount })
   },
@@ -443,6 +449,9 @@ const actions = {
 }
 
 const mutations = {
+  [types.PL_SET_PATIENT_LIST_TOTAL_REQUESTED](modulestate: IPatientListState, patientListTotalRequested) {
+    modulestate.patientListTotalRequested = patientListTotalRequested
+  },
   [types.SET_TOTAL_PATIENT_LIST_COUNT](
     modulestate: IPatientListState,
     { totalPatientListCount }: { totalPatientListCount: number }
