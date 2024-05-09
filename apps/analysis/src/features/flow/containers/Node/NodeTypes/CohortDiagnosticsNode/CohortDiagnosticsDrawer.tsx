@@ -144,20 +144,19 @@ export const CohortDiagnosticsDrawer: FC<CohortIncidentDrawerProps> = ({
     typeof onClose === "function" && onClose();
   }, [formData]);
 
-  const renderSelectBox = (
-    label: string,
-    value: boolean,
-    onChange: (value: boolean) => void
-  ) => (
-    <Box mb={4}>
-      <Checkbox
-        checked={value}
-        label={label}
-        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          onChange(e.target.checked)
-        }
-      />
-    </Box>
+  const renderSelectBox = useCallback(
+    (label: string, value: boolean, onChange: (value: boolean) => void) => (
+      <Box mb={4}>
+        <Checkbox
+          checked={value}
+          label={label}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onChange(e.target.checked)
+          }
+        />
+      </Box>
+    ),
+    [selectBoxConfig]
   );
 
   return (
