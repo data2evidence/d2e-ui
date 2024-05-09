@@ -103,14 +103,14 @@ export const EraCovariateSettingsDrawer: FC<
     (event: any, value: string[]) => {
       onFormDataChange({ excludedEraIds: value });
     },
-    [formData]
+    []
   );
 
   const handleIncludedEraIdsChange = useCallback(
     (event: any, value: string[]) => {
       onFormDataChange({ includedEraIds: value });
     },
-    [formData]
+    []
   );
 
   return (
