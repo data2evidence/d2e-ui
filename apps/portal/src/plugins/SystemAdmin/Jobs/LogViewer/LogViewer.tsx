@@ -4,9 +4,6 @@ import { loadStyleSheet, loadEsModuleScript } from "../../../../utils/loadScript
 import { getAuthToken } from "../../../../containers/auth";
 
 const LOG_VIEWER_ASSETS_URL = `${env.REACT_APP_DN_BASE_URL}log-viewer/assets.json`;
-const VUE_APP_HOST = env.REACT_APP_DN_BASE_URL.endsWith("/")
-  ? env.REACT_APP_DN_BASE_URL.slice(0, -1)
-  : env.REACT_APP_DN_BASE_URL;
 const APPROUTER_ORIGIN = new URL(LOG_VIEWER_ASSETS_URL).origin;
 
 const LogViewer: FC<{

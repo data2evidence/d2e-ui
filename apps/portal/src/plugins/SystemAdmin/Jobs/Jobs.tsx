@@ -40,9 +40,9 @@ const Jobs: FC = () => {
   const [jobs, loadingJobs, errorJobs] = useJobs(refetchJobs, isSilentRefresh);
   const [showAddFlow, setShowAddFlow] = useState(false);
   const [showDataflow, setShowDataflow] = useState(false);
-  const [mode, setMode] = useState<"flowRun" | "taskRun" | null>(null);
   const [logViewerScriptsLoaded, setLogViewerScriptsLoaded] = useState(false);
   const [logViewerDivLoaded, setLogViewerDivLoaded] = useState(false);
+  const [showLogViewer, setShowLogViewer] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -111,7 +111,6 @@ const Jobs: FC = () => {
                 data={mapTime(jobs)}
                 handleStudySelect={handleStudySelect}
                 handleCancelJobClick={handleCancelJobClick}
-                setMode={setMode}
               />
             </>
           )
@@ -121,18 +120,13 @@ const Jobs: FC = () => {
   };
 
   const backToJobs = () => {
-    navigate(location.pathname, { replace: true });
+    navigate("jobs", { replace: true });
   };
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const incomingMode = searchParams.get("mode") || null;
-    if (incomingMode === "flowRun" || incomingMode === "taskRun") {
-      setMode(incomingMode);
-    } else {
-      setMode(null);
-    }
-  }, [location.search]);
+    const shouldShowLogViewer = location.pathname.includes("/flowrun") || location.pathname.includes("/taskRun");
+    setShowLogViewer(shouldShowLogViewer);
+  }, [location]);
 
   useEffect(() => {
     if (logViewerScriptsLoaded && logViewerDivLoaded) {
@@ -143,9 +137,8 @@ const Jobs: FC = () => {
         (window as any).mountLogViewer();
       }
     }
-  }, [mode, logViewerScriptsLoaded, logViewerDivLoaded]);
+  }, [logViewerScriptsLoaded, logViewerDivLoaded, showLogViewer]);
 
-  const showLogViewer = !!mode;
   return (
     <>
       {showLogViewer ? (

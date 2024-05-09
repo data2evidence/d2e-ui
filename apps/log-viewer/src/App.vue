@@ -1,10 +1,8 @@
-<script setup lang="ts">
-import AppRouter from './AppRouter.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="router">
-    <AppRouter />
+    <RouterView />
   </div>
 </template>
 

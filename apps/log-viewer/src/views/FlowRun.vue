@@ -6,15 +6,16 @@ import { ref, watchEffect } from 'vue'
 import LogScroller from '../components/LogScroller.vue'
 import { format } from 'date-fns'
 import { PCodeHighlight } from '@prefecthq/prefect-design'
-import { useParamsStore } from '@/stores'
 import { getPortalAPI } from '../utils/portalApi'
-const { backToJobs } = getPortalAPI()
+import { useRoute, useRouter } from 'vue-router'
 
+const { backToJobs } = getPortalAPI()
+const route = useRoute()
+const router = useRouter()
 const logs = ref<LogInfo[]>([])
 const selected = ref<FlowRunTabName>('LOGS')
 const flowRun = ref<FlowRun>()
 const taskRuns = ref<FlowRun[]>([])
-const paramsStore = useParamsStore()
 
 const sampleGraphData: RunGraphData = {
   start_time: new Date('2024-01-30T06:22:37.538868+00:00'),
@@ -42,16 +43,16 @@ const onClickTab = (tabName: FlowRunTabName) => {
 }
 
 const onClickTaskRunId = (taskRunId: string) => {
-  paramsStore.updateParams({ mode: 'taskRun', taskRunId })
+  router.push(`/taskrun/${taskRunId}`)
 }
 
 const onClickBackToJobs = () => {
-  paramsStore.updateParams({ flowRunId: undefined, taskRunId: undefined, mode: undefined })
+  router.push(`/`)
   backToJobs()
 }
 
 watchEffect(() => {
-  const flowRunId = paramsStore.flowRunId
+  const flowRunId = route.params.flowRunId as string
   if (flowRunId) {
     const asyncFn = async () => {
       const data = await getLogsByFlowRunId(flowRunId)
