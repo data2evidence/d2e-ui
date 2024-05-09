@@ -121,7 +121,7 @@ export default {
     // The config is available when component mounts already to check if interactive mode is used
     this.chartConfig = this.visibleChartTypes(this.getAllChartConfigs)
     this.setPatientListTotalRequested(false)
-    this.refreshPatientCount() // actually on mounted, i can just refresh patient counts
+    this.refreshPatientCount()
     this.loadValuesForAttributePath({
       attributePathUid: 'conceptSets',
       searchQuery: '',

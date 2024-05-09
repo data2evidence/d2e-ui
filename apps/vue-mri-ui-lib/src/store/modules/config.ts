@@ -151,7 +151,6 @@ const actions = {
   },
   setDatasetReleaseId({ commit }) {
     const releaseId = getPortalAPI().releaseId
-    console.log(releaseId)
     commit(types.SET_SELECTED_DATASET_RELEASE_ID, releaseId)
   },
 }
