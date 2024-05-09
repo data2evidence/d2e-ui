@@ -124,7 +124,7 @@ const Jobs: FC = () => {
   };
 
   useEffect(() => {
-    const shouldShowLogViewer = location.pathname.includes("/flowrun") || location.pathname.includes("/taskRun");
+    const shouldShowLogViewer = location.pathname.includes("/flowrun") || location.pathname.includes("/taskrun");
     setShowLogViewer(shouldShowLogViewer);
   }, [location]);
 
