@@ -7,6 +7,7 @@ import { Loader } from "@portal/components";
 interface PAPluginProps {
   tenantId?: string;
   studyId?: string;
+  releaseId?: string;
   getToken?: () => Promise<string>;
 }
 
@@ -16,7 +17,7 @@ const VUE_APP_HOST = env.REACT_APP_DN_BASE_URL.endsWith("/")
   : env.REACT_APP_DN_BASE_URL;
 const APPROUTER_ORIGIN = new URL(PA_ASSETS_URL).origin;
 
-const PAPlugin: FC<PAPluginProps> = ({ studyId, getToken }) => {
+const PAPlugin: FC<PAPluginProps> = ({ studyId, releaseId, getToken }) => {
   const [isLoading, setIsLoading] = useState(false);
   const isLocalDev = window.location.hostname === "localhost";
 
@@ -55,7 +56,7 @@ const PAPlugin: FC<PAPluginProps> = ({ studyId, getToken }) => {
   }, [isLocalDev]);
 
   return (
-    <PluginContainer studyId={studyId} getToken={getToken} qeSvcUrl={VUE_APP_HOST}>
+    <PluginContainer studyId={studyId} releaseId={releaseId} getToken={getToken} qeSvcUrl={VUE_APP_HOST}>
       <div className="vue-main" style={{ height: "100%" }}>
         {isLoading && <Loader />}
       </div>

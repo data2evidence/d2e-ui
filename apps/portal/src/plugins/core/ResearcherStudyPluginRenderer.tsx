@@ -8,6 +8,7 @@ interface ResearcherStudyPluginRendererProps {
   path: string;
   tenantId: string;
   studyId: string;
+  releaseId: string;
   data: any;
   fetchMenu: (route: string, menus: PluginDropdownItem[]) => void;
   subFeatureFlags: SubFeatureFlags;
@@ -17,6 +18,7 @@ export const ResearcherStudyPluginRenderer: FC<ResearcherStudyPluginRendererProp
   path,
   tenantId,
   studyId,
+  releaseId,
   data,
   fetchMenu,
   subFeatureFlags,
@@ -42,6 +44,7 @@ export const ResearcherStudyPluginRenderer: FC<ResearcherStudyPluginRendererProp
       },
       tenantId,
       studyId,
+      releaseId,
       data,
       fetchMenu,
       subFeatureFlags,

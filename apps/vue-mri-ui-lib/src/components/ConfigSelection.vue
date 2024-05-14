@@ -83,7 +83,7 @@ export default {
       'getSelectedPAConfigId',
       'getHasAssignedConfig',
       'getUserStudies',
-      'getSelectedUserStudy',
+      'getSelectedDataset',
     ]),
     doneSetup() {
       return this.selectedPAConfig.meta
@@ -100,7 +100,7 @@ export default {
     ...mapMutations([types.CONFIG_SET, types.SET_SELECTED_STUDY]),
     initList() {
       this.busy = true
-      return this.requestConfigList(this.getSelectedUserStudy.id).then(() => {
+      return this.requestConfigList(this.getSelectedDataset.id).then(() => {
         if (this.getConfigs.length) {
           if (this.getSelectedPAConfigId) {
             this.selectedPAConfig = this.getConfigs.find(config => config.meta.configId === this.getSelectedPAConfigId)
