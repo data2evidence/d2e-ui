@@ -16,7 +16,8 @@ export type NodeType =
   | "self_controlled_case_series_analysis_node"
   | "self_controlled_case_series_node"
   | "patient_level_prediction_node"
-  | "study_population_settings_node";
+  | "study_population_settings_node"
+  | "nco_cohort_set_node";
 
 export type NodeTypeChoice = Exclude<NodeType, "start">;
 
@@ -239,6 +240,7 @@ export const NODE_CONNECTOR_MAPPING = {
     ],
   },
   study_population_settings_node: { type: "lightpink", connector_list: [] },
+  nco_cohort_set_node: { type: "lightpink", connector_list: [] },
 };
 
 export const OUTBOUND_CONNECTOR_STYLE = {

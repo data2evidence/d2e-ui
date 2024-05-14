@@ -18,6 +18,7 @@ import { CohortMethodAnalysisNode } from "./CohortMethodAnalysisNode/CohortMetho
 import { StudyPopulationSettingsNode } from "./StudyPopulationSettingsNode/StudyPopulationSettingsNode";
 import { SelfControlledCaseSeriesAnalysisNode } from "./SelfControlledCaseSeriesAnalysisNode/SelfControlledCaseSeriesAnalysisNode";
 import { CohortIncidentTargetCohortNode } from "./CohortIncidentTargetCohortNode/CohortIncidentTargetCohortNode";
+import { NCOCohortSetNode } from "./NCOCohortSetNode/NCOCohortSetNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -42,6 +43,7 @@ export const NODE_TYPES: {
   self_controlled_case_series_node: SelfControlledCaseSeriesNode,
   patient_level_prediction_node: RNode,
   study_population_settings_node: StudyPopulationSettingsNode,
+  nco_cohort_set_node: NCOCohortSetNode,
 };
 
 export const NODE_COLORS: {
@@ -65,6 +67,7 @@ export const NODE_COLORS: {
   self_controlled_case_series_node: "darkred",
   patient_level_prediction_node: "magenta",
   study_population_settings_node: "lightpink",
+  nco_cohort_set_node: "lightpink",
 };
 
 export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
@@ -298,6 +301,12 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
         naivePeriod: 365,
       },
     },
+  },
+  nco_cohort_set_node: {
+    title: "NCO Cohort Set",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    tag: NodeTag.Lightpink,
+    defaultData: {},
   },
 };
 
