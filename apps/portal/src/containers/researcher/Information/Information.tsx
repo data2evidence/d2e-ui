@@ -136,7 +136,7 @@ export const Information: FC = () => {
   });
 
   const getAccess = useCallback(() => {
-    if (user.isDatasetResearcher(activeDatasetId)) {
+    if (user.isDatasetResearcher[activeDatasetId]) {
       return Access.Approved;
     } else if (accessRequests?.some((req) => req.role === Roles.STUDY_RESEARCHER && req.studyId === activeDatasetId)) {
       return Access.Pending;

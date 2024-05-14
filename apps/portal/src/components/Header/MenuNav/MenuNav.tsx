@@ -44,7 +44,7 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
     if (!allowed && requiredRoles) {
       for (const role of requiredRoles) {
         if (role === Roles.STUDY_RESEARCHER) {
-          allowed = allowed || user.isDatasetResearcher(activeDataset.id);
+          allowed = allowed || user.isDatasetResearcher[activeDataset.id];
         }
       }
     }

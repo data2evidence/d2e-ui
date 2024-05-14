@@ -7,8 +7,11 @@ export interface UserState {
   isUserAdmin: boolean;
   isSystemAdmin: boolean;
   isDashboardViewer: boolean;
-  researcherDatasetIds: string[]; // list of dataset ids
-  isDatasetResearcher: (datasetId: string) => boolean;
+  isDatasetResearcher: DatasetResearcherKeyValue;
+}
+
+export interface DatasetResearcherKeyValue {
+  [datasetId: string]: boolean;
 }
 
 type RoleTypeOf<T, Boolean> = {

@@ -114,7 +114,7 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
           {dataset.visibilityStatus}
           <PadlockEmptyIcon
             className={classNames("dataset-card__permission-icon", {
-              "dataset-card__permission-icon--accessible": user.isDatasetResearcher(dataset.id),
+              "dataset-card__permission-icon--accessible": user.isDatasetResearcher[dataset.id],
             })}
           />
           {dataset.studyDetail?.name || "Untitled"}

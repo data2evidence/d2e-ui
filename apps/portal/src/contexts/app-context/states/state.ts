@@ -44,7 +44,6 @@ export const initialState: AppState = {
     isUserAdmin: false,
     isSystemAdmin: false,
     isDashboardViewer: false,
-    researcherDatasetIds: [],
-    isDatasetResearcher: () => false,
+    isDatasetResearcher: {},
   },
 };

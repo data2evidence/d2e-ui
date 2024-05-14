@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
 import { AppContext, AppDispatchContext } from "../AppContext";
 import { ACTION_TYPES } from "../reducer";
-import { UserGroupMetadata, UserState } from "../states";
+import { DatasetResearcherKeyValue, UserGroupMetadata, UserState } from "../states";
 
 export const useUser = () => {
   const { user } = useContext(AppContext);
@@ -41,7 +41,9 @@ const mapUserGroupToUser = (idpUserId: string, userGroupMetadata: UserGroupMetad
     isUserAdmin,
     isSystemAdmin,
     isDashboardViewer,
-    researcherDatasetIds: userGroupMetadata.alp_role_study_researcher,
-    isDatasetResearcher: (studyId: string) => userGroupMetadata.alp_role_study_researcher?.includes(studyId) || false,
+    isDatasetResearcher: userGroupMetadata.alp_role_study_researcher?.reduce((acc, curr: string) => {
+      acc[curr] = true;
+      return acc;
+    }, {} as DatasetResearcherKeyValue),
   };
 };
