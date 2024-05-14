@@ -5,6 +5,8 @@ import Divider from "@mui/material/Divider";
 import { api } from "../../../../axios/api";
 import "./ExecuteFlowDialog.scss";
 import { useTranslation } from "../../../../contexts";
+import { getProperties } from "../../../../utils";
+import ParamsField from "../ParamsField/ParamsField";
 
 interface ExecuteFlowDialogProps {
   flow?: Flow;
@@ -19,7 +21,7 @@ interface InputField {
 }
 
 interface FormDataField {
-  [key: string]: string;
+  [key: string]: any;
 }
 
 const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) => {
@@ -28,6 +30,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
   const [inputs, setInputs] = useState<InputField[]>([]);
+  const [prefectParams, setPrefectParams] = useState<Record<string, any>>({});
   const [deploymentName, setDeploymentName] = useState("");
   const [flowRunName, setFlowRunName] = useState("");
   const [flowRunNameError, setFlowRunNameError] = useState(false);
@@ -37,7 +40,11 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     try {
       setLoading(true);
       const deployment = await api.dataflow.getDeploymentByFlowId(id);
+      if (!deployment) return;
       const input = deployment.parameter_openapi_schema.properties;
+      setPrefectParams(getProperties(deployment.parameter_openapi_schema));
+      setFormData(deployment.parameters);
+
       const required: string[] = deployment.parameter_openapi_schema.required;
       const inputFields = [];
       for (const key in input) {
@@ -67,10 +74,20 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   );
 
   const handleInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: string) => {
-      setFormData((formData) => ({ ...formData, [key]: event.target.value }));
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, parent?: string) => {
+      if (!parent) {
+        setFormData((formData) => ({ ...formData, [event.target.name]: event.target.value }));
+      } else {
+        setFormData((formData) => ({
+          ...formData,
+          [parent]: {
+            ...formData[parent],
+            [event.target.name]: event.target.value,
+          },
+        }));
+      }
     },
-    []
+    [formData]
   );
 
   const formDataIsEmpty = useCallback(() => {
@@ -182,7 +199,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
         {inputs?.length !== 0 && (
           <span className="subheader">{getText(i18nKeys.EXECUTE_FLOW_DIALOG__FLOW_PARAMETERS)}</span>
         )}
-        {inputs?.length !== 0 &&
+        {/* {inputs?.length !== 0 &&
           inputs?.map((input, index) => (
             <div className="u-padding-vertical--normal" key={index}>
               <FormControl fullWidth>
@@ -195,7 +212,19 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
                 />
               </FormControl>
             </div>
-          ))}
+          ))} */}
+        {Object.keys(prefectParams).map((paramKey, index) => (
+          <div key={index}>
+            {/* {prefectParams[paramKey].properties && paramKey} */}
+            <ParamsField
+              param={prefectParams[paramKey]}
+              paramKey={paramKey}
+              key={index}
+              handleInputChange={handleInputChange}
+              formData={formData}
+            />
+          </div>
+        ))}
       </div>
       <Divider />
       <div className="button-group-actions">
