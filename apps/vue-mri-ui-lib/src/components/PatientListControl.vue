@@ -170,7 +170,7 @@ export default {
           path,
           parentPath: this.getMriFrontendConfig.getInteractionInstancePath(path),
           text: this.getMriFrontendConfig.getAttributeByPath(path).getName(),
-          // isLink: this.getMriFrontendConfig.getAttributeByPath(path).isLinkColumn(),
+          isLink: this.getMriFrontendConfig.getAttributeByPath(path).isLinkColumn(),
         }))
         .reduce((dict, col) => {
           if (dict[col.parentPath]) {
@@ -198,7 +198,7 @@ export default {
           path,
           parentPath: this.getMriFrontendConfig.getInteractionInstancePath(path),
           text: this.getMriFrontendConfig.getAttributeByPath(path).getName(),
-          // isLink: this.getMriFrontendConfig.getAttributeByPath(path).isLinkColumn(),
+          isLink: this.getMriFrontendConfig.getAttributeByPath(path).isLinkColumn(),
         }))
     },
     tableRows() {

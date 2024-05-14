@@ -9,12 +9,12 @@ services:
       ssh:
         - default=${SSH_AUTH_SOCK}
     container_name: alp-local-ui-file-server
-    # volumes:
+    volumes:
     # uncomment the required lines below when doing local UI development, to use files from file system instead of docker image
-    # - ../alp-ui/resources/mri-ui5/PatientSummaryConfig:/home/docker/ui-files/mri-ui5/PatientSummaryConfig
-    # - ../alp-ui/resources/mri:/home/docker/ui-files/mri
-    # - ../alp-ui/resources/starboard-notebook-base:/home/docker/ui-files/starboard-notebook-base
-    # - ../alp-ui/resources/mri-ui5/mri-pa-ui:/home/docker/ui-files/mri-ui5/mri-pa-ui
-    # - ../alp-ui/resources/mri-ui5/chp-ps-ui:/home/docker/ui-files/mri-ui5/chp-ps-ui
+    - ../alp-ui/resources/mri-ui5/PatientSummaryConfig:/home/docker/ui-files/mri-ui5/PatientSummaryConfig
+    - ../alp-ui/resources/mri:/home/docker/ui-files/mri
+    - ../alp-ui/resources/starboard-notebook-base:/home/docker/ui-files/starboard-notebook-base
+    - ../alp-ui/resources/mri-ui5/mri-pa-ui:/home/docker/ui-files/mri-ui5/mri-pa-ui
+    - ../alp-ui/resources/mri-ui5/chp-ps-ui:/home/docker/ui-files/mri-ui5/chp-ps-ui
     networks:
       - alp

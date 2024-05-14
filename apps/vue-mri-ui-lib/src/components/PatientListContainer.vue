@@ -198,22 +198,22 @@ export default {
         psControl.getController().open();
       });
     },
-    // setupUI5Control() {
-    //   if (this.psui5element) {
-    //     try {
-    //       this.psui5element.destroy();
-    //     } catch (err) {
-    //       // do nothing
-    //     }
-    //   }
-    //   this.psui5element = new sap.ui.xmlview({
-    //     viewName: "hc.mri.pa.ui.views.PatientSummary",
-    //     width: "100%",
-    //     height: "100%"
-    //   });
-    //   this.psui5element.placeAt(this.$refs.contextPS, "only");
-    //   return this.psui5element;
-    // },
+    setupUI5Control() {
+      if (this.psui5element) {
+        try {
+          this.psui5element.destroy();
+        } catch (err) {
+          // do nothing
+        }
+      }
+      this.psui5element = new sap.ui.xmlview({
+        viewName: "hc.mri.pa.ui.views.PatientSummary",
+        width: "100%",
+        height: "100%"
+      });
+      this.psui5element.placeAt(this.$refs.contextPS, "only");
+      return this.psui5element;
+    },
     removeColumn({ configPath }) {
       this.removeSelectedAttribute({ configPath })
       this.setFireRequest()
