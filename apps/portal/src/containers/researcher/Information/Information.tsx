@@ -19,9 +19,8 @@ import {
   DownloadIcon,
   Title,
 } from "@portal/components";
-import { useUserInfo } from "../../../contexts/UserContext";
 import { StudyAttribute, StudyTag, DatasetResource } from "../../../types";
-import { useActiveDataset, useFeedback, useTranslation } from "../../../contexts";
+import { useActiveDataset, useFeedback, useTranslation, useUser } from "../../../contexts";
 import { useDatasetResources, useDataset, useDatasetDashboards, useDatasetReleases } from "../../../hooks";
 import webComponentWrapper from "../../../webcomponents/webComponentWrapper";
 import { DQDJobResults } from "../../../plugins/SystemAdmin/DQD/DQDJobResults/DQDJobResults";
@@ -59,7 +58,7 @@ export const Information: FC = () => {
   const { setFeedback } = useFeedback();
   const [requestLoading, setRequestLoading] = useState(false);
 
-  const { user } = useUserInfo();
+  const { user } = useUser();
 
   const { activeDataset } = useActiveDataset();
   const activeDatasetId = activeDataset.id;

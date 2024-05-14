@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useEffect } from "react";
-import { useUserInfo } from "../../../contexts/UserContext";
+import { useUser } from "../../../contexts";
 
 interface PluginContainerProps {
   getToken?: () => Promise<string>;
@@ -10,7 +10,7 @@ interface PluginContainerProps {
 }
 
 const PluginContainer: FC<PluginContainerProps> = ({ children, getToken, qeSvcUrl, studyId, releaseId }) => {
-  const { user } = useUserInfo();
+  const { user } = useUser();
 
   useEffect(() => {
     const pluginEvent = new CustomEvent("dataset");

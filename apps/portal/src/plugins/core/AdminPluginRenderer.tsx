@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { importPluginModule } from "./pluginLoader";
-import { useUserInfo } from "../../contexts/UserContext";
 import { getAuthToken } from "../../containers/auth";
+import { useUser } from "../../contexts";
 import { PluginDropdownItem } from "@portal/plugin";
 
 interface AdminPluginRendererProps {
@@ -12,7 +12,7 @@ interface AdminPluginRendererProps {
 }
 
 export const AdminPluginRenderer: FC<AdminPluginRendererProps> = ({ path, tenantId, studyId, fetchMenu }) => {
-  const { getUserId } = useUserInfo();
+  const { userId } = useUser();
   const [component, setComponent] = useState<any>();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export const AdminPluginRenderer: FC<AdminPluginRendererProps> = ({ path, tenant
 
   const metadata = useMemo(
     () => ({
-      userId: getUserId(),
+      userId,
       getToken: async () => {
         return await getAuthToken();
       },
@@ -35,7 +35,7 @@ export const AdminPluginRenderer: FC<AdminPluginRendererProps> = ({ path, tenant
       studyId,
       fetchMenu,
     }),
-    [getUserId, tenantId, studyId, fetchMenu]
+    [userId, tenantId, studyId, fetchMenu]
   );
 
   const PageComponent = component?.page;

@@ -2,14 +2,13 @@ import React, { FC, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Box } from "@portal/components";
 import { useDashboard } from "../../hooks";
-import { useUserInfo } from "../../contexts/UserContext";
-import { useTranslation } from "../../contexts";
+import { useTranslation, useUser } from "../../contexts";
 
 export const Dashboard: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const { id } = useParams();
   const [dashboard] = useDashboard(id || "");
-  const { user } = useUserInfo();
+  const { user } = useUser();
 
   useEffect(() => {
     localStorage.removeItem("redirectUrl");

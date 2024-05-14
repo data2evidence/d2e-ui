@@ -2,9 +2,8 @@ import React, { FC, useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Tab, Tabs } from "@portal/components";
 import { PortalType, User } from "../../../types";
-import { useMsalInfo } from "../../../contexts/UserContext";
 import { useDialogHelper } from "../../../hooks";
-import { useTranslation } from "../../../contexts";
+import { useToken, useTranslation } from "../../../contexts";
 import env from "../../../env";
 import { config } from "../../../config";
 import { ChangeMyPasswordDialog } from "./ChangeMyPasswordDialog/ChangeMyPasswordDialog";
@@ -32,7 +31,7 @@ const EMPTY_MY_USER: User = { id: "", name: "" };
 export const Account: FC<AccountProps> = ({ portalType }) => {
   const { getText, i18nKeys } = useTranslation();
   const navigate = useNavigate();
-  const { claims } = useMsalInfo();
+  const { idTokenClaims } = useToken();
   const [tabValue, setTabValue] = useState<LegalTab>(LegalTab.TermsOfUse);
   const [myUser, setMyUser] = useState(EMPTY_MY_USER);
   const [showDeleteAccount, openDeleteAccount, closeDeleteAccount] = useDialogHelper(false);
@@ -45,13 +44,13 @@ export const Account: FC<AccountProps> = ({ portalType }) => {
   ];
 
   useEffect(() => {
-    if (claims) {
+    if (idTokenClaims) {
       setMyUser({
-        id: claims[subProp],
-        name: claims[nameProp],
+        id: idTokenClaims[subProp],
+        name: idTokenClaims[nameProp],
       });
     }
-  }, [claims]);
+  }, [idTokenClaims]);
 
   const handleTabSelectionChange = useCallback((event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -78,7 +77,7 @@ export const Account: FC<AccountProps> = ({ portalType }) => {
                 </div>
                 <div>
                   <span>{getText(i18nKeys.ACCOUNT__EMAIL)}</span>
-                  <span>{claims.email || "-"}</span>
+                  <span>{idTokenClaims.email || "-"}</span>
                 </div>
               </div>
             </Card>
