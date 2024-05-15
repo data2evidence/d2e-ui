@@ -5,7 +5,7 @@ import Divider from "@mui/material/Divider";
 import { api } from "../../../../axios/api";
 import "./ExecuteFlowDialog.scss";
 import { useTranslation } from "../../../../contexts";
-import { getProperties } from "../../../../utils";
+import { getParameters, getProperties } from "../../../../utils";
 import ParamsField from "../ParamsField/ParamsField";
 
 interface ExecuteFlowDialogProps {
@@ -30,7 +30,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
   const [inputs, setInputs] = useState<InputField[]>([]);
-  const [prefectParams, setPrefectParams] = useState<Record<string, any>>({});
+  const [prefectProperties, setPrefectProperties] = useState<Record<string, any>>({});
   const [deploymentName, setDeploymentName] = useState("");
   const [flowRunName, setFlowRunName] = useState("");
   const [flowRunNameError, setFlowRunNameError] = useState(false);
@@ -42,8 +42,10 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       const deployment = await api.dataflow.getDeploymentByFlowId(id);
       if (!deployment) return;
       const input = deployment.parameter_openapi_schema.properties;
-      setPrefectParams(getProperties(deployment.parameter_openapi_schema));
-      setFormData(deployment.parameters);
+      const properties = getProperties(deployment.parameter_openapi_schema);
+      setPrefectProperties(properties);
+      const params = getParameters(properties, deployment.parameters);
+      setFormData(params);
 
       const required: string[] = deployment.parameter_openapi_schema.required;
       const inputFields = [];
@@ -213,11 +215,11 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
               </FormControl>
             </div>
           ))} */}
-        {Object.keys(prefectParams).map((paramKey, index) => (
+        {Object.keys(prefectProperties).map((paramKey, index) => (
           <div key={index}>
             {/* {prefectParams[paramKey].properties && paramKey} */}
             <ParamsField
-              param={prefectParams[paramKey]}
+              param={prefectProperties[paramKey]}
               paramKey={paramKey}
               key={index}
               handleInputChange={handleInputChange}

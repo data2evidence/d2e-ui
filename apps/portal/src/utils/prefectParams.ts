@@ -1,3 +1,6 @@
+import { log } from "console";
+import { difference, has, isEmpty, isObject } from "lodash";
+
 export function getProperties(schema: Record<string, any>) {
   const referenceKey = "$ref";
   const { properties, definitions } = schema;
@@ -43,4 +46,79 @@ export function getProperties(schema: Record<string, any>) {
     }
   }
   return result.properties;
+}
+
+export function getParameters(schema: Record<string, any>, parameters?: Record<string, any>) {
+  const result: any = {};
+
+  for (const key in schema) {
+    const properties = schema[key].properties;
+
+    if (properties) {
+      result[key] = {};
+      for (const propKey in properties) {
+        if (properties[propKey].properties) {
+          result[key][propKey] = {};
+
+          for (const childPropKey in properties[propKey].propertie) {
+            result[key][propKey][childPropKey] = "";
+          }
+        } else {
+          result[key][propKey] = "";
+        }
+      }
+      //   propertyKeys.forEach((prop) => {
+      //     if (properties[prop].properties) {
+      //       result[key][prop] = {};
+      //       Object.keys(properties[prop].properties).forEach((i) => {
+      //         result[key][prop][i] = "";
+      //       });
+      //     } else {
+      //       result[key][prop] = "";
+      //     }
+      //   });
+    } else {
+      result[key] = "";
+    }
+  }
+  //   schemaKeys.forEach((key) => {
+  //     const properties = schema[key].properties;
+
+  //     if (properties) {
+  //       const propertyKeys = Object.keys(properties);
+  //       result[key] = {};
+  //       propertyKeys.forEach((prop) => {
+  //         if (properties[prop].properties) {
+  //           result[key][prop] = {};
+  //           Object.keys(properties[prop].properties).forEach((i) => {
+  //             result[key][prop][i] = "";
+  //           });
+  //         } else {
+  //           result[key][prop] = "";
+  //         }
+  //       });
+  //     } else {
+  //       result[key] = "";
+  //     }
+  //   });
+
+  if (parameters && !isEmpty(parameters)) {
+    return findMissing(parameters, result);
+  }
+
+  return result;
+}
+
+function findMissing(parameters: Record<string, any>, result: Record<string, any>) {
+  for (const p in result) {
+    if (isObject(result[p])) {
+      findMissing(parameters[p], result[p]);
+    } else {
+      if (!has(parameters, p)) {
+        parameters[p] = "";
+      }
+    }
+  }
+
+  return parameters;
 }

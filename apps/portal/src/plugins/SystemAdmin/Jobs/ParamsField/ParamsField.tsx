@@ -17,7 +17,7 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
 
   const getKey = useCallback(() => {
     if (parentKey) {
-      return `[${parentKey}][${paramKey}]`;
+      return `${parentKey}.${paramKey}`;
     } else {
       return paramKey;
     }
@@ -50,7 +50,13 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
 
   const getValue = useCallback(() => {
     if (parentKey) {
-      return formData[parentKey][paramKey];
+      const isNested = parentKey.includes(".");
+      if (isNested) {
+        const [pKey, childKey] = parentKey.split(".");
+        return formData[pKey][childKey][paramKey];
+      } else {
+        return formData[parentKey][paramKey];
+      }
     } else {
       return formData[paramKey];
     }
@@ -75,7 +81,6 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
       //   }
       //   if (param.type === "") {
       //   }
-      getValue();
 
       return (
         <div className="u-padding-vertical--normal">
