@@ -10,7 +10,7 @@ module.exports = (env, argv) => {
   const isBuild = env.build
 
   const entryFile = isBuild ? 'module.ts' : 'index.tsx'
-  const externals = isBuild ? ['react', '@portal/components'] : []
+  const externals = isBuild ? ['react'] : []
 
   return {
     mode: argv.mode,

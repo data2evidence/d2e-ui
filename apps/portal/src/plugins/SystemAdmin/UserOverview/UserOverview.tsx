@@ -18,8 +18,7 @@ import {
   ALP_DASHBOARD_VIEWER,
 } from "../../../config";
 import { useTenants, useGroupCleanUp, useDialogHelper } from "../../../hooks";
-import { useFeedback, useTranslation } from "../../../contexts";
-import { useUserInfo } from "../../../contexts/UserContext";
+import { useFeedback, useTranslation, useUser } from "../../../contexts";
 import { api } from "../../../axios/api";
 import DeleteUserDialog from "./DeleteUserDialog/DeleteUserDialog";
 import EditTenantRoleDialog from "./EditTenantRoleDialog/EditTenantRoleDialog";
@@ -36,7 +35,7 @@ interface UserOverviewProps extends PageProps<SystemAdminPageMetadata> {}
 
 export const UserOverview: FC<UserOverviewProps> = () => {
   const { getText, i18nKeys } = useTranslation();
-  const { user: userInfo } = useUserInfo();
+  const { user: ctxUser } = useUser();
   const [loading, setLoading] = useState(false);
 
   const [tenants] = useTenants();
@@ -203,9 +202,9 @@ export const UserOverview: FC<UserOverviewProps> = () => {
     closePwdDialog();
   }, [closePwdDialog]);
 
-  const buttonColWidth = userInfo.isUserAdmin ? "36%" : "0%";
-  const roleWidth = userInfo.isUserAdmin ? "40%" : "50%";
-  const emailWidth = userInfo.isUserAdmin ? "27%" : "30%";
+  const buttonColWidth = ctxUser.isUserAdmin ? "36%" : "0%";
+  const roleWidth = ctxUser.isUserAdmin ? "40%" : "50%";
+  const emailWidth = ctxUser.isUserAdmin ? "27%" : "30%";
 
   if (loading) return <Loader />;
 
@@ -214,7 +213,7 @@ export const UserOverview: FC<UserOverviewProps> = () => {
       <div className="users">
         <div className="users__actions">
           <h3 className="users__actions-title">{getText(i18nKeys.USER_OVERVIEW__USERS)}</h3>
-          {userInfo.isUserAdmin && !isManagedUser && (
+          {ctxUser.isUserAdmin && !isManagedUser && (
             <>
               <Button text={getText(i18nKeys.USER_OVERVIEW__ADD_USER)} onClick={openAddUserDialog} />
               <AddUserDialog open={showAddUser} onClose={closeAddUser} />
@@ -252,7 +251,7 @@ export const UserOverview: FC<UserOverviewProps> = () => {
                     <TableCell>{user.tenantName ? user.tenantName : "-"}</TableCell>
                     <TableCell className="col-action">
                       <div className="table-button-container">
-                        {userInfo.isUserAdmin && (
+                        {ctxUser.isUserAdmin && (
                           <>
                             {!isManagedUser && (
                               <>
