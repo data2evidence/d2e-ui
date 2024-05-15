@@ -60,47 +60,17 @@ export function getParameters(schema: Record<string, any>, parameters?: Record<s
         if (properties[propKey].properties) {
           result[key][propKey] = {};
 
-          for (const childPropKey in properties[propKey].propertie) {
+          for (const childPropKey in properties[propKey].properties) {
             result[key][propKey][childPropKey] = "";
           }
         } else {
           result[key][propKey] = "";
         }
       }
-      //   propertyKeys.forEach((prop) => {
-      //     if (properties[prop].properties) {
-      //       result[key][prop] = {};
-      //       Object.keys(properties[prop].properties).forEach((i) => {
-      //         result[key][prop][i] = "";
-      //       });
-      //     } else {
-      //       result[key][prop] = "";
-      //     }
-      //   });
     } else {
       result[key] = "";
     }
   }
-  //   schemaKeys.forEach((key) => {
-  //     const properties = schema[key].properties;
-
-  //     if (properties) {
-  //       const propertyKeys = Object.keys(properties);
-  //       result[key] = {};
-  //       propertyKeys.forEach((prop) => {
-  //         if (properties[prop].properties) {
-  //           result[key][prop] = {};
-  //           Object.keys(properties[prop].properties).forEach((i) => {
-  //             result[key][prop][i] = "";
-  //           });
-  //         } else {
-  //           result[key][prop] = "";
-  //         }
-  //       });
-  //     } else {
-  //       result[key] = "";
-  //     }
-  //   });
 
   if (parameters && !isEmpty(parameters)) {
     return findMissing(parameters, result);
@@ -113,12 +83,9 @@ function findMissing(parameters: Record<string, any>, result: Record<string, any
   for (const p in result) {
     if (isObject(result[p])) {
       findMissing(parameters[p], result[p]);
-    } else {
-      if (!has(parameters, p)) {
-        parameters[p] = "";
-      }
+    } else if (!has(parameters, p)) {
+      parameters[p] = "";
     }
   }
-
   return parameters;
 }

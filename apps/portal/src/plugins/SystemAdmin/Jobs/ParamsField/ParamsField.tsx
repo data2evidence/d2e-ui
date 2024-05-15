@@ -2,26 +2,22 @@ import { FormControl, TextField } from "@portal/components";
 import classNames from "classnames";
 import React, { FC, useCallback, useState, useEffect, useMemo } from "react";
 import "./ParamsField.scss";
-import { useEventCallback } from "@mui/material";
 
 interface ParamsFieldProps {
   param: Record<string, any>;
   paramKey: string;
-  handleInputChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, parent?: string) => void;
+  handleInputChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    parent?: string,
+    child?: string
+  ) => void;
   formData: Record<string, any>;
   parentKey?: string;
+  childKey?: string;
 }
 
-const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange, formData, parentKey }) => {
+const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange, formData, parentKey, childKey }) => {
   const hasProperties = param.properties;
-
-  const getKey = useCallback(() => {
-    if (parentKey) {
-      return `${parentKey}.${paramKey}`;
-    } else {
-      return paramKey;
-    }
-  }, [parentKey, paramKey]);
 
   const getLabel = useCallback((param: Record<string, any>) => {
     if (!param.required) {
@@ -42,7 +38,8 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
           key={p}
           handleInputChange={handleInputChange}
           formData={formData}
-          parentKey={getKey()}
+          parentKey={parentKey || paramKey}
+          childKey={parentKey ? paramKey : ""}
         ></ParamsField>
       ));
     }
@@ -50,16 +47,10 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
 
   const getValue = useCallback(() => {
     if (parentKey) {
-      const isNested = parentKey.includes(".");
-      if (isNested) {
-        const [pKey, childKey] = parentKey.split(".");
-        return formData[pKey][childKey][paramKey];
-      } else {
-        return formData[parentKey][paramKey];
-      }
-    } else {
-      return formData[paramKey];
+      if (childKey) return formData[parentKey][childKey][paramKey];
+      return formData[parentKey][paramKey];
     }
+    return formData[paramKey];
   }, [formData]);
 
   const inputType = useCallback(
@@ -88,7 +79,7 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
             <TextField
               variant="standard"
               label={getLabel(param)}
-              onChange={(event) => handleInputChange(event, parentKey)}
+              onChange={(event) => handleInputChange(event, parentKey, childKey)}
               defaultValue={getValue()}
               name={paramKey}
             ></TextField>

@@ -76,17 +76,23 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   );
 
   const handleInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, parent?: string) => {
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, parent?: string, child?: string) => {
       if (!parent) {
         setFormData((formData) => ({ ...formData, [event.target.name]: event.target.value }));
       } else {
-        setFormData((formData) => ({
-          ...formData,
-          [parent]: {
-            ...formData[parent],
-            [event.target.name]: event.target.value,
-          },
-        }));
+        if (child) {
+          setFormData((formData) => {
+            const newFormData = { ...formData };
+            newFormData[parent][child][event.target.name] = event.target.value;
+            return newFormData;
+          });
+        } else {
+          setFormData((formData) => {
+            const newFormData = { ...formData };
+            newFormData[parent][event.target.name] = event.target.value;
+            return newFormData;
+          });
+        }
       }
     },
     [formData]
@@ -147,14 +153,16 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     try {
       setLoading(true);
 
-      const flowRun = {
-        flowRunName: flowRunName,
-        flowName: flowName,
-        deploymentName: deploymentName,
-        params: formatParams(),
-      };
+      console.log(formData);
 
-      await api.dataflow.executeFlowRunByDeployment(flowRun);
+      // const flowRun = {
+      //   flowRunName: flowRunName,
+      //   flowName: flowName,
+      //   deploymentName: deploymentName,
+      //   params: formatParams(),
+      // };
+
+      // await api.dataflow.executeFlowRunByDeployment(flowRun);
       handleClose("success");
     } catch (err: any) {
       if (err.data?.message) {
