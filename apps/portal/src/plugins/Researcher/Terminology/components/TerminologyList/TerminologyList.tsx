@@ -47,6 +47,7 @@ const mapFilterOptions = (options: { [key: string]: number }): { text: string; v
   });
 };
 
+let apiCounter = 0;
 const TerminologyList: FC<TerminologyListProps> = ({
   userId,
   onConceptClick,
@@ -108,95 +109,106 @@ const TerminologyList: FC<TerminologyListProps> = ({
     [searchText]
   );
 
-  const fetchData = useCallback(async () => {
-    if (userId && datasetId) {
-      try {
-        setIsLoading(true);
-        const terminologyAPI = new Terminology();
-        const conceptClassIdFilters = (columnFilters.find((filter) => filter.id === "conceptClassId")?.value ||
-          []) as string[];
-        const domainIdFilters = (columnFilters.find((filter) => filter.id === "domainId")?.value || []) as string[];
-        const vocabularyIdFilters = (columnFilters.find((filter) => filter.id === "vocabularyId")?.value ||
-          []) as string[];
-        const conceptFilters = (columnFilters.find((filter) => filter.id === "concept")?.value || []) as string[];
-        const standardConceptFilters = conceptFilters.map((concept) => (concept === "Standard" ? "S" : "Non-standard"));
-        const validityFilters = (columnFilters.find((filter) => filter.id === "validity")?.value || []) as string[];
-        if (
-          tab === "SEARCH" &&
-          Array.isArray(conceptClassIdFilters) &&
-          Array.isArray(domainIdFilters) &&
-          Array.isArray(vocabularyIdFilters) &&
-          Array.isArray(standardConceptFilters)
-        ) {
-          const filterOptions = await terminologyAPI.getFilterOptions(
-            datasetId,
-            searchText,
-            conceptClassIdFilters,
-            domainIdFilters,
-            vocabularyIdFilters,
-            standardConceptFilters
+  const fetchData = useCallback(
+    async (counter: number) => {
+      if (userId && datasetId) {
+        try {
+          setIsLoading(true);
+          const terminologyAPI = new Terminology();
+          const conceptClassIdFilters = (columnFilters.find((filter) => filter.id === "conceptClassId")?.value ||
+            []) as string[];
+          const domainIdFilters = (columnFilters.find((filter) => filter.id === "domainId")?.value || []) as string[];
+          const vocabularyIdFilters = (columnFilters.find((filter) => filter.id === "vocabularyId")?.value ||
+            []) as string[];
+          const conceptFilters = (columnFilters.find((filter) => filter.id === "concept")?.value || []) as string[];
+          const standardConceptFilters = conceptFilters.map((concept) =>
+            concept === "Standard" ? "S" : "Non-standard"
           );
-          const combinedFilterOptions: FilterOptions = {
-            conceptClassId: { ...allFilterOptionsZeroed.conceptClassId, ...filterOptions.conceptClassId },
-            domainId: { ...allFilterOptionsZeroed.domainId, ...filterOptions.domainId },
-            vocabularyId: { ...allFilterOptionsZeroed.vocabularyId, ...filterOptions.vocabularyId },
-            standardConcept: { ...allFilterOptionsZeroed.standardConcept, ...filterOptions.standardConcept },
-            concept: { ...allFilterOptionsZeroed.concept, ...filterOptions.concept },
-            validity: { ...allFilterOptionsZeroed.validity, ...filterOptions.validity },
-          };
-          setFilterOptions(combinedFilterOptions);
-          const fhirResponse = await terminologyAPI.getTerminologies(
-            page,
-            rowsPerPage,
-            datasetId,
-            searchText,
-            conceptClassIdFilters,
-            domainIdFilters,
-            vocabularyIdFilters,
-            standardConceptFilters,
-            validityFilters
-          );
-          const response = {
-            count: fhirResponse.expansion.total,
-            data: fhirResponse.expansion.contains,
-          };
-          response.data.map((data: any) => {
-            data["conceptCode"] = data["code"] as string;
-            data["conceptName"] = data["display"] as string;
-            data["vocabularyId"] = data["system"] as string;
+          const validityFilters = (columnFilters.find((filter) => filter.id === "validity")?.value || []) as string[];
+          if (
+            tab === "SEARCH" &&
+            Array.isArray(conceptClassIdFilters) &&
+            Array.isArray(domainIdFilters) &&
+            Array.isArray(vocabularyIdFilters) &&
+            Array.isArray(standardConceptFilters)
+          ) {
+            const filterOptions = await terminologyAPI.getFilterOptions(
+              datasetId,
+              searchText,
+              conceptClassIdFilters,
+              domainIdFilters,
+              vocabularyIdFilters,
+              standardConceptFilters
+            );
+            const combinedFilterOptions: FilterOptions = {
+              conceptClassId: { ...allFilterOptionsZeroed.conceptClassId, ...filterOptions.conceptClassId },
+              domainId: { ...allFilterOptionsZeroed.domainId, ...filterOptions.domainId },
+              vocabularyId: { ...allFilterOptionsZeroed.vocabularyId, ...filterOptions.vocabularyId },
+              standardConcept: { ...allFilterOptionsZeroed.standardConcept, ...filterOptions.standardConcept },
+              concept: { ...allFilterOptionsZeroed.concept, ...filterOptions.concept },
+              validity: { ...allFilterOptionsZeroed.validity, ...filterOptions.validity },
+            };
+            const fhirResponse = await terminologyAPI.getTerminologies(
+              page,
+              rowsPerPage,
+              datasetId,
+              searchText,
+              conceptClassIdFilters,
+              domainIdFilters,
+              vocabularyIdFilters,
+              standardConceptFilters,
+              validityFilters
+            );
+            const response = {
+              count: fhirResponse.expansion.total,
+              data: fhirResponse.expansion.contains,
+            };
+            response.data.map((data: any) => {
+              data["conceptCode"] = data["code"] as string;
+              data["conceptName"] = data["display"] as string;
+              data["vocabularyId"] = data["system"] as string;
+            });
+            if (counter === apiCounter) {
+              setFilterOptions(combinedFilterOptions);
+              setConceptsResult(response);
+            }
+          } else {
+            const response = await terminologyAPI.getRecommendedConcepts(
+              selectedConcepts.map((selectedConcept) => selectedConcept.conceptId),
+              datasetId
+            );
+            if (counter === apiCounter) {
+              setConceptsResult({ count: response.length, data: response });
+            }
+          }
+        } catch (e) {
+          console.error(e);
+          setFeedback({
+            type: "error",
+            message: getText(i18nKeys.TERMINOLOGY_LIST__ERROR),
+            description: getText(i18nKeys.TERMINOLOGY_LIST__ERROR_DESCRIPTION),
           });
-          setConceptsResult(response);
-        } else {
-          const response = await terminologyAPI.getRecommendedConcepts(
-            selectedConcepts.map((selectedConcept) => selectedConcept.conceptId),
-            datasetId
-          );
-          setConceptsResult({ count: response.length, data: response });
+        } finally {
+          if (counter === apiCounter) {
+            setIsLoading(false);
+          }
         }
-      } catch (e) {
-        console.error(e);
-        setFeedback({
-          type: "error",
-          message: getText(i18nKeys.TERMINOLOGY_LIST__ERROR),
-          description: getText(i18nKeys.TERMINOLOGY_LIST__ERROR_DESCRIPTION),
-        });
-      } finally {
-        setIsLoading(false);
       }
-    }
-  }, [
-    searchText,
-    page,
-    rowsPerPage,
-    setFeedback,
-    userId,
-    tab,
-    datasetId,
-    selectedConcepts,
-    JSON.stringify(columnFilters),
-    allFilterOptionsZeroed,
-    getText,
-  ]);
+    },
+    [
+      searchText,
+      page,
+      rowsPerPage,
+      setFeedback,
+      userId,
+      tab,
+      datasetId,
+      selectedConcepts,
+      JSON.stringify(columnFilters),
+      allFilterOptionsZeroed,
+      getText,
+    ]
+  );
 
   const onClickAddRemoveButton = useCallback(
     (terminology: FhirValueSetExpansionContainsWithExt) => {
@@ -206,9 +218,14 @@ const TerminologyList: FC<TerminologyListProps> = ({
   );
 
   useEffect(() => {
+    if (columnFilters.length || !defaultFilters) {
+      setUseDefaultFilters(false);
+    }
+  }, [columnFilters.length, defaultFilters]);
+
+  useEffect(() => {
     if (useDefaultFilters && defaultFilters && filterOptions && listData.length) {
       setColumnFilters(defaultFilters);
-      setUseDefaultFilters(false);
     }
   }, [defaultFilters, filterOptions, listData, useDefaultFilters]);
 
@@ -217,7 +234,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       return;
     }
     setPage(0);
-    fetchData();
+    fetchData(++apiCounter);
   }, [setFeedback, userId, searchText, tab, JSON.stringify(columnFilters)]);
 
   useEffect(() => {
@@ -227,7 +244,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
 
   useEffect(() => {
     if (tab === "SEARCH") {
-      fetchData();
+      fetchData(++apiCounter);
       return;
     }
   }, [page, rowsPerPage]);
@@ -451,10 +468,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       enableColumnFilter: false,
       enableColumnActions: false,
     },
-    onColumnFiltersChange: (newFilters) => {
-      setColumnFilters(newFilters);
-      setUseDefaultFilters(false);
-    },
+    onColumnFiltersChange: setColumnFilters,
     state: { columnFilters, columnOrder, isLoading },
     enablePagination: false, // Use TablePagination instead of built in
     muiTableBodyRowProps: ({ row, staticRowIndex }) => ({
