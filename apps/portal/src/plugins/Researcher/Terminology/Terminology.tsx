@@ -10,8 +10,7 @@ import { tabNames } from "./utils/constants";
 import { TabName, ConceptSet } from "./utils/types";
 import { terminologyApi } from "../../../axios/terminology";
 import { useDatasets } from "../../../hooks";
-import { useTranslation } from "../../../contexts";
-import { useUserInfo } from "../../../contexts/UserContext";
+import { useTranslation, useUser } from "../../../contexts";
 
 export interface TerminologyProps extends PageProps<ResearcherStudyMetadata> {
   onConceptIdSelect?: (conceptData: any) => void;
@@ -218,7 +217,7 @@ export const Terminology: FC<TerminologyProps> = ({
 }: TerminologyProps) => {
   const { getText, i18nKeys } = useTranslation();
   const userId = baseUserId || metadata?.userId;
-  const { user } = useUserInfo();
+  const { user } = useUser();
   const [conceptId, setConceptId] = useState<null | number>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedConcepts, setSelectedConcepts] = useState<FhirValueSetExpansionContainsWithExt[]>([]);

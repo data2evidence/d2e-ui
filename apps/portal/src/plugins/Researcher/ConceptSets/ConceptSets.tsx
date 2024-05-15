@@ -16,15 +16,14 @@ import {
 } from "@portal/components";
 import { Tabs, Tab } from "@mui/material";
 import { api } from "../../../axios/api";
-import { useUserInfo } from "../../../contexts/UserContext";
 import Terminology from "../../Researcher/Terminology/Terminology";
 import { ConceptSetWithConceptDetails } from "../../Researcher/Terminology/utils/types";
 import { TerminologyProps } from "../../Researcher/Terminology/Terminology";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
-import { useFeedback, useTranslation } from "../../../contexts";
-import "./ConceptSets.scss";
+import { useFeedback, useTranslation, useUser } from "../../../contexts";
 import { useDatasets } from "../../../hooks";
+import "./ConceptSets.scss";
 
 enum ConceptSetTab {
   ConceptSearch = "ConceptSearch",
@@ -35,7 +34,7 @@ interface ConceptSetsProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
   const { getText, i18nKeys } = useTranslation();
-  const { user } = useUserInfo();
+  const { user, userId } = useUser();
   const [datasets] = useDatasets("researcher");
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
@@ -45,7 +44,6 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
   const [data, setData] = useState<ConceptSetWithConceptDetails[]>([]);
   const [tabValue, setTabValue] = useState(ConceptSetTab.ConceptSearch);
   const [datasetId, setDatasetId] = useState<string | undefined>();
-  const userId = useUserInfo().user?.userId;
 
   useEffect(() => {
     if (metadata?.studyId) {

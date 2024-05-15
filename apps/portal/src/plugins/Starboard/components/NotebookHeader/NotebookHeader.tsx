@@ -2,8 +2,7 @@ import React, { ChangeEvent, FC, useCallback, useMemo } from "react";
 import { saveAs } from "file-saver";
 import { Button, EditIcon, IconButton, Checkbox, DownloadIcon, Tooltip } from "@portal/components";
 import { useDialogHelper } from "../../../../hooks";
-import { useFeedback, useTranslation } from "../../../../contexts";
-import { useUserInfo } from "../../../../contexts/UserContext";
+import { useFeedback, useTranslation, useUser } from "../../../../contexts";
 import {
   convertStarboardToJupyter,
   convertJupyterToStarboard,
@@ -43,7 +42,7 @@ export const Header: FC<HeaderProps> = ({
   setIsShared,
 }) => {
   const { getText, i18nKeys } = useTranslation();
-  const { user } = useUserInfo();
+  const { user } = useUser();
   const isNotUserNotebook = useMemo(() => user.idpUserId !== activeNotebook?.userId, [activeNotebook]);
   const { setFeedback } = useFeedback();
   const [showEditTitleDialog, openEditTitleDialog, closeEditTitleDialog] = useDialogHelper(false);

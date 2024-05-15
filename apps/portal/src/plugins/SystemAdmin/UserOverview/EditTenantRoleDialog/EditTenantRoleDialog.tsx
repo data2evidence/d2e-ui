@@ -2,12 +2,11 @@ import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } fro
 import Divider from "@mui/material/Divider";
 import { Button, Dialog, Checkbox } from "@portal/components";
 import { UserWithRolesInfoExt, Feedback, CloseDialogType } from "../../../../types";
-import { useUserInfo, useUserGroups } from "../../../../contexts/UserContext";
 import { Roles, TENANT_ROLES, DATA_ADMIN_ROLES, ALP_ROLES } from "../../../../config";
 import { getRoleChanges } from "../../../../utils";
 import { api } from "../../../../axios/api";
+import { useTranslation, useUser } from "../../../../contexts";
 import "./EditTenantRoleDialog.scss";
-import { useTranslation } from "../../../../contexts";
 
 interface EditTenantRoleDialogProps {
   user?: UserWithRolesInfoExt;
@@ -25,8 +24,8 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
   onClose,
 }) => {
   const { getText, i18nKeys } = useTranslation();
-  const { user: userInfo } = useUserInfo();
-  const { setUserGroups } = useUserGroups();
+  const { user: ctxUser } = useUser();
+  const { setUserGroup } = useUser();
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
 
@@ -110,12 +109,12 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
 
   const updateCurrentUserGroups = useCallback(
     async (requestUserId: string) => {
-      if (requestUserId === userInfo.userId && userInfo.idpUserId) {
-        const userGroups = await api.userMgmt.getUserGroupList(userInfo.idpUserId);
-        setUserGroups(userGroups);
+      if (requestUserId === ctxUser.userId && ctxUser.idpUserId) {
+        const userGroups = await api.userMgmt.getUserGroupList(ctxUser.idpUserId);
+        setUserGroup(ctxUser.idpUserId, userGroups);
       }
     },
-    [userInfo, setUserGroups]
+    [ctxUser, setUserGroup]
   );
 
   const handleSave = useCallback(async () => {
@@ -189,7 +188,7 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
       <Divider />
       <div className="edit-tenant-role-dialog__content">
         <div className="roles__title">{getText(i18nKeys.EDIT_TENANT_ROLE_DIALOG__ROLES)}</div>
-        {userInfo.isUserAdmin && (
+        {ctxUser.isUserAdmin && (
           <>
             {Object.keys(availableTenantRoles).map((role) => (
               <Checkbox

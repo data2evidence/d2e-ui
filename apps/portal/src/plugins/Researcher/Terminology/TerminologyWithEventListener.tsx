@@ -1,15 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Terminology, { TerminologyProps } from "./Terminology";
-import { useUserInfo } from "../../../contexts/UserContext";
 import { FhirValueSetExpansionContainsWithExt } from "./utils/types";
+import { useUser } from "../../../contexts";
 
 const eventListenerName = "alp-terminology-open";
 
 export const TerminologyWithEventListener = () => {
   const [props, setProps] = useState<TerminologyProps | null>(null);
   const [open, setOpen] = useState(false);
-  const tenantId = useUserInfo().user?.tenantId[0];
-  const userId = useUserInfo().user?.userId;
+  const { userId } = useUser();
 
   const listener = useCallback((e: Event) => {
     const customEvent = e as CustomEvent<{ props: TerminologyProps }>;
@@ -27,7 +26,7 @@ export const TerminologyWithEventListener = () => {
     };
   }, []);
 
-  if (!tenantId || !userId || !props?.selectedDatasetId) {
+  if (!userId || !props?.selectedDatasetId) {
     return null;
   }
 
