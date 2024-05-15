@@ -5,8 +5,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { FormControl } from "@mui/material";
 import { Study } from "../../../../types";
 import { SxProps } from "@mui/system";
-import { useUserInfo } from "../../../../contexts/UserContext";
-import { useTranslation } from "../../../../contexts";
+import { useTranslation, useUser } from "../../../../contexts";
 
 interface ActionSelectorProps {
   study: Study;
@@ -59,7 +58,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
   handleRelease,
 }) => {
   const { getText, i18nKeys } = useTranslation();
-  const { user } = useUserInfo();
+  const { user } = useUser();
   const isUserAdmin = user.isUserAdmin;
 
   const actionsList: Action[] = [
