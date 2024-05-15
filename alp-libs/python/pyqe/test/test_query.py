@@ -333,7 +333,7 @@ def test_select_study_from_user_input(setup, monkeypatch):
     assert query._study_name == 'first.study.name'
     assert query._study_config_id == 'first.pa.config.id'
     assert query._study_config_version == 'B'
-    assert query._study_config_assigned_name == 'first.assignment.name'
+    assert query._study_config_assigned_name == 'OMOP_GDM_PA_CONF'
 
     # Teardown to reset env
     query._clear_selected_study()
@@ -1253,8 +1253,6 @@ def _get_mock_my_config(setup, selected_study_id):
             }
         }, 
         'meta': {
-            'assignmentId': '3D00794D4078407C9B6F67675E62A26D',
-            'assignmentName': 'first.assignment.name',
             'configId': 'first.pa.config.id',
             'configVersion': 'B',
             'configStatus': '',
