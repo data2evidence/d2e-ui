@@ -25,6 +25,10 @@ interface TerminologyListProps {
   setConceptsResult: React.Dispatch<React.SetStateAction<TerminologyResult | null>>;
   datasetId?: string;
   isDrawer: boolean;
+  defaultFilters?: {
+    id: string;
+    value: string[];
+  }[];
 }
 
 const mapFilterOptions = (options: { [key: string]: number }): { text: string; value: string }[] => {
@@ -58,6 +62,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
   setConceptsResult,
   datasetId,
   isDrawer,
+  defaultFilters,
 }) => {
   const { getText, i18nKeys } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
@@ -66,14 +71,6 @@ const TerminologyList: FC<TerminologyListProps> = ({
   const [terminologiesCount, setTerminologiesCount] = useState(0);
   const [searchText, setSearchText] = useState(initialInput);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
-    conceptClassId: {},
-    domainId: {},
-    standardConcept: {},
-    vocabularyId: {},
-    concept: {},
-    validity: {},
-  });
-  const [allFilterOptions, setAllFilterOptions] = useState<FilterOptions>({
     conceptClassId: {},
     domainId: {},
     standardConcept: {},
@@ -90,8 +87,18 @@ const TerminologyList: FC<TerminologyListProps> = ({
     validity: {},
   });
   const [columnFilters, setColumnFilters] = useState<{ id: string; value: unknown }[]>([]);
+  const [useDefaultFilters, setUseDefaultFilters] = useState(true);
   const { setFeedback } = useFeedback();
   const tableRef = useRef<HTMLTableElement>(null);
+
+  const listData = useMemo(() => {
+    const fullListData = tab === tabNames.SELECTED ? selectedConcepts : conceptsResult?.data || [];
+    const listData =
+      tab === tabNames.SELECTED || tab === tabNames.RELATED
+        ? fullListData.slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+        : fullListData;
+    return listData;
+  }, [tab, conceptsResult, page, rowsPerPage, selectedConcepts]);
 
   const updateSearchResult = useCallback(
     (keyword: string) => {
@@ -199,6 +206,13 @@ const TerminologyList: FC<TerminologyListProps> = ({
   );
 
   useEffect(() => {
+    if (useDefaultFilters && defaultFilters && filterOptions && listData.length) {
+      setColumnFilters(defaultFilters);
+      setUseDefaultFilters(false);
+    }
+  }, [defaultFilters, filterOptions, listData, useDefaultFilters]);
+
+  useEffect(() => {
     if (tab === tabNames.SELECTED) {
       return;
     }
@@ -245,7 +259,6 @@ const TerminologyList: FC<TerminologyListProps> = ({
           filterOptionsZeroed[filterKey][optionKey] = 0;
         }
       }
-      setAllFilterOptions(filterOptions);
       setAllFilterOptionsZeroed(filterOptionsZeroed);
     };
     getAllFilterOptions();
@@ -259,12 +272,6 @@ const TerminologyList: FC<TerminologyListProps> = ({
     setRowsPerPage(Number(event.target.value) || 25);
     setPage(0);
   }, []);
-
-  const fullListData = tab === tabNames.SELECTED ? selectedConcepts : conceptsResult?.data || [];
-  const listData =
-    tab === tabNames.SELECTED || tab === tabNames.RELATED
-      ? fullListData.slice(page * rowsPerPage, (page + 1) * rowsPerPage)
-      : fullListData;
 
   useEffect(() => {
     // Only applies to selected tab as it is the only one that can remove items
@@ -432,7 +439,6 @@ const TerminologyList: FC<TerminologyListProps> = ({
     }
     return { columns: basicColumns, columnOrder: basicColumnOrder };
   }, [filterOptions, tab, JSON.stringify(listData), selectedConcepts, getText]);
-
   const table = useMaterialReactTable({
     layoutMode: "grid",
     columns,
@@ -445,7 +451,10 @@ const TerminologyList: FC<TerminologyListProps> = ({
       enableColumnFilter: false,
       enableColumnActions: false,
     },
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: (newFilters) => {
+      setColumnFilters(newFilters);
+      setUseDefaultFilters(false);
+    },
     state: { columnFilters, columnOrder, isLoading },
     enablePagination: false, // Use TablePagination instead of built in
     muiTableBodyRowProps: ({ row, staticRowIndex }) => ({
