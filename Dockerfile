@@ -143,7 +143,7 @@ COPY --from=pyqe-build /usr/src/services/app/alp-ui/resources/starboard-jupyter 
 COPY --from=log-viewer-build /usr/src/services/app/alp-ui/resources/log-viewer services/app/alp-ui/resources/log-viewer
 COPY --from=pystrategus-build /usr/src/services/app/alp-ui/resources/pystrategus-0.0.1-py3-none-any.whl services/app/alp-ui/resources/starboard-notebook-base
 
-FROM caddy:alpine AS final
+FROM caddy:2.8-alpine AS final
 
 USER root
 
