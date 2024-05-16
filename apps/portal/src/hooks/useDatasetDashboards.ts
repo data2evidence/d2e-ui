@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../axios/api";
 import { AppError, DatasetDashboard } from "../types";
-import { useUserInfo } from "../contexts/UserContext";
+import { useUser } from "../contexts";
 
 export const useDatasetDashboards = (
   datasetId: string,
@@ -10,7 +10,7 @@ export const useDatasetDashboards = (
   const [dashboards, setDashboards] = useState<DatasetDashboard[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<AppError>();
-  const { user } = useUserInfo();
+  const { user } = useUser();
 
   const fetchDashboards = useCallback(async () => {
     try {

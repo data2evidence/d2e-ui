@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { importPluginModule } from "./pluginLoader";
-import { useUserInfo } from "../../contexts/UserContext";
 import { getAuthToken } from "../../containers/auth";
+import { useUser } from "../../contexts";
 import { PluginDropdownItem, SubFeatureFlags } from "@portal/plugin";
 
 interface ResearcherStudyPluginRendererProps {
@@ -23,7 +23,7 @@ export const ResearcherStudyPluginRenderer: FC<ResearcherStudyPluginRendererProp
   fetchMenu,
   subFeatureFlags,
 }) => {
-  const { getUserId } = useUserInfo();
+  const { userId } = useUser();
   const [component, setComponent] = useState<any>();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export const ResearcherStudyPluginRenderer: FC<ResearcherStudyPluginRendererProp
 
   const metadata = useMemo(
     () => ({
-      userId: getUserId(),
+      userId,
       getToken: async () => {
         return await getAuthToken();
       },
@@ -49,7 +49,7 @@ export const ResearcherStudyPluginRenderer: FC<ResearcherStudyPluginRendererProp
       fetchMenu,
       subFeatureFlags,
     }),
-    [tenantId, studyId, data, fetchMenu, getUserId, subFeatureFlags]
+    [tenantId, studyId, releaseId, data, fetchMenu, userId, subFeatureFlags]
   );
 
   const PageComponent = component?.page;

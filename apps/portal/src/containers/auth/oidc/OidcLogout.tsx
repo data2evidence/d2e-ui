@@ -1,18 +1,20 @@
 import { FC, useEffect } from "react";
-import { useUserInfo } from "../../../contexts/UserContext";
 import { oidcLogout } from "./oidc";
+import { useToken, useUser } from "../../../contexts";
 
 export const OidcLogout: FC = () => {
-  const { clearUserContext } = useUserInfo();
+  const { clearUser } = useUser();
+  const { clearToken } = useToken();
 
   useEffect(() => {
     const logout = async () => {
       localStorage.clear();
-      clearUserContext();
+      clearUser();
+      clearToken();
       await oidcLogout();
     };
     logout();
-  }, [clearUserContext]);
+  }, [clearUser]);
 
   return null;
 };

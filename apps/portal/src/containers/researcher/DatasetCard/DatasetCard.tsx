@@ -4,9 +4,8 @@ import ReactECharts from "echarts-for-react";
 import classNames from "classnames";
 import { Card, CalendarIcon, DatabaseIcon, DocPlayIcon, PadlockEmptyIcon, UsersIcon } from "@portal/components";
 import { Study } from "../../../types";
-import { useUserInfo } from "../../../contexts/UserContext";
 import { DatasetAttribute } from "../../../constant";
-import { useActiveDataset, useTranslation } from "../../../contexts";
+import { useActiveDataset, useTranslation, useUser } from "../../../contexts";
 import "./DatasetCard.scss";
 
 interface DatasetCardProps {
@@ -37,7 +36,7 @@ const colorPalette = [
 
 export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
   const navigate = useNavigate();
-  const { user } = useUserInfo();
+  const { user } = useUser();
   const { getText, i18nKeys } = useTranslation();
   const { setActiveDatasetId } = useActiveDataset();
 
@@ -115,7 +114,7 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
           {dataset.visibilityStatus}
           <PadlockEmptyIcon
             className={classNames("dataset-card__permission-icon", {
-              "dataset-card__permission-icon--accessible": user.isDatasetResearcher(dataset.id),
+              "dataset-card__permission-icon--accessible": user.isDatasetResearcher[dataset.id],
             })}
           />
           {dataset.studyDetail?.name || "Untitled"}
