@@ -7,6 +7,8 @@ import "./ExecuteFlowDialog.scss";
 import { useTranslation } from "../../../../contexts";
 import { getParameters, getProperties } from "../../../../utils";
 import ParamsField from "../ParamsField/ParamsField";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import CodeEditor from "../CodeEditor/CodeEditor";
 
 interface ExecuteFlowDialogProps {
   flow?: Flow;
@@ -24,6 +26,11 @@ interface FormDataField {
   [key: string]: any;
 }
 
+enum ParamType {
+  Field = "field",
+  JSON = "json",
+}
+
 const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) => {
   const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormDataField>({});
@@ -34,6 +41,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   const [deploymentName, setDeploymentName] = useState("");
   const [flowRunName, setFlowRunName] = useState("");
   const [flowRunNameError, setFlowRunNameError] = useState(false);
+  const [paramType, setParamType] = useState(ParamType.Field);
   const flowName = flow?.name || "";
 
   const fetchDeployment = useCallback(async (id: string) => {
@@ -69,7 +77,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   );
 
   const handleInputChange = useCallback(
-    (value: any, name: string, parent?: string, child?: string) => {
+    (value: string, name: string, parent?: string, child?: string) => {
       if (!parent) {
         setFormData((formData) => ({ ...formData, [name]: value }));
       } else {
@@ -87,6 +95,20 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
           });
         }
       }
+    },
+    [formData]
+  );
+
+  const handleJSONChange = useCallback(
+    (value: string) => {
+      setFormData(JSON.parse(value));
+    },
+    [formData]
+  );
+
+  const handleParamTypeChange = useCallback(
+    (event: React.MouseEvent<HTMLElement>, type: ParamType) => {
+      setParamType(type);
     },
     [formData]
   );
@@ -156,7 +178,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       // };
 
       // await api.dataflow.executeFlowRunByDeployment(flowRun);
-      handleClose("success");
+      // handleClose("success");
     } catch (err: any) {
       if (err.data?.message) {
         setFeedback({ type: "error", message: err.data?.message });
@@ -198,22 +220,35 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
             />
           </FormControl>
         </div>
-
         {Object.keys(prefectProperties).length !== 0 && (
-          <span className="subheader">{getText(i18nKeys.EXECUTE_FLOW_DIALOG__FLOW_PARAMETERS)}</span>
+          <>
+            <span className="subheader">{getText(i18nKeys.EXECUTE_FLOW_DIALOG__FLOW_PARAMETERS)}</span>
+            <div className="u-padding-vertical--normal toggle-button-container">
+              <ToggleButtonGroup color="primary" value={paramType} exclusive onChange={handleParamTypeChange}>
+                <ToggleButton value={ParamType.Field}>Field</ToggleButton>
+                <ToggleButton value={ParamType.JSON}>JSON</ToggleButton>
+              </ToggleButtonGroup>
+            </div>
+          </>
         )}
 
-        {Object.keys(prefectProperties).map((paramKey, index) => (
-          <div key={index}>
-            <ParamsField
-              param={prefectProperties[paramKey]}
-              paramKey={paramKey}
-              key={index}
-              handleInputChange={handleInputChange}
-              formData={formData}
-            />
+        {paramType === ParamType.Field ? (
+          Object.keys(prefectProperties).map((paramKey, index) => (
+            <div key={index}>
+              <ParamsField
+                param={prefectProperties[paramKey]}
+                paramKey={paramKey}
+                key={index}
+                handleInputChange={handleInputChange}
+                formData={formData}
+              />
+            </div>
+          ))
+        ) : (
+          <div className="u-padding-vertical--normal">
+            <CodeEditor value={formData} onChange={handleJSONChange}></CodeEditor>
           </div>
-        ))}
+        )}
       </div>
 
       <Divider />

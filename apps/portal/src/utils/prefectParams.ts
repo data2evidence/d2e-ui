@@ -1,7 +1,6 @@
-import { difference, has, isEmpty, isObject } from "lodash";
+import { has, isEmpty, isObject } from "lodash";
 
 export function getProperties(schema: Record<string, any>) {
-  console.log({ schema });
   const referenceKey = "$ref";
   const { properties, definitions } = schema;
   const result = { ...schema };
@@ -42,7 +41,7 @@ export function getProperties(schema: Record<string, any>) {
         }
       });
     }
-  }  
+  }
   return result.properties;
 }
 
@@ -87,5 +86,3 @@ function findMissing(parameters: Record<string, any>, result: Record<string, any
   }
   return parameters;
 }
-
-// function defaultValues() {}

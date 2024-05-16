@@ -1,6 +1,6 @@
 import { Checkbox, FormControl, InputLabel, Select, SelectChangeEvent, TextField } from "@portal/components";
 import classNames from "classnames";
-import React, { FC, useCallback, useState, useEffect, useMemo, ChangeEvent } from "react";
+import React, { FC, useCallback, ChangeEvent } from "react";
 import "./ParamsField.scss";
 import CodeEditor from "../CodeEditor/CodeEditor";
 import { MenuItem, SxProps } from "@mui/material";
@@ -35,7 +35,6 @@ const styles: SxProps = {
 
 const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange, formData, parentKey, childKey }) => {
   const hasProperties = param.properties;
-  console.log(param);
 
   const getLabel = useCallback((param: Record<string, any>) => {
     if (!param.required) {
@@ -58,7 +57,7 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
           formData={formData}
           parentKey={parentKey || paramKey}
           childKey={parentKey ? paramKey : ""}
-        ></ParamsField>
+        />
       ));
     }
   }, [param]);
@@ -79,7 +78,7 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
             <InputLabel>{paramKey}</InputLabel>
             <Select
               sx={styles}
-              value={formData.schemaOption}
+              value={getValue()}
               onChange={(event: SelectChangeEvent) =>
                 handleInputChange(event.target.value, paramKey, parentKey, childKey)
               }
@@ -127,7 +126,7 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               handleInputChange(event.target.checked, paramKey, parentKey, childKey);
             }}
-            checked={getValue()}
+            checked={!!getValue()}
           />
         );
       }
