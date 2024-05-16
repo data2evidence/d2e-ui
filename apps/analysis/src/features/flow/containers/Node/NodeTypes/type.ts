@@ -78,9 +78,9 @@ export const ONE_INCIDENCE_NODE = [
 export const TWO_INCIDENCE_NODE = [
   "cohort_method_node",
   "self_controlled_case_series_analysis_node",
+  "cohort_incidence_node",
 ];
 export const THREE_INCIDENCE_NODE = [
-  "cohort_incidence_node",
   "default_covariate_settings_node",
   "patient_level_prediction_node",
 ];
@@ -107,7 +107,6 @@ export const NODE_CONNECTOR_MAPPING = {
   cohort_incidence_node: {
     type: "cyan",
     connector_list: [
-      { name: "Target Cohorts", type: "blue", classifier: "target_cohort" },
       {
         name: "Cohort Incident Target Cohorts",
         type: "aquamarine",
