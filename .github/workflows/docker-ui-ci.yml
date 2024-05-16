@@ -110,18 +110,18 @@ jobs:
         
         # az login --service-principal -u ${AZ_SP__CLIENT_ID} -p ${AZ_SP__CLIENT_SECRET} --tenant ${AZ_TENANT_NAME}
         
-        echo "Listing images if available.."
-        az acr manifest metadata list --name ${REPOSITORY} --registry ${REGISTRY_NAME} --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags) && !(contains(@, '${AZ__EXCLUDE_DOCKER_TAG__PATTERN}')) && !(length(tags[0])!=\`40\` || not_null(tags[1]) && length(tags[1])!=\`40\` || not_null(tags[2]) && length(tags[2])!=\`40\`)]" > private.json
+        echo ". INFO: calculate digests"
+        az acr manifest metadata list --name ${REPOSITORY} --registry ${REGISTRY_NAME} --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags) && !(length(tags[0])!=\`40\` || not_null(tags[1]) && length(tags[1])!=\`40\` || not_null(tags[2]) && length(tags[2])!=\`40\`)]" > private.json
+        # !(contains(@, '${AZ__EXCLUDE_DOCKER_TAG__PATTERN}')) && 
 
-        echo . tags to delete
+        echo . INFO: tags to delete
         cat private.json | yq '.[].tags'
-
         
         if [ "${AZ__ENABLE_DELETE}" = false ]; then
-          echo . images digests selected but not deleted
+          echo . INFO: images digests selected but not deleted
           cat private.json | yq '.[].digest' | xargs -I% echo az acr repository delete -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} --name ${REGISTRY_NAME} --image $REPOSITORY@% --yes
         else
-          echo . digests to delete
+          echo . ACTION: digests to delete
           cat private.json | yq '.[].digest' | xargs -I% echo az acr repository delete -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} --name ${REGISTRY_NAME} --image $REPOSITORY@% --yes  
         fi
 
