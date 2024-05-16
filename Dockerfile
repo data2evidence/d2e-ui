@@ -1,4 +1,3 @@
-
 FROM node:18.14.0-alpine AS base-build
 
 RUN apk add --update python3 py3-pip build-base git openssh-client
@@ -144,22 +143,14 @@ COPY --from=pyqe-build /usr/src/services/app/alp-ui/resources/starboard-jupyter 
 COPY --from=log-viewer-build /usr/src/services/app/alp-ui/resources/log-viewer services/app/alp-ui/resources/log-viewer
 COPY --from=pystrategus-build /usr/src/services/app/alp-ui/resources/pystrategus-0.0.1-py3-none-any.whl services/app/alp-ui/resources/starboard-notebook-base
 
-FROM node:18.14.0-alpine AS final
+FROM caddy:alpine AS final
 
 USER root
 
 RUN apk add --update --upgrade openssl zlib
 RUN rm -rf /usr/local/lib/node_modules/npm
-RUN addgroup -S alp -g 3000 && adduser --uid 3000 -S docker -G alp
-
-USER docker
 
 WORKDIR /home/docker
-
-COPY --chown=docker:alp ./local-ui-file-server/package.json .
-COPY --chown=docker:alp ./local-ui-file-server/src/ ./src
-
-RUN yarn install && cd -
 
 # ARG 
 # GIT COMMIT Passed during docker build time
@@ -167,14 +158,12 @@ ARG GIT_COMMIT_ARG
 # ENV
 ENV GIT_COMMIT=$GIT_COMMIT_ARG
 
-COPY --chown=docker:alp --from=final-build /usr/src/services/app/alp-ui/resources/ ui-files/
+COPY --from=final-build /usr/src/services/app/alp-ui/resources/ ui-files/
 
 # Ignore check if its run for http tests
 RUN for NAME in mri mri-ui5 ui5 portal superadmin flow starboard-jupyter starboard-notebook-base; do \
-  DIR=ui-files/${NAME}; \
-  echo TEST $DIR created ...; \
-  ls -d "${DIR}" || exit 1; \
-  done
-
-ENTRYPOINT ["yarn", "start"]
-EXPOSE 3000
+    DIR=ui-files/${NAME}; \
+    echo TEST $DIR created ...; \
+    ls -d "${DIR}" || exit 1; \
+    done
+    
