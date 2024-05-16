@@ -2,6 +2,7 @@ export const getPortalAPI = (): {
   baseUrl: string
   getAuthToken: () => Promise<string | void>
   browserBaseUrl: string
+  backToJobs: () => void
 } => {
   const portalApiNode = document.getElementById('log-viewer-main') as any
   if (portalApiNode) {
