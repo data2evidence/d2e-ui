@@ -7,6 +7,13 @@ import "./ExecuteFlowDialog.scss";
 import { useTranslation } from "../../../../contexts";
 import { getParameters, getProperties } from "../../../../utils";
 import ParamsField from "../ParamsField/ParamsField";
+import Form from "@rjsf/mui";
+
+import validator from "@rjsf/validator-ajv8";
+import { RJSFSchema, UiSchema, WidgetProps } from "@rjsf/utils";
+import { isEmpty } from "lodash";
+import CodeEditor from "../CodeEditor/CodeEditor";
+import ParamsForm from "../ParamsForm/ParamsForm";
 
 interface ExecuteFlowDialogProps {
   flow?: Flow;
@@ -35,6 +42,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   const [flowRunName, setFlowRunName] = useState("");
   const [flowRunNameError, setFlowRunNameError] = useState(false);
   const flowName = flow?.name || "";
+  const [schema, setSchema] = useState<RJSFSchema>({});
 
   const fetchDeployment = useCallback(async (id: string) => {
     try {
@@ -44,8 +52,11 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       const input = deployment.parameter_openapi_schema.properties;
       const properties = getProperties(deployment.parameter_openapi_schema);
       setPrefectProperties(properties);
+      setSchema(deployment.parameter_openapi_schema);
+
       const params = getParameters(properties, deployment.parameters);
       setFormData(params);
+      // setFormData(deployment.parameters);
 
       const required: string[] = deployment.parameter_openapi_schema.required;
       const inputFields = [];
@@ -76,20 +87,22 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   );
 
   const handleInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, parent?: string, child?: string) => {
+    (value: string, name: string, parent?: string, child?: string) => {
+      console.log({ value });
+
       if (!parent) {
-        setFormData((formData) => ({ ...formData, [event.target.name]: event.target.value }));
+        setFormData((formData) => ({ ...formData, [name]: value }));
       } else {
         if (child) {
           setFormData((formData) => {
             const newFormData = { ...formData };
-            newFormData[parent][child][event.target.name] = event.target.value;
+            newFormData[parent][child][name] = value;
             return newFormData;
           });
         } else {
           setFormData((formData) => {
             const newFormData = { ...formData };
-            newFormData[parent][event.target.name] = event.target.value;
+            newFormData[parent][name] = value;
             return newFormData;
           });
         }
@@ -223,6 +236,9 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
               </FormControl>
             </div>
           ))} */}
+
+        {/* {!isEmpty(schema) && <ParamsForm schema={schema} formData={formData} onChange={setFormData} />} */}
+
         {Object.keys(prefectProperties).map((paramKey, index) => (
           <div key={index}>
             {/* {prefectParams[paramKey].properties && paramKey} */}
@@ -236,6 +252,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
           </div>
         ))}
       </div>
+
       <Divider />
       <div className="button-group-actions">
         <Button

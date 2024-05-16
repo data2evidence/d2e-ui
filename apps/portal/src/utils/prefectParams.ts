@@ -1,4 +1,3 @@
-import { log } from "console";
 import { difference, has, isEmpty, isObject } from "lodash";
 
 export function getProperties(schema: Record<string, any>) {
@@ -89,3 +88,5 @@ function findMissing(parameters: Record<string, any>, result: Record<string, any
   }
   return parameters;
 }
+
+// function defaultValues() {}

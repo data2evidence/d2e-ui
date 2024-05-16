@@ -2,15 +2,12 @@ import { FormControl, TextField } from "@portal/components";
 import classNames from "classnames";
 import React, { FC, useCallback, useState, useEffect, useMemo } from "react";
 import "./ParamsField.scss";
+import CodeEditor from "../CodeEditor/CodeEditor";
 
 interface ParamsFieldProps {
   param: Record<string, any>;
   paramKey: string;
-  handleInputChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    parent?: string,
-    child?: string
-  ) => void;
+  handleInputChange: (value: string, name: string, parent?: string, child?: string) => void;
   formData: Record<string, any>;
   parentKey?: string;
   childKey?: string;
@@ -55,15 +52,33 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
 
   const inputType = useCallback(
     (param: Record<string, any>) => {
-      //   if (!param.type || param.type === "string" || param.type === "array") {
-      //     return (
-      //       <FormControl fullWidth>
-      //         <TextField variant="standard" label={getLabel(param)}></TextField>
-      //       </FormControl>
-      //     );
-      //   }
-      //   if (param.type === "object") {
-      //   }
+      if (!param.type || param.type === "string") {
+        return (
+          <FormControl fullWidth>
+            <TextField
+              variant="standard"
+              label={getLabel(param)}
+              onChange={(event) => handleInputChange(event.target.value, paramKey, parentKey, childKey)}
+              defaultValue={getValue()}
+              name={paramKey}
+            />
+          </FormControl>
+        );
+      }
+      if (param.type === "object" || param.type === "array") {
+        return (
+          <>
+            {paramKey}
+            <CodeEditor
+              value={getValue()}
+              onChange={handleInputChange}
+              parentKey={parentKey}
+              childKey={childKey}
+              name={paramKey}
+            />
+          </>
+        );
+      }
       //   if (param.type === "boolean") {
       //   }
       //   if (param.type === "enum") {
@@ -72,20 +87,19 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
       //   }
       //   if (param.type === "") {
       //   }
-
-      return (
-        <div className="u-padding-vertical--normal">
+      else {
+        return (
           <FormControl fullWidth>
             <TextField
               variant="standard"
               label={getLabel(param)}
-              onChange={(event) => handleInputChange(event, parentKey, childKey)}
+              onChange={(event) => handleInputChange(event.target.value, paramKey, parentKey, childKey)}
               defaultValue={getValue()}
               name={paramKey}
-            ></TextField>
+            />
           </FormControl>
-        </div>
-      );
+        );
+      }
     },
     [param, getValue]
   );
@@ -93,7 +107,7 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
   return (
     <div className={classNames("params-field", { "params-field-properties": hasProperties })}>
       {hasProperties && paramKey}
-      {renderInput()}
+      <div className="u-padding-vertical--normal">{renderInput()}</div>
     </div>
   );
 };
