@@ -8,18 +8,12 @@ import { useTranslation } from "../../../../contexts";
 import { getParameters, getProperties } from "../../../../utils";
 import ParamsField from "../ParamsField/ParamsField";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import CodeEditor from "../CodeEditor/CodeEditor";
+import JSONEditor from "../JSONEditor/JSONEditor";
 
 interface ExecuteFlowDialogProps {
   flow?: Flow;
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
-}
-
-interface InputField {
-  name: string;
-  required: boolean;
-  error?: boolean;
 }
 
 interface FormDataField {
@@ -36,7 +30,6 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   const [formData, setFormData] = useState<FormDataField>({});
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
-  const [inputs, setInputs] = useState<InputField[]>([]);
   const [prefectProperties, setPrefectProperties] = useState<Record<string, any>>({});
   const [deploymentName, setDeploymentName] = useState("");
   const [flowRunName, setFlowRunName] = useState("");
@@ -70,7 +63,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     (type: CloseDialogType) => {
       setFeedback({});
       setFormData({});
-      setInputs([]);
+      setPrefectProperties({});
       typeof onClose === "function" && onClose(type);
     },
     [onClose, setFeedback]
@@ -118,24 +111,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   }, [flowRunName, formData]);
 
   const validateFormData = useCallback(() => {
-    let errors: string[] = [];
-    inputs.forEach((input) => {
-      if ((formData[input.name] === "" && input.required) || (!formData[input.name] && input.required)) {
-        errors.push(input.name);
-      } else {
-        errors = errors.filter((i) => i !== input.name);
-      }
-    });
-
-    const updatedInputs = inputs.map((i) => {
-      if (errors.includes(i.name)) {
-        return { ...i, error: true };
-      } else {
-        return { ...i, error: false };
-      }
-    });
-
-    setInputs(updatedInputs);
+    const errors: string[] = [];
 
     if (flowRunName === "") {
       setFlowRunNameError(true);
@@ -144,7 +120,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     }
 
     return errors.length !== 0 || flowRunName === "";
-  }, [flowRunName, formData, inputs]);
+  }, [flowRunName, formData]);
 
   const formatParams = useCallback(() => {
     const newFormData = { ...formData };
@@ -246,7 +222,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
           ))
         ) : (
           <div className="u-padding-vertical--normal">
-            <CodeEditor value={formData} onChange={handleJSONChange}></CodeEditor>
+            <JSONEditor value={formData} onChange={handleJSONChange}></JSONEditor>
           </div>
         )}
       </div>

@@ -2,7 +2,7 @@ import { Checkbox, FormControl, InputLabel, Select, SelectChangeEvent, TextField
 import classNames from "classnames";
 import React, { FC, useCallback, ChangeEvent } from "react";
 import "./ParamsField.scss";
-import CodeEditor from "../CodeEditor/CodeEditor";
+import JSONEditor from "../JSONEditor/JSONEditor";
 import { MenuItem, SxProps } from "@mui/material";
 
 interface ParamsFieldProps {
@@ -109,7 +109,7 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
         return (
           <>
             {paramKey}
-            <CodeEditor
+            <JSONEditor
               value={getValue()}
               onChange={handleInputChange}
               parentKey={parentKey}
