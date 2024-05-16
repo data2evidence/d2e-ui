@@ -5,7 +5,7 @@ export type NodeType =
   | "cohort_incidence_node"
   | "cohort_incidence_target_cohorts_node"
   | "time_at_risk_node"
-  | "covariate_settings_node"
+  | "default_covariate_settings_node"
   | "characterization_node"
   | "target_comparator_outcomes_node"
   | "cohort_method_analysis_node"
@@ -81,11 +81,14 @@ export const TWO_INCIDENCE_NODE = [
 ];
 export const THREE_INCIDENCE_NODE = [
   "cohort_incidence_node",
-  "covariate_settings_node",
+  "default_covariate_settings_node",
   "patient_level_prediction_node",
 ];
-export const FOUR_INCIDENCE_NODE = ["self_controlled_case_series_node"];
-export const FIVE_INCIDENCE_NODE = ["target_comparator_outcomes_node"];
+export const FOUR_INCIDENCE_NODE = [];
+export const FIVE_INCIDENCE_NODE = [
+  "target_comparator_outcomes_node",
+  "self_controlled_case_series_node",
+];
 
 export const NODE_CONNECTOR_MAPPING = {
   cohort_generator_node: { type: "lightgrey", connector_list: [] },
@@ -120,7 +123,7 @@ export const NODE_CONNECTOR_MAPPING = {
     ],
   },
   time_at_risk_node: { type: "wheat", connector_list: [] },
-  covariate_settings_node: {
+  default_covariate_settings_node: {
     type: "darkgreen",
     connector_list: [
       { name: "Target Cohort", type: "blue", classifier: "target_cohort" },
@@ -216,6 +219,11 @@ export const NODE_CONNECTOR_MAPPING = {
       },
       { name: "Exposures", type: "blue", classifier: "exposures" },
       { name: "SCCS Analysis", type: "red", classifier: "scss_analysis" },
+      {
+        name: "Study Population",
+        type: "lightpink",
+        classifier: "study_population",
+      },
     ],
   },
   patient_level_prediction_node: {

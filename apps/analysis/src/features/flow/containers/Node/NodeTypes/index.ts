@@ -30,7 +30,7 @@ export const NODE_TYPES: {
   cohort_incidence_node: CohortIncidentNode,
   cohort_incidence_target_cohorts_node: CohortIncidentTargetCohortNode,
   time_at_risk_node: TimeAtRiskNode,
-  covariate_settings_node: RNode,
+  default_covariate_settings_node: RNode,
   characterization_node: CharacterizationNode,
   target_comparator_outcomes_node: TargetComparatorOutcomesNode,
   cohort_method_analysis_node: CohortMethodAnalysisNode,
@@ -55,7 +55,7 @@ export const NODE_COLORS: {
   cohort_incidence_node: "cyan",
   cohort_incidence_target_cohorts_node: "aquamarine",
   time_at_risk_node: "wheat",
-  covariate_settings_node: "darkgreen",
+  default_covariate_settings_node: "darkgreen",
   characterization_node: "darkgreen",
   target_comparator_outcomes_node: "indigo",
   cohort_method_analysis_node: "lavender",
@@ -135,7 +135,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
       endOffset: 0,
     },
   },
-  covariate_settings_node: {
+  default_covariate_settings_node: {
     title: "Covariate Settings",
     description: "Run covariate settings code.",
     tag: NodeTag.Darkgreen,
