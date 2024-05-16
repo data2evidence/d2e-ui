@@ -89,37 +89,39 @@ jobs:
           docker_image_prefix=alpcr.azurecr.io
           GIT_COMMIT_ARG=${{ github.sha }}
     
-    # - name: Delete images older than 14 days
-    #   id: delete_old_images
-    #   if: false # ${{ github.event_name != 'workflow_dispatch' && github.ref_name == 'develop' }}
-    #   shell: bash
-    #   env:
-    #     REGISTRY: alpcr
-    #     REPOSITORY: alp-data-node/alp-local-ui-file-server
-    #     AZ_SP__CLIENT_ID: ${{ secrets.AZ__CDN__CLIENT_ID }}
-    #     AZ_SP__CLIENT_SECRET: ${{ secrets.AZ__CDN__CLIENT_SECRET }}
-    #     AZ_TENANT_NAME: data4life.care
-    #     AZ_UI_LOCAL_FILE_SERVER_USERNAME: ${{ secrets.AZ_UI_LOCAL_FILE_SERVER_USERNAME }}
-    #     AZ_UI_LOCAL_FILE_SERVER_PASSWORD: ${{ secrets.AZ_UI_LOCAL_FILE_SERVER_PASSWORD }}
-    #     AZ__EXCLUDE_DOCKER_TAG__PATTERN: project # TODO: Use another name | only single value.
-    #     AZ__ENABLE_DELETE: false # Can enable/disable if needed
-    #     NUMBER_OF_DAYS: 14
-    #   run: |
-    #     TODAY=$(date +%Y-%m-%d)
-    #     TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
+    - name: Delete images older than 14 days
+      id: delete_old_images
+      if: false # ${{ github.event_name != 'workflow_dispatch' && github.ref_name == 'develop' }}
+      shell: bash
+      env:
+        REGISTRY_NAME: alpcr
+        REPOSITORY: alp-data-node/alp-local-ui-file-server
+        # AZ_SP__CLIENT_ID: ${{ secrets.AZ__CDN__CLIENT_ID }}
+        # AZ_SP__CLIENT_SECRET: ${{ secrets.AZ__CDN__CLIENT_SECRET }}
+        AZ_TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
+        REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+        REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        AZ__EXCLUDE_DOCKER_TAG__PATTERN: project # TODO: Use another name | only single value.
+        AZ__ENABLE_DELETE: false # Can enable/disable if needed
+        NUMBER_OF_DAYS: 14
+      run: |
+        TODAY=$(date +%Y-%m-%d)
+        TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
         
-    #     az login --service-principal -u ${AZ_SP__CLIENT_ID} \
-    #     -p ${AZ_SP__CLIENT_SECRET} --tenant ${AZ_TENANT_NAME}
+        # az login --service-principal -u ${AZ_SP__CLIENT_ID} -p ${AZ_SP__CLIENT_SECRET} --tenant ${AZ_TENANT_NAME}
         
-    #     echo "Listing images if available.."
-    #     az acr manifest list-metadata --name ${REPOSITORY} --registry ${REGISTRY} \
-    #     --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && tags[? !(contains(@, '${AZ__EXCLUDE_DOCKER_TAG__PATTERN}'))]]" -u ${AZ_UI_LOCAL_FILE_SERVER_USERNAME} -p ${AZ_UI_LOCAL_FILE_SERVER_PASSWORD}
+        echo "Listing images if available.."
+        az acr manifest metadata list --name ${REPOSITORY} --registry ${REGISTRY_NAME} --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags) && tags[? !(contains(@, '${AZ__EXCLUDE_DOCKER_TAG__PATTERN}')) && !(length(tags[0])!=\`40\` || not_null(tags[1]) && length(tags[1])!=\`40\` || not_null(tags[2]) && length(tags[2])!=\`40\`)]" > private.json
+
+        echo . tags to delete
+        cat private.json | yq '.[].tags'
+
         
-    #     if [ "${AZ__ENABLE_DELETE}" = false ]; then
-    #       echo "Images not deleted.."
-    #     else
-    #       echo "Images to be deleted.."
-    #       az acr manifest list-metadata --name ${REPOSITORY} --registry ${REGISTRY} \
-    #       --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && tags[? !(contains(@, '${AZ__EXCLUDE_DOCKER_TAG__PATTERN}'))]].digest" -o tsv -u ${AZ_UI_LOCAL_FILE_SERVER_USERNAME} -p ${AZ_UI_LOCAL_FILE_SERVER_PASSWORD} | xargs -I% az acr repository delete -u ${AZ_UI_LOCAL_FILE_SERVER_USERNAME} -p ${AZ_UI_LOCAL_FILE_SERVER_PASSWORD} --name ${REGISTRY} --image $REPOSITORY@% --yes
-    #     fi
+        if [ "${AZ__ENABLE_DELETE}" = false ]; then
+          echo . images digests selected but not deleted
+          cat private.json | yq '.[].digest' | xargs -I% echo az acr repository delete -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} --name ${REGISTRY_NAME} --image $REPOSITORY@% --yes
+        else
+          echo . digests to delete
+          cat private.json | yq '.[].digest' | xargs -I% echo az acr repository delete -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} --name ${REGISTRY_NAME} --image $REPOSITORY@% --yes  
+        fi
 
