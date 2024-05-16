@@ -102,7 +102,7 @@ jobs:
         REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
         REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         AZ__EXCLUDE_DOCKER_TAG__PATTERN: project # TODO: Use another name | only single value.
-        AZ__ENABLE_DELETE: false # Can enable/disable if needed
+        AZ__ENABLE_DELETE: ${{ vars.AZ__ENABLE_DELETE }} # Can enable/disable if needed
         NUMBER_OF_DAYS: 14
       run: |
         TODAY=$(date +%Y-%m-%d)
