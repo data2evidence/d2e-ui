@@ -1,6 +1,7 @@
 import { difference, has, isEmpty, isObject } from "lodash";
 
 export function getProperties(schema: Record<string, any>) {
+  console.log({ schema });
   const referenceKey = "$ref";
   const { properties, definitions } = schema;
   const result = { ...schema };
@@ -14,12 +15,10 @@ export function getProperties(schema: Record<string, any>) {
     const result = { ...definition };
     const { required, properties } = result;
 
-    // populate required key to obj
     if (required) {
       required.forEach((key: string) => (properties[key]["required"] = true));
     }
 
-    // check for nested $ref
     for (const prop in properties) {
       if (properties[prop][referenceKey]) {
         const key = getDefinitionKey(properties[prop][referenceKey]);
@@ -43,7 +42,7 @@ export function getProperties(schema: Record<string, any>) {
         }
       });
     }
-  }
+  }  
   return result.properties;
 }
 

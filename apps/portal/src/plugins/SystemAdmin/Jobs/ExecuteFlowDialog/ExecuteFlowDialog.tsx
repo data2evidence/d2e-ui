@@ -7,13 +7,6 @@ import "./ExecuteFlowDialog.scss";
 import { useTranslation } from "../../../../contexts";
 import { getParameters, getProperties } from "../../../../utils";
 import ParamsField from "../ParamsField/ParamsField";
-import Form from "@rjsf/mui";
-
-import validator from "@rjsf/validator-ajv8";
-import { RJSFSchema, UiSchema, WidgetProps } from "@rjsf/utils";
-import { isEmpty } from "lodash";
-import CodeEditor from "../CodeEditor/CodeEditor";
-import ParamsForm from "../ParamsForm/ParamsForm";
 
 interface ExecuteFlowDialogProps {
   flow?: Flow;
@@ -42,28 +35,17 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   const [flowRunName, setFlowRunName] = useState("");
   const [flowRunNameError, setFlowRunNameError] = useState(false);
   const flowName = flow?.name || "";
-  const [schema, setSchema] = useState<RJSFSchema>({});
 
   const fetchDeployment = useCallback(async (id: string) => {
     try {
       setLoading(true);
       const deployment = await api.dataflow.getDeploymentByFlowId(id);
       if (!deployment) return;
-      const input = deployment.parameter_openapi_schema.properties;
       const properties = getProperties(deployment.parameter_openapi_schema);
-      setPrefectProperties(properties);
-      setSchema(deployment.parameter_openapi_schema);
-
       const params = getParameters(properties, deployment.parameters);
-      setFormData(params);
-      // setFormData(deployment.parameters);
 
-      const required: string[] = deployment.parameter_openapi_schema.required;
-      const inputFields = [];
-      for (const key in input) {
-        inputFields.push({ name: key, required: required.includes(key) });
-      }
-      setInputs(inputFields);
+      setPrefectProperties(properties);
+      setFormData(params);
       setDeploymentName(deployment.name);
     } catch (error: any) {
       console.error(error);
@@ -87,9 +69,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   );
 
   const handleInputChange = useCallback(
-    (value: string, name: string, parent?: string, child?: string) => {
-      console.log({ value });
-
+    (value: any, name: string, parent?: string, child?: string) => {
       if (!parent) {
         setFormData((formData) => ({ ...formData, [name]: value }));
       } else {
@@ -196,7 +176,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   return (
     <Dialog
       className="execute-flow-dialog"
-      title={getText(i18nKeys.EXECUTE_FLOW_DIALOG__EXECUTE_FLOW)}
+      title={`${getText(i18nKeys.EXECUTE_FLOW_DIALOG__EXECUTE_FLOW)} | ${flowName}`}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -219,29 +199,12 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
           </FormControl>
         </div>
 
-        {inputs?.length !== 0 && (
+        {Object.keys(prefectProperties).length !== 0 && (
           <span className="subheader">{getText(i18nKeys.EXECUTE_FLOW_DIALOG__FLOW_PARAMETERS)}</span>
         )}
-        {/* {inputs?.length !== 0 &&
-          inputs?.map((input, index) => (
-            <div className="u-padding-vertical--normal" key={index}>
-              <FormControl fullWidth>
-                <TextField
-                  error={input.error}
-                  variant="standard"
-                  label={input.name}
-                  onChange={(event) => handleInputChange(event, input.name)}
-                  helperText={input.error && getText(i18nKeys.EXECUTE_FLOW_DIALOG__REQUIRED)}
-                />
-              </FormControl>
-            </div>
-          ))} */}
-
-        {/* {!isEmpty(schema) && <ParamsForm schema={schema} formData={formData} onChange={setFormData} />} */}
 
         {Object.keys(prefectProperties).map((paramKey, index) => (
           <div key={index}>
-            {/* {prefectParams[paramKey].properties && paramKey} */}
             <ParamsField
               param={prefectProperties[paramKey]}
               paramKey={paramKey}
