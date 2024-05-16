@@ -290,19 +290,23 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     tag: NodeTag.Lightpink,
     defaultData: {
-      startAnchor: ["cohort start", "cohort start"],
-      riskWindowStart: 1,
-      endAnchor: ["cohort end", "cohort end"],
-      riskWindowEnd: 365,
-      minTimeAtRisk: 1,
-      studyPopulationArgs: {
+      cohortMethodArgs: {
         minDaysAtRisk: 1,
         riskWindowStart: 0,
-        startAnchor: ["cohort start", "cohort start"],
+        startAnchor: "cohort start",
         riskWindowEnd: 30,
-        endAnchor: ["cohort end", "cohort end"],
+        endAnchor: "cohort end",
+      },
+      sccsArgs: {
         minAge: 18,
         naivePeriod: 365,
+      },
+      patientLevelPredictionArgs: {
+        startAnchor: "cohort start",
+        endAnchor: "cohort end",
+        riskWindowStart: 1,
+        riskWindowEnd: 365,
+        minTimeAtRisk: 1,
       },
     },
   },
