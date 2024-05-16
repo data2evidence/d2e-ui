@@ -111,8 +111,11 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run cohort incidence code.",
     tag: NodeTag.Cyan,
     defaultData: {
-      byYear: true,
-      byGender: true,
+      strataSettings: {
+        byYear: true,
+        byGender: true,
+      },
+      cohortRefs: [],
     },
   },
   cohort_incidence_target_cohorts_node: {
