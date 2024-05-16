@@ -6,12 +6,23 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
+import FlowRun from './views/FlowRun.vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import TaskRun from './views/TaskRun.vue'
+
 const mountLogViewer = () => {
+  const routes = [
+    { path: '/flowrun/:flowRunId', component: FlowRun },
+    { path: '/taskrun/:taskRunId', component: TaskRun }
+  ]
+  const router = createRouter({
+    history: createWebHistory('/portal/systemadmin/jobs'),
+    routes
+  })
   try {
     const app = createApp(App)
-
     app.use(createPinia())
-
+    app.use(router)
     app.mount('#log-viewer-main')
   } catch (err) {
     console.log(err)
