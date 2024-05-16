@@ -155,6 +155,14 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
       minPriorObservation: 0,
       targetIds: ["1", "2"],
       outcomeIds: ["3", "2"],
+      timeAtRiskConfigs: [
+        {
+          riskWindowStart: 1,
+          riskWindowEnd: 1,
+          startAnchor: "cohort start",
+          endAnchor: "cohort end",
+        },
+      ],
     },
   },
   target_comparator_outcomes_node: {
