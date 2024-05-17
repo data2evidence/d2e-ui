@@ -17,7 +17,8 @@ export type NodeType =
   | "self_controlled_case_series_node"
   | "patient_level_prediction_node"
   | "study_population_settings_node"
-  | "nco_cohort_set_node";
+  | "nco_cohort_set_node"
+  | "outcomes_node";
 
 export type NodeTypeChoice = Exclude<NodeType, "start">;
 
@@ -69,11 +70,13 @@ export const ZERO_INCIDENCE_NODE = [
   "seasonality_covariate_settings_node",
   "study_population_settings_node",
   "nco_cohort_set_node",
+  "outcomes_node",
 ];
 export const ONE_INCIDENCE_NODE = [
   "negative_control_outcome_cohort_node",
   "cohort_incidence_target_cohorts_node",
   "characterization_node",
+  "target_comparator_outcomes_node",
 ];
 export const TWO_INCIDENCE_NODE = [
   "cohort_method_node",
@@ -86,10 +89,7 @@ export const THREE_INCIDENCE_NODE = [
   "patient_level_prediction_node",
 ];
 export const FOUR_INCIDENCE_NODE = [];
-export const FIVE_INCIDENCE_NODE = [
-  "target_comparator_outcomes_node",
-  "self_controlled_case_series_node",
-];
+export const FIVE_INCIDENCE_NODE = ["self_controlled_case_series_node"];
 
 export const NODE_CONNECTOR_MAPPING = {
   cohort_generator_node: { type: "lightgrey", connector_list: [] },
@@ -145,18 +145,10 @@ export const NODE_CONNECTOR_MAPPING = {
     type: "indigo",
     connector_list: [
       {
-        name: "Negative Control Outcomes",
-        type: "lime",
-        classifier: "negative_control_outcomes",
-      },
-      {
-        name: "Outcome of Interest",
+        name: "Outcomes",
         type: "green",
-        classifier: "outcome_of_interest",
+        classifier: "outcomes",
       },
-      { name: "Target", type: "blue", classifier: "target" },
-      { name: "Comparator", type: "blue", classifier: "comparator" },
-      { name: "Exclude", type: "orange", classifier: "exclude" },
     ],
   },
   cohort_method_analysis_node: {
@@ -249,6 +241,7 @@ export const NODE_CONNECTOR_MAPPING = {
   },
   study_population_settings_node: { type: "lightpink", connector_list: [] },
   nco_cohort_set_node: { type: "blue", connector_list: [] },
+  outcomes_node: { type: "green", connector_list: [] },
 };
 
 export const OUTBOUND_CONNECTOR_STYLE = {

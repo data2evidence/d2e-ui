@@ -20,6 +20,7 @@ import { SelfControlledCaseSeriesAnalysisNode } from "./SelfControlledCaseSeries
 import { CohortIncidentTargetCohortNode } from "./CohortIncidentTargetCohortNode/CohortIncidentTargetCohortNode";
 import { NCOCohortSetNode } from "./NCOCohortSetNode/NCOCohortSetNode";
 import { DefaultCovariateSettingsNode } from "./DefaultCovariateSettingsNode/DefaultCovariateSettingsNode";
+import { OutcomesNode } from "./OutcomesNode/OutcomesNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -45,6 +46,7 @@ export const NODE_TYPES: {
   patient_level_prediction_node: RNode,
   study_population_settings_node: StudyPopulationSettingsNode,
   nco_cohort_set_node: NCOCohortSetNode,
+  outcomes_node: OutcomesNode,
 };
 
 export const NODE_COLORS: {
@@ -69,6 +71,7 @@ export const NODE_COLORS: {
   patient_level_prediction_node: "magenta",
   study_population_settings_node: "lightpink",
   nco_cohort_set_node: "blue",
+  outcomes_node: "green",
 };
 
 export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
@@ -330,6 +333,17 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     tag: NodeTag.Blue,
     defaultData: {},
+  },
+  outcomes_node: {
+    title: "Outcomes",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    tag: NodeTag.Green,
+    defaultData: {
+      ncoCohortSetIds: [],
+      outcomeOfInterest: false,
+      trueEffectSize: 1,
+      priorOutcomeLookback: 30,
+    },
   },
 };
 
