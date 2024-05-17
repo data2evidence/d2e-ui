@@ -21,6 +21,10 @@ export interface TerminologyProps extends PageProps<ResearcherStudyMetadata> {
   selectedConceptSetId?: string;
   mode?: "CONCEPT_MAPPING" | "CONCEPT_SET" | "CONCEPT_SEARCH";
   selectedDatasetId?: string;
+  defaultFilters?: {
+    id: string;
+    value: string[];
+  }[];
 }
 
 const WithDrawer = ({
@@ -212,6 +216,7 @@ export const Terminology: FC<TerminologyProps> = ({
   selectedConceptSetId,
   mode = "CONCEPT_SEARCH",
   selectedDatasetId,
+  defaultFilters,
 }: TerminologyProps) => {
   const { getText, i18nKeys } = useTranslation();
   const userId = baseUserId || metadata?.userId;
@@ -230,12 +235,6 @@ export const Terminology: FC<TerminologyProps> = ({
   const [errorMsg, setErrorMsg] = useState("");
   const [datasets] = useDatasets("researcher");
   const [datasetId, setDatasetId] = useState<string>();
-  const [defaultFilters, setDefaultFilters] = useState<
-    {
-      id: string;
-      value: string[];
-    }[]
-  >();
 
   const isConceptSet = mode === "CONCEPT_SET";
 
@@ -264,19 +263,6 @@ export const Terminology: FC<TerminologyProps> = ({
       return concept1.conceptId < concept2.conceptId ? -1 : 1;
     });
     setSelectedConcepts(selectedConceptsCopy);
-  }, []);
-
-  const getDefaultFilters = useCallback(async () => {
-    // TODO: Use server data
-    const incomingDefaultFilters = await [
-      {
-        id: "conceptClassId",
-        value: ["10th level", "hey"],
-      },
-    ];
-
-    const newDefaultFilters = incomingDefaultFilters ?? {};
-    setDefaultFilters(newDefaultFilters);
   }, []);
 
   const saveConceptSet = useCallback(async () => {
@@ -399,10 +385,6 @@ export const Terminology: FC<TerminologyProps> = ({
   );
 
   const showAddIcon = !!(onConceptIdSelect || isConceptSet);
-
-  useEffect(() => {
-    getDefaultFilters();
-  }, [getDefaultFilters]);
 
   useEffect(() => {
     if (mode === "CONCEPT_MAPPING" || !conceptsResult?.data) {

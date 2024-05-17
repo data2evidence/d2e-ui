@@ -225,7 +225,20 @@ const TerminologyList: FC<TerminologyListProps> = ({
 
   useEffect(() => {
     if (useDefaultFilters && defaultFilters && filterOptions && listData.length) {
-      setColumnFilters(defaultFilters);
+      // Only include valid filters
+      const filters = JSON.parse(JSON.stringify(defaultFilters)) as typeof defaultFilters;
+      const validFilters = filters
+        .map((f) => {
+          const valueKeys = filterOptions[f.id as keyof typeof filterOptions];
+          const valueKeysArr = Object.keys(valueKeys);
+          const value = f.value.filter((v) => valueKeysArr.includes(v));
+          return { ...f, value };
+        })
+        .filter((f) => {
+          // Empty value arrays should be removed as it is not compatible with the react table
+          return Object.keys(filterOptions).includes(f.id) && f.value.length;
+        });
+      setColumnFilters(validFilters);
     }
   }, [defaultFilters, filterOptions, listData, useDefaultFilters]);
 
