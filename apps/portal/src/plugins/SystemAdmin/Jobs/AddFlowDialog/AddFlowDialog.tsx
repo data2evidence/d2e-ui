@@ -60,17 +60,10 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
   );
 
   const handleAdd = useCallback(async () => {
-    const { name, url } = formData;
-    if (name == null || (selectedFile == null && url == null)) return;
+    if (formData.name == null || (selectedFile == null && formData.url == null)) return;
     if (selectedFile) {
       const fileType = selectedFile.type;
-      if (ALLOWED_FILE_TYPES.includes(fileType) && url) {
-        setFeedback({
-          type: "error",
-          message: getText(i18nKeys.ADD_FLOW_DIALOG__TYPE_ERROR),
-        });
-        return;
-      } else if (!ALLOWED_FILE_TYPES.includes(fileType)) {
+      if (!ALLOWED_FILE_TYPES.includes(fileType)) {
         setFeedback({
           type: "error",
           message: getText(i18nKeys.ADD_FLOW_DIALOG__UPLOAD_ERROR),
@@ -80,10 +73,12 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
     }
     try {
       setLoading(true);
-      if (!url) {
+      if (formData.method === "FILE") {
         await api.dataflow.addFlowFromFileDeployment(selectedFile);
+      } else if (formData.url && formData.method === "URL") {
+        await api.dataflow.addFlowFromGitUrlDeployment(formData.url);
       } else {
-        await api.dataflow.addFlowFromGitUrlDeployment(url);
+        return;
       }
       handleClose("success");
     } catch (err: any) {
@@ -100,7 +95,7 @@ const AddFlowDialog: FC<AddFlowDialogProps> = ({ open, onClose }) => {
     } finally {
       setLoading(false);
     }
-  }, [formData.name, handleClose, selectedFile, formData.url, getText]);
+  }, [formData, handleClose, selectedFile, getText, i18nKeys]);
 
   const handleAddFile = useCallback(() => {
     setFeedback({});

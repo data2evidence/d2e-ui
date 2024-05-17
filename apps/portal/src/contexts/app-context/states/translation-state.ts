@@ -51,7 +51,6 @@ export const i18nDefault = {
     ADD_FLOW_DIALOG__NO_FILE_AVAILABLE: "No file available",
     ADD_FLOW_DIALOG__SELECT_FILE: "Select file",
     ADD_FLOW_DIALOG__SIZE: "Size",
-    ADD_FLOW_DIALOG__TYPE_ERROR: "Zip/tgz file upload should not have git url provided",
     ADD_FLOW_DIALOG__UPLOAD_ERROR: "Uploaded file type not supported",
     ADD_FLOW_DIALOG__UPLOAD_METHOD: "Upload Method",
     ADD_FLOW_DIALOG__VIA_FILE_UPLOAD: "via file upload",
