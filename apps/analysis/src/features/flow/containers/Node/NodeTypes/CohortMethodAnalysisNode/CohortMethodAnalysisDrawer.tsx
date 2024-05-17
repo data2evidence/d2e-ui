@@ -25,19 +25,20 @@ interface FormData extends CohortMethodAnalysisNodeData {}
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "Matching on ps and covariates, simple outcomeModel",
-  covariant: {
-    addDescendantsToExclude: true,
-  },
   dbCohortMethodDataArgs: {
     washoutPeriod: 183,
     firstExposureOnly: true,
     removeDuplicateSubjects: "remove all",
     maxCohortSize: 100000,
   },
-  modelType: "cox",
-  stopOnError: false,
-  control: "Cyclops::createControl(cvRepetitions = 1",
-  covariateFilter: "FeatureExtraction::getDefaultTable1Specifications()",
+  fitOutcomeModelArgs: {
+    modelType: "cox",
+  },
+  psArgs: {
+    stopOnError: false,
+    control: false,
+    cvRepetition: 1,
+  },
 };
 
 export const CohortMethodAnalysisDrawer: FC<
@@ -54,12 +55,9 @@ export const CohortMethodAnalysisDrawer: FC<
       setFormData({
         name: node.data.name,
         description: node.data.description,
-        covariant: node.data.covariant,
         dbCohortMethodDataArgs: node.data.dbCohortMethodDataArgs,
-        modelType: node.data.modelType,
-        stopOnError: node.data.stopOnError,
-        control: node.data.control,
-        covariateFilter: node.data.covariateFilter,
+        fitOutcomeModelArgs: node.data.fitOutcomeModelArgs,
+        psArgs: node.data.psArgs,
       });
     } else {
       setFormData({
@@ -99,20 +97,6 @@ export const CohortMethodAnalysisDrawer: FC<
             onFormDataChange({ description: e.target.value })
           }
         />
-      </Box>
-      <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
-        <div style={{ paddingBottom: "20px" }}>Covariant</div>
-        <Box mb={4}>
-          <Checkbox
-            checked={formData.covariant.addDescendantsToExclude}
-            label="Add descendants to exclude"
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onFormDataChange({
-                covariant: { addDescendantsToExclude: e.target.checked },
-              })
-            }
-          />
-        </Box>
       </Box>
       <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
         <div style={{ paddingBottom: "20px" }}>DbCohortMethodDataArgs</div>
@@ -175,49 +159,71 @@ export const CohortMethodAnalysisDrawer: FC<
           />
         </Box>
       </Box>
-      <Box mb={4}>
-        <TextInput
-          label="Model Type"
-          value={formData.modelType}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              modelType: e.target.value,
-            })
-          }
-        />
+      <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
+        <div style={{ paddingBottom: "20px" }}>FitOutcomeModelArgs</div>
+        <Box mb={4}>
+          <TextInput
+            label="Model Type"
+            value={formData.fitOutcomeModelArgs.modelType}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              onFormDataChange({
+                fitOutcomeModelArgs: {
+                  ...formData.fitOutcomeModelArgs,
+                  modelType: e.target.value,
+                },
+              })
+            }
+          />
+        </Box>
       </Box>
-      <Box mb={4}>
-        <Checkbox
-          checked={formData.stopOnError}
-          label="Stop On Error"
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              stopOnError: e.target.checked,
-            })
-          }
-        />
-      </Box>
-      <Box mb={4}>
-        <TextInput
-          label="Control"
-          value={formData.control}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              control: e.target.value,
-            })
-          }
-        />
-      </Box>
-      <Box mb={4}>
-        <TextInput
-          label="CovariateFilter"
-          value={formData.covariateFilter}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              covariateFilter: e.target.value,
-            })
-          }
-        />
+
+      <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
+        <div style={{ paddingBottom: "20px" }}>PsArgs</div>
+        <Box mb={4}>
+          <Checkbox
+            checked={formData.psArgs.stopOnError}
+            label="Stop On Error"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              onFormDataChange({
+                psArgs: {
+                  ...formData.psArgs,
+                  stopOnError: e.target.checked,
+                },
+              })
+            }
+          />
+        </Box>
+        <Box mb={4}>
+          <Checkbox
+            checked={formData.psArgs.control}
+            label="Control"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              onFormDataChange({
+                psArgs: {
+                  ...formData.psArgs,
+                  control: e.target.checked,
+                },
+              })
+            }
+          />
+        </Box>
+        {formData.psArgs.control && (
+          <Box mb={4}>
+            <TextInput
+              label="CV Repetition"
+              value={formData.psArgs.cvRepetition}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                onFormDataChange({
+                  psArgs: {
+                    ...formData.psArgs,
+                    cvRepetition: e.target.value,
+                  },
+                })
+              }
+              type="number"
+            />
+          </Box>
+        )}
       </Box>
     </NodeDrawer>
   );

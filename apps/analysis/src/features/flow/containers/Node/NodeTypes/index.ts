@@ -197,19 +197,20 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run cohort method analysis code",
     tag: NodeTag.Lavender,
     defaultData: {
-      covariant: {
-        addDescendantsToExclude: true,
-      },
       dbCohortMethodDataArgs: {
         washoutPeriod: 183,
         firstExposureOnly: true,
         removeDuplicateSubjects: "remove all",
         maxCohortSize: 100000,
       },
-      modelType: "cox",
-      stopOnError: false,
-      control: "Cyclops::createControl(cvRepetitions = 1",
-      covariateFilter: "FeatureExtraction::getDefaultTable1Specifications()",
+      fitOutcomeModelArgs: {
+        modelType: "cox",
+      },
+      psArgs: {
+        stopOnError: false,
+        control: false,
+        cvRepetition: 1,
+      },
     },
   },
   cohort_method_node: {
