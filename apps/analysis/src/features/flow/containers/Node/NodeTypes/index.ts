@@ -2,29 +2,46 @@ import { ComponentType } from "react";
 import { Node, NodeProps } from "reactflow";
 import { NodeDataState } from "../../../types";
 import { RNode } from "./RNode/RNode";
+import { CohortGeneratorNode } from "./CohortGeneratorNode/CohortGeneratorNode";
+import { CohortDiagnosticsNode } from "./CohortDiagnosticsNode/CohortDiagnosticsNode";
+import { NegatveControlOutcomeNode } from "./NegativeControlOutcomeNode/NegativeControlOutcomeNode";
+import { CharacterizationNode } from "./CharacterizationNode/CharacterizationNode";
+import { TimeAtRiskNode } from "./TimeAtRiskNode/TimeAtRiskNode";
+import { SelfControlledCaseSeriesNode } from "./SelfControlledCaseSeriesNode/SelfControlledCaseSeriesNode";
+import { EraCovariateSettingsNode } from "./EraCovariateSettingsNode/EraCovariateSettingsNode";
+import { CalendarTimeCovariateSettingsNode } from "./CalendarTimeCovariateSettingsNode/CalendarTimeCovariateSettingsNode";
+import { SeasonalityCovariateSettingsNode } from "./SeasonalityCovariateSettingsNode/SeasonalityCovariateSettingsNode";
+import { CohortIncidentNode } from "./CohortIncidentNode/CohortIncidentNode";
+import { TargetComparatorOutcomesNode } from "./TargetComparatorOutcomesNode/TargetComparatorOutcomesNode";
+import { CohortMethodNode } from "./CohortMethodNode/CohortMethodNode";
+import { CohortMethodAnalysisNode } from "./CohortMethodAnalysisNode/CohortMethodAnalysisNode";
+import { StudyPopulationSettingsNode } from "./StudyPopulationSettingsNode/StudyPopulationSettingsNode";
+import { SelfControlledCaseSeriesAnalysisNode } from "./SelfControlledCaseSeriesAnalysisNode/SelfControlledCaseSeriesAnalysisNode";
+import { CohortIncidentTargetCohortNode } from "./CohortIncidentTargetCohortNode/CohortIncidentTargetCohortNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
   [key in NodeType]: ComponentType<NodeProps<any>>;
 } = {
-  cohort_generator_node: RNode,
-  cohort_diagnostic_node: RNode,
-  negative_control_outcome_cohort_node: RNode,
-  cohort_incidence_node: RNode,
-  cohort_incidence_target_cohorts_node: RNode,
-  time_at_risk_node: RNode,
+  cohort_generator_node: CohortGeneratorNode,
+  cohort_diagnostic_node: CohortDiagnosticsNode,
+  negative_control_outcome_cohort_node: NegatveControlOutcomeNode,
+  cohort_incidence_node: CohortIncidentNode,
+  cohort_incidence_target_cohorts_node: CohortIncidentTargetCohortNode,
+  time_at_risk_node: TimeAtRiskNode,
   covariate_settings_node: RNode,
-  characterization_node: RNode,
-  target_compartor_outcomes_node: RNode,
-  cohort_method_analysis_node: RNode,
-  cohort_method_node: RNode,
-  era_covariate_settings_node: RNode,
-  calendar_time_covariate_settings_node: RNode,
-  seasonality_covariate_settings_node: RNode,
-  self_controlled_case_series_analysis_node: RNode,
-  self_controlled_case_series_node: RNode,
+  characterization_node: CharacterizationNode,
+  target_comparator_outcomes_node: TargetComparatorOutcomesNode,
+  cohort_method_analysis_node: CohortMethodAnalysisNode,
+  cohort_method_node: CohortMethodNode,
+  era_covariate_settings_node: EraCovariateSettingsNode,
+  calendar_time_covariate_settings_node: CalendarTimeCovariateSettingsNode,
+  seasonality_covariate_settings_node: SeasonalityCovariateSettingsNode,
+  self_controlled_case_series_analysis_node:
+    SelfControlledCaseSeriesAnalysisNode,
+  self_controlled_case_series_node: SelfControlledCaseSeriesNode,
   patient_level_prediction_node: RNode,
-  study_poplulation_settings_node: RNode,
+  study_population_settings_node: StudyPopulationSettingsNode,
 };
 
 export const NODE_COLORS: {
@@ -38,7 +55,7 @@ export const NODE_COLORS: {
   time_at_risk_node: "wheat",
   covariate_settings_node: "darkgreen",
   characterization_node: "darkgreen",
-  target_compartor_outcomes_node: "indigo",
+  target_comparator_outcomes_node: "indigo",
   cohort_method_analysis_node: "lavender",
   cohort_method_node: "mediumpurple",
   era_covariate_settings_node: "chocolate",
@@ -47,7 +64,7 @@ export const NODE_COLORS: {
   self_controlled_case_series_analysis_node: "red",
   self_controlled_case_series_node: "darkred",
   patient_level_prediction_node: "magenta",
-  study_poplulation_settings_node: "lightpink",
+  study_population_settings_node: "lightpink",
 };
 
 export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
@@ -56,56 +73,68 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run cohort generator code.",
     tag: NodeTag.Lightgrey,
     defaultData: {
-      r_code: `source("https://raw.githubusercontent.com/OHDSI/CohortGeneratorModule/v0.3.0/SettingsFunctions.R")
-
-# Create the cohort definition shared resource element for the analysis specification
-cohortDefinitionSharedResource <- createCohortSharedResourceSpecifications(
-  cohortDefinitionSet = cohortDefinitionSet
-)
-
-# Create the negative control outcome shared resource element for the analysis specification
-ncoSharedResource <- createNegativeControlOutcomeCohortSharedResourceSpecifications(
-  negativeControlOutcomeCohortSet = ncoCohortSet,
-  occurrenceType = "all",
-  detectOnDescendants = TRUE
-)
-
-# Create the module specification
-cohortGeneratorModuleSpecifications <- createCohortGeneratorModuleSpecifications(
-  incremental = TRUE,
-  generateStats = TRUE
-)`,
+      incremental: true,
+      generateStats: true,
     },
   },
   cohort_diagnostic_node: {
     title: "Cohort Diagnostic Module Specifications",
     description: "Run cohort diagnostic starboard.",
     tag: NodeTag.Grey,
-    defaultData: {},
+    defaultData: {
+      runInclusionStatistics: true,
+      runIncludedSourceConcepts: true,
+      runOrphanConcepts: true,
+      runTimeSeries: false,
+      runVisistContext: true,
+      runBreakdownIndexEvents: true,
+      runIncidenceRate: true,
+      runCohortRelationship: true,
+      runTemporalCohortCharacterization: true,
+      incremental: false,
+    },
   },
   negative_control_outcome_cohort_node: {
     title: "Negative Control Outcome Cohort Shared Resource Specifications",
     description: "Run negative control outcome cohort.",
     tag: NodeTag.Lime,
-    defaultData: {},
+    defaultData: {
+      occurenceType: "all",
+      detectOnDescendants: true,
+    },
   },
   cohort_incidence_node: {
     title: "Cohort Incidence",
     description: "Run cohort incidence code.",
     tag: NodeTag.Cyan,
-    defaultData: {},
+    defaultData: {
+      byYear: true,
+      byGender: true,
+    },
   },
   cohort_incidence_target_cohorts_node: {
     title: "Cohort Incidence Target Cohorts",
     description: "Run cohort incidence target cohorts code.",
     tag: NodeTag.Aquamarine,
-    defaultData: {},
+    defaultData: {
+      cohortId: 3,
+      cleanWindow: 9999,
+    },
   },
   time_at_risk_node: {
     title: "Time At Risk",
     description: "Run time at risk code.",
     tag: NodeTag.Wheat,
-    defaultData: {},
+    defaultData: {
+      timeAtRiskConfigs: [
+        {
+          riskWindowStart: 1,
+          riskWindowEnd: 1,
+          startAnchor: "cohort start",
+          endAnchor: "cohort end",
+        },
+      ],
+    },
   },
   covariate_settings_node: {
     title: "Covariate Settings",
@@ -117,55 +146,130 @@ cohortGeneratorModuleSpecifications <- createCohortGeneratorModuleSpecifications
     title: "Characterization",
     description: "JSON analysis specification for executing HADES modules",
     tag: NodeTag.Darkgreen,
-    defaultData: {},
+    defaultData: {
+      dechallengeStopInterval: 0,
+      dechallengeEvaluationWindow: 0,
+      minPriorObservation: 0,
+      targetIds: ["1", "2"],
+      outcomeIds: ["3", "2"],
+    },
   },
-  target_compartor_outcomes_node: {
+  target_comparator_outcomes_node: {
     title: "Target Compartor Outcomes",
-    description: "Run target compartor outcomes code",
+    description: "Run target comparator outcomes code",
     tag: NodeTag.Indigo,
-    defaultData: {},
+    defaultData: {
+      targetId: 1,
+      comparatorId: 1,
+      trueEffectSize: 1,
+      priorOutcomeLookback: 30,
+      excludedCovariateConceptIds: [],
+      includedCovariateConceptIds: [],
+    },
   },
   cohort_method_analysis_node: {
     title: "Cohort Method Analysis",
     description: "Run cohort method analysis code",
     tag: NodeTag.Lavender,
-    defaultData: {},
+    defaultData: {
+      covariant: {
+        addDescendantsToExclude: true,
+      },
+      dbCohortMethodDataArgs: {
+        washoutPeriod: 183,
+        firstExposureOnly: true,
+        removeDuplicateSubjects: "remove all",
+        maxCohortSize: 100000,
+      },
+      modelType: "cox",
+      stopOnError: false,
+      control: "Cyclops::createControl(cvRepetitions = 1",
+      covariateFilter: "FeatureExtraction::getDefaultTable1Specifications()",
+    },
   },
   cohort_method_node: {
     title: "Cohort Method",
     description: "Run cohort method code.",
     tag: NodeTag.Mediumpurple,
-    defaultData: {},
+    defaultData: {
+      trueEffectSize: 1,
+      priorOutcomeLookback: 30,
+      cohortMethodConfigs: [],
+    },
   },
   era_covariate_settings_node: {
     title: "Era Covariate Settings",
     description: "Run era covariate settings code.",
     tag: NodeTag.Chocolate,
-    defaultData: {},
+    defaultData: {
+      label: "Main",
+      includedEraIds: [],
+      excludedEraIds: [],
+      start: 0,
+      end: 0,
+      startAnchor: "era start",
+      endAnchor: "era end",
+      stratifyById: false,
+      firstOccurenceOnly: false,
+      allowRegularization: false,
+      profileLikelihood: true,
+      exposureOfInterest: true,
+    },
   },
   calendar_time_covariate_settings_node: {
     title: "Calendar Time Covariate Settings",
     description: "Run calendar time covariate settings code.",
     tag: NodeTag.Chocolate,
-    defaultData: {},
+    defaultData: {
+      caldendarTimeKnots: 5,
+      allowRegularization: true,
+      computeConfidenceIntervals: false,
+    },
   },
   seasonality_covariate_settings_node: {
     title: "Seasonality Covariate Settings",
     description: "Run seasonality covariate settings code.",
     tag: NodeTag.Chocolate,
-    defaultData: {},
+    defaultData: {
+      seasonalityKnots: 5,
+      allowRegularization: true,
+      computeConfidenceIntervals: false,
+    },
   },
   self_controlled_case_series_analysis_node: {
     title: "Self Controlled Case Series Analysis",
     description: "Run self-controlled case series analysis code.",
     tag: NodeTag.Red,
-    defaultData: {},
+    defaultData: {
+      description: "SCCS age 18-",
+      dbSccsDataArgs: {
+        studyStartDate: "",
+        studyEndDate: "",
+        maxCasesPerOutcome: 100000,
+        useNestingCohort: true,
+        nestingCohortId: 1,
+        deleteCovariateSmallCount: 0,
+      },
+      sccsIntervalDataArgs: {
+        minCasesForTimeCovariates: 100000,
+      },
+      fitSccsModelArgs: {
+        cvType: "auto",
+        selectorType: "byPid",
+        startingVariance: 0.1,
+        seed: 1,
+        resetCoefficients: true,
+        noiseLevel: "quiet",
+      },
+    },
   },
   self_controlled_case_series_node: {
     title: "Self Controlled Case Series",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     tag: NodeTag.Darkred,
-    defaultData: {},
+    defaultData: {
+      combineDataFetchAcrossOutcomes: false,
+    },
   },
   patient_level_prediction_node: {
     title: "Patient Level Prediction",
@@ -174,11 +278,26 @@ cohortGeneratorModuleSpecifications <- createCohortGeneratorModuleSpecifications
     tag: NodeTag.Magenta,
     defaultData: {},
   },
-  study_poplulation_settings_node: {
+  study_population_settings_node: {
     title: "Study Population Settings",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     tag: NodeTag.Lightpink,
-    defaultData: {},
+    defaultData: {
+      startAnchor: ["cohort start", "cohort start"],
+      riskWindowStart: 1,
+      endAnchor: ["cohort end", "cohort end"],
+      riskWindowEnd: 365,
+      minTimeAtRisk: 1,
+      studyPopulationArgs: {
+        minDaysAtRisk: 1,
+        riskWindowStart: 0,
+        startAnchor: ["cohort start", "cohort start"],
+        riskWindowEnd: 30,
+        endAnchor: ["cohort end", "cohort end"],
+        minAge: 18,
+        naivePeriod: 365,
+      },
+    },
   },
 };
 

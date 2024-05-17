@@ -2,7 +2,7 @@ import { STUDY_ROLES } from "../config";
 import { UserGroup, UserWithRoles, UserWithRolesInfo } from "../types";
 import env from "../env";
 import request from "./request";
-import { UserGroupMetadata } from "../contexts/UserContext";
+import { UserGroupMetadata } from "../contexts/app-context/states";
 
 const USER_MGMT_BASE_URL = `${env.REACT_APP_DN_BASE_URL}usermgmt/api/`;
 
@@ -243,14 +243,13 @@ export class UserMgmt {
 
   public addStudyAccessRequest(
     userId: string,
-    tenantId: string,
     studyId: string,
     role: string
   ): Promise<{ id: string; userId: string; groupId: string }[]> {
     return request({
       baseURL: USER_MGMT_BASE_URL,
       url: "study/access-request",
-      data: { userId, tenantId, studyId, role },
+      data: { userId, studyId, role },
       method: "POST",
     });
   }

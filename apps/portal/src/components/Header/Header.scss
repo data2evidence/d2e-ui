@@ -1,76 +1,67 @@
 header.portal__header {
+  width: 100%;
+  min-height: 80px;
+  background-color: #fbfbfd;
+  box-shadow: 0 0.5px 8px 0 #acaba8;
+  position: fixed;
+  top: 0;
   display: flex;
-  height: 72px;
-  justify-content: space-between;
-  background: #ccdef1;
-  color: var(--color-primary);
   align-items: center;
+  justify-content: space-between;
   z-index: 3;
-}
 
-.header__logo-group {
-  display: flex;
+  .active-dataset-container {
+    margin-right: 2rem;
 
-  .logo {
-    align-self: center;
-    margin-left: 1rem;
-  }
-
-  .portal-switcher {
-    display: flex;
-    align-items: center;
-    margin-left: 1rem;
-
-    svg {
-      position: relative;
-      right: 1rem;
-      &:first-of-type {
-        left: 0.8rem;
-        top: 0.13rem;
-      }
+    .select-release {
+      margin-left: 1rem;
     }
   }
 }
 
-.header__title {
-  text-align: left;
-  font-size: 24px;
-  font-weight: 500;
-  display: inline-block;
-  margin: 17px 16px;
-  font-family: "GT-America";
+.header__logo-group {
+  .logo {
+    margin-left: 2rem;
+    cursor: pointer;
+  }
 }
 
 .header__menu-group {
-  text-align: right;
-  padding-right: 10px;
+  padding-right: 32px;
+
+  ul {
+    padding-left: 0;
+    margin: 0;
+
+    li {
+      display: inline-block;
+      position: relative;
+
+      > a {
+        display: inline-block;
+        padding: 28px 16px;
+      }
+
+      > p {
+        display: inline-block;
+        padding: 10px 8px;
+      }
+    }
+  }
 
   span {
     margin-right: -6px;
   }
-
-  svg {
-    position: relative;
-    top: 8px;
-    right: 6px;
-    vertical-align: inherit;
-  }
 }
 
 .header__menu-group ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-family: "GT-America";
-
   li {
-    font-size: 16px;
     display: inline-block;
     position: relative;
 
     > a {
       display: inline-block;
-      padding: 26px 16px;
+      padding: 28px 16px;
     }
 
     > p {
@@ -81,6 +72,7 @@ header.portal__header {
     &.header__menu-overview {
       svg {
         position: relative;
+        top: 6px;
         right: 16px;
       }
     }
@@ -98,7 +90,7 @@ header.portal__header {
       &::after {
         content: "";
         position: absolute;
-        bottom: 2px;
+        bottom: 0;
         left: 0;
         height: 8px;
         width: 100%;
@@ -127,7 +119,7 @@ header.portal__header {
       cursor: default;
     }
 
-    svg {
+    svg.portal_menu__chevron-down {
       filter: brightness(0) saturate(100%) invert(28%) sepia(13%) saturate(5728%) hue-rotate(204deg) brightness(96%)
         contrast(86%);
     }

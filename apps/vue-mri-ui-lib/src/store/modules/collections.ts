@@ -162,13 +162,13 @@ const actions = {
     })
 
     const syntax = JSON.stringify({
-      datasetId: rootGetters.getSelectedUserStudy.id,
+      datasetId: rootGetters.getSelectedDataset.id,
       bookmarkId: bookmarkId,
     })
 
     return dispatch('ajaxAuth', {
       method: 'get',
-      url: '/analytics-svc/api/services/cohort/SYNTAX/' + syntax + '?studyId=' + rootGetters.getSelectedUserStudy.id,
+      url: '/analytics-svc/api/services/cohort/SYNTAX/' + syntax + '?studyId=' + rootGetters.getSelectedDataset.id,
       cancelToken,
     })
       .then(response => {

@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   alp-local-ui-file-server:
     image: alpcr.azurecr.io/alp-data-node/alp-local-ui-file-server:local # will build from local
@@ -11,10 +9,11 @@ services:
     container_name: alp-local-ui-file-server
     # volumes:
     # uncomment the required lines below when doing local UI development, to use files from file system instead of docker image
-    # - ../alp-ui/resources/mri-ui5/PatientSummaryConfig:/home/docker/ui-files/mri-ui5/PatientSummaryConfig
-    # - ../alp-ui/resources/mri:/home/docker/ui-files/mri
-    # - ../alp-ui/resources/starboard-notebook-base:/home/docker/ui-files/starboard-notebook-base
-    # - ../alp-ui/resources/mri-ui5/mri-pa-ui:/home/docker/ui-files/mri-ui5/mri-pa-ui
-    # - ../alp-ui/resources/mri-ui5/chp-ps-ui:/home/docker/ui-files/mri-ui5/chp-ps-ui
+    # - ../d2e-ui/resources/mri-ui5/PatientSummaryConfig:/home/docker/ui-files/mri-ui5/PatientSummaryConfig
+    # - ../d2e-ui/resources/mri:/home/docker/ui-files/mri
+    # - ../d2e-ui/resources/starboard-notebook-base:/home/docker/ui-files/starboard-notebook-base
+    # - ../d2e-ui/resources/mri-ui5/mri-pa-ui:/home/docker/ui-files/mri-ui5/mri-pa-ui
+    # - ../d2e-ui/resources/mri-ui5/chp-ps-ui:/home/docker/ui-files/mri-ui5/chp-ps-ui
+    # - ../d2e-ui/resources/log-viewer:/home/docker/ui-files/log-viewer
     networks:
       - alp

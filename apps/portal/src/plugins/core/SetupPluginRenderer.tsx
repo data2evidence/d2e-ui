@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { importPluginModule } from "./pluginLoader";
-import { useUserInfo } from "../../contexts/UserContext";
 import { getAuthToken } from "../../containers/auth";
+import { useUser } from "../../contexts";
 
 interface SetupPluginRendererProps<T = any> {
   path: string;
@@ -9,7 +9,7 @@ interface SetupPluginRendererProps<T = any> {
 }
 
 export const SetupPluginRenderer: FC<SetupPluginRendererProps> = ({ path, data }) => {
-  const { getUserId } = useUserInfo();
+  const { userId } = useUser();
   const [component, setComponent] = useState<any>();
 
   useEffect(() => {
@@ -24,13 +24,13 @@ export const SetupPluginRenderer: FC<SetupPluginRendererProps> = ({ path, data }
 
   const metadata = useMemo(
     () => ({
-      userId: getUserId(),
+      userId,
       getToken: async () => {
         return await getAuthToken();
       },
       data,
     }),
-    [getUserId, data]
+    [userId, data]
   );
 
   const PageComponent = component?.page;

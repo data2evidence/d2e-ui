@@ -58,7 +58,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['dataToTraces', 'getMriFrontendConfig', 'getText', 'processResponse', 'getSelectedUserStudy']),
+    ...mapGetters(['dataToTraces', 'getMriFrontendConfig', 'getText', 'processResponse', 'getSelectedDataset']),
   },
   methods: {
     ...mapActions(['ajaxAuth']),
@@ -109,7 +109,7 @@ export default {
           '&configVersion=' +
           configMetadata.configVersion +
           '&selectedStudyEntityValue=' +
-          this.getSelectedUserStudy.id,
+          this.getSelectedDataset.id,
         cancelToken,
       })
         .then(({ data }) => {

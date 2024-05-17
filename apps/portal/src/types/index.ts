@@ -135,3 +135,10 @@ export interface ConfigItem {
   code: string;
   value: string;
 }
+
+export enum PORTAL_TYPE {
+  RESEARCHER = "researcher",
+  SYSTEM_ADMIN = "system_admin",
+}
+
+export type PortalType = `${PORTAL_TYPE}`;

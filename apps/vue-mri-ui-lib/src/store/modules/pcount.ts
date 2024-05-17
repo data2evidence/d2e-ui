@@ -3,6 +3,7 @@ import * as types from '@/store/mutation-types'
 // initial state
 const state = {
   displayTotalGuardedPatientCount: false,
+  patientTotalRequested: false,
 }
 
 // getters
@@ -23,12 +24,87 @@ const getters = {
 }
 
 // actions
-const actions = {}
+const actions = {
+  setPatientTotalRequested({ commit }, patientTotalRequested) {
+    commit(types.PCOUNT_SET_PATIENT_TOTAL_REQUESTED, patientTotalRequested)
+  },
+  requestTotalPatientCount({ commit, state, rootGetters, dispatch }) {
+    commit(types.PCOUNT_SET_PATIENT_TOTAL_REQUESTED, true)
+    const configMetadata = rootGetters.getMriFrontendConfig.getConfigMetadata()
+    const bm = {
+      filter: {
+        configMetadata: {
+          id: configMetadata.configId,
+          version: configMetadata.configVersion,
+        },
+        cards: {
+          type: 'BooleanContainer',
+          op: 'AND',
+          content: [
+            {
+              type: 'BooleanContainer',
+              op: 'OR',
+              content: [],
+            },
+          ],
+        },
+      },
+      axisSelection: [],
+      metadata: {
+        version: 3,
+      },
+      selectedStudyEntityValue: rootGetters.getSelectedDataset.id,
+    }
+
+    dispatch('firePatientCountQuery', {
+      type: 'total',
+      params: bm,
+    })
+  },
+  refreshPatientCount({ commit, state, rootGetters, dispatch }) {
+    if (!rootGetters.getPatientListTotalRequested) {
+      dispatch('setPatientListTotalRequested', true)
+      const configMetadata = rootGetters.getMriFrontendConfig.getConfigMetadata()
+      const request = {
+        cards: {
+          type: 'BooleanContainer',
+          op: 'AND',
+          content: [
+            {
+              type: 'BooleanContainer',
+              op: 'OR',
+              content: [],
+            },
+          ],
+        },
+        guarded: true,
+        limit: 20,
+        offset: 0,
+        axes: [],
+        configData: {
+          configId: configMetadata.configId,
+          configVersion: configMetadata.configVersion,
+        },
+        selectedStudyEntityValue: this.getSelectedDataset.id,
+      }
+      dispatch('firePatientListCountQuery', {
+        type: 'total',
+        params: request,
+      })
+    }
+    if (state.patientTotalRequested) {
+      dispatch('requestTotalPatientCount')
+    }
+  },
+}
 
 // mutations
 const mutations = {
   [types.PCOUNT_SET_DISPLAYTOTALGUARDEDPATIENTCOUNT](modulestate, { isDisplay }) {
     modulestate.displayTotalGuardedPatientCount = isDisplay
+  },
+  [types.PCOUNT_SET_PATIENT_TOTAL_REQUESTED](modulestate, patientTotalRequested) {
+    modulestate.patientTotalRequested = patientTotalRequested
   },
 }
 

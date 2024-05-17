@@ -2,13 +2,14 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
 import { StarboardNotebook } from "./utils/notebook";
 import { StarboardEmbed } from "@alp-os/alp-starboard-wrap";
-import { Loader } from "@portal/components";
+import { Card, Loader } from "@portal/components";
 import { api } from "../../axios/api";
 import { useFeedback, useTranslation } from "../../contexts";
 import { EmptyNotebook } from "./components/EmptyNotebook";
-import { Header } from "./components/Header";
+import { Header } from "./components/NotebookHeader/NotebookHeader";
 import { convertJupyterToStarboard, notebookContentToText } from "./utils/jupystar";
 import env from "../../env";
+import "./Starboard.scss";
 
 const MRI_ROOT_URL = `${env.REACT_APP_DN_BASE_URL}analytics-svc`;
 const uiFilesUrl = env.REACT_APP_DN_BASE_URL;
@@ -171,7 +172,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
   }
 
   return (
-    <div>
+    <div className="starboard">
       <Header
         metadata={metadata}
         notebooks={notebooks}
@@ -184,7 +185,9 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
         isShared={isShared}
         setIsShared={setIsShared}
       />
-      <div id="starboard-root" />
+      <Card>
+        <div id="starboard-root" />
+      </Card>
     </div>
   );
 };

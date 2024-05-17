@@ -23,10 +23,8 @@ const state = {
     show: false,
   },
   hasAssignedConfig: false,
-  userStudies: [],
-  datasetVersions: [],
-  selectedStudy: {},
-  selectedDatasetVersion: {},
+  selectedDatasetId: {},
+  selectedDatasetVersion: '',
 }
 
 // default release version
@@ -45,9 +43,7 @@ const getters = {
   getConfigs: state => state.assignments,
   getHasAssignedConfig: state => state.hasAssignedConfig,
   getSelectedPAConfigId: state => state.mriconfig.meta.configId,
-  getUserStudies: state => state.userStudies,
-  getSelectedUserStudy: state => state.selectedStudy,
-  getDatasetVersions: state => state.datasetVersions,
+  getSelectedDataset: state => state.selectedDataset,
   getSelectedDatasetVersion: state => state.selectedDatasetVersion,
 }
 
@@ -81,58 +77,15 @@ const actions = {
     //   processData([...config]);
     // }, 1000);
 
-    dispatch('requestUserStudies').then((selectedStudyId?: string) => {
-      // load the complete config to our state
-      dispatch('ajaxAuth', {
-        method: 'get',
-        url: `${analyticsEndpoint}?action=getMyConfig${selectedStudyId ? `&selectedStudyId=${selectedStudyId}` : ''}`,
-      }).then(response => {
-        const aData = response.data
-        processData(aData)
-        dispatch('requestDatasetVersions')
-      })
-    })
-  },
-  requestUserStudies({ dispatch, commit, rootGetters }) {
-    return new Promise((resolve, reject) => {
-      const portalAPI = getPortalAPI()
-      dispatch('ajaxAuth', {
-        method: 'get',
-        url: '/analytics-svc/api/services/userStudies',
-      }).then(response => {
-        if (response) {
-          commit(types.SET_USER_STUDIES, response.data)
-
-          // Portal defines the selected study instead of PA
-          if (response.data && portalAPI && portalAPI.studyId) {
-            commit(
-              types.SET_SELECTED_STUDY,
-              response.data.find(dataset => dataset.id == portalAPI.studyId)
-            )
-          } else {
-            commit(types.SET_SELECTED_STUDY, response.data[0])
-          }
-        }
-        resolve(response?.data?.[0]?.id)
-      })
-    })
-  },
-  requestDatasetVersions({ dispatch, commit, getters }) {
-    return new Promise((resolve, reject) => {
-      dispatch('ajaxAuth', {
-        method: 'get',
-        url: '/system-portal/dataset/' + getters.getSelectedUserStudy.id + '/release/list',
-      }).then(response => {
-        if (response) {
-          commit(types.SET_DATASET_VERSIONS, [...response.data, defaultRelease])
-          if (response?.data?.[0]) {
-            commit(types.SET_SELECTED_DATASET_VERSION, defaultRelease)
-          } else {
-            commit(types.SET_SELECTED_DATASET_VERSION, {})
-          }
-        }
-        resolve(response?.data?.[0]?.id)
-      })
+    // load the complete config to our state
+    dispatch('ajaxAuth', {
+      method: 'get',
+      url: `${analyticsEndpoint}?action=getMyConfig${
+        rootGetters.getSelectedDataset.id ? `&selectedStudyId=${rootGetters.getSelectedDataset.id}` : ''
+      }`,
+    }).then(response => {
+      const aData = response.data
+      processData(aData)
     })
   },
   setupFrontendConfig({ dispatch, commit }, config) {
@@ -193,10 +146,12 @@ const actions = {
     })
   },
   setDataset({ commit }, dataset) {
-    commit(types.SET_SELECTED_STUDY, dataset)
+    const datasetId = getPortalAPI().studyId
+    commit(types.SET_SELECTED_DATASET, { id: datasetId })
   },
-  setDatasetVersion({ commit }, datasetVersion) {
-    commit(types.SET_SELECTED_DATASET_VERSION, datasetVersion)
+  setDatasetReleaseId({ commit }) {
+    const releaseId = getPortalAPI().releaseId
+    commit(types.SET_SELECTED_DATASET_RELEASE_ID, releaseId)
   },
 }
 
@@ -217,17 +172,11 @@ const mutations = {
   [types.CONFIG_SET_HAS_ASSIGNED](moduleState, hasAssignedConfig) {
     moduleState.hasAssignedConfig = hasAssignedConfig
   },
-  [types.SET_USER_STUDIES](moduleState, userStudies) {
-    moduleState.userStudies = userStudies
+  [types.SET_SELECTED_DATASET](moduleState, dataset) {
+    moduleState.selectedDataset = dataset
   },
-  [types.SET_SELECTED_STUDY](moduleState, dataset) {
-    moduleState.selectedStudy = dataset
-  },
-  [types.SET_DATASET_VERSIONS](moduleState, datasetVersions) {
-    moduleState.datasetVersions = datasetVersions
-  },
-  [types.SET_SELECTED_DATASET_VERSION](moduleState, selectedDatasetVersion) {
-    moduleState.selectedDatasetVersion = selectedDatasetVersion
+  [types.SET_SELECTED_DATASET_RELEASE_ID](moduleState, selectedDatasetReleaseId) {
+    moduleState.selectedDatasetReleaseId = selectedDatasetReleaseId
   },
   [types.CONFIG_SET_ALL](moduleState, { mriFrontendConfigInstance, chartConfigServiceInstance }) {
     moduleState.mriFrontendConfigInstance = mriFrontendConfigInstance

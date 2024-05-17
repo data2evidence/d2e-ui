@@ -50,7 +50,7 @@ const RequestPanel: FC<RequestPanelProps> = ({ selectedAction, handleActionChang
               </TableRow>
             )}
             {accessRequests?.map((request, index) => (
-              <TableRow key={request.id} style={index % 2 ? { background: "#ebf1f8" } : { background: "white" }}>
+              <TableRow key={request.id}>
                 <TableCell style={{ wordBreak: "break-all", color: "#000e7e" }}>{request.username}</TableCell>
                 <TableCell style={{ color: "#000e7e" }}>
                   {dayjs(
