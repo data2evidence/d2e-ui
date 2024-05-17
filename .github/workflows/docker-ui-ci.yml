@@ -101,7 +101,6 @@ jobs:
         AZ_TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
         REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
         REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-        AZ__EXCLUDE_DOCKER_TAG__PATTERN: project # TODO: Use another name | only single value.
         AZ__ENABLE_DELETE: ${{ vars.AZ__ENABLE_DELETE }} # Can enable/disable if needed
         NUMBER_OF_DAYS: 14
       run: |
@@ -112,7 +111,6 @@ jobs:
         
         echo ". INFO: calculate digests"
         az acr manifest metadata list --name ${REPOSITORY} --registry ${REGISTRY_NAME} --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags) && !(length(tags[0])!=\`40\` || not_null(tags[1]) && length(tags[1])!=\`40\` || not_null(tags[2]) && length(tags[2])!=\`40\`)]" > private.json
-        # !(contains(@, '${AZ__EXCLUDE_DOCKER_TAG__PATTERN}')) && 
 
         echo . INFO: tags to delete
         cat private.json | yq '.[].tags'
