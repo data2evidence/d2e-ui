@@ -68,17 +68,18 @@ export const ZERO_INCIDENCE_NODE = [
   "calendar_time_covariate_settings_node",
   "seasonality_covariate_settings_node",
   "study_population_settings_node",
+  "nco_cohort_set_node",
 ];
 export const ONE_INCIDENCE_NODE = [
   "negative_control_outcome_cohort_node",
   "cohort_incidence_target_cohorts_node",
-  "cohort_method_analysis_node",
   "characterization_node",
 ];
 export const TWO_INCIDENCE_NODE = [
   "cohort_method_node",
   "self_controlled_case_series_analysis_node",
   "cohort_incidence_node",
+  "cohort_method_analysis_node",
 ];
 export const THREE_INCIDENCE_NODE = [
   "default_covariate_settings_node",
@@ -97,9 +98,9 @@ export const NODE_CONNECTOR_MAPPING = {
     type: "lime",
     connector_list: [
       {
-        name: "negativeControlOutcomeCohortSet",
+        name: "ncoCohortSet",
         type: "blue",
-        classifier: "negative_control_outcome_cohort_set",
+        classifier: "nco_cohort_set",
       },
     ],
   },
@@ -165,6 +166,11 @@ export const NODE_CONNECTOR_MAPPING = {
         name: "Study Population",
         type: "lightpink",
         classifier: "study_population",
+      },
+      {
+        name: "Default Covariate Settings",
+        type: "darkgreen",
+        classifier: "default_covariate_settings",
       },
     ],
   },
@@ -242,7 +248,7 @@ export const NODE_CONNECTOR_MAPPING = {
     ],
   },
   study_population_settings_node: { type: "lightpink", connector_list: [] },
-  nco_cohort_set_node: { type: "lightpink", connector_list: [] },
+  nco_cohort_set_node: { type: "blue", connector_list: [] },
 };
 
 export const OUTBOUND_CONNECTOR_STYLE = {

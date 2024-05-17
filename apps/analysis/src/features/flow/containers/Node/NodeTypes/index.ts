@@ -19,6 +19,7 @@ import { StudyPopulationSettingsNode } from "./StudyPopulationSettingsNode/Study
 import { SelfControlledCaseSeriesAnalysisNode } from "./SelfControlledCaseSeriesAnalysisNode/SelfControlledCaseSeriesAnalysisNode";
 import { CohortIncidentTargetCohortNode } from "./CohortIncidentTargetCohortNode/CohortIncidentTargetCohortNode";
 import { NCOCohortSetNode } from "./NCOCohortSetNode/NCOCohortSetNode";
+import { DefaultCovariateSettingsNode } from "./DefaultCovariateSettingsNode/DefaultCovariateSettingsNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -30,7 +31,7 @@ export const NODE_TYPES: {
   cohort_incidence_node: CohortIncidentNode,
   cohort_incidence_target_cohorts_node: CohortIncidentTargetCohortNode,
   time_at_risk_node: TimeAtRiskNode,
-  default_covariate_settings_node: RNode,
+  default_covariate_settings_node: DefaultCovariateSettingsNode,
   characterization_node: CharacterizationNode,
   target_comparator_outcomes_node: TargetComparatorOutcomesNode,
   cohort_method_analysis_node: CohortMethodAnalysisNode,
@@ -67,7 +68,7 @@ export const NODE_COLORS: {
   self_controlled_case_series_node: "darkred",
   patient_level_prediction_node: "magenta",
   study_population_settings_node: "lightpink",
-  nco_cohort_set_node: "lightpink",
+  nco_cohort_set_node: "blue",
 };
 
 export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
@@ -147,7 +148,13 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     title: "Covariate Settings",
     description: "Run covariate settings code.",
     tag: NodeTag.Darkgreen,
-    defaultData: {},
+    defaultData: {
+      excludedCovariateConceptIds: [],
+      includedCovariateConceptIds: [],
+      addDescendantsToExclude: false,
+      addDescendantsToInclude: false,
+      includedCovariateIds: [],
+    },
   },
   characterization_node: {
     title: "Characterization",
@@ -321,7 +328,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
   nco_cohort_set_node: {
     title: "NCO Cohort Set",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    tag: NodeTag.Lightpink,
+    tag: NodeTag.Blue,
     defaultData: {},
   },
 };
