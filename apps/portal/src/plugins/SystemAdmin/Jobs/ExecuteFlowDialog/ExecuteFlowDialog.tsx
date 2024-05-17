@@ -154,20 +154,6 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     return errors.length !== 0 || flowRunName === "";
   }, [flowRunName, formData, errors]);
 
-  const formatParams = useCallback(() => {
-    const newFormData = { ...formData };
-
-    const keysToParse = ["options", "analysis_spec", "json_graph"];
-
-    keysToParse.forEach((key) => {
-      if (formData[key]) {
-        newFormData[key] = JSON.parse(formData[key]);
-      }
-    });
-
-    return newFormData;
-  }, [formData]);
-
   function hasError(property: Record<string, any>, form: Record<string, any>) {
     return property.required && form === undefined;
   }
@@ -182,20 +168,15 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     try {
       setLoading(true);
 
-      console.log(formData);
-      console.log(typeof formData);
-      console.log(JSON.stringify(formData));
-      console.log(JSON.parse(JSON.stringify(formData)));
+      const flowRun = {
+        flowRunName: flowRunName,
+        flowName: flowName,
+        deploymentName: deploymentName,
+        params: formData,
+      };
 
-      // const flowRun = {
-      //   flowRunName: flowRunName,
-      //   flowName: flowName,
-      //   deploymentName: deploymentName,
-      //   params: formatParams(),
-      // };
-
-      // await api.dataflow.executeFlowRunByDeployment(flowRun);
-      // handleClose("success");
+      await api.dataflow.executeFlowRunByDeployment(flowRun);
+      handleClose("success");
     } catch (err: any) {
       if (err.data?.message) {
         setFeedback({ type: "error", message: err.data?.message });
