@@ -96,12 +96,10 @@ jobs:
       env:
         REGISTRY_NAME: alpcr
         REPOSITORY: alp-data-node/alp-local-ui-file-server
-        # AZ_SP__CLIENT_ID: ${{ secrets.AZ__CDN__CLIENT_ID }}
-        # AZ_SP__CLIENT_SECRET: ${{ secrets.AZ__CDN__CLIENT_SECRET }}
         AZ_TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
         REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
         REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-        AZ__ENABLE_DELETE: ${{ vars.AZ__ENABLE_DELETE }} # Can enable/disable if needed
+        AZ__ENABLE_DELETE: ${{ vars.AZ__ENABLE_DELETE }} # true|false - enable/disable as needed
         NUMBER_OF_DAYS: 14
       run: |
         TODAY=$(date +%Y-%m-%d)
