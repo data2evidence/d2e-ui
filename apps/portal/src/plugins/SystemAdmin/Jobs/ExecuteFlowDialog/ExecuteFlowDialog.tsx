@@ -149,8 +149,6 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       }
     }
     setErrors(errorsArr);
-    console.log(errorsArr);
-
     return errors.length !== 0 || flowRunName === "";
   }, [flowRunName, formData, errors]);
 
@@ -160,8 +158,6 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
 
   const handleAdd = useCallback(async () => {
     if (formDataIsEmpty() || validateFormData()) {
-      console.log("hello");
-
       return;
     }
 
