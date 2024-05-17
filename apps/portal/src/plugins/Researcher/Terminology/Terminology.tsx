@@ -387,6 +387,13 @@ export const Terminology: FC<TerminologyProps> = ({
   const showAddIcon = !!(onConceptIdSelect || isConceptSet);
 
   useEffect(() => {
+    // If new concept set
+    if (!conceptSetId) {
+      setIsUserConceptSet(true);
+    }
+  }, [conceptSetId]);
+
+  useEffect(() => {
     if (mode === "CONCEPT_MAPPING" || !conceptsResult?.data) {
       return;
     }
