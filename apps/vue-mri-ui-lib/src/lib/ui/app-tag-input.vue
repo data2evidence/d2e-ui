@@ -310,7 +310,6 @@ export default {
             selectedDatasetId: this.getSelectedDataset.id,
             selectedConceptSetId: conceptSetId,
             mode: 'CONCEPT_SET',
-            isConceptSet: true,
             onClose: onCloseValues => {
               // No action to do if no concept set is being created
               if (!onCloseValues?.currentConceptSet) {

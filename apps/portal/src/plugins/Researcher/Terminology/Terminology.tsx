@@ -18,7 +18,6 @@ export interface TerminologyProps extends PageProps<ResearcherStudyMetadata> {
   baseUserId?: string;
   open?: boolean;
   onClose?: (values: OnCloseReturnValues) => void;
-  isConceptSet?: boolean;
   selectedConceptSetId?: string;
   mode?: "CONCEPT_MAPPING" | "CONCEPT_SET" | "CONCEPT_SEARCH";
   selectedDatasetId?: string;
@@ -210,7 +209,6 @@ export const Terminology: FC<TerminologyProps> = ({
   baseUserId,
   open,
   onClose,
-  isConceptSet,
   selectedConceptSetId,
   mode = "CONCEPT_SEARCH",
   selectedDatasetId,
@@ -238,6 +236,8 @@ export const Terminology: FC<TerminologyProps> = ({
       value: string[];
     }[]
   >();
+
+  const isConceptSet = mode === "CONCEPT_SET";
 
   const resetState = useCallback(() => {
     setConceptId(null);

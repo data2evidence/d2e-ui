@@ -123,7 +123,6 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
               fetchData();
             },
             mode: "CONCEPT_SET",
-            isConceptSet: true,
             selectedDatasetId: datasetId,
           },
         },
