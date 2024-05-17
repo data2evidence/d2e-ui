@@ -119,7 +119,7 @@ export const NegatveControlOutcomeDrawer: FC<
           label="DetectOnDescendants"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             onFormDataChange({
-              DetectOnDescendants: e.target.checked,
+              detectOnDescendants: e.target.checked,
             })
           }
         />
