@@ -3,12 +3,12 @@ import { Button, Dialog, FormControl, TextField } from "@portal/components";
 import { Feedback, CloseDialogType, Flow } from "../../../../types";
 import Divider from "@mui/material/Divider";
 import { api } from "../../../../axios/api";
-import "./ExecuteFlowDialog.scss";
 import { useTranslation } from "../../../../contexts";
 import { getParameters, getProperties } from "../../../../utils";
-import ParamsField from "../ParamsField/ParamsField";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import JSONEditor from "../JSONEditor/JSONEditor";
+import ParamsForm from "../ParamsForm/ParamsForm";
+import "./ExecuteFlowDialog.scss";
 
 interface ExecuteFlowDialogProps {
   flow?: Flow;
@@ -35,6 +35,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   const [flowRunName, setFlowRunName] = useState("");
   const [flowRunNameError, setFlowRunNameError] = useState(false);
   const [paramType, setParamType] = useState(ParamType.Field);
+  const [errors, setErrors] = useState<string[]>([]);
   const flowName = flow?.name || "";
 
   const fetchDeployment = useCallback(async (id: string) => {
@@ -44,7 +45,6 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       if (!deployment) return;
       const properties = getProperties(deployment.parameter_openapi_schema);
       const params = getParameters(properties, deployment.parameters);
-
       setPrefectProperties(properties);
       setFormData(params);
       setDeploymentName(deployment.name);
@@ -64,6 +64,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       setFeedback({});
       setFormData({});
       setPrefectProperties({});
+      setErrors([]);
       typeof onClose === "function" && onClose(type);
     },
     [onClose, setFeedback]
@@ -94,7 +95,11 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
 
   const handleJSONChange = useCallback(
     (value: string) => {
-      setFormData(JSON.parse(value));
+      try {
+        setFormData(JSON.parse(value));
+      } catch (error) {
+        return;
+      }
     },
     [formData]
   );
@@ -110,8 +115,22 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     return Object.keys(formData).length === 0 && flowRunName === "";
   }, [flowRunName, formData]);
 
+  const checkNestedProperties = useCallback((properties: Record<string, any>, formData: Record<string, any>) => {
+    let errors: string[] = [];
+    for (const prop in properties) {
+      const form = formData[prop];
+      if (hasError(properties[prop], form)) {
+        errors.push(prop);
+      }
+      if (properties[prop].type === "object" && properties[prop].properties) {
+        errors = [...errors, ...checkNestedProperties(properties[prop].properties, formData[prop])];
+      }
+    }
+    return errors;
+  }, []);
+
   const validateFormData = useCallback(() => {
-    const errors: string[] = [];
+    let errorsArr: string[] = [];
 
     if (flowRunName === "") {
       setFlowRunNameError(true);
@@ -119,8 +138,21 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       setFlowRunNameError(false);
     }
 
+    for (const key in formData) {
+      if (prefectProperties[key].type === "object" && prefectProperties[key].properties) {
+        const properties = prefectProperties[key].properties;
+        errorsArr = [...errorsArr, ...checkNestedProperties(properties, formData[key])];
+      } else {
+        if (hasError(prefectProperties[key], formData[key])) {
+          errorsArr.push(key);
+        }
+      }
+    }
+    setErrors(errorsArr);
+    console.log(errorsArr);
+
     return errors.length !== 0 || flowRunName === "";
-  }, [flowRunName, formData]);
+  }, [flowRunName, formData, errors]);
 
   const formatParams = useCallback(() => {
     const newFormData = { ...formData };
@@ -136,8 +168,14 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     return newFormData;
   }, [formData]);
 
+  function hasError(property: Record<string, any>, form: Record<string, any>) {
+    return property.required && form === undefined;
+  }
+
   const handleAdd = useCallback(async () => {
     if (formDataIsEmpty() || validateFormData()) {
+      console.log("hello");
+
       return;
     }
 
@@ -145,6 +183,9 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       setLoading(true);
 
       console.log(formData);
+      console.log(typeof formData);
+      console.log(JSON.stringify(formData));
+      console.log(JSON.parse(JSON.stringify(formData)));
 
       // const flowRun = {
       //   flowRunName: flowRunName,
@@ -169,7 +210,17 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     } finally {
       setLoading(false);
     }
-  }, [deploymentName, flowName, flowRunName, formData, formDataIsEmpty, handleClose, validateFormData, getText]);
+  }, [
+    deploymentName,
+    flowName,
+    flowRunName,
+    formData,
+    formDataIsEmpty,
+    handleClose,
+    validateFormData,
+    getText,
+    errors,
+  ]);
 
   return (
     <Dialog
@@ -210,15 +261,14 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
 
         {paramType === ParamType.Field ? (
           Object.keys(prefectProperties).map((paramKey, index) => (
-            <div key={index}>
-              <ParamsField
-                param={prefectProperties[paramKey]}
-                paramKey={paramKey}
-                key={index}
-                handleInputChange={handleInputChange}
-                formData={formData}
-              />
-            </div>
+            <ParamsForm
+              param={prefectProperties[paramKey]}
+              paramKey={paramKey}
+              key={index}
+              handleInputChange={handleInputChange}
+              formData={formData}
+              errors={errors}
+            />
           ))
         ) : (
           <div className="u-padding-vertical--normal">

@@ -1,4 +1,4 @@
-import { has, isEmpty, isObject } from "lodash";
+import { isEmpty } from "lodash";
 
 export function getProperties(schema: Record<string, any>) {
   const referenceKey = "$ref";
@@ -58,14 +58,14 @@ export function getParameters(schema: Record<string, any>, parameters?: Record<s
           result[key][propKey] = {};
 
           for (const childPropKey in properties[propKey].properties) {
-            result[key][propKey][childPropKey] = "";
+            result[key][propKey][childPropKey] = getDefaultValue(properties[propKey].properties[childPropKey]);
           }
         } else {
-          result[key][propKey] = "";
+          result[key][propKey] = getDefaultValue(properties[propKey]);
         }
       }
     } else {
-      result[key] = "";
+      result[key] = getDefaultValue(schema[key]);
     }
   }
 
@@ -80,9 +80,33 @@ function findMissing(parameters: Record<string, any>, result: Record<string, any
   for (const p in result) {
     if (isObject(result[p])) {
       findMissing(parameters[p], result[p]);
-    } else if (!has(parameters, p)) {
-      parameters[p] = "";
+    } else if (!parameters[p]) {
+      parameters[p] = result[p];
     }
   }
   return parameters;
+}
+
+function getDefaultValue(property: Record<string, any>) {
+  if (property.type === "string") {
+    return "";
+  }
+  switch (property.type) {
+    case "string":
+      return "";
+    case "boolean":
+      return property.default || false;
+    case "array":
+      return [];
+    case "object":
+      return {};
+    case "integer":
+      return 0;
+    default:
+      return "";
+  }
+}
+
+function isObject(value: any) {
+  return value !== null && typeof value === "object" && Object.prototype.toString.call(value) === "[object Object]";
 }

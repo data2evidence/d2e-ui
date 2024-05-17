@@ -1,14 +1,14 @@
+import React, { FC, useCallback, ChangeEvent, useMemo } from "react";
 import { Checkbox, FormControl, InputLabel, Select, SelectChangeEvent, TextField } from "@portal/components";
-import classNames from "classnames";
-import React, { FC, useCallback, ChangeEvent } from "react";
-import "./ParamsField.scss";
+import { FormHelperText, MenuItem, SxProps } from "@mui/material";
+import { useTranslation } from "../../../../contexts";
 import JSONEditor from "../JSONEditor/JSONEditor";
-import { MenuItem, SxProps } from "@mui/material";
 
 interface ParamsFieldProps {
   param: Record<string, any>;
   paramKey: string;
   handleInputChange: (value: any, name: string, parent?: string, child?: string) => void;
+  errors: string[];
   formData: Record<string, any>;
   parentKey?: string;
   childKey?: string;
@@ -19,12 +19,6 @@ const styles: SxProps = {
   "&::after, &:hover:not(.Mui-disabled)::before": {
     borderBottom: "2px solid #000080",
   },
-  ".MuiInputLabel-root": {
-    color: "#000080",
-    "&.MuiInputLabel-shrink, &.Mui-focused": {
-      color: "var(--color-neutral)",
-    },
-  },
   ".MuiInput-input:focus": {
     backgroundColor: "transparent",
   },
@@ -33,8 +27,18 @@ const styles: SxProps = {
   },
 };
 
-const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange, formData, parentKey, childKey }) => {
-  const hasProperties = param.properties;
+const ParamsField: FC<ParamsFieldProps> = ({
+  param,
+  paramKey,
+  handleInputChange,
+  formData,
+  parentKey,
+  childKey,
+  errors,
+}) => {
+  const { getText, i18nKeys } = useTranslation();
+
+  const hasError = useMemo(() => errors.includes(paramKey), [errors]);
 
   const getLabel = useCallback((param: Record<string, any>) => {
     if (!param.required) {
@@ -43,24 +47,6 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
       return param.title;
     }
   }, []);
-
-  const renderInput = useCallback(() => {
-    if (!param.properties) {
-      return inputType(param);
-    } else {
-      return Object.keys(param.properties).map((p) => (
-        <ParamsField
-          param={param.properties[p]}
-          paramKey={p}
-          key={p}
-          handleInputChange={handleInputChange}
-          formData={formData}
-          parentKey={parentKey || paramKey}
-          childKey={parentKey ? paramKey : ""}
-        />
-      ));
-    }
-  }, [param]);
 
   const getValue = useCallback(() => {
     if (parentKey) {
@@ -74,7 +60,7 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
     (param: Record<string, any>) => {
       if (param.type === "enum" || param.enum) {
         return (
-          <FormControl fullWidth sx={styles} className="select" variant="standard">
+          <FormControl fullWidth sx={styles} className="select" variant="standard" error={hasError}>
             <InputLabel>{paramKey}</InputLabel>
             <Select
               sx={styles}
@@ -82,6 +68,7 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
               onChange={(event: SelectChangeEvent) =>
                 handleInputChange(event.target.value, paramKey, parentKey, childKey)
               }
+              error={hasError}
             >
               {param.enum.map((option: string) => (
                 <MenuItem sx={styles} key={option} value={option}>
@@ -89,6 +76,7 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
                 </MenuItem>
               ))}
             </Select>
+            {hasError && <FormHelperText>{getText(i18nKeys.EXECUTE_FLOW_DIALOG__REQUIRED)}</FormHelperText>}
           </FormControl>
         );
       }
@@ -101,22 +89,21 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
               onChange={(event) => handleInputChange(event.target.value, paramKey, parentKey, childKey)}
               defaultValue={getValue()}
               name={paramKey}
+              error={hasError}
+              helperText={hasError && getText(i18nKeys.EXECUTE_FLOW_DIALOG__REQUIRED)}
             />
           </FormControl>
         );
       }
       if (param.type === "object" || param.type === "array") {
         return (
-          <>
-            {paramKey}
-            <JSONEditor
-              value={getValue()}
-              onChange={handleInputChange}
-              parentKey={parentKey}
-              childKey={childKey}
-              name={paramKey}
-            />
-          </>
+          <JSONEditor
+            value={getValue()}
+            onChange={handleInputChange}
+            parentKey={parentKey}
+            childKey={childKey}
+            name={paramKey}
+          />
         );
       }
       if (param.type === "boolean") {
@@ -137,10 +124,12 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
             <TextField
               variant="standard"
               label={getLabel(param)}
-              onChange={(event) => handleInputChange(event.target.value, paramKey, parentKey, childKey)}
+              onChange={(event) => handleInputChange(parseInt(event.target.value), paramKey, parentKey, childKey)}
               defaultValue={getValue()}
               name={paramKey}
               type={"number"}
+              error={hasError}
+              helperText={hasError && getText(i18nKeys.EXECUTE_FLOW_DIALOG__REQUIRED)}
             />
           </FormControl>
         );
@@ -153,18 +142,34 @@ const ParamsField: FC<ParamsFieldProps> = ({ param, paramKey, handleInputChange,
               onChange={(event) => handleInputChange(event.target.value, paramKey, parentKey, childKey)}
               defaultValue={getValue()}
               name={paramKey}
+              error={hasError}
+              helperText={hasError && getText(i18nKeys.EXECUTE_FLOW_DIALOG__REQUIRED)}
             />
           </FormControl>
         );
       }
     },
-    [param, getValue]
+    [param, getValue, hasError]
   );
 
   return (
-    <div className={classNames("params-field", { "params-field-properties": hasProperties })}>
-      {hasProperties && paramKey}
-      <div className="u-padding-vertical--normal">{renderInput()}</div>
+    <div className="params-field">
+      <div className="u-padding-vertical--normal">
+        {param.properties
+          ? Object.keys(param.properties).map((p) => (
+              <ParamsField
+                param={param.properties[p]}
+                paramKey={p}
+                key={p}
+                handleInputChange={handleInputChange}
+                formData={formData}
+                parentKey={parentKey || paramKey}
+                childKey={parentKey ? paramKey : ""}
+                errors={errors}
+              />
+            ))
+          : inputType(param)}
+      </div>
     </div>
   );
 };
