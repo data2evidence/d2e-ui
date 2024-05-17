@@ -12,6 +12,12 @@ interface StrataSettings {
   byGender: boolean;
 }
 
+interface IncidenceAnalysis {
+  targets: string[];
+  outcomes: string[];
+  tars: string[];
+}
+
 export interface CohortRefs {
   name: string;
   id: string;
@@ -20,6 +26,7 @@ export interface CohortRefs {
 export interface CohortIncidentNodeData extends NodeDataState {
   strataSettings: StrataSettings;
   cohortRefs: CohortRefs[];
+  incidenceAnalysis: IncidenceAnalysis;
 }
 
 export const CohortIncidentNode = (node: NodeProps<CohortIncidentNodeData>) => {

@@ -7,6 +7,8 @@ import {
   TextInput,
   IconButton,
   AddSquareIcon,
+  Autocomplete,
+  TextField,
 } from "@portal/components";
 import { useFormData } from "~/features/flow/hooks";
 import {
@@ -23,6 +25,8 @@ import {
   CohortRefsForm,
   EMPTY_COHORTREFS_FORM_DATA,
 } from "./CohortRefsForm/CohortRefsForm";
+import { CONFIGS_USER_INPUT_ARRAY_STYLES } from "../common";
+import "./CohortIncidentNode.scss";
 
 export interface CohortIncidentDrawerProps
   extends Omit<NodeDrawerProps, "children"> {
@@ -40,6 +44,11 @@ const EMPTY_FORM_DATA: FormData = {
     byGender: true,
   },
   cohortRefs: [],
+  incidenceAnalysis: {
+    targets: [],
+    outcomes: [],
+    tars: [],
+  },
 };
 
 export const CohortIncidentDrawer: FC<CohortIncidentDrawerProps> = ({
@@ -60,6 +69,7 @@ export const CohortIncidentDrawer: FC<CohortIncidentDrawerProps> = ({
         description: node.data.description,
         strataSettings: node.data.strataSettings,
         cohortRefs: node.data.cohortRefs,
+        incidenceAnalysis: node.data.incidenceAnalysis,
       });
     } else {
       setFormData({
@@ -110,6 +120,31 @@ export const CohortIncidentDrawer: FC<CohortIncidentDrawerProps> = ({
     [formData]
   );
 
+  const handleTargetsChange = useCallback(
+    (event: any, value: string[]) => {
+      onFormDataChange({
+        incidenceAnalysis: { ...formData.incidenceAnalysis, targets: value },
+      });
+    },
+    [formData]
+  );
+  const handleOutcomesChange = useCallback(
+    (event: any, value: string[]) => {
+      onFormDataChange({
+        incidenceAnalysis: { ...formData.incidenceAnalysis, outcomes: value },
+      });
+    },
+    [formData]
+  );
+  const handleTarsChange = useCallback(
+    (event: any, value: string[]) => {
+      onFormDataChange({
+        incidenceAnalysis: { ...formData.incidenceAnalysis, tars: value },
+      });
+    },
+    [formData]
+  );
+
   return (
     <NodeDrawer {...props} width="700px" onOk={handleOk} onClose={onClose}>
       <Box mb={4}>
@@ -130,12 +165,7 @@ export const CohortIncidentDrawer: FC<CohortIncidentDrawerProps> = ({
           }
         />
       </Box>
-      <Box
-        mb={4}
-        border={"0.5px solid grey"}
-        paddingLeft={"20px"}
-        paddingTop={"20px"}
-      >
+      <Box className="box-section">
         <div style={{ paddingBottom: "20px" }}>Cohort Refs</div>
         {formData.cohortRefs.length !== 0 &&
           formData.cohortRefs.map((data, index) => (
@@ -165,12 +195,57 @@ export const CohortIncidentDrawer: FC<CohortIncidentDrawerProps> = ({
           />
         </Box>
       </Box>
-      <Box
-        mb={4}
-        border={"0.5px solid grey"}
-        paddingLeft={"20px"}
-        paddingTop={"20px"}
-      >
+      <Box className="box-section">
+        <div style={{ paddingBottom: "20px" }}>Incidence Analysis</div>
+        <Box mb={4}>
+          <Autocomplete
+            multiple
+            sx={CONFIGS_USER_INPUT_ARRAY_STYLES}
+            value={formData.incidenceAnalysis.targets}
+            onChange={handleTargetsChange}
+            options={[]}
+            freeSolo
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Targets"
+                placeholder="Enter Targets"
+              />
+            )}
+          />
+        </Box>
+        <Box mb={4}>
+          <Autocomplete
+            multiple
+            sx={CONFIGS_USER_INPUT_ARRAY_STYLES}
+            value={formData.incidenceAnalysis.outcomes}
+            onChange={handleOutcomesChange}
+            options={[]}
+            freeSolo
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Outcomes"
+                placeholder="Enter Outcomes"
+              />
+            )}
+          />
+        </Box>
+        <Box mb={4}>
+          <Autocomplete
+            multiple
+            sx={CONFIGS_USER_INPUT_ARRAY_STYLES}
+            value={formData.incidenceAnalysis.tars}
+            onChange={handleTarsChange}
+            options={[]}
+            freeSolo
+            renderInput={(params) => (
+              <TextField {...params} label="Tars" placeholder="Enter Tars" />
+            )}
+          />
+        </Box>
+      </Box>
+      <Box className="box-section">
         <div style={{ paddingBottom: "20px" }}>Strata Settings</div>
         <Box mb={4}>
           <Checkbox

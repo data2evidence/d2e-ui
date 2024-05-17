@@ -116,6 +116,11 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
         byGender: true,
       },
       cohortRefs: [],
+      incidenceAnalysis: {
+        targets: [],
+        outcomes: [],
+        tars: [],
+      },
     },
   },
   cohort_incidence_target_cohorts_node: {
