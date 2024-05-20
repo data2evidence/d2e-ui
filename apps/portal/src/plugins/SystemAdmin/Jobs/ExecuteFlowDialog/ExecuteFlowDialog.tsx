@@ -153,7 +153,10 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   }, [flowRunName, formData, errors]);
 
   function hasError(property: Record<string, any>, form: Record<string, any>) {
-    return property.required && form === undefined;
+    if (property.type === "boolean") {
+      return property.required && (form === undefined || form === null);
+    }
+    return property.required && !form;
   }
 
   const handleAdd = useCallback(async () => {
@@ -171,7 +174,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
         params: formData,
       };
 
-      await api.dataflow.executeFlowRunByDeployment(flowRun);
+      // await api.dataflow.executeFlowRunByDeployment(flowRun);
       handleClose("success");
     } catch (err: any) {
       if (err.data?.message) {
