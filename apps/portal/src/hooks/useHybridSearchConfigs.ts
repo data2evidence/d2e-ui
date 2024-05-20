@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../axios/api";
 import { AppError } from "../types";
-import { HybridSearchConfig } from "../plugins/SystemAdmin/Terminology/utils/types";
+import { HybridSearchConfig } from "../plugins/Researcher/Terminology/utils/types";
 
 export const useHybridSearchConfigs = (): [HybridSearchConfig, boolean, AppError | undefined] => {
   const [configs, setConfigs] = useState<HybridSearchConfig>({

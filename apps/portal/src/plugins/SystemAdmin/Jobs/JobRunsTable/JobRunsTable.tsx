@@ -93,8 +93,8 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
                 className="cancel-job-button"
                 onClick={() => handleCancelJobClick(row.flowRunId)}
                 text={getText(i18nKeys.JOB_RUNS_TABLE__CANCEL)}
-                variant="secondary"
-              ></Button>
+                variant="outlined"
+              />
             ) : (
               "-"
             )
@@ -125,10 +125,9 @@ interface JobRunsTableProps {
   handleStudySelect: (schemaName: string, studyId: string) => void;
   data: HistoryJob[];
   handleCancelJobClick: (id: string) => void;
-  setMode: React.Dispatch<React.SetStateAction<"flowRun" | "taskRun" | null>>;
 }
 
-const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCancelJobClick, setMode }) => {
+const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCancelJobClick }) => {
   const { getText, i18nKeys } = useTranslation();
   const studies = useDatasets("systemAdmin")[0];
   // Dialog show hooks
@@ -143,11 +142,7 @@ const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCa
   };
 
   const handleViewLogsClick = (jobId: string) => {
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set("mode", "flowRun");
-    searchParams.set("flowRunId", jobId);
-    setMode("flowRun");
-    navigate(`${location.pathname}?${searchParams.toString()}`, { replace: false });
+    navigate(`flowrun/${jobId}`, { replace: false });
   };
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);

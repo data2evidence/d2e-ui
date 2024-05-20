@@ -80,7 +80,7 @@ class Query(_AuthApi):
             meta = self._study_config[0]['meta']
             self._study_config_id = str(meta['configId'])
             self._study_config_version = str(meta['configVersion'])
-            self._study_config_assigned_name = str(meta['assignmentName'])
+            self._study_config_assigned_name = str(meta['configName'])
             self._build_entities()
 
     def get_study_list(self):

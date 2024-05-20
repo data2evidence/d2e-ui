@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from typing import Optional
 from pyqe.setup import setup_simple_console_log
 from pyqe.shared import decorator
-
+import jwt
 
 logger = logging.getLogger(__name__)
 setup_simple_console_log()
@@ -110,7 +110,12 @@ class _AuthApi(_Api):
 
         self._session: requests.Session = requests.Session()
         self._username: Optional[str] = None
-
+        self._auth_audience: Optional[str] = os.getenv('PYQE_JWT_AUDIENCE')
+        self._auth_algorithms: list = []
+        _auth_algorithms: Optional[str] = os.getenv('PYQE_JWT_ALGORITHMS')
+        if _auth_algorithms:
+            self._auth_algorithms = _auth_algorithms.split()
+            
         if self.id_token:
             # add id token to request header
             self._session.headers.update(self._create_authorization_header())
@@ -123,6 +128,22 @@ class _AuthApi(_Api):
     def id_token(self) -> Optional[str]:
         return os.getenv('ID_TOKEN')
 
+    def get_id(self) -> str:
+        return self._decode_id_token(self.id_token.split(" ")[1])['sub']
+    
+    def _decode_id_token(self, token):        
+        decode_kwargs = {
+            'options': {'verify_signature': False, 'verify_exp': True}
+        }
+
+        if self._auth_audience is not None:
+            decode_kwargs['audience'] = self._auth_audience
+
+        if self._auth_algorithms is not None:
+            decode_kwargs['algorithms'] = self._auth_algorithms
+
+        return jwt.decode(token, **decode_kwargs)
+    
     @property
     def has_id_token(self):
         return True if self.id_token else False

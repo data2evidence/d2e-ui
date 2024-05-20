@@ -25,7 +25,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import configSelection from './components/ConfigSelection.vue'
 import notification from './components/Notification.vue'
 import patientanalytics from './components/PatientAnalytics.vue'
-import ui5adaptor from "./components/UI5Adaptor.vue";
+import ui5adaptor from './components/UI5Adaptor.vue'
 import SplashScreen from './components/SplashScreen.vue'
 import store from './store'
 import { MESSAGE_ALERT_SHOW_TOGGLE, MESSAGE_FATAL_SHOW_TOGGLE } from './store/mutation-types'
@@ -39,16 +39,36 @@ export default {
   data() {
     return {
       showDialog: false,
+      listener: null
     }
   },
   created() {
+    this.setDataset()
+    this.setDatasetReleaseId()
     this.requestMriConfig()
   },
+  mounted() {
+    this.listener = window.addEventListener('dataset', () => {
+      this.setDataset()
+      this.setDatasetReleaseId()
+      this.setFireRequest()
+      this.refreshPatientCount()
+    })
+  },
+  unmounted() {
+    window.removeEventListener('dataset', this.listener)
+  },
   computed: {
-    ...mapGetters(['getConfigSelectionDialogState', 'getFatalNotification', 'getAlertNotification', 'getText', 'getInitialLoad']),
+    ...mapGetters([
+      'getConfigSelectionDialogState',
+      'getFatalNotification',
+      'getAlertNotification',
+      'getText',
+      'getInitialLoad',
+    ]),
   },
   methods: {
-    ...mapActions(['requestMriConfig', 'toggleConfigSelectionDialog']),
+    ...mapActions(['requestMriConfig', 'setDataset', 'setDatasetReleaseId', 'toggleConfigSelectionDialog', 'setFireRequest', 'refreshPatientCount']),
     ...mapMutations([MESSAGE_FATAL_SHOW_TOGGLE, MESSAGE_ALERT_SHOW_TOGGLE]),
     okFatal() {
       this[MESSAGE_FATAL_SHOW_TOGGLE]()
@@ -64,7 +84,7 @@ export default {
     configSelection,
     fatal: notification,
     alert: notification,
-    SplashScreen
+    SplashScreen,
   },
 }
 </script>

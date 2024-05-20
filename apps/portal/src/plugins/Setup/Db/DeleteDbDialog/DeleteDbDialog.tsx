@@ -58,7 +58,7 @@ export const DeleteDbDialog: FC<DeleteDbDialogProps> = ({ open, onClose, db }) =
         <Box display="flex" gap={1} className="delete-db-dialog__footer-actions">
           <Button
             text={getText(i18nKeys.DELETE_DB_DIALOG__CANCEL)}
-            variant="secondary"
+            variant="outlined"
             onClick={() => handleClose("cancelled")}
           />
           <Button text={getText(i18nKeys.DELETE_DB_DIALOG__DELETE)} onClick={handleDelete} loading={deleting} />

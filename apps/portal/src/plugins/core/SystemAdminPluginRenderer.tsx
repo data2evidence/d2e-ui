@@ -1,7 +1,7 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { importPluginModule } from "./pluginLoader";
-import { useUserInfo } from "../../contexts/UserContext";
 import { getAuthToken } from "../../containers/auth";
+import { useUser } from "../../contexts";
 
 interface SystemAdminPluginRendererProps<T = any> {
   path: string;
@@ -10,7 +10,7 @@ interface SystemAdminPluginRendererProps<T = any> {
 }
 
 export const SystemAdminPluginRenderer: FC<SystemAdminPluginRendererProps> = ({ path, system, data }) => {
-  const { getUserId } = useUserInfo();
+  const { userId } = useUser();
   const [component, setComponent] = useState<any>();
 
   useEffect(() => {
@@ -23,17 +23,20 @@ export const SystemAdminPluginRenderer: FC<SystemAdminPluginRendererProps> = ({ 
     }
   }, [component, path]);
 
+  const metadata = useMemo(
+    () => ({
+      userId,
+      system,
+      getToken: async () => {
+        return await getAuthToken();
+      },
+      data,
+    }),
+    [userId, system, data]
+  );
+
   const PageComponent = component?.page;
   if (!PageComponent) return null;
-
-  const metadata = {
-    userId: getUserId(),
-    system,
-    getToken: async () => {
-      return await getAuthToken();
-    },
-    data,
-  };
 
   return <PageComponent metadata={metadata} />;
 };

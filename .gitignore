@@ -25,3 +25,5 @@ dist
 **/library-parameters.json
 
 **/*private*
+
+.nx

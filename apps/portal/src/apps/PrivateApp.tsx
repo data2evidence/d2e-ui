@@ -1,6 +1,5 @@
 import React, { FC, useContext, useMemo } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useUserInfo, UserProvider } from "../contexts/UserContext";
 import { PostLoginRedirectUrlContext } from "../contexts/PostLoginRedirectUrlContext";
 import { Researcher } from "../containers/researcher/Researcher";
 import SystemAdmin from "../containers/systemadmin/SystemAdmin";
@@ -9,12 +8,13 @@ import { Logout } from "../containers/auth/Logout";
 import { LoginSilent } from "../containers/auth/LoginSilent";
 import { Dashboard } from "../containers/dashboard/Dashboard";
 import { config } from "../config";
-import { TerminologyWithEventListener } from "../plugins/SystemAdmin/Terminology/TerminologyWithEventListener";
+import { useUser } from "../contexts";
+import { TerminologyWithEventListener } from "../plugins/Researcher/Terminology/TerminologyWithEventListener";
 import { ResultsDialogWithEventLister } from "../plugins/SystemAdmin/DQD/ResultsDialog/ResultsDialogWithEventListener";
 
-const PrivateAppInternal: FC = () => {
+export const PrivateApp: FC = () => {
   const redirectUrl = useContext(PostLoginRedirectUrlContext);
-  const { user } = useUserInfo();
+  const { user } = useUser();
 
   const defaultRoute = useMemo(() => {
     let defaultRoute = config.ROUTES.researcher;
@@ -52,13 +52,5 @@ const PrivateAppInternal: FC = () => {
         </Route>
       </Routes>
     </div>
-  );
-};
-
-export const PrivateApp: FC = () => {
-  return (
-    <UserProvider>
-      <PrivateAppInternal />
-    </UserProvider>
   );
 };

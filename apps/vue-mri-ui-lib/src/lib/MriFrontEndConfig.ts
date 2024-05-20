@@ -337,10 +337,6 @@ export default class MriFrontendConfig {
     return this._internalConfig.panelOptions.advancedTimeFiltering.useNextInteraction === true
   }
 
-  public isNonInteractiveMode() {
-    return this._internalConfig.panelOptions.nonInteractiveMode === true
-  }
-
   /**
    * Returns an array containing the paths to the filter cards that
    * contains at least an attribute with a specific annotation.

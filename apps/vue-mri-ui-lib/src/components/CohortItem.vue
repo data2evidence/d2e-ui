@@ -56,7 +56,7 @@ export default {
     async generateCohort() {
       const GenerateDataQualityFlowRunParams = {
         options: {
-          datasetId: this.getSelectedUserStudy.id,
+          datasetId: this.getSelectedDataset.id,
           comment: '',
           cohortDefinitionId: String(this.cohort.id),
           releaseId: '',
@@ -123,7 +123,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getText', 'getSelectedUserStudy']),
+    ...mapGetters(['getText', 'getSelectedDataset']),
   },
   mounted() {
     this.pollJobStatus()

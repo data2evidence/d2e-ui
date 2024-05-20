@@ -124,7 +124,7 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
               )}
               {data.length > 0 &&
                 data.map((cohort, index) => (
-                  <TableRow key={cohort.id} style={index % 2 ? { background: "#edf2f7" } : { background: "white" }}>
+                  <TableRow key={cohort.id}>
                     <TableCell>{cohort.id}</TableCell>
                     <TableCell>{cohort.name}</TableCell>
                     <TableCell>{cohort.description}</TableCell>
@@ -139,7 +139,7 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
                     </TableCell>
                     <TableCell>{cohort.owner}</TableCell>
                     <TableCell className="col-action">
-                      <Button onClick={() => handleDataQualityButtonPress(cohort)} text="Data Quality"></Button>
+                      <Button onClick={() => handleDataQualityButtonPress(cohort)} text="Data Quality" />
                     </TableCell>
                     <TableCell className="col-action">
                       <div className="table-button-container">

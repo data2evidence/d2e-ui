@@ -1,108 +1,18 @@
 .information__container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
+  height: calc(100% - 4rem);
+  margin: 2rem;
 
-  .information__studies {
-    .config_title {
-      display: flex;
-
-      .MuiListItemIcon-root {
-        min-width: 48px;
-        padding: 8px 0px 8px 20px;
-      }
-
-      .MuiListItemText-root {
-        padding: 8px 0px 8px 20px;
-      }
-
-      .MuiListItem-gutters {
-        padding: 0px;
-      }
-
-      .config_list_external {
-        display: none;
-        border-left: 1px solid rgba(168, 187, 209, 0.4);
-
-        .MuiButton-startIcon {
-          margin: 0;
-        }
-        .MuiButton-root {
-          min-width: 0;
-          min-height: 48px;
-        }
-        &__is-active {
-          display: block;
-        }
-      }
-      &:hover {
-        .config_list_external {
-          display: block;
-        }
-      }
-    }
-    .config_list {
-      position: relative;
-      left: 45px;
-
-      .config_list_item {
-        width: 80%;
-        border-radius: 6px;
-        margin: 3px 0;
-
-        .config_list_span {
-          text-align: left;
-          font-size: 18px;
-          font-weight: 500;
-          position: relative;
-          right: 5px;
-        }
-      }
-    }
-
-    .MuiTouchRipple-root {
-      color: transparent;
-    }
-
-    .MuiDrawer-docked {
-      height: 100%;
-    }
-
-    .MuiDrawer-paper {
-      z-index: 0;
-      position: relative;
-      height: 100%;
-      overflow-x: hidden;
-      color: var(--color-primary);
-    }
-
-    .MuiListItemIcon-root {
-      min-width: 48px;
-    }
-
-    .MuiList-padding {
-      padding: 0;
-    }
+  .alp-card__header {
+    justify-content: center;
   }
-  .information__study_content {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    min-width: 1050px;
-  }
+
   .tab__content {
-    margin: 0;
-    flex: auto;
+    width: 100%;
 
     &__container {
-      margin: 24px 41px;
-    }
-
-    &__study-name {
-      font-size: 18px;
-      letter-spacing: 0.3px;
-      color: var(--color-neutral);
+      margin: 24px auto;
+      max-width: 1080px;
+      padding: 0 32px;
     }
 
     &__title {
@@ -111,12 +21,6 @@
       height: 32px;
       font-size: 24px;
       font-weight: 500;
-      color: var(--color-primary);
-    }
-
-    &__info {
-      width: 70%;
-      color: grey;
     }
 
     &__subtitle {

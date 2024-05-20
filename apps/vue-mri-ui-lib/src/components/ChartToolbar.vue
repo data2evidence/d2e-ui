@@ -1,9 +1,8 @@
 <template>
-  <!-- hiding the toolbar when isNonInteractiveMode to use the functionality for patient list count -->
-  <div class="chartToolbar-main-container" :style="isNonInteractiveMode ? 'height: 0px; visibility: hidden' : ''">
+  <div class="chartToolbar-main-container">
     <div class="d-flex">
       <button
-        v-if="!isNonInteractiveMode && !showUnHideFilters"
+        v-if="!showUnHideFilters"
         class="actionButton"
         @click="hideLeftPanel"
         :title="getText('MRI_PA_TOOLTIP_COLLAPSE_FILTER_BAR')"
@@ -11,37 +10,13 @@
         <span class="icon" style="font-family: app-icons">{{ hideIcon }}</span>
       </button>
       <button
-        v-if="!isNonInteractiveMode && showUnHideFilters"
+        v-if="showUnHideFilters"
         class="actionButton"
         @click="unHideClicked"
         :title="getText('MRI_PA_TOOLTIP_EXPAND_FILTER_BAR')"
       >
-        <span v-if="!isNonInteractiveMode" class="icon" style="font-family: app-icons">{{ unHideIcon }}</span>
+        <span class="icon" style="font-family: app-icons">{{ unHideIcon }}</span>
       </button>
-
-      <span class="separator"></span>
-
-      <div class="dataset-selection-container">
-        <label>Dataset:</label>
-        <b-dropdown class="dropdown-box dropdown-dataset" variant="link" :text="this.getSelectedDatasetText">
-          <template v-for="dataset in getUserStudies">
-            <b-dropdown-item @click="handleSelectDataset(dataset)">{{ dataset.name == "" ? "Untitled" : dataset.name}}</b-dropdown-item>
-          </template>
-        </b-dropdown>
-
-        <span class="separator"></span>
-
-        <template v-if="this.getDatasetVersions.length > 1">
-          <label>Version:</label>
-          <b-dropdown class="dropdown-box dropdown-version" variant="link" :text="this.getSelectedDatasetVersion.name">
-            <template v-for="datasetVersion in getDatasetVersions">
-              <b-dropdown-item @click="handleSelectDatasetVersion(datasetVersion)">{{
-                datasetVersion.name
-              }}</b-dropdown-item>
-            </template>
-          </b-dropdown>
-        </template>
-      </div>
     </div>
     <div class="d-flex">
       <template v-for="chart in chartConfig" :key="chart.name">
@@ -129,8 +104,8 @@ export default {
     getHasAssignedConfig(val) {
       if (val) {
         this.chartConfig = this.visibleChartTypes(this.getAllChartConfigs)
-        this.patientTotalRequested = false
-        this.patientListTotalRequested = false
+        this.setPatientTotalRequested(false)
+        this.setPatientListTotalRequested(false)
         this.refreshPatientCount()
       }
     },
@@ -142,12 +117,10 @@ export default {
     this.$nextTick(() => {
       window.addEventListener('click', this.closeSubMenu)
     })
-    this.getTotalPatientCount()
-    this.patientTotalRequested = true
+    this.requestTotalPatientCount()
     // The config is available when component mounts already to check if interactive mode is used
     this.chartConfig = this.visibleChartTypes(this.getAllChartConfigs)
-    this.patientTotalRequested = false
-    this.patientListTotalRequested = false
+    this.setPatientListTotalRequested(false)
     this.refreshPatientCount()
     this.loadValuesForAttributePath({
       attributePathUid: 'conceptSets',
@@ -166,17 +139,11 @@ export default {
       'getAllChartConfigs',
       'getMriFrontendConfig',
       'getText',
-      'getSelectedUserStudy',
+      'getSelectedDataset',
       'getMriFrontendConfig',
-      'getUserStudies',
-      'getDatasetVersions',
-      'getSelectedDatasetVersion',
     ]),
     chartSelection() {
       return this.getChartSelection()
-    },
-    isNonInteractiveMode() {
-      return this.getMriFrontendConfig.isNonInteractiveMode()
     },
     drilldownEnabled() {
       if (
@@ -189,7 +156,7 @@ export default {
       return false
     },
     getSelectedDatasetText(){
-      return this.getSelectedUserStudy.name == "" ? "Untitled" : this.getSelectedUserStudy.name
+      return this.getSelectedDataset.name == "" ? "Untitled" : this.getSelectedDataset.name
     }
   },
   methods: {
@@ -203,74 +170,11 @@ export default {
       'setDataset',
       'requestDatasetVersions',
       'loadValuesForAttributePath',
+      'setPatientListTotalRequested',
+      'setPatientTotalRequested',
+      'requestTotalPatientCount',
+      'refreshPatientCount'
     ]),
-    refreshPatientCount() {
-      if (!this.patientListTotalRequested) {
-        this.patientListTotalRequested = true
-        const configMetadata = this.getMriFrontendConfig.getConfigMetadata()
-        const request = {
-          cards: {
-            type: 'BooleanContainer',
-            op: 'AND',
-            content: [
-              {
-                type: 'BooleanContainer',
-                op: 'OR',
-                content: [],
-              },
-            ],
-          },
-          guarded: true,
-          limit: 20,
-          offset: 0,
-          axes: [],
-          configData: {
-            configId: configMetadata.configId,
-            configVersion: configMetadata.configVersion,
-          },
-          selectedStudyEntityValue: this.getSelectedUserStudy.id,
-        }
-        this.firePatientListCountQuery({
-          type: 'total',
-          params: request,
-        })
-      }
-      if (!this.patientTotalRequested) {
-        this.getTotalPatientCount()
-      }
-    },
-    getTotalPatientCount() {
-      this.patientTotalRequested = true
-      const configMetadata = this.getMriFrontendConfig.getConfigMetadata()
-      const bm = {
-        filter: {
-          configMetadata: {
-            id: configMetadata.configId,
-            version: configMetadata.configVersion,
-          },
-          cards: {
-            type: 'BooleanContainer',
-            op: 'AND',
-            content: [
-              {
-                type: 'BooleanContainer',
-                op: 'OR',
-                content: [],
-              },
-            ],
-          },
-        },
-        axisSelection: [],
-        metadata: {
-          version: 3,
-        },
-        selectedStudyEntityValue: this.getSelectedUserStudy.id,
-      }
-      this.firePatientCountQuery({
-        type: 'total',
-        params: bm,
-      })
-    },
     openSettingsConfig() {
       const eventBus = sap.ui.getCore().getEventBus()
       this.toggleConfigSelectionDialog()
@@ -373,26 +277,6 @@ export default {
     },
     hideLeftPanel() {
       this.$emit('unhideEv', true)
-    },
-    handleSelectDataset(dataset) {
-      if (dataset.name !== this.getSelectedUserStudy.name) {
-        this.setDataset(dataset)
-        this.requestDatasetVersions().then(()=>{
-          this.setFireRequest()
-          this.patientTotalRequested = false
-          this.patientListTotalRequested = false
-          this.refreshPatientCount()
-        })
-      }
-    },
-    handleSelectDatasetVersion(datasetVersion) {
-      if (datasetVersion.name !== this.getSelectedDatasetVersion.name) {
-        this.setDatasetVersion(datasetVersion)
-        this.setFireRequest()
-        this.patientTotalRequested = false
-        this.patientListTotalRequested = false
-        this.refreshPatientCount()
-      }
     },
     drillDownClicked() {
       this.$emit('drilldown')

@@ -95,7 +95,7 @@ export const DuplicateFlowRevisionDialog: FC<
           gap={1}
           className="duplicate-flow-revision-dialog__footer-actions"
         >
-          <Button text="Cancel" variant="secondary" onClick={handleClose} />
+          <Button text="Cancel" variant="outlined" onClick={handleClose} />
           <Button
             text="Duplicate"
             onClick={handleDuplicate}

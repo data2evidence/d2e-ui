@@ -125,13 +125,13 @@ const JobTable: FC = () => {
               </TableRow>
             )}
             {pageData?.map((flow, index) => (
-              <TableRow key={flow.id} style={index % 2 ? { background: "#ebf1f8" } : { background: "white" }}>
+              <TableRow key={flow.id}>
                 <TableCell>{flow.id}</TableCell>
                 <TableCell>{flow.name}</TableCell>
                 <TableCell>{dayjs.utc(flow.created).format("YYYY-MM-DD HH:mm:ss A")}</TableCell>
                 <TableCell>{dayjs.utc(flow.updated).format("YYYY-MM-DD HH:mm:ss A")}</TableCell>
                 <TableCell>
-                  <Button text="Execute" variant="secondary" onClick={() => handleOpenExecuteFlow(flow)} />
+                  <Button text="Execute" variant="outlined" onClick={() => handleOpenExecuteFlow(flow)} />
                 </TableCell>
                 <TableCell>
                   <IconButton

@@ -2,31 +2,33 @@
 import { LogInfo } from '@/types'
 import { getLogsByTaskRunId } from '@/api'
 import { ref, watchEffect } from 'vue'
-import Logs from '../components/Logs.vue'
-import { useParamsStore } from '@/stores'
+import LogScroller from '../components/LogScroller.vue'
+import { getPortalAPI } from '../utils/portalApi'
+import { useRoute, useRouter } from 'vue-router'
+const { backToJobs } = getPortalAPI()
 
 type TabName = 'LOGS' | 'TASK_RUNS' | 'DETAILS' | 'PARAMETERS'
+const route = useRoute()
+const router = useRouter()
 
 const logs = ref<LogInfo[]>([])
 const selected = ref<TabName>('LOGS')
-const paramsStore = useParamsStore()
 
 const onClickTab = (tabName: TabName) => {
   selected.value = tabName
 }
 
 const onClickBackToJobs = () => {
-  paramsStore.updateParams({ flowRunId: undefined, taskRunId: undefined, mode: undefined })
-  location.reload()
+  router.push(`/`)
+  backToJobs()
 }
 
 watchEffect(() => {
-  if (paramsStore.taskRunId) {
+  const taskRunId = route.params.taskRunId as string
+  if (taskRunId) {
     const asyncFn = async () => {
-      if (paramsStore.taskRunId) {
-        const data = await getLogsByTaskRunId(paramsStore.taskRunId)
-        logs.value = data
-      }
+      const data = await getLogsByTaskRunId(taskRunId)
+      logs.value = data
     }
     asyncFn()
   }
@@ -43,9 +45,11 @@ watchEffect(() => {
       padding: 0px 20px;
     "
   >
-    <div style="color: white; cursor: pointer" @click="onClickBackToJobs">< back to Jobs list</div>
+    <div style="color: white; cursor: pointer" @click="onClickBackToJobs">
+      &#60; back to Jobs list
+    </div>
     <div style="font-size: small">
-      <div style="color: white">Task Run ID: {{ paramsStore.taskRunId }}</div>
+      <div style="color: white">Task Run ID: {{ route.params.taskRunId }}</div>
     </div>
   </div>
   <div
@@ -64,7 +68,7 @@ watchEffect(() => {
     </div>
   </div>
 
-  <Logs v-if="selected === 'LOGS'" :logs="logs" />
+  <LogScroller v-if="selected === 'LOGS'" :logs="logs" />
 </template>
 
 <style scoped>

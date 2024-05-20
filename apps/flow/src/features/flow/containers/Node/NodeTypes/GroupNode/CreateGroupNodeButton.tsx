@@ -8,13 +8,16 @@ export interface CreateGroupButtonProps {}
 export const CreateGroupButton: FC<CreateGroupButtonProps> = () => {
   const handleClick = useCallback(() => {
     dispatch(setAddGroupDialog({ visible: true }));
-    console.log("Clicked")
   }, []);
 
   return (
     <Tooltip title="Create new subflow">
       <div>
-        <Button variant="secondary" text="Create subflow" onClick={handleClick} />
+        <Button
+          variant="outlined"
+          text="Create subflow"
+          onClick={handleClick}
+        />
       </div>
     </Tooltip>
   );

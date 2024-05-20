@@ -82,7 +82,7 @@ const OverviewTable: FC<OverviewTableProps> = ({ data }) => {
 
   const rows = transformData(data);
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table sx={{ minWidth: 700 }} aria-label="spanning table">
         <TableHead>
           <TableRow>
@@ -90,8 +90,8 @@ const OverviewTable: FC<OverviewTableProps> = ({ data }) => {
               colSpan={1}
               sx={{
                 borderBottomWidth: 0,
-                borderLeftWidth: "2px",
-                borderTopWidth: "2px",
+                borderLeftWidth: "1px",
+                borderTopWidth: "1px",
                 borderStyle: "solid",
                 borderColor: "#dadbde",
               }}
@@ -110,8 +110,8 @@ const OverviewTable: FC<OverviewTableProps> = ({ data }) => {
             <TableCell
               align="center"
               sx={{
-                borderBottomWidth: "2px",
-                borderLeftWidth: "2px",
+                borderBottomWidth: "1px",
+                borderLeftWidth: "1px",
                 borderTopWidth: 0,
                 borderStyle: "solid",
                 borderColor: "#dadbde",

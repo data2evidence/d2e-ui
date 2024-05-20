@@ -432,7 +432,7 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
               type="button"
               text={getText(i18nKeys.COPY_STUDY_DIALOG__CANCEL)}
               onClick={() => handleClose("cancelled")}
-              variant="secondary"
+              variant="outlined"
               block
               disabled={loading}
             />

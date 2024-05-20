@@ -1,139 +1,118 @@
 .account {
+  height: 100%;
+
+  .account__container {
     height: 100%;
-    
-    .account__container {
-      height: 100%;
-      width: 90%;
-      margin: auto;
-      display: flex;
-      flex-direction: column;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
 
-      .alp-title {
-        margin: 2rem 0 1rem
-      }
-    }
-  
-    .account__content {
-      display: flex;
-      flex: 1 1 0;
-      margin-bottom: 2rem;
-      justify-content: space-between;
+  .account__content {
+    display: flex;
+    flex: 1 1 0;
+    justify-content: space-between;
 
-      &_account {
-        margin-right: 2rem;
-        min-width: 25%;
+    &_account {
+      margin-right: 2rem;
+      width: 350px;
 
-        &_details {
+      &_details {
+        display: flex;
+        flex-direction: column;
+        margin: 1.5rem 1.5rem;
+
+        div {
           display: flex;
           flex-direction: column;
-          margin: 1.5rem 2rem;
-          
-          div {
-            display: flex;
-            flex-direction: column;
-            color: var(--color-neutral);
-            font-size: 16px;
-          }
-          div:nth-child(-n+2) {
-            margin-bottom: 1rem;
-          }
+        }
+        div:nth-child(-n + 1) {
+          margin-bottom: 1.5rem;
+        }
+      }
+    }
+
+    &_actions {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    &_legal {
+      display: flex;
+      flex: 1 1 0;
+    }
+  }
+
+  .alp-card {
+    flex: 1;
+
+    &__header {
+      justify-content: center;
+    }
+  }
+
+  .tab__content {
+    flex: 1 1;
+    flex-basis: 0;
+    overflow: auto;
+
+    &__container {
+      margin: 1.5rem 2.5rem;
+
+      .page-header {
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: 0.4px;
+        margin-bottom: 24px;
+      }
+
+      .sub-header {
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0.27px;
+      }
+
+      .content {
+        font-size: 16px;
+        line-height: 1.5;
+        letter-spacing: 0.27px;
+        white-space: pre-line;
+
+        a {
+          color: var(--color-neutral);
         }
       }
 
-      &_legal {
-        display: flex;
-        flex: 1 1 0;
+      .margin-small {
+        margin-bottom: 16px;
+      }
+
+      .margin-medium {
+        margin-bottom: 24px;
+      }
+
+      .margin-large {
+        margin-bottom: 32px;
+      }
+
+      .strong {
+        font-weight: bold;
       }
     }
-  
-    .alp-card {
-      flex: 1 1 0;
-  
-      &__header {
-        background-color: #ccdef1;
-        border-bottom: 0;
-        padding: 12px 24px;
-      }
-  
-      &__content {
-        display: flex;
-        color: var(--color-primary);
-        flex: 1 1 0;
-      }
+
+    &__title {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--color-primary);
     }
-  
-    .tab__container {
-      border-bottom: 1px solid var(--color-neutral-lighter);
-    }
-    .tab__content {
-      flex: 1 1;
-      flex-basis: 0;
-      overflow: auto;
-  
-      &__container {
-        margin: 3rem 4rem;
-  
-        .page-header{
-          font-size: 24px;
-          font-weight: 500;
-          letter-spacing: 0.4px;
-          color: var(--color-primary);
-          margin-bottom: 24px;
-        }
-  
-        .sub-header {
-          font-size: 16px;
-          font-weight: 500;
-          letter-spacing: 0.27px;
-          color: var(--color-neutral);
-        }
-  
-        .content {
-          font-size: 16px;
-          line-height: 1.5;
-          letter-spacing: 0.27px;
-          color: var(--color-neutral);
-          white-space: pre-line;
-  
-          a {
-            color: var(--color-neutral);
-          }
-        }
-  
-        .margin-small {
-          margin-bottom: 16px;
-        }
-  
-        .margin-medium {
-          margin-bottom: 24px;
-        }
-  
-        .margin-large {
-          margin-bottom: 32px;
-        }
-  
-        .strong {
-          font-weight: bold;
-        }
-      }
-  
-      &__title {
-        display: flex;
-        align-items: center;
-        height: 32px;
-        font-size: 20px;
-        font-weight: 500;
-        color: var(--color-primary);
-      }
-  
-      &__info {
-        width: 70%;
-      }
+
+    &__info {
+      width: 70%;
     }
   }
-  
-  
-  
-  
-  
-  
+}

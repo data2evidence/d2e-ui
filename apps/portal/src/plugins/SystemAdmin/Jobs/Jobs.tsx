@@ -16,7 +16,7 @@ import { loadPlugins } from "../../../utils";
 import { SystemAdminPluginRenderer } from "../../core/SystemAdminPluginRenderer";
 import env from "../../../env";
 import classNames from "classnames";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LogViewer from "./LogViewer/LogViewer";
 import { FeatureGate } from "../../../config/FeatureGate";
 import { FEATURE_DATAFLOW } from "../../../config";
@@ -40,10 +40,11 @@ const Jobs: FC = () => {
   const [jobs, loadingJobs, errorJobs] = useJobs(refetchJobs, isSilentRefresh);
   const [showAddFlow, setShowAddFlow] = useState(false);
   const [showDataflow, setShowDataflow] = useState(false);
-  const [mode, setMode] = useState<"flowRun" | "taskRun" | null>(null);
   const [logViewerScriptsLoaded, setLogViewerScriptsLoaded] = useState(false);
   const [logViewerDivLoaded, setLogViewerDivLoaded] = useState(false);
+  const [showLogViewer, setShowLogViewer] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const dataflowPlugin = useMemo(
     () => plugins.systemadmin.find((plugin: IPluginItem) => plugin.name === "Dataflow"),
@@ -110,7 +111,6 @@ const Jobs: FC = () => {
                 data={mapTime(jobs)}
                 handleStudySelect={handleStudySelect}
                 handleCancelJobClick={handleCancelJobClick}
-                setMode={setMode}
               />
             </>
           )
@@ -119,13 +119,14 @@ const Jobs: FC = () => {
     );
   };
 
+  const backToJobs = () => {
+    navigate("jobs", { replace: true });
+  };
+
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const incomingMode = searchParams.get("mode") || null;
-    if (incomingMode === "flowRun" || incomingMode === "taskRun" || incomingMode === null) {
-      setMode(incomingMode);
-    }
-  }, [location.search]);
+    const shouldShowLogViewer = location.pathname.includes("/flowrun") || location.pathname.includes("/taskrun");
+    setShowLogViewer(shouldShowLogViewer);
+  }, [location]);
 
   useEffect(() => {
     if (logViewerScriptsLoaded && logViewerDivLoaded) {
@@ -136,15 +137,15 @@ const Jobs: FC = () => {
         (window as any).mountLogViewer();
       }
     }
-  }, [mode, logViewerScriptsLoaded, logViewerDivLoaded]);
+  }, [logViewerScriptsLoaded, logViewerDivLoaded, showLogViewer]);
 
-  const showLogViewer = !!mode;
   return (
     <>
       {showLogViewer ? (
         <LogViewer
           setLogViewerScriptsLoaded={setLogViewerScriptsLoaded}
           setLogViewerDivLoaded={setLogViewerDivLoaded}
+          backToJobs={backToJobs}
         />
       ) : null}
       {!showLogViewer ? (
@@ -179,9 +180,9 @@ const Jobs: FC = () => {
                   <Button
                     className="jobs__button"
                     text={getText(i18nKeys.JOBS__UPLOAD)}
-                    variant="secondary"
+                    variant="outlined"
                     onClick={handleOpenAddFlow}
-                  ></Button>
+                  />
                   <AddFlowDialog open={showAddFlow} onClose={handleCloseAddFlow} />
                 </div>
                 <div className="jobs_content__container">

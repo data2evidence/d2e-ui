@@ -102,7 +102,7 @@ export default {
       'getServiceURL',
       'getAddCohortDialogState',
       'getPLRequest',
-      'getSelectedUserStudy',
+      'getSelectedDataset',
       'getJwtTokenValue',
       'getCurrentPatientCount',
     ]),
@@ -153,11 +153,11 @@ export default {
     onOkButtonPress() {
       const portalAPI = getPortalAPI()
       const syntax = JSON.stringify({
-        datasetId: this.getSelectedUserStudy.id,
+        datasetId: this.getSelectedDataset.id,
         bookmarkId: this.bookmarkId,
       })
       const params = {
-        studyId: this.getSelectedUserStudy.id,
+        studyId: this.getSelectedDataset.id,
         mriquery: JSON.stringify(this.getPLRequest({ bmkId: this.bookmarkId })),
         name: this.cohortName,
         description: this.cohortDescription,

@@ -3,16 +3,19 @@ import { RunGraph, RunGraphData } from '@prefecthq/graphs'
 import { FlowRun, FlowRunTabName, LogInfo } from '@/types'
 import { getLogsByFlowRunId, getParametersByFlowRunId, getTaskRunsByFlowRunId } from '@/api'
 import { ref, watchEffect } from 'vue'
-import Logs from '../components/Logs.vue'
+import LogScroller from '../components/LogScroller.vue'
 import { format } from 'date-fns'
 import { PCodeHighlight } from '@prefecthq/prefect-design'
-import { useParamsStore } from '@/stores'
+import { getPortalAPI } from '../utils/portalApi'
+import { useRoute, useRouter } from 'vue-router'
 
+const { backToJobs } = getPortalAPI()
+const route = useRoute()
+const router = useRouter()
 const logs = ref<LogInfo[]>([])
 const selected = ref<FlowRunTabName>('LOGS')
 const flowRun = ref<FlowRun>()
 const taskRuns = ref<FlowRun[]>([])
-const paramsStore = useParamsStore()
 
 const sampleGraphData: RunGraphData = {
   start_time: new Date('2024-01-30T06:22:37.538868+00:00'),
@@ -40,16 +43,16 @@ const onClickTab = (tabName: FlowRunTabName) => {
 }
 
 const onClickTaskRunId = (taskRunId: string) => {
-  paramsStore.updateParams({ mode: 'taskRun', taskRunId })
+  router.push(`/taskrun/${taskRunId}`)
 }
 
 const onClickBackToJobs = () => {
-  paramsStore.updateParams({ flowRunId: undefined, taskRunId: undefined, mode: undefined })
-  location.reload()
+  router.push(`/`)
+  backToJobs()
 }
 
 watchEffect(() => {
-  const flowRunId = paramsStore.flowRunId
+  const flowRunId = route.params.flowRunId as string
   if (flowRunId) {
     const asyncFn = async () => {
       const data = await getLogsByFlowRunId(flowRunId)
@@ -95,7 +98,9 @@ const showDemoGraph = false
       padding: 0px 20px;
     "
   >
-    <div style="color: white; cursor: pointer" @click="onClickBackToJobs">< back to Jobs list</div>
+    <div style="color: white; cursor: pointer" @click="onClickBackToJobs">
+      &#60; back to Jobs list
+    </div>
     <div style="font-size: small">
       <div style="color: white">Flow Run ID: {{ flowRun?.id }}</div>
     </div>
@@ -133,25 +138,27 @@ const showDemoGraph = false
       </div>
     </div>
   </div>
-  <Logs v-if="selected === 'LOGS'" :logs="logs" />
+  <LogScroller v-if="selected === 'LOGS'" :logs="logs" />
   <div v-if="selected === 'TASK_RUNS'">
-    <template v-if="taskRuns.length" v-for="taskRun in taskRuns">
-      <div class="task-run-container" @click="onClickTaskRunId(taskRun.id)">
-        <div class="task-run-name">
-          <div>
-            {{ taskRun.name }}
+    <template v-if="taskRuns.length">
+      <template v-for="taskRun in taskRuns" :key="taskRun.id">
+        <div class="task-run-container" @click="onClickTaskRunId(taskRun.id)">
+          <div class="task-run-name">
+            <div>
+              {{ taskRun.name }}
+            </div>
           </div>
-        </div>
-        <div class="task-run-details">
-          <div
-            :style="`padding: 0px 10px; background-color: ${taskRun.stateType === 'COMPLETED' ? 'green' : 'red'}; color: white; border-radius: 10px`"
-          >
-            {{ taskRun.stateName }}
+          <div class="task-run-details">
+            <div
+              :style="`padding: 0px 10px; background-color: ${taskRun.stateType === 'COMPLETED' ? 'green' : 'red'}; color: white; border-radius: 10px`"
+            >
+              {{ taskRun.stateName }}
+            </div>
+            <div style="margin: 0px 20px; color: white">{{ Math.ceil(taskRun.totalRunTime) }}s</div>
+            <div style="color: white">{{ format(taskRun.startTime, 'yyyy/MM/dd h:mm:ss a') }}</div>
           </div>
-          <div style="margin: 0px 20px; color: white">{{ Math.ceil(taskRun.totalRunTime) }}s</div>
-          <div style="color: white">{{ format(taskRun.startTime, 'yyyy/MM/dd h:mm:ss a') }}</div>
-        </div>
-      </div>
+        </div></template
+      >
     </template>
     <template v-else><div style="padding: 20px; color: white">No task flows</div></template>
   </div>

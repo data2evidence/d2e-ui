@@ -1,13 +1,14 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { importPluginModule } from "./pluginLoader";
-import { useUserInfo } from "../../contexts/UserContext";
 import { getAuthToken } from "../../containers/auth";
+import { useUser } from "../../contexts";
 import { PluginDropdownItem, SubFeatureFlags } from "@portal/plugin";
 
 interface ResearcherStudyPluginRendererProps {
   path: string;
   tenantId: string;
   studyId: string;
+  releaseId: string;
   data: any;
   fetchMenu: (route: string, menus: PluginDropdownItem[]) => void;
   subFeatureFlags: SubFeatureFlags;
@@ -17,11 +18,12 @@ export const ResearcherStudyPluginRenderer: FC<ResearcherStudyPluginRendererProp
   path,
   tenantId,
   studyId,
+  releaseId,
   data,
   fetchMenu,
   subFeatureFlags,
 }) => {
-  const { getUserId } = useUserInfo();
+  const { userId } = useUser();
   const [component, setComponent] = useState<any>();
 
   useEffect(() => {
@@ -36,17 +38,18 @@ export const ResearcherStudyPluginRenderer: FC<ResearcherStudyPluginRendererProp
 
   const metadata = useMemo(
     () => ({
-      userId: getUserId(),
+      userId,
       getToken: async () => {
         return await getAuthToken();
       },
       tenantId,
       studyId,
+      releaseId,
       data,
       fetchMenu,
       subFeatureFlags,
     }),
-    [tenantId, studyId, data, fetchMenu, getUserId, subFeatureFlags]
+    [tenantId, studyId, releaseId, data, fetchMenu, userId, subFeatureFlags]
   );
 
   const PageComponent = component?.page;

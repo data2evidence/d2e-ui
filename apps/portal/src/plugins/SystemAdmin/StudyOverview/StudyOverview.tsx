@@ -214,8 +214,6 @@ const StudyOverview: FC = () => {
   return (
     <div className="studyoverview__container">
       <div className="studyoverview">
-        <Title>Dataset overview</Title>
-
         <div className="studyoverview__actions">
           <h3 className="studyoverview__actions-title">{getText(i18nKeys.STUDY_OVERVIEW__DATASETS)}</h3>
           <div className="studyoverview__actions-btn-container">
@@ -266,7 +264,7 @@ const StudyOverview: FC = () => {
                   </TableRow>
                 )}
                 {datasets?.map((dataset: Study, index: number) => (
-                  <TableRow key={dataset.id} style={index % 2 ? { background: "#ebf1f8" } : { background: "white" }}>
+                  <TableRow key={dataset.id}>
                     <TableCell style={{ paddingLeft: "2.75em" }}>{visibilityIcon(dataset.visibilityStatus)}</TableCell>
                     <TableCell style={{ maxWidth: "120px" }}>
                       <Text textFormat="wrap" showCopy textStyle={{ paddingTop: "5px" }}>

@@ -36,7 +36,7 @@ const DeleteNotebookDialog: FC<DeleteNotebookDialogProps> = ({ notebook, open, o
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button text={getText(i18nKeys.DELETE_NOTEBOOK_DIALOG__CANCEL)} onClick={onClose} variant="secondary" block />
+        <Button text={getText(i18nKeys.DELETE_NOTEBOOK_DIALOG__CANCEL)} onClick={onClose} variant="outlined" block />
         <Button text={getText(i18nKeys.DELETE_NOTEBOOK_DIALOG__DELETE)} onClick={handleDelete} block />
       </div>
     </Dialog>

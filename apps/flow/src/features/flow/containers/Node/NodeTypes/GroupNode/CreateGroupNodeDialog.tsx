@@ -118,7 +118,7 @@ export const CreateGroupNodeDialogDialog: FC<CreateGroupNodeDialogProps> = ({
           gap={1}
           className="create-group-node-dialog__footer-actions"
         >
-          <Button text="Cancel" variant="secondary" onClick={handleCancel} />
+          <Button text="Cancel" variant="outlined" onClick={handleCancel} />
           <Button
             text="Create"
             onClick={() => handleCreate(formData)}

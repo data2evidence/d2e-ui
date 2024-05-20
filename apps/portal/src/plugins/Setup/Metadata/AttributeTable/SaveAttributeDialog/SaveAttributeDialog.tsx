@@ -167,7 +167,7 @@ export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClos
           <Box display="flex" gap={1} className="save-attribute-dialog__footer-actions">
             <Button
               text={getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__CANCEL)}
-              variant="secondary"
+              variant="outlined"
               onClick={() => handleClose("cancelled")}
             />
             <Button text={getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__SAVE)} onClick={handleSave} loading={saving} />

@@ -129,7 +129,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getDomainValues', 'getConstraint', 'getText', 'getMriFrontendConfig', 'getSelectedUserStudy']),
+    ...mapGetters(['getDomainValues', 'getConstraint', 'getText', 'getMriFrontendConfig', 'getSelectedDataset']),
     myDomainValues() {
       return this.getDomainValues(this.attributePathUid)
     },
@@ -307,7 +307,7 @@ export default {
       const event = new CustomEvent<{ props: TerminologyProps }>('alp-terminology-open', {
         detail: {
           props: {
-            selectedDatasetId: this.getSelectedUserStudy.id,
+            selectedDatasetId: this.getSelectedDataset.id,
             selectedConceptSetId: conceptSetId,
             mode: 'CONCEPT_SET',
             isConceptSet: true,

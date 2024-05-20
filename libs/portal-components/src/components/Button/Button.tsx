@@ -1,24 +1,28 @@
 import React, { AllHTMLAttributes, forwardRef } from "react";
+import { default as MuiButton, ButtonProps as MuiButtonProps } from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import classNames from "classnames";
 import "./Button.scss";
 
 export type Ref = HTMLButtonElement;
 
-export type ButtonProps = AllHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = MuiButtonProps & {
   text?: string;
   loading?: boolean;
   onClick?: (event?: any) => void;
   block?: boolean;
-  variant?: "primary" | "secondary" | "tertiary" | "alarm";
+  containerClassName?: string;
 };
 
 export const Button = forwardRef<Ref, ButtonProps>(
-  ({ loading, className, disabled, block, variant = "primary", onClick, ...props }, ref) => {
+  (
+    { text, type, loading, className, containerClassName, disabled, block, onClick, variant = "contained", ...props },
+    ref
+  ) => {
     const containerClasses = classNames(
       "alp-button__container",
       { "button--block": block },
-      { [`${className}`]: !!className }
+      { [`${containerClassName}`]: !!containerClassName }
     );
     const classes = classNames(
       "alp-button",
@@ -29,15 +33,19 @@ export const Button = forwardRef<Ref, ButtonProps>(
 
     return (
       <div className={containerClasses} data-testid="button-container">
-        <d4l-button
-          //@ts-ignore
+        <MuiButton
           ref={ref}
-          classes={classes}
+          className={classes}
           disabled={loading || disabled}
+          disableElevation
           data-testid="button"
+          variant={variant}
+          style={{ textTransform: "none" }}
           {...(!disabled && { onClick })}
           {...props}
-        />
+        >
+          {text}
+        </MuiButton>
         {loading && (
           <CircularProgress size={32} color="inherit" className="alp-button--loading" data-testid="button-loading" />
         )}

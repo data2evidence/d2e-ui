@@ -13,8 +13,7 @@ import {
   JobRunTypes,
 } from "../../../SystemAdmin/DQD/types";
 import { useDialogHelper } from "../../../../hooks";
-import { useFeedback, useTranslation } from "../../../../contexts";
-import { useUserInfo } from "../../../../contexts/UserContext";
+import { useFeedback, useTranslation, useUser } from "../../../../contexts";
 
 import "./DataQualityDialog.scss";
 
@@ -36,7 +35,7 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
   const [showJobDialog, openJobDialog, closeJobDialog] = useDialogHelper(false);
   const { getFeedback } = useFeedback();
   const feedback = getFeedback();
-  const { user: userInfo } = useUserInfo();
+  const { user } = useUser();
 
   useEffect(() => {
     if (!latestFlowRun) {
@@ -98,8 +97,8 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
           <Button
             onClick={openJobDialog}
             text={getText(i18nKeys.DATA_QUALITY_DIALOG__RUN_DATA_QUALITY)}
-            disabled={FlowRunInProgressJobStateTypes.includes(latestFlowRun?.state?.type) || !userInfo.isSystemAdmin}
-          ></Button>
+            disabled={FlowRunInProgressJobStateTypes.includes(latestFlowRun?.state?.type) || !user.isSystemAdmin}
+          />
         </div>
         <div>
           {loadingLatestFlowRun ? (

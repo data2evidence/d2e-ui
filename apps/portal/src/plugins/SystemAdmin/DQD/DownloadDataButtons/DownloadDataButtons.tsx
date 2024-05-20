@@ -3,6 +3,7 @@ import { Button } from "@portal/components";
 import { dqdParseToCsv, filterJSON, downloadFile, DownloadColumn } from "../../../../utils/Export";
 import { CheckResults, OverviewResults } from "../../../../components/DQD/types";
 import { useTranslation } from "../../../../contexts";
+import "./DownloadDataButtons.scss";
 
 interface DownloadDataButtonsProps {
   data: CheckResults[];
@@ -25,34 +26,30 @@ const DownloadDataButtons: FC<DownloadDataButtonsProps> = ({ data, overviewData,
     { header: getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__NUMVIOLATEDROWS), accessor: "numViolatedRows" },
   ];
   return (
-    <div className="selector__button">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div className="button-container">
-          <Button
-            onClick={() =>
-              downloadFile({
-                data: dqdParseToCsv(data.map((d) => ({ ...d }))),
-                fileName: datasetName,
-                fileType: "text/csv",
-              })
-            }
-            text={getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__DOWNLOAD_CSV)}
-          />
-          <Button
-            onClick={() =>
-              downloadFile({
-                data: filterJSON(
-                  data.map((d) => ({ ...d })),
-                  overviewData
-                ),
-                fileName: `${datasetName}.json`,
-                fileType: "text/json",
-              })
-            }
-            text={getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__DOWNLOAD_JSON)}
-          />
-        </div>
-      </div>
+    <div className="download-data-buttons">
+      <Button
+        onClick={() =>
+          downloadFile({
+            data: dqdParseToCsv(data.map((d) => ({ ...d }))),
+            fileName: datasetName,
+            fileType: "text/csv",
+          })
+        }
+        text={getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__DOWNLOAD_CSV)}
+      />
+      <Button
+        onClick={() =>
+          downloadFile({
+            data: filterJSON(
+              data.map((d) => ({ ...d })),
+              overviewData
+            ),
+            fileName: `${datasetName}.json`,
+            fileType: "text/json",
+          })
+        }
+        text={getText(i18nKeys.DOWNLOAD_DATA_BUTTONS__DOWNLOAD_JSON)}
+      />
     </div>
   );
 };

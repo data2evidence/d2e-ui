@@ -4,14 +4,27 @@
 
   &.button--block {
     display: block;
+
+    .alp-button {
+      width: 100%;
+    }
   }
 
-  .alp-button--loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    color: white;
-    margin-top: -16px;
-    margin-left: -16px;
+  .alp-button {
+    font-size: 1rem;
+    border-radius: 8px;
+
+    &--loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      color: white;
+      margin-top: -16px;
+      margin-left: -16px;
+    }
+
+    &.button--outlined {
+      border-width: 2px;
+    }
   }
 }

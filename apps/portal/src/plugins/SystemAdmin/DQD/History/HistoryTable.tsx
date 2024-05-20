@@ -117,15 +117,15 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
                 handleViewDetailClick(row);
               }}
               text={getText(i18nKeys.HISTORY_TABLE__VIEW_DETAIL)}
-            ></Button>
+            />
           ) : // If status is "in progress", show abort button
           inProgressJobStates.includes(row.status) ? (
             <Button
               className="cancel-job-button"
               onClick={() => handleCancelJobClick(row.flowRunId)}
               text={getText(i18nKeys.HISTORY_TABLE__CANCEL_JOB)}
-              variant="secondary"
-            ></Button>
+              variant="outlined"
+            />
           ) : (
             "-"
           )}

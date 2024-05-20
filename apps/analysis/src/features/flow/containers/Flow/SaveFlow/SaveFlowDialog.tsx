@@ -182,7 +182,7 @@ export const SaveFlowDialog: FC<SaveFlowDialogProps> = ({
           gap={1}
           className="save-flow-dialog__footer-actions"
         >
-          <Button text="Cancel" variant="secondary" onClick={handleClose} />
+          <Button text="Cancel" variant="outlined" onClick={handleClose} />
           <Button
             text={isNew ? "Create" : !!revisionId ? "Overwrite latest" : "Save"}
             onClick={handleSave}

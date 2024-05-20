@@ -2,14 +2,18 @@ import React, { FC, useMemo, useState, useCallback } from "react";
 import classNames from "classnames";
 import debounce from "lodash/debounce";
 import { Loader } from "@portal/components";
-import { StudyCard } from "../../shared/StudyOverview/StudyCard/StudyCard";
 import { useDatasets } from "../../../hooks";
 import { FEATURE_DATASET_FILTER, config } from "../../../config/index";
 import { DatasetFilters } from "./components/DatasetFilters";
+import { DatasetCard } from "../DatasetCard/DatasetCard";
 import noStudyImg from "../../shared/StudyOverview/images/no-study.png";
 import { FeatureGate } from "../../../config/FeatureGate";
-import "./Overview.scss";
 import { useTranslation } from "../../../contexts";
+import { HomeHeader } from "./components/HomeHeader";
+import { SearchBarDataset } from "./components/SearchBarDatasets";
+import { AccountButton } from "./components/AccountButton";
+import env from "../../../env";
+import "./Overview.scss";
 
 export const Overview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
@@ -17,23 +21,22 @@ export const Overview: FC = () => {
   const debounceSetFilters = debounce((filters: Record<string, string>) => setFilters(filters), 300);
   const [datasets, loading, error] = useDatasets("researcher", filters);
 
-  const RenderStudies = useMemo(() => {
+  const RenderDatasets = useMemo(() => {
+    const isEmpty = datasets.length === 0;
+    const classes = classNames("overview__datasets", { "overview__datasets--empty": isEmpty });
+
     if (loading) return <Loader />;
 
-    if (datasets.length === 0) {
-      return (
-        <>
-          <img alt="No dataset" src={noStudyImg} height="160" width="270" />
-          <p>{getText(i18nKeys.OVERVIEW__NO_DATASET)}</p>
-        </>
-      );
-    }
-
     return (
-      <div className="overview__studies overview__single_tenant">
-        {datasets.map((study) => (
-          <StudyCard key={study.id} study={study} path={config.ROUTES.researcher} />
-        ))}
+      <div className={classes}>
+        {isEmpty ? (
+          <>
+            <img alt="No dataset" src={noStudyImg} height="160" width="270" />
+            <p>{getText(i18nKeys.OVERVIEW__NO_DATASET)}</p>
+          </>
+        ) : (
+          datasets.map((dataset) => <DatasetCard key={dataset.id} dataset={dataset} path={config.ROUTES.researcher} />)
+        )}
       </div>
     );
   }, [datasets, loading, getText]);
@@ -49,13 +52,27 @@ export const Overview: FC = () => {
 
   return (
     <div className="overview">
-      <FeatureGate featureFlags={[FEATURE_DATASET_FILTER]}>
-        <div className="overview__filter">
-          <DatasetFilters onChange={handleFiltersChange} />
+      <HomeHeader />
+      <div className="overview__banner">
+        <div className="overview__banner-content">
+          <img alt="Illustration" src={`${env.PUBLIC_URL}/assets/landing-page-illustration.svg`} />
+          <div className="overview__banner-title">
+            <div className="overview__banner-title-text">Data2Evidence</div>
+            <div className="overview__banner-description">{getText(i18nKeys.HOME__DESCRIPTION)}</div>
+            <SearchBarDataset />
+          </div>
         </div>
-      </FeatureGate>
-      <div className={classNames("overview__content", { "overview__content--empty": datasets.length === 0 })}>
-        {RenderStudies}
+        <AccountButton />
+      </div>
+      <div className="overview__body">
+        <FeatureGate featureFlags={[FEATURE_DATASET_FILTER]}>
+          <div className="overview__filter">
+            <DatasetFilters onChange={handleFiltersChange} />
+          </div>
+        </FeatureGate>
+        <div className={classNames("overview__content", { "overview__content--empty": datasets.length === 0 })}>
+          {RenderDatasets}
+        </div>
       </div>
     </div>
   );
