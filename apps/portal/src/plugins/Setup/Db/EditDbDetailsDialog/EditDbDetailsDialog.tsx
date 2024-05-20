@@ -138,6 +138,14 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
             />
           </Box>
         </Box>
+        <Box mb={4}>
+          <Box mb={2}>
+            <b>Extra</b>
+          </Box>
+          <Box>
+            <TextArea rows={10} value={JSON.stringify(db.extra, null, 4)} />
+          </Box>
+        </Box>
       </div>
       <Divider />
 
