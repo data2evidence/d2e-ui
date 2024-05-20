@@ -21,6 +21,7 @@ import { CohortIncidentTargetCohortNode } from "./CohortIncidentTargetCohortNode
 import { NCOCohortSetNode } from "./NCOCohortSetNode/NCOCohortSetNode";
 import { DefaultCovariateSettingsNode } from "./DefaultCovariateSettingsNode/DefaultCovariateSettingsNode";
 import { OutcomesNode } from "./OutcomesNode/OutcomesNode";
+import { CohortDefinitionSetNode } from "./CohortDefinitionSetNode/CohortDefinitionSetNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -47,6 +48,7 @@ export const NODE_TYPES: {
   study_population_settings_node: StudyPopulationSettingsNode,
   nco_cohort_set_node: NCOCohortSetNode,
   outcomes_node: OutcomesNode,
+  cohort_definition_set_node: CohortDefinitionSetNode,
 };
 
 export const NODE_COLORS: {
@@ -72,6 +74,7 @@ export const NODE_COLORS: {
   study_population_settings_node: "lightpink",
   nco_cohort_set_node: "blue",
   outcomes_node: "green",
+  cohort_definition_set_node: "grey",
 };
 
 export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
@@ -346,6 +349,12 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
       trueEffectSize: 1,
       priorOutcomeLookback: 30,
     },
+  },
+  cohort_definition_set_node: {
+    title: "Cohort Definition Set",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    tag: NodeTag.Grey,
+    defaultData: {},
   },
 };
 

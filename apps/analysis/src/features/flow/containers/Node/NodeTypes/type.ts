@@ -18,7 +18,8 @@ export type NodeType =
   | "patient_level_prediction_node"
   | "study_population_settings_node"
   | "nco_cohort_set_node"
-  | "outcomes_node";
+  | "outcomes_node"
+  | "cohort_definition_set_node";
 
 export type NodeTypeChoice = Exclude<NodeType, "start">;
 
@@ -71,6 +72,7 @@ export const ZERO_INCIDENCE_NODE = [
   "study_population_settings_node",
   "nco_cohort_set_node",
   "outcomes_node",
+  "cohort_definitions_set_node",
 ];
 export const ONE_INCIDENCE_NODE = [
   "negative_control_outcome_cohort_node",
@@ -242,6 +244,7 @@ export const NODE_CONNECTOR_MAPPING = {
   study_population_settings_node: { type: "lightpink", connector_list: [] },
   nco_cohort_set_node: { type: "blue", connector_list: [] },
   outcomes_node: { type: "green", connector_list: [] },
+  cohort_definition_set_node: { type: "grey", connector_list: [] },
 };
 
 export const OUTBOUND_CONNECTOR_STYLE = {
