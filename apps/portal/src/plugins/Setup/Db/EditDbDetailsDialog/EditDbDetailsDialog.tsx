@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import Divider from "@mui/material/Divider";
 import { SxProps } from "@mui/material";
-import { Autocomplete, Box, Button, Chip, Dialog, TextField } from "@portal/components";
+import { Autocomplete, Box, Button, Chip, Dialog, TextArea, TextField } from "@portal/components";
 import { CloseDialogType, Feedback, IDatabase } from "../../../../types";
 import { api } from "../../../../axios/api";
 import { isEqual } from "lodash";
