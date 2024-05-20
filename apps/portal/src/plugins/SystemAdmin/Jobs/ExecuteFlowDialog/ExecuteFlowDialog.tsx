@@ -93,23 +93,17 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     [formData]
   );
 
-  const handleJSONChange = useCallback(
-    (value: string) => {
-      try {
-        setFormData(JSON.parse(value));
-      } catch (error) {
-        return;
-      }
-    },
-    [formData]
-  );
+  const handleJSONChange = useCallback((value: string) => {
+    try {
+      setFormData(JSON.parse(value));
+    } catch (error) {
+      return;
+    }
+  }, []);
 
-  const handleParamTypeChange = useCallback(
-    (event: React.MouseEvent<HTMLElement>, type: ParamType) => {
-      setParamType(type);
-    },
-    [formData]
-  );
+  const handleParamTypeChange = useCallback((event: React.MouseEvent<HTMLElement>, type: ParamType) => {
+    setParamType(type);
+  }, []);
 
   const formDataIsEmpty = useCallback(() => {
     return Object.keys(formData).length === 0 && flowRunName === "";
@@ -190,17 +184,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     } finally {
       setLoading(false);
     }
-  }, [
-    deploymentName,
-    flowName,
-    flowRunName,
-    formData,
-    formDataIsEmpty,
-    handleClose,
-    validateFormData,
-    getText,
-    errors,
-  ]);
+  }, [deploymentName, flowName, flowRunName, formData, formDataIsEmpty, handleClose, validateFormData, getText]);
 
   return (
     <Dialog

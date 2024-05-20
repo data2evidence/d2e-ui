@@ -37,13 +37,10 @@ const JSONEditor: FC<JSONEditorProps> = ({ value, onChange, parentKey, childKey,
     return val;
   }, []);
 
-  const handleChange = useCallback(
-    (val: string) => {
-      setCode(val);
-      onChange(val, name, parentKey, childKey);
-    },
-    [code]
-  );
+  const handleChange = useCallback((val: string) => {
+    setCode(val);
+    onChange(val, name, parentKey, childKey);
+  }, []);
 
   return (
     <>
