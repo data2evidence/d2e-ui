@@ -277,7 +277,7 @@ export default {
         clearInterval(this.selectedValuesTimeout)
       }
       this.isLoading = true
-      const INPUT_WAIT_TIME_MS = 200
+      const INPUT_WAIT_TIME_MS = 600
       this.selectedValuesTimeout = setTimeout(() => {
         this.loadValuesForAttributePath({
           attributePathUid: this.attributePathUid,
