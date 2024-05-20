@@ -280,6 +280,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
         minCasesForTimeCovariates: 100000,
       },
       fitSccsModelArgs: {
+        control: false,
         cvType: "auto",
         selectorType: "byPid",
         startingVariance: 0.1,
