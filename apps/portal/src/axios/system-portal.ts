@@ -153,11 +153,15 @@ export class SystemPortal {
     });
   }
 
-  public getPublicDatasets() {
+  public getPublicDatasets(searchText: string | undefined) {
+    const params = new URLSearchParams();
+    if (searchText) params.set("searchText", searchText);
+
     return request<Study[]>({
       baseURL: SYSTEM_PORTAL_URL,
       url: "dataset/public/list",
       method: "GET",
+      params,
     });
   }
 
