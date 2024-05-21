@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo } from "react";
+import React, { FC, useEffect, useState, useMemo, useCallback } from "react";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@portal/components";
@@ -13,15 +13,28 @@ import { AccountButton } from "../../researcher/Overview/components/AccountButto
 import env from "../../../env";
 import "./PublicOverview.scss";
 
+let hasPublicDatasets = false;
+
 export const PublicOverview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
+  const [searchString, setSearchString] = useState<string>();
+  const [searchText, setSearchText] = useState<string>();
   const navigate = useNavigate();
 
-  const [datasets, loading, error] = usePublicDatasets();
+  const [refetch, setRefetch] = useState(0);
+  const [datasets, loading, error] = usePublicDatasets(searchText, refetch);
 
   useEffect(() => {
+    if (hasPublicDatasets) {
+      return;
+    }
+
     if (datasets && datasets.length === 0) {
       navigate(config.ROUTES.login);
+    } else {
+      if (!hasPublicDatasets) {
+        hasPublicDatasets = true;
+      }
     }
   }, [datasets, navigate]);
 
@@ -40,26 +53,46 @@ export const PublicOverview: FC = () => {
           </>
         ) : (
           datasets.map((dataset) => (
-            <PublicDatasetCard key={dataset.id} dataset={dataset} path={config.ROUTES.public} />
+            <PublicDatasetCard
+              key={dataset.id}
+              dataset={dataset}
+              path={config.ROUTES.public}
+              highlightText={searchText}
+            />
           ))
         )}
       </div>
     );
-  }, [datasets, loading, getText]);
+  }, [datasets, loading, searchText, getText]);
+
+  const handleSearchEnter = useCallback((keyword: string) => {
+    setSearchText((current) => {
+      if (current === keyword) {
+        setRefetch((refetch) => refetch + 1);
+        return current;
+      } else {
+        return keyword;
+      }
+    });
+  }, []);
+
+  const handleSearchChange = useCallback((keyword: string) => {
+    setSearchString(keyword);
+  }, []);
 
   if (error) console.error(error.message);
   if (loading) return <Loader />;
 
   return (
     <div className="public-overview">
-      <HomeHeader />
+      <HomeHeader searchKeyword={searchString} onSearchEnter={handleSearchEnter} onSearchChange={handleSearchChange} />
       <div className="public-overview__banner">
         <div className="public-overview__banner-content">
           <img alt="Illustration" src={`${env.PUBLIC_URL}/assets/landing-page-illustration.svg`} />
           <div className="public-overview__banner-title">
             <div className="public-overview__banner-title-text">Data2Evidence</div>
             <div className="public-overview__banner-description">{getText(i18nKeys.HOME__DESCRIPTION)}</div>
-            <SearchBarDataset />
+            <SearchBarDataset keyword={searchString} onEnter={handleSearchEnter} onChange={handleSearchChange} />
           </div>
         </div>
         <AccountButton />

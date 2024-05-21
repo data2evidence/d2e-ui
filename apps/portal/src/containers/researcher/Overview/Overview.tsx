@@ -17,9 +17,12 @@ import "./Overview.scss";
 
 export const Overview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
+  const [searchString, setSearchString] = useState<string>();
+  const [searchText, setSearchText] = useState<string>();
   const [filters, setFilters] = useState<Record<string, string>>({});
   const debounceSetFilters = debounce((filters: Record<string, string>) => setFilters(filters), 300);
-  const [datasets, loading, error] = useDatasets("researcher", filters);
+  const [refetch, setRefetch] = useState(0);
+  const [datasets, loading, error] = useDatasets("researcher", searchText, filters, refetch);
 
   const RenderDatasets = useMemo(() => {
     const isEmpty = datasets.length === 0;
@@ -35,11 +38,18 @@ export const Overview: FC = () => {
             <p>{getText(i18nKeys.OVERVIEW__NO_DATASET)}</p>
           </>
         ) : (
-          datasets.map((dataset) => <DatasetCard key={dataset.id} dataset={dataset} path={config.ROUTES.researcher} />)
+          datasets.map((dataset) => (
+            <DatasetCard
+              key={dataset.id}
+              dataset={dataset}
+              path={config.ROUTES.researcher}
+              highlightText={searchText}
+            />
+          ))
         )}
       </div>
     );
-  }, [datasets, loading, getText]);
+  }, [datasets, loading, searchText, getText]);
 
   const handleFiltersChange = useCallback(
     (filters: Record<string, string>) => {
@@ -48,18 +58,33 @@ export const Overview: FC = () => {
     [debounceSetFilters]
   );
 
+  const handleSearchEnter = useCallback((keyword: string) => {
+    setSearchText((current) => {
+      if (current === keyword) {
+        setRefetch((refetch) => refetch + 1);
+        return current;
+      } else {
+        return keyword;
+      }
+    });
+  }, []);
+
+  const handleSearchChange = useCallback((keyword: string) => {
+    setSearchString(keyword);
+  }, []);
+
   if (error) console.error(error.message);
 
   return (
     <div className="overview">
-      <HomeHeader />
+      <HomeHeader searchKeyword={searchString} onSearchEnter={handleSearchEnter} onSearchChange={handleSearchChange} />
       <div className="overview__banner">
         <div className="overview__banner-content">
           <img alt="Illustration" src={`${env.PUBLIC_URL}/assets/landing-page-illustration.svg`} />
           <div className="overview__banner-title">
             <div className="overview__banner-title-text">Data2Evidence</div>
             <div className="overview__banner-description">{getText(i18nKeys.HOME__DESCRIPTION)}</div>
-            <SearchBarDataset />
+            <SearchBarDataset keyword={searchString} onEnter={handleSearchEnter} onChange={handleSearchChange} />
           </div>
         </div>
         <AccountButton />

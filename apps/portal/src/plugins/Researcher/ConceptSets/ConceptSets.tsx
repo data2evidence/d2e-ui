@@ -141,7 +141,7 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
     setPage(page);
   }, []);
 
-  const filteredData = data.filter((row) => row.name.toLowerCase().includes(searchText));
+  const filteredData = data.filter((row) => row.name.toLowerCase().includes(searchText.toLowerCase()));
   const pageData = filteredData.slice(rowsPerPage * page, rowsPerPage * (page + 1));
 
   if (isLoading || !datasetId) return <Loader />;

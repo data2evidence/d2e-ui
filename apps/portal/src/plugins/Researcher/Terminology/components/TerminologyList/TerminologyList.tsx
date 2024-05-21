@@ -101,13 +101,10 @@ const TerminologyList: FC<TerminologyListProps> = ({
     return listData;
   }, [tab, conceptsResult, page, rowsPerPage, selectedConcepts]);
 
-  const updateSearchResult = useCallback(
-    (keyword: string) => {
-      setSearchText(keyword);
-      setPage(0);
-    },
-    [searchText]
-  );
+  const updateSearchResult = useCallback((keyword: string) => {
+    setSearchText(keyword);
+    setPage(0);
+  }, []);
 
   const fetchData = useCallback(
     async (counter: number) => {
@@ -134,7 +131,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
           ) {
             const filterOptions = await terminologyAPI.getFilterOptions(
               datasetId,
-              searchText,
+              searchText.toLowerCase(),
               conceptClassIdFilters,
               domainIdFilters,
               vocabularyIdFilters,
@@ -148,11 +145,12 @@ const TerminologyList: FC<TerminologyListProps> = ({
               concept: { ...allFilterOptionsZeroed.concept, ...filterOptions.concept },
               validity: { ...allFilterOptionsZeroed.validity, ...filterOptions.validity },
             };
+            setFilterOptions(combinedFilterOptions);
             const fhirResponse = await terminologyAPI.getTerminologies(
               page,
               rowsPerPage,
               datasetId,
-              searchText,
+              searchText.toLowerCase(),
               conceptClassIdFilters,
               domainIdFilters,
               vocabularyIdFilters,
@@ -282,7 +280,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         return;
       }
       const terminologyAPI = new Terminology();
-      const filterOptions = await terminologyAPI.getFilterOptions(datasetId, searchText, [], [], [], []);
+      const filterOptions = await terminologyAPI.getFilterOptions(datasetId, searchText.toLowerCase(), [], [], [], []);
       const filterOptionsZeroed = JSON.parse(JSON.stringify(filterOptions));
       for (const filterKey of ["conceptClassId", "domainId", "vocabularyId", "standardConcept", "concept"] as const) {
         for (const optionKey in filterOptionsZeroed[filterKey]) {

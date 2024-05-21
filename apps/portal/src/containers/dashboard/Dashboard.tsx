@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { Box } from "@portal/components";
 import { useDashboard } from "../../hooks";
@@ -9,10 +9,6 @@ export const Dashboard: FC = () => {
   const { id } = useParams();
   const [dashboard] = useDashboard(id || "");
   const { user } = useUser();
-
-  useEffect(() => {
-    localStorage.removeItem("redirectUrl");
-  }, []);
 
   return (
     <Box height="100%" display="flex" flexDirection="column" justifyContent="center">
