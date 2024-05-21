@@ -1,7 +1,7 @@
 import { ComponentType } from "react";
 import { Node, NodeProps } from "reactflow";
 import { NodeDataState } from "../../../types";
-import { RNode } from "./RNode/RNode";
+import { PlainNode } from "./PlainNode/PlainNode";
 import { CohortGeneratorNode } from "./CohortGeneratorNode/CohortGeneratorNode";
 import { CohortDiagnosticsNode } from "./CohortDiagnosticsNode/CohortDiagnosticsNode";
 import { NegatveControlOutcomeNode } from "./NegativeControlOutcomeNode/NegativeControlOutcomeNode";
@@ -45,7 +45,7 @@ export const NODE_TYPES: {
   self_controlled_case_series_analysis_node:
     SelfControlledCaseSeriesAnalysisNode,
   self_controlled_case_series_node: SelfControlledCaseSeriesNode,
-  patient_level_prediction_node: RNode,
+  patient_level_prediction_node: PlainNode,
   study_population_settings_node: StudyPopulationSettingsNode,
   nco_cohort_set_node: NCOCohortSetNode,
   outcomes_node: OutcomesNode,

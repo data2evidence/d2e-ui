@@ -4,38 +4,26 @@ import { useBooleanHelper } from "~/features/flow/hooks";
 import { NodeDataState } from "../../../../types";
 import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
-import { RDrawer } from "./RDrawer";
-import "./RNode.scss";
+import "./PlainNode.scss";
 
-export interface RNodeData extends NodeDataState {
-  r_code: string;
-  output_json_schema: string;
-}
+export interface PlainNodeData extends NodeDataState {}
 
-export const RNode = (node: NodeProps<RNodeData>) => {
+export const PlainNode = (node: NodeProps<PlainNodeData>) => {
   const { data } = node;
-  const [settingVisible, openSetting, closeSetting] = useBooleanHelper(false);
   const [resultVisible, openResult, closeResult] = useBooleanHelper(false);
 
   return (
     <>
-      <NodeLayout<RNodeData>
-        className="r-node"
+      <NodeLayout<PlainNodeData>
+        className="plain-node"
         name={data.name}
-        onSettingClick={openSetting}
+        onSettingClick={undefined}
         resultType={data.error ? "error" : "success"}
         onResultClick={data.result ? openResult : null}
         node={node}
       >
         {data.description}
       </NodeLayout>
-      <RDrawer
-        node={node}
-        title="Configure R"
-        className="r-drawer"
-        open={settingVisible}
-        onClose={closeSetting}
-      />
       <ResultsDrawer
         open={resultVisible}
         onClose={closeResult}
