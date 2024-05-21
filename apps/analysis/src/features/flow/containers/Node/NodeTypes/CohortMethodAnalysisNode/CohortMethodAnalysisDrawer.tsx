@@ -25,6 +25,7 @@ interface FormData extends CohortMethodAnalysisNodeData {}
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "Matching on ps and covariates, simple outcomeModel",
+  analysisId: undefined,
   dbCohortMethodDataArgs: {
     washoutPeriod: 183,
     firstExposureOnly: true,
@@ -55,6 +56,7 @@ export const CohortMethodAnalysisDrawer: FC<
       setFormData({
         name: node.data.name,
         description: node.data.description,
+        analysisId: node.data.analysisId,
         dbCohortMethodDataArgs: node.data.dbCohortMethodDataArgs,
         fitOutcomeModelArgs: node.data.fitOutcomeModelArgs,
         psArgs: node.data.psArgs,
@@ -96,6 +98,18 @@ export const CohortMethodAnalysisDrawer: FC<
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             onFormDataChange({ description: e.target.value })
           }
+        />
+      </Box>
+      <Box mb={4}>
+        <TextInput
+          label="Analysis ID"
+          value={formData.analysisId}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({
+              analysisId: e.target.value,
+            })
+          }
+          type="number"
         />
       </Box>
       <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>

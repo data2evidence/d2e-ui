@@ -25,6 +25,7 @@ interface PsArgs {
 }
 
 export interface CohortMethodAnalysisNodeData extends NodeDataState {
+  analysisId: number;
   dbCohortMethodDataArgs: DbCohortMethodDataArgs;
   fitOutcomeModelArgs: FitOutcomeModelArgs;
   psArgs: PsArgs;
