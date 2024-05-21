@@ -75,10 +75,10 @@ export const ZERO_INCIDENCE_NODE = [
   "outcomes_node",
   "cohort_definitions_set_node",
   "exposure_node",
+  "cohort_incidence_target_cohorts_node",
 ];
 export const ONE_INCIDENCE_NODE = [
   "negative_control_outcome_cohort_node",
-  "cohort_incidence_target_cohorts_node",
   "characterization_node",
   "target_comparator_outcomes_node",
 ];
@@ -120,9 +120,7 @@ export const NODE_CONNECTOR_MAPPING = {
   },
   cohort_incidence_target_cohorts_node: {
     type: "aquamarine",
-    connector_list: [
-      { name: "Outcomes", type: "green", classifier: "outcomes" },
-    ],
+    connector_list: [],
   },
   time_at_risk_node: { type: "wheat", connector_list: [] },
   default_covariate_settings_node: {
@@ -133,7 +131,7 @@ export const NODE_CONNECTOR_MAPPING = {
     ],
   },
   characterization_node: {
-    type: "darkgreen",
+    type: "orange",
     connector_list: [
       {
         name: "Covariate Settings",

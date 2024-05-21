@@ -63,7 +63,7 @@ export const NODE_COLORS: {
   cohort_incidence_target_cohorts_node: "aquamarine",
   time_at_risk_node: "wheat",
   default_covariate_settings_node: "darkgreen",
-  characterization_node: "darkgreen",
+  characterization_node: "orange",
   target_comparator_outcomes_node: "indigo",
   cohort_method_analysis_node: "lavender",
   cohort_method_node: "mediumpurple",
@@ -167,7 +167,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
   characterization_node: {
     title: "Characterization",
     description: "JSON analysis specification for executing HADES modules",
-    tag: NodeTag.Darkgreen,
+    tag: NodeTag.Orange,
     defaultData: {
       dechallengeStopInterval: 0,
       dechallengeEvaluationWindow: 0,
