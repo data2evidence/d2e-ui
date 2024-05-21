@@ -7,7 +7,6 @@ import {
   Loader,
   TableCell,
   TableRow,
-  Title,
   Text,
   VisibilityPublicIcon,
   VisibilityOnIcon,
@@ -16,6 +15,7 @@ import {
 } from "@portal/components";
 import { CloseDialogType, Study, StudyAttribute } from "../../../types";
 import { useDialogHelper, useDatasets, useDatabases } from "../../../hooks";
+import { useTranslation } from "../../../contexts";
 import AddStudyDialog from "./AddStudyDialog/AddStudyDialog";
 import UpdateStudyDialog from "./UpdateStudyDialog/UpdateStudyDialog";
 import DatasetResourcesDialog from "./DatasetResourcesDialog/DatasetResourcesDialog";
@@ -26,7 +26,6 @@ import PermissionsDialog from "./PermissionsDialog/PermissionsDialog";
 import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
 import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
 import "./StudyOverview.scss";
-import { useTranslation } from "../../../contexts";
 
 const enum StudyAttributeConfigIds {
   LATEST_SCHEMA_VERSION = "latest_schema_version",
@@ -37,7 +36,7 @@ const MISSING_ATTRIBUTE_ERROR = "Not Available";
 const StudyOverview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
-  const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, refetch);
+  const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, undefined, refetch);
   const [databases] = useDatabases();
 
   const getDbDialect = useCallback(

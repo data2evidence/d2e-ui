@@ -93,13 +93,10 @@ const TerminologyList: FC<TerminologyListProps> = ({
   const { setFeedback } = useFeedback();
   const tableRef = useRef<HTMLTableElement>(null);
 
-  const updateSearchResult = useCallback(
-    (keyword: string) => {
-      setSearchText(keyword);
-      setPage(0);
-    },
-    [searchText]
-  );
+  const updateSearchResult = useCallback((keyword: string) => {
+    setSearchText(keyword);
+    setPage(0);
+  }, []);
 
   const fetchData = useCallback(async () => {
     if (userId && datasetId) {
@@ -123,7 +120,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         ) {
           const filterOptions = await terminologyAPI.getFilterOptions(
             datasetId,
-            searchText,
+            searchText.toLowerCase(),
             conceptClassIdFilters,
             domainIdFilters,
             vocabularyIdFilters,
@@ -142,7 +139,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
             page,
             rowsPerPage,
             datasetId,
-            searchText,
+            searchText.toLowerCase(),
             conceptClassIdFilters,
             domainIdFilters,
             vocabularyIdFilters,
@@ -238,7 +235,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         return;
       }
       const terminologyAPI = new Terminology();
-      const filterOptions = await terminologyAPI.getFilterOptions(datasetId, searchText, [], [], [], []);
+      const filterOptions = await terminologyAPI.getFilterOptions(datasetId, searchText.toLowerCase(), [], [], [], []);
       const filterOptionsZeroed = JSON.parse(JSON.stringify(filterOptions));
       for (const filterKey of ["conceptClassId", "domainId", "vocabularyId", "standardConcept", "concept"] as const) {
         for (const optionKey in filterOptionsZeroed[filterKey]) {

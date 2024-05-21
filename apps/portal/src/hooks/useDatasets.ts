@@ -4,6 +4,7 @@ import { Study, AppError, DatasetQueryRole } from "../types";
 
 export const useDatasets = (
   role: DatasetQueryRole,
+  searchText?: string,
   filters: Record<string, string> = {},
   refetch = 0
 ): [Study[], boolean, AppError | undefined] => {
@@ -15,7 +16,7 @@ export const useDatasets = (
   const fetchDatasets = useCallback(async () => {
     try {
       setLoading(refetch ? false : true);
-      const datasets = await api.systemPortal.getDatasets(role, new URLSearchParams(filterQs));
+      const datasets = await api.systemPortal.getDatasets(role, searchText, new URLSearchParams(filterQs));
       setDatasets(datasets);
     } catch (error: any) {
       if ("message" in error) {
@@ -24,7 +25,7 @@ export const useDatasets = (
     } finally {
       setLoading(false);
     }
-  }, [role, filterQs, refetch]);
+  }, [role, searchText, filterQs, refetch]);
 
   useEffect(() => {
     fetchDatasets();

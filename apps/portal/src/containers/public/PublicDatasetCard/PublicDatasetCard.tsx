@@ -2,6 +2,7 @@ import React, { FC, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactECharts from "echarts-for-react";
 import { Card, CalendarIcon, DatabaseIcon, DocPlayIcon, PadlockEmptyIcon, UsersIcon } from "@portal/components";
+import { HighlightText } from "../../../components";
 import { Study } from "../../../types";
 import { DatasetAttribute } from "../../../constant";
 import { useActiveDataset, useTranslation } from "../../../contexts";
@@ -10,6 +11,7 @@ import "./PublicDatasetCard.scss";
 interface PublicDatasetCardProps {
   dataset: Study;
   path: string;
+  highlightText?: string;
 }
 
 const colorPalette = [
@@ -33,7 +35,7 @@ const colorPalette = [
   "#07609F",
 ];
 
-export const PublicDatasetCard: FC<PublicDatasetCardProps> = ({ dataset, path }) => {
+export const PublicDatasetCard: FC<PublicDatasetCardProps> = ({ dataset, path, highlightText }) => {
   const navigate = useNavigate();
   const { getText, i18nKeys } = useTranslation();
   const { setActiveDatasetId } = useActiveDataset();
@@ -111,10 +113,13 @@ export const PublicDatasetCard: FC<PublicDatasetCardProps> = ({ dataset, path })
         <div className="public-dataset-card__title">
           {dataset.visibilityStatus}
           <PadlockEmptyIcon className={"public-dataset-card__permission-icon"} />
-          {dataset.studyDetail?.name || "Untitled"}
+          <HighlightText text={dataset.studyDetail?.name || "Untitled"} searchText={highlightText} />
         </div>
         <div className="public-dataset-card__description">
-          {dataset.studyDetail?.description || getText(i18nKeys.PUBLIC_DATASET_CARD__NO_DATASET_SUMMARY)}
+          <HighlightText
+            text={dataset.studyDetail?.description || getText(i18nKeys.PUBLIC_DATASET_CARD__NO_DATASET_SUMMARY)}
+            searchText={highlightText}
+          />
         </div>
         <div className="public-dataset-card__attributes">
           <div className="public-dataset-card__attribute">

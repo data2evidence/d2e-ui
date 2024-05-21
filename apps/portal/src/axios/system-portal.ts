@@ -53,8 +53,9 @@ export class SystemPortal {
     });
   }
 
-  public getDatasets(role: DatasetQueryRole, params: URLSearchParams) {
+  public getDatasets(role: DatasetQueryRole, searchText: string | undefined, params: URLSearchParams) {
     params.set("role", role);
+    if (searchText) params.set("searchText", searchText);
 
     return request<Study[]>({
       baseURL: SYSTEM_PORTAL_URL,
@@ -152,11 +153,15 @@ export class SystemPortal {
     });
   }
 
-  public getPublicDatasets() {
+  public getPublicDatasets(searchText: string | undefined) {
+    const params = new URLSearchParams();
+    if (searchText) params.set("searchText", searchText);
+
     return request<Study[]>({
       baseURL: SYSTEM_PORTAL_URL,
       url: "dataset/public/list",
       method: "GET",
+      params,
     });
   }
 
