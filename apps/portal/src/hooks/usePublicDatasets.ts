@@ -2,7 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "../axios/api";
 import { Study, AppError } from "../types";
 
-export const usePublicDatasets = (refetch = 0): [Study[] | undefined, boolean, AppError | undefined] => {
+export const usePublicDatasets = (
+  searchText?: string,
+  refetch = 0
+): [Study[] | undefined, boolean, AppError | undefined] => {
   const [datasets, setDatasets] = useState<Study[] | undefined>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<AppError>();
@@ -10,7 +13,7 @@ export const usePublicDatasets = (refetch = 0): [Study[] | undefined, boolean, A
   const fetchDatasets = useCallback(async () => {
     try {
       setLoading(refetch ? false : true);
-      const datasets = await api.systemPortal.getPublicDatasets();
+      const datasets = await api.systemPortal.getPublicDatasets(searchText);
       setDatasets(datasets);
     } catch (error: any) {
       if ("message" in error) {
@@ -19,7 +22,7 @@ export const usePublicDatasets = (refetch = 0): [Study[] | undefined, boolean, A
     } finally {
       setLoading(false);
     }
-  }, [refetch]);
+  }, [searchText, refetch]);
 
   useEffect(() => {
     fetchDatasets();
