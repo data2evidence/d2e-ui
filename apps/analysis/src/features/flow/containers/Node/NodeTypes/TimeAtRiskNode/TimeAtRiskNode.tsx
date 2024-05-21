@@ -8,10 +8,11 @@ import { TimeAtRiskDrawer } from "./TimeAtRiskDrawer";
 import "./TimeAtRiskNode.scss";
 
 export interface TimeAtRiskNodeData extends NodeDataState {
+  id: number;
   endWith: string;
   startWith: string;
-  startOffset: number;
-  endOffset: number;
+  startOffset?: number;
+  endOffset?: number;
 }
 
 export const TimeAtRiskNode = (node: NodeProps<TimeAtRiskNodeData>) => {

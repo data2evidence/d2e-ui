@@ -33,10 +33,9 @@ interface FormData extends TimeAtRiskNodeData {}
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
+  id: undefined,
   startWith: "start",
   endWith: "end",
-  startOffset: 0,
-  endOffset: 0,
 };
 
 const START_END_WITH_OPTIONS = ["start", "end"];
@@ -57,6 +56,7 @@ export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
       setFormData({
         name: node.data.name,
         description: node.data.description,
+        id: node.data.id,
         startWith: node.data.startWith,
         endWith: node.data.endWith,
         startOffset: node.data.startOffset,
@@ -102,6 +102,16 @@ export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
         />
       </Box>
       <Box mb={4}>
+        <TextInput
+          label="ID"
+          value={formData.id}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({ id: e.target.value })
+          }
+          type="number"
+        />
+      </Box>
+      <Box mb={4}>
         <FormControl variant="standard" fullWidth>
           <InputLabel shrink>Start With</InputLabel>
           <Select
@@ -144,6 +154,7 @@ export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             onFormDataChange({ startOffset: e.target.value })
           }
+          type="number"
         />
       </Box>
       <Box mb={4}>
@@ -153,6 +164,7 @@ export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             onFormDataChange({ endOffset: e.target.value })
           }
+          type="number"
         />
       </Box>
     </NodeDrawer>
