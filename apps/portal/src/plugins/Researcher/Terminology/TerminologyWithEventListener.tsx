@@ -47,9 +47,9 @@ export const TerminologyWithEventListener = () => {
         return;
       }}
       selectedConceptSetId={props?.selectedConceptSetId}
-      isConceptSet={props?.isConceptSet}
       mode={props?.mode}
       selectedDatasetId={props?.selectedDatasetId}
+      defaultFilters={props?.defaultFilters}
     />
   );
 };

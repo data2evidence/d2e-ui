@@ -303,14 +303,18 @@ export default {
       this.placeHolder = this.getText('MRI_PA_INPUT_PLACEHOLDER_ALL')
     },
     handleConceptSet(values?: { value?: string }) {
+      const { domainFilter, standardConceptCodeFilter } = this.model.props
       const conceptSetId = values?.value
+      const defaultFilters = [
+        { id: 'domainId', value: domainFilter ? [domainFilter] : [] },
+        { id: 'concept', value: standardConceptCodeFilter ? [standardConceptCodeFilter] : [] },
+      ]
       const event = new CustomEvent<{ props: TerminologyProps }>('alp-terminology-open', {
         detail: {
           props: {
             selectedDatasetId: this.getSelectedDataset.id,
             selectedConceptSetId: conceptSetId,
             mode: 'CONCEPT_SET',
-            isConceptSet: true,
             onClose: onCloseValues => {
               // No action to do if no concept set is being created
               if (!onCloseValues?.currentConceptSet) {
@@ -334,6 +338,7 @@ export default {
               this.newTags.push(addThis)
               this.updateValue([...this.model.props.value, addThis])
             },
+            defaultFilters,
           },
         },
       })
