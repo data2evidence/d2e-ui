@@ -19,7 +19,8 @@ export type NodeType =
   | "study_population_settings_node"
   | "nco_cohort_set_node"
   | "outcomes_node"
-  | "cohort_definition_set_node";
+  | "cohort_definition_set_node"
+  | "exposure_node";
 
 export type NodeTypeChoice = Exclude<NodeType, "start">;
 
@@ -73,6 +74,7 @@ export const ZERO_INCIDENCE_NODE = [
   "nco_cohort_set_node",
   "outcomes_node",
   "cohort_definitions_set_node",
+  "exposure_node",
 ];
 export const ONE_INCIDENCE_NODE = [
   "negative_control_outcome_cohort_node",
@@ -94,7 +96,7 @@ export const FOUR_INCIDENCE_NODE = [];
 export const FIVE_INCIDENCE_NODE = ["self_controlled_case_series_node"];
 
 export const NODE_CONNECTOR_MAPPING = {
-  cohort_generator_node: { type: "lightgrey", connector_list: [] },
+  cohort_generator_node: { type: "grey", connector_list: [] },
   cohort_diagnostic_node: { type: "grey", connector_list: [] },
   negative_control_outcome_cohort_node: {
     type: "lime",
@@ -216,7 +218,7 @@ export const NODE_CONNECTOR_MAPPING = {
         type: "green",
         classifier: "outcome_of_interest",
       },
-      { name: "Exposures", type: "blue", classifier: "exposures" },
+      { name: "Exposures", type: "lightgrey", classifier: "exposures" },
       { name: "SCCS Analysis", type: "red", classifier: "scss_analysis" },
       {
         name: "Study Population",
@@ -233,7 +235,7 @@ export const NODE_CONNECTOR_MAPPING = {
         type: "green",
         classifier: "outcome_of_interest",
       },
-      { name: "Exposures", type: "blue", classifier: "exposures" },
+      { name: "Exposures", type: "lightgrey", classifier: "exposures" },
       {
         name: "Study Population",
         type: "lightpink",
@@ -245,6 +247,7 @@ export const NODE_CONNECTOR_MAPPING = {
   nco_cohort_set_node: { type: "blue", connector_list: [] },
   outcomes_node: { type: "green", connector_list: [] },
   cohort_definition_set_node: { type: "grey", connector_list: [] },
+  exposure_node: { type: "lightgrey", connector_list: [] },
 };
 
 export const OUTBOUND_CONNECTOR_STYLE = {

@@ -22,6 +22,7 @@ import { NCOCohortSetNode } from "./NCOCohortSetNode/NCOCohortSetNode";
 import { DefaultCovariateSettingsNode } from "./DefaultCovariateSettingsNode/DefaultCovariateSettingsNode";
 import { OutcomesNode } from "./OutcomesNode/OutcomesNode";
 import { CohortDefinitionSetNode } from "./CohortDefinitionSetNode/CohortDefinitionSetNode";
+import { ExposureNode } from "./ExposureNode/ExposureNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -49,12 +50,13 @@ export const NODE_TYPES: {
   nco_cohort_set_node: NCOCohortSetNode,
   outcomes_node: OutcomesNode,
   cohort_definition_set_node: CohortDefinitionSetNode,
+  exposure_node: ExposureNode,
 };
 
 export const NODE_COLORS: {
   [key in NodeType]: string;
 } = {
-  cohort_generator_node: "lightgrey",
+  cohort_generator_node: "grey",
   cohort_diagnostic_node: "grey",
   negative_control_outcome_cohort_node: "lime",
   cohort_incidence_node: "cyan",
@@ -75,13 +77,14 @@ export const NODE_COLORS: {
   nco_cohort_set_node: "blue",
   outcomes_node: "green",
   cohort_definition_set_node: "grey",
+  exposure_node: "lightgrey",
 };
 
 export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
   cohort_generator_node: {
     title: "Cohort Generator Module Specifications",
     description: "Run cohort generator code.",
-    tag: NodeTag.Lightgrey,
+    tag: NodeTag.Grey,
     defaultData: {
       incremental: true,
       generateStats: true,
@@ -144,10 +147,9 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run time at risk code.",
     tag: NodeTag.Wheat,
     defaultData: {
+      id: undefined,
       startWith: "start",
       endWith: "end",
-      startOffset: 0,
-      endOffset: 0,
     },
   },
   default_covariate_settings_node: {
@@ -200,6 +202,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run cohort method analysis code",
     tag: NodeTag.Lavender,
     defaultData: {
+      analysisId: undefined,
       dbCohortMethodDataArgs: {
         washoutPeriod: 183,
         firstExposureOnly: true,
@@ -355,6 +358,15 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     tag: NodeTag.Grey,
     defaultData: {},
+  },
+  exposure_node: {
+    title: "Exposures",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    tag: NodeTag.Lightgrey,
+    defaultData: {
+      outcomeOfInterestIds: [],
+      exposureOfInterestIds: [],
+    },
   },
 };
 
