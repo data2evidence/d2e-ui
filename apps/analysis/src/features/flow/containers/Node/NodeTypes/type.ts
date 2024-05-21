@@ -87,11 +87,9 @@ export const TWO_INCIDENCE_NODE = [
   "self_controlled_case_series_analysis_node",
   "cohort_incidence_node",
   "cohort_method_analysis_node",
-];
-export const THREE_INCIDENCE_NODE = [
   "default_covariate_settings_node",
-  "patient_level_prediction_node",
 ];
+export const THREE_INCIDENCE_NODE = ["patient_level_prediction_node"];
 export const FOUR_INCIDENCE_NODE = [];
 export const FIVE_INCIDENCE_NODE = ["self_controlled_case_series_node"];
 
@@ -131,7 +129,6 @@ export const NODE_CONNECTOR_MAPPING = {
     type: "darkgreen",
     connector_list: [
       { name: "Target Cohort", type: "blue", classifier: "target_cohort" },
-      { name: "Outcomes", type: "green", classifier: "outcomes" },
       { name: "Time At Risk", type: "wheat", classifier: "time_at_risk" },
     ],
   },
