@@ -1,12 +1,12 @@
 services:
-  alp-local-ui-file-server:
-    image: alpcr.azurecr.io/alp-data-node/alp-local-ui-file-server:local # will build from local
+  alp-caddy:
+    image: alpcr.azurecr.io/alp-data-node/alp-caddy:local # will build from local
     build:
       context: ../d2e-ui # Relative to d2e repo!!
       dockerfile: Dockerfile
       ssh:
         - default=${SSH_AUTH_SOCK}
-    container_name: alp-local-ui-file-server
+    container_name: alp-caddy
     # volumes:
     # uncomment the required lines below when doing local UI development, to use files from file system instead of docker image
     # - ../d2e-ui/resources/mri-ui5/PatientSummaryConfig:/home/docker/ui-files/mri-ui5/PatientSummaryConfig
