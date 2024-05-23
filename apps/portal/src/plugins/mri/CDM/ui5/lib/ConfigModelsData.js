@@ -312,7 +312,9 @@ sap.ui.define([
 			otsSubject: { value: "", validity: { status: "valid", message: "" } },
 			otsHierarchyLevel: { value: "", validity: { status: "valid", message: "" } },
 			otsTermContext: { value: "", validity: { status: "valid", message: "" } },
-			annotations: []
+			annotations: [],
+			domainFilter: { value: "", validity: { status: "valid", message: "" } },
+			standardConceptCodeFilter: { value: "", validity: { status: "valid", message: "" } }
 		};
 
 		return attr;

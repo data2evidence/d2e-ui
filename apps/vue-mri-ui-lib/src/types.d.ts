@@ -108,10 +108,13 @@ interface TerminologyProps {
   baseUserId?: string
   open?: boolean
   onClose?: (values: OnCloseReturnValues) => void
-  isConceptSet?: boolean
   selectedConceptSetId?: string
   mode?: 'CONCEPT_MAPPING' | 'CONCEPT_SET' | 'CONCEPT_SEARCH'
   selectedDatasetId?: string
+  defaultFilters?: {
+    id: string
+    value: string[]
+  }[]
 }
 
 interface BaseGenerateFlowRunParams {

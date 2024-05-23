@@ -10,6 +10,7 @@ services:
     # volumes:
     # uncomment the required lines below when doing local UI development, to use files from file system instead of docker image
     # - ../d2e-ui/resources/mri-ui5/PatientSummaryConfig:/home/docker/ui-files/mri-ui5/PatientSummaryConfig
+    # - ../d2e-ui/resources/mri-ui5/CDM:/home/docker/ui-files/mri-ui5/CDM
     # - ../d2e-ui/resources/mri:/home/docker/ui-files/mri
     # - ../d2e-ui/resources/starboard-notebook-base:/home/docker/ui-files/starboard-notebook-base
     # - ../d2e-ui/resources/mri-ui5/mri-pa-ui:/home/docker/ui-files/mri-ui5/mri-pa-ui
