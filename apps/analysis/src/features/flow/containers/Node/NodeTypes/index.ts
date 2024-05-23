@@ -51,6 +51,7 @@ export const NODE_TYPES: {
   outcomes_node: OutcomesNode,
   cohort_definition_set_node: CohortDefinitionSetNode,
   exposure_node: ExposureNode,
+  strategus_node: PlainNode,
 };
 
 export const NODE_COLORS: {
@@ -78,6 +79,7 @@ export const NODE_COLORS: {
   outcomes_node: "green",
   cohort_definition_set_node: "grey",
   exposure_node: "lightgrey",
+  strategus_node: "black",
 };
 
 export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
@@ -356,7 +358,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
   cohort_definition_set_node: {
     title: "Cohort Definition Set",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    tag: NodeTag.Grey,
+    tag: NodeTag.Olive,
     defaultData: {},
   },
   exposure_node: {
@@ -367,6 +369,12 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
       outcomeOfInterestIds: [],
       exposureOfInterestIds: [],
     },
+  },
+  strategus_node: {
+    title: "Strategus",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    tag: NodeTag.Black,
+    defaultData: {},
   },
 };
 

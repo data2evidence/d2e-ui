@@ -46,7 +46,14 @@ import {
   NODE_TYPES,
   SelectNodeTypesDialog,
 } from "../../Node/NodeTypes";
-import { NodeChoiceMap, NodeTypeChoice } from "../../Node/NodeTypes";
+import {
+  NodeChoiceMap,
+  NodeTypeChoice,
+  SHARED_RESOURCES_NODE_COLORS,
+  MODULE_SPECIFICATIONS_NODE_COLORS,
+  SHARED_RESOURCES_HANDLE_COLOR,
+  MODULE_SPECIFICATIONS_HANDLE_COLOR,
+} from "../../Node/NodeTypes";
 import { RunFlowButton } from "../RunFlow/RunFlowButton";
 import "./FlowPanel.scss";
 
@@ -281,8 +288,24 @@ export const FlowPanel: FC<FlowPanelProps> = () => {
 
       const isSameNodeType = sourceHandleType === targetHandleType;
 
+      // Allow sharedResources / moduleSpecifications connections to the strategus node
+      const isSourceModuleSpecification =
+        MODULE_SPECIFICATIONS_NODE_COLORS.includes(sourceHandleType);
+      const isSourceSharedResources =
+        SHARED_RESOURCES_NODE_COLORS.includes(sourceHandleType);
+      const isTargetModuleSpecification =
+        MODULE_SPECIFICATIONS_HANDLE_COLOR === targetHandleType;
+      const isTargetSharedResources =
+        SHARED_RESOURCES_HANDLE_COLOR === targetHandleType;
+
+      const isValidStrategusConnection =
+        (isSourceModuleSpecification && isTargetModuleSpecification) ||
+        (isSourceSharedResources && isTargetSharedResources);
+
       return (
-        isDifferentNode && !isCircular(routes, source, target) && isSameNodeType
+        isDifferentNode &&
+        !isCircular(routes, source, target) &&
+        (isSameNodeType || isValidStrategusConnection)
       );
     },
     [edges, nodes]
