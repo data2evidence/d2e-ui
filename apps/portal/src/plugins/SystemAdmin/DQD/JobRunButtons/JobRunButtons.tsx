@@ -41,7 +41,7 @@ const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGen
   const isButtonDisabled = useCallback(
     (type?: string) => {
       if (type === JobRunTypes.DQD && studyName) {
-        return !flowMetadata.some((flow) => flow.type === JobRunTypes.DQD.toLowerCase());
+        return !flowMetadata.some((flow) => flow.type === JobRunTypes.DQD);
       }
       return !studyName;
     },
