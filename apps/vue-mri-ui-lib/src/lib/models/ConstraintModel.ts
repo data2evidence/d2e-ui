@@ -22,6 +22,8 @@ export default class ConstraintModel extends ConstraintBase {
       upper?: any
       parents?: string[]
       items?: object
+      domainFilter?: string
+      standardConceptCodeFilter?: string
     },
     parentKey
   ): ConstraintModel {
@@ -31,6 +33,8 @@ export default class ConstraintModel extends ConstraintBase {
       attributePath: `${parentKey}.attributes.${key}`,
       name: params.name,
       instanceId: `${params.cardId}.attributes.${key}`,
+      domainFilter: params.domainFilter,
+      standardConceptCodeFilter: params.standardConceptCodeFilter,
     }
 
     if (params.type === Constants.CDMAttrType.Text) {

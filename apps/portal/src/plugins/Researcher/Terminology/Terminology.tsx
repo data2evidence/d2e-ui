@@ -18,10 +18,13 @@ export interface TerminologyProps extends PageProps<ResearcherStudyMetadata> {
   baseUserId?: string;
   open?: boolean;
   onClose?: (values: OnCloseReturnValues) => void;
-  isConceptSet?: boolean;
   selectedConceptSetId?: string;
   mode?: "CONCEPT_MAPPING" | "CONCEPT_SET" | "CONCEPT_SEARCH";
   selectedDatasetId?: string;
+  defaultFilters?: {
+    id: string;
+    value: string[];
+  }[];
 }
 
 const WithDrawer = ({
@@ -210,10 +213,10 @@ export const Terminology: FC<TerminologyProps> = ({
   baseUserId,
   open,
   onClose,
-  isConceptSet,
   selectedConceptSetId,
   mode = "CONCEPT_SEARCH",
   selectedDatasetId,
+  defaultFilters,
 }: TerminologyProps) => {
   const { getText, i18nKeys } = useTranslation();
   const userId = baseUserId || metadata?.userId;
@@ -233,6 +236,8 @@ export const Terminology: FC<TerminologyProps> = ({
   const [datasets] = useDatasets("researcher");
   const [datasetId, setDatasetId] = useState<string>();
 
+  const isConceptSet = mode === "CONCEPT_SET";
+
   const resetState = useCallback(() => {
     setConceptId(null);
     setShowDetails(false);
@@ -243,6 +248,10 @@ export const Terminology: FC<TerminologyProps> = ({
     setIsConceptSetLoading(false);
     setCurrentConceptSet(null);
     setErrorMsg("");
+    setDatasetId(undefined);
+    setConceptSetShared(false);
+    setIsUserConceptSet(false);
+    setConceptsResult(null);
   }, []);
 
   const changeTab = useCallback((tabName: TabName) => {
@@ -378,6 +387,13 @@ export const Terminology: FC<TerminologyProps> = ({
   const showAddIcon = !!(onConceptIdSelect || isConceptSet);
 
   useEffect(() => {
+    // If new concept set
+    if (!conceptSetId) {
+      setIsUserConceptSet(true);
+    }
+  }, [conceptSetId]);
+
+  useEffect(() => {
     if (mode === "CONCEPT_MAPPING" || !conceptsResult?.data) {
       return;
     }
@@ -494,6 +510,7 @@ export const Terminology: FC<TerminologyProps> = ({
                 setConceptsResult={setConceptsResult}
                 datasetId={datasetId}
                 isDrawer={isDrawer}
+                defaultFilters={defaultFilters}
               />
             )}
           </div>

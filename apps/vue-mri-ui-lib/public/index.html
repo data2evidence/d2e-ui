@@ -14,7 +14,7 @@
     <link href="<%= htmlWebpackPlugin.files.css[key] %>" rel="stylesheet" />
     <% } %>
   </head>
-  <body>
+  <body style="margin: 0px">
     <button
       id="mriBtnLogout"
       onclick="logoutfn()"
@@ -22,8 +22,21 @@
     >
       logout
     </button>
-
-    <div class="vue-main"></div>
+    <div
+      style="
+        width: 100vw;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 0.5px 8px 0 #acaba8;
+      "
+    >
+      <div>PORTAL HEADER</div>
+    </div>
+    <div class="vue-main" style="height: calc(100vh - 80px)"></div>
     <span class="plugin-container"></span>
 
     <script>
@@ -31,7 +44,6 @@
         qeSvcUrl: 'https://localhost:41100',
         studyId: '42adb18d-b19c-4f40-b51d-261e6371b51e', // Change to your dev studyID
         releaseId: '',
-        
         async getToken() {
           return localStorage.getItem('msaltoken')
         },
