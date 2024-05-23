@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
@@ -27,6 +27,8 @@ import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
 import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
 import "./StudyOverview.scss";
 import { useTranslation } from "../../../contexts";
+import { api } from "../../../axios/api";
+import { FlowRunJobStateTypes } from "../Jobs/types";
 
 const enum StudyAttributeConfigIds {
   LATEST_SCHEMA_VERSION = "latest_schema_version",
@@ -37,6 +39,8 @@ const MISSING_ATTRIBUTE_ERROR = "Not Available";
 const StudyOverview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
+  const [fetchUpdatesLoading, setFetchUpdatesLoading] = useState(false);
+  const [fetchUpdatesFlowId, setFetchUpdatesFlowId] = useState("");
   const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, refetch);
   const [databases] = useDatabases();
 
@@ -59,6 +63,37 @@ const StudyOverview: FC = () => {
 
   const [activeStudy, setActiveStudy] = useState<Study>();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchFlowRunState = async () => {
+      const res = await api.dataflow.getFlowRunState(fetchUpdatesFlowId);
+      const pendingJobStatuses = [
+        FlowRunJobStateTypes.SCHEDULED as string,
+        FlowRunJobStateTypes.RUNNING as string,
+        FlowRunJobStateTypes.PAUSED as string,
+        FlowRunJobStateTypes.PENDING as string,
+      ];
+
+      if (!pendingJobStatuses.includes(res.type)) {
+        setFetchUpdatesLoading(false);
+        setFetchUpdatesFlowId("");
+      }
+
+      if (res.type === FlowRunJobStateTypes.COMPLETED) {
+        setRefetch((refetch) => refetch + 1);
+      }
+    };
+
+    const interval = setInterval(() => {
+      fetchFlowRunState();
+    }, 10000);
+
+    if (!fetchUpdatesLoading) {
+      clearInterval(interval);
+    }
+
+    return (): void => clearInterval(interval);
+  }, [fetchUpdatesLoading, fetchUpdatesFlowId]);
 
   const handleUpdateStudy = useCallback(
     (study: Study) => {
@@ -178,6 +213,27 @@ const StudyOverview: FC = () => {
     [closeDeleteStudyDialog]
   );
 
+  const fetchDatamodelUpdates = async () => {
+    const options = {
+      options: {
+        flow_action_type: "get_version_info",
+        token: "",
+        database_code: "",
+        data_model: "",
+      },
+    };
+    try {
+      const res = await api.dataflow.createFlowRunByMetadata({
+        type: "datamodel",
+        options,
+      });
+      setFetchUpdatesLoading(true);
+      setFetchUpdatesFlowId(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const getAttributeValue = (
     studyAttributes: StudyAttribute[] | undefined,
     attributeConfigId: StudyAttributeConfigIds
@@ -217,8 +273,12 @@ const StudyOverview: FC = () => {
         <div className="studyoverview__actions">
           <h3 className="studyoverview__actions-title">{getText(i18nKeys.STUDY_OVERVIEW__DATASETS)}</h3>
           <div className="studyoverview__actions-btn-container">
-            <Button text="Check for updates" onClick={() => alert("hello")} />
-            <Button text="Add dataset" onClick={openAddStudyDialog} />
+            <Button
+              text={getText(i18nKeys.STUDY_OVERVIEW__CHECK_DATAMODEL_UPDATES)}
+              onClick={fetchDatamodelUpdates}
+              loading={fetchUpdatesLoading}
+            />
+            <Button text={getText(i18nKeys.STUDY_OVERVIEW__ADD_DATASET)} onClick={openAddStudyDialog} />
           </div>
           <AddStudyDialog
             open={showAddStudyDialog}
