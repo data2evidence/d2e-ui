@@ -4,18 +4,15 @@ import { useBooleanHelper } from "~/features/flow/hooks";
 import { NodeDataState } from "../../../../types";
 import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
-import { TargetComparatorOutcomesDrawer } from "./TargetComparatorOutcomesDrawer";
-import "./TargetComparatorOutcomesNode.scss";
+import { CohortDefinitionSetDrawer } from "./CohortDefinitionSetDrawer";
+import "./CohortDefinitionSetNode.scss";
 
-export interface TargetComparatorOutcomesNodeData extends NodeDataState {
-  targetId: number;
-  comparatorId: number;
-  excludedCovariateConceptIds: string[];
-  includedCovariateConceptIds: string[];
+export interface CohortDefinitionSetNodeData extends NodeDataState {
+  file: string;
 }
 
-export const TargetComparatorOutcomesNode = (
-  node: NodeProps<TargetComparatorOutcomesNodeData>
+export const CohortDefinitionSetNode = (
+  node: NodeProps<CohortDefinitionSetNodeData>
 ) => {
   const { data } = node;
   const [settingVisible, openSetting, closeSetting] = useBooleanHelper(false);
@@ -23,8 +20,8 @@ export const TargetComparatorOutcomesNode = (
 
   return (
     <>
-      <NodeLayout<TargetComparatorOutcomesNodeData>
-        className="target-comparator-outcomes-node"
+      <NodeLayout<CohortDefinitionSetNodeData>
+        className="cohort-definition-set-node"
         name={data.name}
         onSettingClick={openSetting}
         resultType={data.error ? "error" : "success"}
@@ -33,10 +30,10 @@ export const TargetComparatorOutcomesNode = (
       >
         {data.description}
       </NodeLayout>
-      <TargetComparatorOutcomesDrawer
+      <CohortDefinitionSetDrawer
         node={node}
-        title="Configure Target Comparator Outcomes Node"
-        className="target-comparator-outcomes-drawer"
+        title="Configure Cohort Definition Set Node"
+        className="nco-cohort-set-drawer"
         open={settingVisible}
         onClose={closeSetting}
       />
