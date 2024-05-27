@@ -50,6 +50,7 @@ export const NodeLayout = <T extends NodeDataState>({
   const [targetConnected, setTargetConnected] = useState<string | null>(null);
 
   const NODE_COLOR = NODE_CONNECTOR_MAPPING[node.type].type;
+  const PLAIN_NODES = ["patient_level_prediction_node"];
 
   const getIncidenceNumber = (type: string) => {
     switch (true) {
@@ -120,17 +121,17 @@ export const NodeLayout = <T extends NodeDataState>({
           {title}
         </Box>
         <Box display="flex" gap={2}>
-          {typeof onSettingClick === "function" && (
-            <Box display="inline-flex">
-              <EditNoBoxIcon
-                onClick={onSettingClick}
-                className="node__setting nodrag"
-              />
-            </Box>
-          )}
+          {typeof onSettingClick === "function" &&
+            !PLAIN_NODES.includes(node.type) && (
+              <Box display="inline-flex">
+                <EditNoBoxIcon
+                  onClick={onSettingClick}
+                  className="node__setting nodrag"
+                />
+              </Box>
+            )}
         </Box>
       </div>
-      {/* <div className="node__content">{children}</div> */}
       {typeof onResultClick === "function" && (
         <div className="node__footer">
           <Button

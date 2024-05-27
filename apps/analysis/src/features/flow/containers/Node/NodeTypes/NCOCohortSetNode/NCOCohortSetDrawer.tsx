@@ -1,16 +1,14 @@
-import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
+import React, {
+  ChangeEvent,
+  FC,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
-import {
-  Box,
-  Checkbox,
-  TextInput,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-} from "@portal/components";
+import { Box, Button, TextInput } from "@portal/components";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -21,27 +19,30 @@ import { NodeState } from "~/features/flow/types";
 import { RootState, dispatch } from "~/store";
 import { NodeDrawer, NodeDrawerProps } from "../../NodeDrawer/NodeDrawer";
 import { NodeChoiceMap } from "../../NodeTypes";
-import { NegatveControlOutcomeNodeData } from "./NegativeControlOutcomeNode";
+import { NCOCohortSetNodeData } from "./NCOCohortSetNode";
 
-export interface NegatveControlOutcomeDrawerProps
+export interface NCOCohortSetDrawerProps
   extends Omit<NodeDrawerProps, "children"> {
-  node: NodeProps<NegatveControlOutcomeNodeData>;
+  node: NodeProps<NCOCohortSetNodeData>;
   onClose: () => void;
 }
 
-interface FormData extends NegatveControlOutcomeNodeData {}
+interface FormData extends NCOCohortSetNodeData {}
 
-const OCCURENCE_TYPE_OPTIONS = ["first", "all"];
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  occurenceType: "all",
-  detectOnDescendants: true,
+  file: "",
 };
 
-export const NegatveControlOutcomeDrawer: FC<
-  NegatveControlOutcomeDrawerProps
-> = ({ node, onClose, ...props }) => {
+export const NCOCohortSetDrawer: FC<NCOCohortSetDrawerProps> = ({
+  node,
+  onClose,
+  ...props
+}) => {
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const hiddenFileInput = useRef<HTMLInputElement>(null);
+
   const { formData, setFormData, onFormDataChange } =
     useFormData<FormData>(EMPTY_FORM_DATA);
   const nodeState = useSelector((state: RootState) =>
@@ -53,19 +54,35 @@ export const NegatveControlOutcomeDrawer: FC<
       setFormData({
         name: node.data.name,
         description: node.data.description,
-        occurenceType: node.data.occurenceType,
-        detectOnDescendants: node.data.detectOnDescendants,
+        file: node.data.file,
       });
     } else {
       setFormData({
         ...EMPTY_FORM_DATA,
-        ...NodeChoiceMap["cohort_generator_node"].defaultData,
+        ...NodeChoiceMap["nco_cohort_set_node"].defaultData,
       });
     }
   }, [node.data]);
 
+  const handleAddFile = useCallback(() => {
+    if (hiddenFileInput.current !== null) {
+      hiddenFileInput.current.click();
+    }
+  }, [hiddenFileInput]);
+
+  const handleFileChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (!e.target.files || e.target.files.length == 0) return;
+
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      onFormDataChange({ file: file.name });
+    },
+    [onFormDataChange]
+  );
+
   const handleOk = useCallback(() => {
-    const updated: NodeState<NegatveControlOutcomeNodeData> = {
+    const updated: NodeState<NCOCohortSetNodeData> = {
       ...nodeState,
       data: formData,
     };
@@ -95,33 +112,25 @@ export const NegatveControlOutcomeDrawer: FC<
           }
         />
       </Box>
-      <Box mb={4}>
-        <FormControl variant="standard" fullWidth>
-          <InputLabel shrink>OccurenceType</InputLabel>
-          <Select
-            value={formData.occurenceType}
-            onChange={(e: SelectChangeEvent) =>
-              onFormDataChange({ occurenceType: e.target.value })
+      <Box mb={4} display="flex" alignItems="center">
+        <Button
+          type="button"
+          text="Choose file"
+          onClick={handleAddFile}
+          style={{ marginRight: 7 }}
+        />
+        <div>{selectedFile?.name}</div>
+        <input
+          type="file"
+          accept=".csv"
+          ref={hiddenFileInput}
+          onChange={handleFileChange}
+          onClick={() => {
+            if (hiddenFileInput.current) {
+              hiddenFileInput.current.value = "";
             }
-          >
-            <MenuItem value="">&nbsp;</MenuItem>
-            {OCCURENCE_TYPE_OPTIONS.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-      <Box mb={4}>
-        <Checkbox
-          checked={formData.detectOnDescendants}
-          label="DetectOnDescendants"
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              detectOnDescendants: e.target.checked,
-            })
-          }
+          }}
+          style={{ display: "none" }}
         />
       </Box>
     </NodeDrawer>

@@ -8,6 +8,8 @@ import { CohortIncidentTargetCohortDrawer } from "./CohortIncidentTargetCohortDr
 import "./CohortIncidentTargetCohortNode.scss";
 
 export interface CohortIncidentTargetCohortNodeData extends NodeDataState {
+  defId: number;
+  defName: string;
   cohortId: number;
   cleanWindow: number;
 }

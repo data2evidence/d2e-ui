@@ -12,29 +12,28 @@ import { NodeState } from "~/features/flow/types";
 import { RootState, dispatch } from "~/store";
 import { NodeDrawer, NodeDrawerProps } from "../../NodeDrawer/NodeDrawer";
 import { NodeChoiceMap } from "..";
-import { TargetComparatorOutcomesNodeData } from "./TargetComparatorOutcomesNode";
+import { ExposureNodeData } from "./ExposureNode";
 import { CONFIGS_USER_INPUT_ARRAY_STYLES } from "../common";
 
-export interface TargetComparatorOutcomesDrawerProps
-  extends Omit<NodeDrawerProps, "children"> {
-  node: NodeProps<TargetComparatorOutcomesNodeData>;
+export interface ExposureDrawerProps extends Omit<NodeDrawerProps, "children"> {
+  node: NodeProps<ExposureNodeData>;
   onClose: () => void;
 }
 
-interface FormData extends TargetComparatorOutcomesNodeData {}
+interface FormData extends ExposureNodeData {}
 
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  targetId: 1,
-  comparatorId: 1,
-  excludedCovariateConceptIds: [],
-  includedCovariateConceptIds: [],
+  outcomeOfInterestIds: [],
+  exposureOfInterestIds: [],
 };
 
-export const TargetComparatorOutcomesDrawer: FC<
-  TargetComparatorOutcomesDrawerProps
-> = ({ node, onClose, ...props }) => {
+export const ExposureDrawer: FC<ExposureDrawerProps> = ({
+  node,
+  onClose,
+  ...props
+}) => {
   const { formData, setFormData, onFormDataChange } =
     useFormData<FormData>(EMPTY_FORM_DATA);
   const nodeState = useSelector((state: RootState) =>
@@ -46,21 +45,19 @@ export const TargetComparatorOutcomesDrawer: FC<
       setFormData({
         name: node.data.name,
         description: node.data.description,
-        targetId: node.data.targetId,
-        comparatorId: node.data.comparatorId,
-        excludedCovariateConceptIds: node.data.excludedCovariateConceptIds,
-        includedCovariateConceptIds: node.data.includedCovariateConceptIds,
+        outcomeOfInterestIds: node.data.outcomeOfInterestIds,
+        exposureOfInterestIds: node.data.exposureOfInterestIds,
       });
     } else {
       setFormData({
         ...EMPTY_FORM_DATA,
-        ...NodeChoiceMap["target_comparator_outcomes_node"].defaultData,
+        ...NodeChoiceMap["exposure_node"].defaultData,
       });
     }
   }, [node.data]);
 
   const handleOk = useCallback(() => {
-    const updated: NodeState<TargetComparatorOutcomesNodeData> = {
+    const updated: NodeState<ExposureNodeData> = {
       ...nodeState,
       data: formData,
     };
@@ -70,16 +67,16 @@ export const TargetComparatorOutcomesDrawer: FC<
     typeof onClose === "function" && onClose();
   }, [formData]);
 
-  const handleExcludedCovariateConceptIdsChange = useCallback(
+  const handleOutcomeOfInterestIdsChange = useCallback(
     (event: any, value: string[]) => {
-      onFormDataChange({ excludedCovariateConceptIds: value });
+      onFormDataChange({ outcomeOfInterestIds: value });
     },
     []
   );
 
-  const handleIncludedCovariateConceptIdsChange = useCallback(
+  const handleExposureOfInterestIdsChange = useCallback(
     (event: any, value: string[]) => {
-      onFormDataChange({ includedCovariateConceptIds: value });
+      onFormDataChange({ exposureOfInterestIds: value });
     },
     []
   );
@@ -105,38 +102,18 @@ export const TargetComparatorOutcomesDrawer: FC<
         />
       </Box>
       <Box mb={4}>
-        <TextInput
-          label="targetId"
-          value={formData.targetId}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({ targetId: e.target.value })
-          }
-          type="number"
-        />
-      </Box>
-      <Box mb={4}>
-        <TextInput
-          label="comparatorId"
-          value={formData.comparatorId}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({ comparatorId: e.target.value })
-          }
-          type="number"
-        />
-      </Box>
-      <Box mb={4}>
         <Autocomplete
           multiple
           sx={CONFIGS_USER_INPUT_ARRAY_STYLES}
-          value={formData.excludedCovariateConceptIds}
-          onChange={handleExcludedCovariateConceptIdsChange}
+          value={formData.outcomeOfInterestIds}
+          onChange={handleOutcomeOfInterestIdsChange}
           options={[]}
           freeSolo
           renderInput={(params) => (
             <TextField
               {...params}
-              label="ExcludedCovariateConceptIds"
-              placeholder="Enter Excluded Covariate Concept ID"
+              label="Outcome of Interest IDs"
+              placeholder="Enter Outcome of Interest ID"
             />
           )}
         />
@@ -145,15 +122,15 @@ export const TargetComparatorOutcomesDrawer: FC<
         <Autocomplete
           multiple
           sx={CONFIGS_USER_INPUT_ARRAY_STYLES}
-          value={formData.includedCovariateConceptIds}
-          onChange={handleIncludedCovariateConceptIdsChange}
+          value={formData.exposureOfInterestIds}
+          onChange={handleExposureOfInterestIdsChange}
           options={[]}
           freeSolo
           renderInput={(params) => (
             <TextField
               {...params}
-              label="IncludedCovariateConceptIds"
-              placeholder="Enter Included Covariate Concept ID"
+              label="Exposure of Interest IDs"
+              placeholder="Enter Exposure of Interest ID"
             />
           )}
         />

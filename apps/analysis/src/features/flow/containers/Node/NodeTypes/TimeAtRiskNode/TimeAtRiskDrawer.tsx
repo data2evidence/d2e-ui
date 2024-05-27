@@ -1,13 +1,15 @@
-import React, {
-  ChangeEvent,
-  FC,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
-import { Box, TextInput, IconButton, AddSquareIcon } from "@portal/components";
+import {
+  Box,
+  TextInput,
+  FormControl,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  InputLabel,
+} from "@portal/components";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -19,11 +21,6 @@ import { RootState, dispatch } from "~/store";
 import { NodeDrawer, NodeDrawerProps } from "../../NodeDrawer/NodeDrawer";
 import { NodeChoiceMap } from "../../NodeTypes";
 import { TimeAtRiskNodeData } from "./TimeAtRiskNode";
-import {
-  TimeAtRiskConfigsForm,
-  TimeAtRiskConfigsFormError,
-  EMPTY_TIMEATRISK_FORM_DATA,
-} from "./TimeAtRiskConfigsForm/TimeAtRiskConfigsForm";
 
 export interface TimeAtRiskDrawerProps
   extends Omit<NodeDrawerProps, "children"> {
@@ -36,15 +33,12 @@ interface FormData extends TimeAtRiskNodeData {}
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  timeAtRiskConfigs: [
-    {
-      riskWindowStart: 1,
-      riskWindowEnd: 1,
-      startAnchor: "cohort start",
-      endAnchor: "cohort end",
-    },
-  ],
+  id: undefined,
+  startWith: "start",
+  endWith: "end",
 };
+
+const START_END_WITH_OPTIONS = ["start", "end"];
 
 export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
   node,
@@ -56,16 +50,17 @@ export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
   const nodeState = useSelector((state: RootState) =>
     selectNodeById(state, node.id)
   );
-  const [dashboardErrorIndex, setDashboardErrorIndex] = useState<
-    Record<number, TimeAtRiskConfigsFormError>
-  >({});
 
   useEffect(() => {
     if (node.data) {
       setFormData({
         name: node.data.name,
         description: node.data.description,
-        timeAtRiskConfigs: node.data.timeAtRiskConfigs,
+        id: node.data.id,
+        startWith: node.data.startWith,
+        endWith: node.data.endWith,
+        startOffset: node.data.startOffset,
+        endOffset: node.data.endOffset,
       });
     } else {
       setFormData({
@@ -85,43 +80,6 @@ export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
 
     typeof onClose === "function" && onClose();
   }, [formData]);
-
-  const handleRemove = useCallback(
-    (indexToRemove: number) => {
-      onFormDataChange({
-        timeAtRiskConfigs: [
-          ...formData.timeAtRiskConfigs.slice(0, indexToRemove),
-          ...formData.timeAtRiskConfigs.slice(indexToRemove + 1),
-        ],
-      });
-    },
-    [formData]
-  );
-
-  const handleChange = useCallback(
-    (
-      indexToUpdate: number,
-      riskWindowStart: number,
-      riskWindowEnd: number,
-      startAnchor: string,
-      endAnchor: string
-    ) => {
-      onFormDataChange({
-        timeAtRiskConfigs: [
-          ...formData.timeAtRiskConfigs.slice(0, indexToUpdate),
-          {
-            ...formData.timeAtRiskConfigs[indexToUpdate],
-            riskWindowStart,
-            riskWindowEnd,
-            startAnchor,
-            endAnchor,
-          },
-          ...formData.timeAtRiskConfigs.slice(indexToUpdate + 1),
-        ],
-      });
-    },
-    [formData]
-  );
 
   return (
     <NodeDrawer {...props} width="800px" onOk={handleOk} onClose={onClose}>
@@ -143,50 +101,71 @@ export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
           }
         />
       </Box>
-
       <Box mb={4}>
-        <Box fontWeight="bold" mb={1}>
-          Time At Risk Dataframe Configs
-        </Box>
-        {formData.timeAtRiskConfigs.length !== 0 &&
-          formData.timeAtRiskConfigs.map((data, index) => (
-            <TimeAtRiskConfigsForm
-              key={index}
-              index={index}
-              configs={data}
-              onRemove={() => handleRemove(index)}
-              onChange={(
-                riskWindowStart: number,
-                riskWindowEnd: number,
-                startAnchor: string,
-                endAnchor: string
-              ) =>
-                handleChange(
-                  index,
-                  riskWindowStart,
-                  riskWindowEnd,
-                  startAnchor,
-                  endAnchor
-                )
-              }
-              error={dashboardErrorIndex[index]}
-            />
-          ))}
-        <Box mt={2}>
-          <IconButton
-            startIcon={<AddSquareIcon />}
-            title="Add timeAtRisk configuration"
-            onClick={() =>
-              setFormData((prevFormData) => ({
-                ...prevFormData,
-                timeAtRiskConfigs: [
-                  ...prevFormData.timeAtRiskConfigs,
-                  EMPTY_TIMEATRISK_FORM_DATA,
-                ],
-              }))
+        <TextInput
+          label="ID"
+          value={formData.id}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({ id: e.target.value })
+          }
+          type="number"
+        />
+      </Box>
+      <Box mb={4}>
+        <FormControl variant="standard" fullWidth>
+          <InputLabel shrink>Start With</InputLabel>
+          <Select
+            value={formData.startWith}
+            onChange={(e: SelectChangeEvent) =>
+              onFormDataChange({ startWith: e.target.value })
             }
-          />
-        </Box>
+          >
+            <MenuItem value="">&nbsp;</MenuItem>
+            {START_END_WITH_OPTIONS.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+      <Box mb={4}>
+        <FormControl variant="standard" fullWidth>
+          <InputLabel shrink>End With</InputLabel>
+          <Select
+            value={formData.endWith}
+            onChange={(e: SelectChangeEvent) =>
+              onFormDataChange({ endWith: e.target.value })
+            }
+          >
+            <MenuItem value="">&nbsp;</MenuItem>
+            {START_END_WITH_OPTIONS.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+      <Box mb={4}>
+        <TextInput
+          label="Start Offset"
+          value={formData.startOffset}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({ startOffset: e.target.value })
+          }
+          type="number"
+        />
+      </Box>
+      <Box mb={4}>
+        <TextInput
+          label="End Offset"
+          value={formData.endOffset}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({ endOffset: e.target.value })
+          }
+          type="number"
+        />
       </Box>
     </NodeDrawer>
   );

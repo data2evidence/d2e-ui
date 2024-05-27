@@ -25,6 +25,8 @@ interface FormData extends CohortIncidentTargetCohortNodeData {}
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
+  defId: 1,
+  defName: "",
   cohortId: 3,
   cleanWindow: 9999,
 };
@@ -43,6 +45,8 @@ export const CohortIncidentTargetCohortDrawer: FC<
       setFormData({
         name: node.data.name,
         description: node.data.description,
+        defId: node.data.defId,
+        defName: node.data.defName,
         cohortId: node.data.cohortId,
         cleanWindow: node.data.cleanWindow,
       });
@@ -82,6 +86,25 @@ export const CohortIncidentTargetCohortDrawer: FC<
           value={formData.description}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             onFormDataChange({ description: e.target.value })
+          }
+        />
+      </Box>
+      <Box mb={4}>
+        <TextInput
+          label="Def ID"
+          value={formData.defId}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({ defId: e.target.value })
+          }
+          type="number"
+        />
+      </Box>
+      <Box mb={4}>
+        <TextInput
+          label="Def Name"
+          value={formData.defName}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({ defName: e.target.value })
           }
         />
       </Box>
