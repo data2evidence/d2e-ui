@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { RunGraph, RunGraphData, RunGraphConfig, RunGraphNode } from '@prefecthq/graphs'
+import {
+  RunGraph,
+  RunGraphData,
+  RunGraphConfig,
+  RunGraphNode,
+  GraphItemSelection
+} from '@prefecthq/graphs'
 import { FlowRun, FlowRunTabName, GetRunsForFlowRunResponse, LogInfo } from '@/types'
 import {
   getLogsByFlowRunId,
@@ -19,9 +25,10 @@ const { backToJobs } = getPortalAPI()
 const route = useRoute()
 const router = useRouter()
 const logs = ref<LogInfo[]>([])
-const selected = ref<FlowRunTabName>('LOGS')
+const selectedTab = ref<FlowRunTabName>('LOGS')
 const flowRun = ref<FlowRun>()
 const taskRuns = ref<FlowRun[]>([])
+const selectedNode = ref<GraphItemSelection | null>(null)
 
 const processRunData = (runData: GetRunsForFlowRunResponse): RunGraphData => {
   const data = {
@@ -41,7 +48,7 @@ const processRunData = (runData: GetRunsForFlowRunResponse): RunGraphData => {
 }
 
 const onClickTab = (tabName: FlowRunTabName) => {
-  selected.value = tabName
+  selectedTab.value = tabName
 }
 
 const onClickTaskRunId = (taskRunId: string) => {
@@ -81,12 +88,11 @@ const stateTypeColors = {
 } as const
 
 function getColorToken(cssVariable: string): string {
-  return 'blue'
+  return 'white'
 }
 const config = computed<RunGraphConfig>(() => ({
   runId: flowRun?.value?.id || '',
   fetch: async (flowRunId: string) => {
-    console.log(flowRunId)
     const data = await getRunsForFlowRun(flowRunId)
     return processRunData(data)
   },
@@ -111,17 +117,6 @@ const config = computed<RunGraphConfig>(() => ({
 </script>
 
 <template>
-  <template v-if="!!flowRun?.id">
-    <div class="flow-run-graph">
-      <RunGraph
-        class="flow-run-graph__graph p-background run-graph"
-        :config="config"
-        :selected="null"
-        :fullscreen="false"
-        @update:selected="console.log"
-      />
-    </div>
-  </template>
   <div
     style="
       display: flex;
@@ -134,10 +129,27 @@ const config = computed<RunGraphConfig>(() => ({
     <div style="color: white; cursor: pointer" @click="onClickBackToJobs">
       &#60; back to Jobs list
     </div>
+
     <div style="font-size: small">
       <div style="color: white">Flow Run ID: {{ flowRun?.id }}</div>
     </div>
   </div>
+
+  <template v-if="!!flowRun?.id">
+    <div class="flow-run-graph">
+      <RunGraph
+        class="flow-run-graph__graph p-background run-graph"
+        :config="config"
+        :selected="null"
+        :fullscreen="false"
+        @update:selected="
+          (selected) => {
+            selectedNode = selected
+          }
+        "
+      />
+    </div>
+  </template>
   <div
     style="
       display: flex;
@@ -148,31 +160,31 @@ const config = computed<RunGraphConfig>(() => ({
     "
   >
     <div class="tabs">
-      <div @click="onClickTab('LOGS')" :class="`tab ${selected === 'LOGS' ? 'selected' : ''}`">
+      <div @click="onClickTab('LOGS')" :class="`tab ${selectedTab === 'LOGS' ? 'selected' : ''}`">
         <div>Logs</div>
       </div>
       <div
         @click="onClickTab('TASK_RUNS')"
-        :class="`tab ${selected === 'TASK_RUNS' ? 'selected' : ''}`"
+        :class="`tab ${selectedTab === 'TASK_RUNS' ? 'selected' : ''}`"
       >
         <div>Task Runs</div>
       </div>
       <div
         @click="onClickTab('DETAILS')"
-        :class="`tab ${selected === 'DETAILS' ? 'selected' : ''}`"
+        :class="`tab ${selectedTab === 'DETAILS' ? 'selected' : ''}`"
       >
         <div>Details</div>
       </div>
       <div
         @click="onClickTab('PARAMETERS')"
-        :class="`tab ${selected === 'PARAMETERS' ? 'selected' : ''}`"
+        :class="`tab ${selectedTab === 'PARAMETERS' ? 'selected' : ''}`"
       >
         <div>Parameters</div>
       </div>
     </div>
   </div>
-  <LogScroller v-if="selected === 'LOGS'" :logs="logs" />
-  <div v-if="selected === 'TASK_RUNS'">
+  <LogScroller v-if="selectedTab === 'LOGS'" :logs="logs" />
+  <div v-if="selectedTab === 'TASK_RUNS'">
     <template v-if="taskRuns.length">
       <template v-for="taskRun in taskRuns" :key="taskRun.id">
         <div class="task-run-container" @click="onClickTaskRunId(taskRun.id)">
@@ -195,7 +207,7 @@ const config = computed<RunGraphConfig>(() => ({
     </template>
     <template v-else><div style="padding: 20px; color: white">No task flows</div></template>
   </div>
-  <div v-if="selected === 'DETAILS'" class="details-container">
+  <div v-if="selectedTab === 'DETAILS'" class="details-container">
     <div class="details-attribute">
       <div>Run Count:</div>
       <div>{{ flowRun?.runCount }}</div>
@@ -233,7 +245,7 @@ const config = computed<RunGraphConfig>(() => ({
       <div>{{ flowRun?.empiricalPolicy?.retryDelaySeconds }}s</div>
     </div>
   </div>
-  <div class="parameters-container" v-if="selected === 'PARAMETERS'">
+  <div class="parameters-container" v-if="selectedTab === 'PARAMETERS'">
     <p-code-highlight
       style="overflow-x: auto"
       lang="json"
