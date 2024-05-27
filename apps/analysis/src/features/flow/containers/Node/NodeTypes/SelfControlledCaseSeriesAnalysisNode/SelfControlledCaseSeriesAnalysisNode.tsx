@@ -23,6 +23,7 @@ interface SccsIntervalDataArgs {
 }
 
 interface FitSccsModelArgs {
+  control: boolean;
   cvType: string;
   selectorType: string;
   startingVariance: number;

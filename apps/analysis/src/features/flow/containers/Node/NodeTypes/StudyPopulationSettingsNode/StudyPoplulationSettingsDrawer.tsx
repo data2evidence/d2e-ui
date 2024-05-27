@@ -1,7 +1,15 @@
 import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
-import { Box, TextInput } from "@portal/components";
+import {
+  Box,
+  TextInput,
+  FormControl,
+  Select,
+  SelectChangeEvent,
+  InputLabel,
+  MenuItem,
+} from "@portal/components";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -25,21 +33,27 @@ interface FormData extends StudyPopulationSettingsNodeData {}
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  startAnchor: ["cohort start", "cohort start"],
-  riskWindowStart: 1,
-  endAnchor: ["cohort end", "cohort end"],
-  riskWindowEnd: 365,
-  minTimeAtRisk: 1,
-  studyPopulationArgs: {
+  cohortMethodArgs: {
     minDaysAtRisk: 1,
     riskWindowStart: 0,
-    startAnchor: ["cohort start", "cohort start"],
+    startAnchor: "cohort start",
     riskWindowEnd: 30,
-    endAnchor: ["cohort end", "cohort end"],
+    endAnchor: "cohort end",
+  },
+  sccsArgs: {
     minAge: 18,
     naivePeriod: 365,
   },
+  patientLevelPredictionArgs: {
+    startAnchor: "cohort start",
+    endAnchor: "cohort end",
+    riskWindowStart: 1,
+    riskWindowEnd: 365,
+    minTimeAtRisk: 1,
+  },
 };
+
+const START_END_ANCHOR_OPTIONS = ["cohort start", "cohort end"];
 
 export const StudyPopulationSettingsDrawer: FC<
   StudyPopulationSettingsDrawerProps
@@ -55,12 +69,9 @@ export const StudyPopulationSettingsDrawer: FC<
       setFormData({
         name: node.data.name,
         description: node.data.description,
-        startAnchor: node.data.startAnchor,
-        riskWindowStart: node.data.riskWindowStart,
-        endAnchor: node.data.endAnchor,
-        riskWindowEnd: node.data.riskWindowEnd,
-        minTimeAtRisk: node.data.minTimeAtRisk,
-        studyPopulationArgs: node.data.studyPopulationArgs,
+        cohortMethodArgs: node.data.cohortMethodArgs,
+        sccsArgs: node.data.sccsArgs,
+        patientLevelPredictionArgs: node.data.patientLevelPredictionArgs,
       });
     } else {
       setFormData({
@@ -101,97 +112,16 @@ export const StudyPopulationSettingsDrawer: FC<
           }
         />
       </Box>
-      <Box mb={4} display="flex">
-        <TextInput
-          label="startAnchor[0]"
-          value={formData.startAnchor[0]}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              startAnchor: [Number(e.target.value), formData.startAnchor[1]],
-            })
-          }
-          style={{ marginRight: "30px" }}
-        />
-        <TextInput
-          label="startAnchor[1]"
-          value={formData.startAnchor[1]}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              startAnchor: [formData.startAnchor[0], Number(e.target.value)],
-            })
-          }
-        />
-      </Box>
-
-      <Box mb={4}>
-        <TextInput
-          label="Risk Window Start"
-          value={formData.riskWindowStart}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              riskWindowStart: e.target.value,
-            })
-          }
-          type="number"
-        />
-      </Box>
-
-      <Box mb={4} display="flex">
-        <TextInput
-          label="endAnchor[0]"
-          value={formData.endAnchor[0]}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              endAnchor: [Number(e.target.value), formData.endAnchor[1]],
-            })
-          }
-          style={{ marginRight: "30px" }}
-        />
-        <TextInput
-          label="endAnchor[1]"
-          value={formData.endAnchor[1]}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              endAnchor: [formData.endAnchor[0], Number(e.target.value)],
-            })
-          }
-        />
-      </Box>
-
-      <Box mb={4}>
-        <TextInput
-          label="Risk Window End"
-          value={formData.riskWindowEnd}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              riskWindowEnd: e.target.value,
-            })
-          }
-          type="number"
-        />
-      </Box>
-      <Box mb={4}>
-        <TextInput
-          label="Min Time At Risk"
-          value={formData.minTimeAtRisk}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({
-              minTimeAtRisk: e.target.value,
-            })
-          }
-          type="number"
-        />
-      </Box>
       <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
-        <div style={{ paddingBottom: "20px" }}>StudyPopulationArgs</div>
+        <div style={{ paddingBottom: "20px" }}>CohortMethodArgs</div>
         <Box mb={4}>
           <TextInput
             label="Min Days At Risk"
-            value={formData.studyPopulationArgs.minDaysAtRisk}
+            value={formData.cohortMethodArgs.minDaysAtRisk}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               onFormDataChange({
-                studyPopulationArgs: {
-                  ...formData.studyPopulationArgs,
+                cohortMethodArgs: {
+                  ...formData.cohortMethodArgs,
                   minDaysAtRisk: e.target.value,
                 },
               })
@@ -202,11 +132,11 @@ export const StudyPopulationSettingsDrawer: FC<
         <Box mb={4}>
           <TextInput
             label="Risk Window Start"
-            value={formData.studyPopulationArgs.riskWindowStart}
+            value={formData.cohortMethodArgs.riskWindowStart}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               onFormDataChange({
-                studyPopulationArgs: {
-                  ...formData.studyPopulationArgs,
+                cohortMethodArgs: {
+                  ...formData.cohortMethodArgs,
                   riskWindowStart: e.target.value,
                 },
               })
@@ -214,47 +144,14 @@ export const StudyPopulationSettingsDrawer: FC<
             type="number"
           />
         </Box>
-        <Box mb={4} display="flex">
-          <TextInput
-            label="startAnchor[0]"
-            value={formData.studyPopulationArgs.startAnchor[0]}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onFormDataChange({
-                studyPopulationArgs: {
-                  ...formData.studyPopulationArgs,
-                  startAnchor: [
-                    Number(e.target.value),
-                    formData.studyPopulationArgs.startAnchor[1],
-                  ],
-                },
-              })
-            }
-            style={{ marginRight: "30px" }}
-          />
-          <TextInput
-            label="startAnchor[1]"
-            value={formData.studyPopulationArgs.startAnchor[1]}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onFormDataChange({
-                studyPopulationArgs: {
-                  ...formData.studyPopulationArgs,
-                  startAnchor: [
-                    formData.studyPopulationArgs.startAnchor[0],
-                    Number(e.target.value),
-                  ],
-                },
-              })
-            }
-          />
-        </Box>
         <Box mb={4}>
           <TextInput
             label="Risk Window End"
-            value={formData.studyPopulationArgs.riskWindowEnd}
+            value={formData.cohortMethodArgs.riskWindowEnd}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               onFormDataChange({
-                studyPopulationArgs: {
-                  ...formData.studyPopulationArgs,
+                cohortMethodArgs: {
+                  ...formData.cohortMethodArgs,
                   riskWindowEnd: e.target.value,
                 },
               })
@@ -262,47 +159,63 @@ export const StudyPopulationSettingsDrawer: FC<
             type="number"
           />
         </Box>
-        <Box mb={4} display="flex">
-          <TextInput
-            label="endAnchor[0]"
-            value={formData.studyPopulationArgs.endAnchor[0]}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onFormDataChange({
-                studyPopulationArgs: {
-                  ...formData.studyPopulationArgs,
-                  endAnchor: [
-                    Number(e.target.value),
-                    formData.studyPopulationArgs.endAnchor[1],
-                  ],
-                },
-              })
-            }
-            style={{ marginRight: "30px" }}
-          />
-          <TextInput
-            label="endAnchor[1]"
-            value={formData.studyPopulationArgs.endAnchor[1]}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onFormDataChange({
-                studyPopulationArgs: {
-                  ...formData.studyPopulationArgs,
-                  endAnchor: [
-                    formData.studyPopulationArgs.endAnchor[0],
-                    Number(e.target.value),
-                  ],
-                },
-              })
-            }
-          />
+        <Box mb={4}>
+          <FormControl variant="standard" fullWidth>
+            <InputLabel shrink>Start Anchor</InputLabel>
+            <Select
+              value={formData.cohortMethodArgs.startAnchor}
+              onChange={(e: SelectChangeEvent) =>
+                onFormDataChange({
+                  cohortMethodArgs: {
+                    ...formData.cohortMethodArgs,
+                    startAnchor: e.target.value,
+                  },
+                })
+              }
+            >
+              <MenuItem value="">&nbsp;</MenuItem>
+              {START_END_ANCHOR_OPTIONS.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
+        <Box mb={4}>
+          <FormControl variant="standard" fullWidth>
+            <InputLabel shrink>End Anchor</InputLabel>
+            <Select
+              value={formData.cohortMethodArgs.endAnchor}
+              onChange={(e: SelectChangeEvent) =>
+                onFormDataChange({
+                  cohortMethodArgs: {
+                    ...formData.cohortMethodArgs,
+                    endAnchor: e.target.value,
+                  },
+                })
+              }
+            >
+              <MenuItem value="">&nbsp;</MenuItem>
+              {START_END_ANCHOR_OPTIONS.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </Box>
+      <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
+        <div style={{ paddingBottom: "20px" }}>SCCSArgs</div>
         <Box mb={4}>
           <TextInput
             label="Min Age"
-            value={formData.studyPopulationArgs.minAge}
+            value={formData.sccsArgs.minAge}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               onFormDataChange({
-                studyPopulationArgs: {
-                  ...formData.studyPopulationArgs,
+                sccsArgs: {
+                  ...formData.sccsArgs,
                   minAge: e.target.value,
                 },
               })
@@ -313,17 +226,111 @@ export const StudyPopulationSettingsDrawer: FC<
         <Box mb={4}>
           <TextInput
             label="Naive Period"
-            value={formData.studyPopulationArgs.naivePeriod}
+            value={formData.sccsArgs.naivePeriod}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               onFormDataChange({
-                studyPopulationArgs: {
-                  ...formData.studyPopulationArgs,
+                sccsArgs: {
+                  ...formData.sccsArgs,
                   naivePeriod: e.target.value,
                 },
               })
             }
             type="number"
           />
+        </Box>
+      </Box>
+      <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
+        <div style={{ paddingBottom: "20px" }}>PatientLevelPredictionArgs</div>
+        <Box mb={4}>
+          <TextInput
+            label="Min Time At Risk"
+            value={formData.patientLevelPredictionArgs.minTimeAtRisk}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              onFormDataChange({
+                patientLevelPredictionArgs: {
+                  ...formData.patientLevelPredictionArgs,
+                  minTimeAtRisk: e.target.value,
+                },
+              })
+            }
+            type="number"
+          />
+        </Box>
+        <Box mb={4}>
+          <TextInput
+            label="Risk Window Start"
+            value={formData.patientLevelPredictionArgs.riskWindowStart}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              onFormDataChange({
+                patientLevelPredictionArgs: {
+                  ...formData.patientLevelPredictionArgs,
+                  riskWindowStart: e.target.value,
+                },
+              })
+            }
+            type="number"
+          />
+        </Box>
+        <Box mb={4}>
+          <TextInput
+            label="Risk Window End"
+            value={formData.patientLevelPredictionArgs.riskWindowEnd}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              onFormDataChange({
+                patientLevelPredictionArgs: {
+                  ...formData.patientLevelPredictionArgs,
+                  riskWindowEnd: e.target.value,
+                },
+              })
+            }
+            type="number"
+          />
+        </Box>
+        <Box mb={4}>
+          <FormControl variant="standard" fullWidth>
+            <InputLabel shrink>Start Anchor</InputLabel>
+            <Select
+              value={formData.patientLevelPredictionArgs.startAnchor}
+              onChange={(e: SelectChangeEvent) =>
+                onFormDataChange({
+                  patientLevelPredictionArgs: {
+                    ...formData.patientLevelPredictionArgs,
+                    startAnchor: e.target.value,
+                  },
+                })
+              }
+            >
+              <MenuItem value="">&nbsp;</MenuItem>
+              {START_END_ANCHOR_OPTIONS.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box mb={4}>
+          <FormControl variant="standard" fullWidth>
+            <InputLabel shrink>End Anchor</InputLabel>
+            <Select
+              value={formData.patientLevelPredictionArgs.endAnchor}
+              onChange={(e: SelectChangeEvent) =>
+                onFormDataChange({
+                  patientLevelPredictionArgs: {
+                    ...formData.patientLevelPredictionArgs,
+                    endAnchor: e.target.value,
+                  },
+                })
+              }
+            >
+              <MenuItem value="">&nbsp;</MenuItem>
+              {START_END_ANCHOR_OPTIONS.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
       </Box>
     </NodeDrawer>

@@ -4,27 +4,30 @@ import { useBooleanHelper } from "~/features/flow/hooks";
 import { NodeDataState } from "../../../../types";
 import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
-import { TargetComparatorOutcomesDrawer } from "./TargetComparatorOutcomesDrawer";
-import "./TargetComparatorOutcomesNode.scss";
+import { OutcomesDrawer } from "./OutcomesDrawer";
+import "./OutcomesNode.scss";
 
-export interface TargetComparatorOutcomesNodeData extends NodeDataState {
-  targetId: number;
-  comparatorId: number;
-  excludedCovariateConceptIds: string[];
-  includedCovariateConceptIds: string[];
+export interface OutcomesNodeData extends NodeDataState {
+  ncoCohortSetIds: string[];
+  outcomeId?: number;
+  outcomeOfInterest?: boolean;
+  trueEffectSize?: number;
+  priorOutcomeLookback?: number;
+  riskWindowStart?: number;
+  riskWindowEnd?: number;
+  startAnchor?: string;
+  endAnchor?: string;
 }
 
-export const TargetComparatorOutcomesNode = (
-  node: NodeProps<TargetComparatorOutcomesNodeData>
-) => {
+export const OutcomesNode = (node: NodeProps<OutcomesNodeData>) => {
   const { data } = node;
   const [settingVisible, openSetting, closeSetting] = useBooleanHelper(false);
   const [resultVisible, openResult, closeResult] = useBooleanHelper(false);
 
   return (
     <>
-      <NodeLayout<TargetComparatorOutcomesNodeData>
-        className="target-comparator-outcomes-node"
+      <NodeLayout<OutcomesNodeData>
+        className="outcomes-node"
         name={data.name}
         onSettingClick={openSetting}
         resultType={data.error ? "error" : "success"}
@@ -33,10 +36,10 @@ export const TargetComparatorOutcomesNode = (
       >
         {data.description}
       </NodeLayout>
-      <TargetComparatorOutcomesDrawer
+      <OutcomesDrawer
         node={node}
-        title="Configure Target Comparator Outcomes Node"
-        className="target-comparator-outcomes-drawer"
+        title="Configure Outcomes Node"
+        className="outcomes-drawer"
         open={settingVisible}
         onClose={closeSetting}
       />
