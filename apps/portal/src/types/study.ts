@@ -47,6 +47,7 @@ export interface CopyStudyInput {
   newStudyName: string;
   sourceStudyId: string;
   snapshotLocation: string;
+  dataModel: string;
   snapshotCopyConfig?: SnapshotCopyConfig;
 }
 
