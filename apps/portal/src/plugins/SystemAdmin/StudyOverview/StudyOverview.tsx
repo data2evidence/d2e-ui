@@ -212,7 +212,7 @@ const StudyOverview: FC = () => {
     [closeDeleteStudyDialog]
   );
 
-  const fetchDatamodelUpdates = async () => {
+  const fetchDatamodelUpdates = useCallback(async () => {
     const options = {
       options: {
         flow_action_type: "get_version_info",
@@ -231,8 +231,8 @@ const StudyOverview: FC = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-
+  }, [setFetchUpdatesLoading, setFetchUpdatesFlowId]);
+  
   const getAttributeValue = (
     studyAttributes: StudyAttribute[] | undefined,
     attributeConfigId: StudyAttributeConfigIds
