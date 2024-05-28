@@ -7,23 +7,38 @@ import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
 import { StudyPopulationSettingsDrawer } from "./StudyPoplulationSettingsDrawer";
 import "./StudyPopulationSettingsNode.scss";
 
-interface StudyPopulationArgs {
+// TODO: remaining optional configs: https://ohdsi.github.io/CohortMethod/reference/createCreateStudyPopulationArgs.html
+interface CohortMethodArgs {
   minDaysAtRisk: number;
   riskWindowStart: number;
-  startAnchor: string[];
+  startAnchor: string;
   riskWindowEnd: number;
-  endAnchor: string[];
-  minAge: number;
+  endAnchor: string;
+}
+
+interface SCCSArgs {
+  firstOutcomeOnly?: boolean;
   naivePeriod: number;
+  minAge?: number;
+  maxAge?: number;
+  genderConceptIds?: string[];
+  // TODO: investigate what data type this should be
+  restrictTimeToEraId?: boolean;
+}
+
+// TODO: remaining optional configs: https://ohdsi.github.io/PatientLevelPrediction/reference/createStudyPopulationSettings.html
+interface PatientLevelPredictionArgs {
+  startAnchor: string;
+  riskWindowStart: number;
+  endAnchor: string;
+  riskWindowEnd: number;
+  minTimeAtRisk: number;
 }
 
 export interface StudyPopulationSettingsNodeData extends NodeDataState {
-  startAnchor: string[];
-  riskWindowStart: number;
-  endAnchor: string[];
-  riskWindowEnd: number;
-  minTimeAtRisk: number;
-  studyPopulationArgs: StudyPopulationArgs;
+  cohortMethodArgs: CohortMethodArgs;
+  sccsArgs: SCCSArgs;
+  patientLevelPredictionArgs: PatientLevelPredictionArgs;
 }
 
 export const StudyPopulationSettingsNode = (

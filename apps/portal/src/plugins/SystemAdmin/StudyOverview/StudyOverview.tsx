@@ -7,7 +7,6 @@ import {
   Loader,
   TableCell,
   TableRow,
-  Title,
   Text,
   VisibilityPublicIcon,
   VisibilityOnIcon,
@@ -16,6 +15,7 @@ import {
 } from "@portal/components";
 import { CloseDialogType, Study, StudyAttribute } from "../../../types";
 import { useDialogHelper, useDatasets, useDatabases } from "../../../hooks";
+import { useTranslation } from "../../../contexts";
 import AddStudyDialog from "./AddStudyDialog/AddStudyDialog";
 import UpdateStudyDialog from "./UpdateStudyDialog/UpdateStudyDialog";
 import DatasetResourcesDialog from "./DatasetResourcesDialog/DatasetResourcesDialog";
@@ -26,7 +26,6 @@ import PermissionsDialog from "./PermissionsDialog/PermissionsDialog";
 import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
 import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
 import "./StudyOverview.scss";
-import { useTranslation } from "../../../contexts";
 import { api } from "../../../axios/api";
 import { FlowRunJobStateTypes } from "../Jobs/types";
 
@@ -41,7 +40,7 @@ const StudyOverview: FC = () => {
   const [refetch, setRefetch] = useState(0);
   const [fetchUpdatesLoading, setFetchUpdatesLoading] = useState(false);
   const [fetchUpdatesFlowId, setFetchUpdatesFlowId] = useState("");
-  const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, refetch);
+  const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, undefined, refetch);
   const [databases] = useDatabases();
 
   const getDbDialect = useCallback(

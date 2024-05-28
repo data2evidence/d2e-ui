@@ -129,7 +129,7 @@ export const dataflowApiSlice = createApi({
     }),
     runDataflow: builder.mutation({
       query: (id) => ({
-        url: `prefect/flow-run/${id}`,
+        url: `prefect/analysis-run/${id}`,
         method: "POST",
       }),
       invalidatesTags: (result, error, { id }) => [

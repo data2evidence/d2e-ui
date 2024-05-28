@@ -28,8 +28,6 @@ const EMPTY_FORM_DATA: FormData = {
   description: "",
   targetId: 1,
   comparatorId: 1,
-  trueEffectSize: 1,
-  priorOutcomeLookback: 30,
   excludedCovariateConceptIds: [],
   includedCovariateConceptIds: [],
 };
@@ -50,8 +48,6 @@ export const TargetComparatorOutcomesDrawer: FC<
         description: node.data.description,
         targetId: node.data.targetId,
         comparatorId: node.data.comparatorId,
-        trueEffectSize: node.data.trueEffectSize,
-        priorOutcomeLookback: node.data.priorOutcomeLookback,
         excludedCovariateConceptIds: node.data.excludedCovariateConceptIds,
         includedCovariateConceptIds: node.data.includedCovariateConceptIds,
       });
@@ -127,34 +123,6 @@ export const TargetComparatorOutcomesDrawer: FC<
           }
           type="number"
         />
-      </Box>
-
-      <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
-        <div style={{ paddingBottom: "20px" }}>Negative Control Outcomes</div>
-        <Box mb={4}>
-          <TextInput
-            label="True Effect Size"
-            value={formData.trueEffectSize}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onFormDataChange({
-                trueEffectSize: e.target.value,
-              })
-            }
-            type="number"
-          />
-        </Box>
-        <Box mb={4}>
-          <TextInput
-            label="Prior Outcome Lookback"
-            value={formData.priorOutcomeLookback}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onFormDataChange({
-                priorOutcomeLookback: e.target.value,
-              })
-            }
-            type="number"
-          />
-        </Box>
       </Box>
       <Box mb={4}>
         <Autocomplete
