@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ReactECharts from "echarts-for-react";
 import classNames from "classnames";
 import { Card, CalendarIcon, DatabaseIcon, DocPlayIcon, PadlockEmptyIcon, UsersIcon } from "@portal/components";
+import { HighlightText } from "../../../components";
 import { Study } from "../../../types";
 import { DatasetAttribute } from "../../../constant";
 import { useActiveDataset, useTranslation, useUser } from "../../../contexts";
@@ -11,6 +12,7 @@ import "./DatasetCard.scss";
 interface DatasetCardProps {
   dataset: Study;
   path: string;
+  highlightText?: string;
 }
 
 const colorPalette = [
@@ -34,7 +36,7 @@ const colorPalette = [
   "#07609F",
 ];
 
-export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
+export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path, highlightText }) => {
   const navigate = useNavigate();
   const { user } = useUser();
   const { getText, i18nKeys } = useTranslation();
@@ -117,10 +119,13 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
               "dataset-card__permission-icon--accessible": user.isDatasetResearcher[dataset.id],
             })}
           />
-          {dataset.studyDetail?.name || "Untitled"}
+          <HighlightText text={dataset.studyDetail?.name || "Untitled"} searchText={highlightText} />
         </div>
         <div className="dataset-card__description">
-          {dataset.studyDetail?.description || getText(i18nKeys.DATASET_CARD__NO_DATASET_SUMMARY)}
+          <HighlightText
+            text={dataset.studyDetail?.description || getText(i18nKeys.DATASET_CARD__NO_DATASET_SUMMARY)}
+            searchText={highlightText}
+          />
         </div>
         <div className="dataset-card__attributes">
           <div className="dataset-card__attribute">

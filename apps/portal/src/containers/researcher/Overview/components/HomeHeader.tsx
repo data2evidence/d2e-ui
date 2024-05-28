@@ -6,9 +6,13 @@ import { SearchBarDataset } from "./SearchBarDatasets";
 import { AccountButton } from "./AccountButton";
 import "./HomeHeader.scss";
 
-interface HomeHeaderProps extends HTMLAttributes<HTMLDivElement> {}
+interface HomeHeaderProps extends HTMLAttributes<HTMLDivElement> {
+  searchKeyword?: string;
+  onSearchEnter?: (keyword: string) => void;
+  onSearchChange?: (keyword: string) => void;
+}
 
-export const HomeHeader: FC<HomeHeaderProps> = () => {
+export const HomeHeader: FC<HomeHeaderProps> = ({ searchKeyword, onSearchEnter, onSearchChange }) => {
   const scrollPosition = useScrollPosition();
   const [scrolled, setScrolled] = useState(false);
 
@@ -26,7 +30,7 @@ export const HomeHeader: FC<HomeHeaderProps> = () => {
   return (
     <div className={classes}>
       <img alt="Data2Evidence" src={`${env.PUBLIC_URL}/assets/d2e.svg`} height={30} />
-      <SearchBarDataset />
+      <SearchBarDataset keyword={searchKeyword} onEnter={onSearchEnter} onChange={onSearchChange} />
       <AccountButton />
     </div>
   );

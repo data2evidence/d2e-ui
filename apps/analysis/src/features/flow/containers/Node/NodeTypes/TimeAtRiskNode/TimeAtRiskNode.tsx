@@ -7,14 +7,12 @@ import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
 import { TimeAtRiskDrawer } from "./TimeAtRiskDrawer";
 import "./TimeAtRiskNode.scss";
 
-export interface TimeAtRiskConfigs {
-  riskWindowStart: number;
-  startAnchor: string;
-  riskWindowEnd: number;
-  endAnchor: string;
-}
 export interface TimeAtRiskNodeData extends NodeDataState {
-  timeAtRiskConfigs: TimeAtRiskConfigs[];
+  id: number;
+  endWith: string;
+  startWith: string;
+  startOffset?: number;
+  endOffset?: number;
 }
 
 export const TimeAtRiskNode = (node: NodeProps<TimeAtRiskNodeData>) => {

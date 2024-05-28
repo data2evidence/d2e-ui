@@ -7,9 +7,26 @@ import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
 import { CohortIncidentDrawer } from "./CohortIncidentDrawer";
 import "./CohortIncidentNode.scss";
 
-export interface CohortIncidentNodeData extends NodeDataState {
+interface StrataSettings {
   byYear: boolean;
   byGender: boolean;
+}
+
+interface IncidenceAnalysis {
+  targets: string[];
+  outcomes: string[];
+  tars: string[];
+}
+
+export interface CohortRefs {
+  name: string;
+  id: string;
+  description: string;
+}
+export interface CohortIncidentNodeData extends NodeDataState {
+  strataSettings: StrataSettings;
+  cohortRefs: CohortRefs[];
+  incidenceAnalysis: IncidenceAnalysis;
 }
 
 export const CohortIncidentNode = (node: NodeProps<CohortIncidentNodeData>) => {
