@@ -265,6 +265,8 @@ export default class FilterCardModel extends EntityBase {
                 type: oneAttrConfig.getType(),
                 name: oneAttrConfig.getName(),
                 cardId: this.props.instanceId,
+                domainFilter: oneAttrConfig.getDomainFilter(),
+                standardConceptCodeFilter: oneAttrConfig.getStandardConceptCodeFilter(),
               },
               this.props.key
             ),

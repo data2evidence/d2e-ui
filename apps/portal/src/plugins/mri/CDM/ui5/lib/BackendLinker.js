@@ -300,7 +300,9 @@ sap.ui.define([
 				order: 0,
 				isDefault: false,
 				from: {},
-				annotations: []
+				annotations: [],
+				domainFilter: "",
+				standardConceptCodeFilter: ""
 			},
 			censorSkeleton: {
 				minCohortSize: 0
@@ -555,6 +557,14 @@ sap.ui.define([
 			catch (e) {
 				console.error(e);
 			}
+		},
+
+		domainFilter: function (frontValue, originalContainer, destination) {
+			destination.domainFilter = frontValue.value;
+		},
+
+		standardConceptCodeFilter: function (frontValue, originalContainer, destination) {
+			destination.standardConceptCodeFilter = frontValue.value;
 		},
 
 		defaultFilterKey: function (frontValue, originalContainer, destination, feConfig) {
@@ -1132,6 +1142,28 @@ sap.ui.define([
 			};
 			destination.measureExpression = frontValue;
 			destination.isNormalAttribute = false;
+		},
+
+		domainFilter: function (backValue, destination) {
+			var frontValue = {
+				value: backValue,
+				validity: {
+					message: "",
+					status: "valid"
+				}
+			};
+			destination.domainFilter = frontValue;
+		},
+
+		standardConceptCodeFilter: function (backValue, destination) {
+			var frontValue = {
+				value: backValue,
+				validity: {
+					message: "",
+					status: "valid"
+				}
+			};
+			destination.standardConceptCodeFilter = frontValue;
 		},
 
 		parentInteraction: function (backValue, destination) {

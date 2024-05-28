@@ -7,12 +7,20 @@ import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
 import { CharacterizationDrawer } from "./CharacterizationDrawer";
 import "./CharacterizationNode.scss";
 
+export interface TimeAtRiskConfigs {
+  riskWindowStart: number;
+  startAnchor: string;
+  riskWindowEnd: number;
+  endAnchor: string;
+}
+
 export interface CharacterizationNodeData extends NodeDataState {
   dechallengeStopInterval: number;
   dechallengeEvaluationWindow: number;
   minPriorObservation: number;
   targetIds: string[];
   outcomeIds: string[];
+  timeAtRiskConfigs: TimeAtRiskConfigs[];
 }
 
 export const CharacterizationNode = (

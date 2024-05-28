@@ -1,7 +1,7 @@
 .public-overview {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  height: 100%;
 
   &__banner {
     height: 364px;
@@ -89,6 +89,7 @@
 
       p {
         font-size: 18px;
+        margin-top: 0;
       }
     }
   }
