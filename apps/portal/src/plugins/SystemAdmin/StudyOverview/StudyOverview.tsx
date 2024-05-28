@@ -65,34 +65,37 @@ const StudyOverview: FC = () => {
 
   useEffect(() => {
     const fetchFlowRunState = async () => {
-      const res = await api.dataflow.getFlowRunState(fetchUpdatesFlowId);
       const pendingJobStatuses = [
         FlowRunJobStateTypes.SCHEDULED as string,
         FlowRunJobStateTypes.RUNNING as string,
         FlowRunJobStateTypes.PAUSED as string,
         FlowRunJobStateTypes.PENDING as string,
       ];
+      if (fetchUpdatesFlowId) {
+        const flowRunState = await api.dataflow.getFlowRunState(fetchUpdatesFlowId);
 
-      if (!pendingJobStatuses.includes(res.type)) {
-        setFetchUpdatesLoading(false);
-        setFetchUpdatesFlowId("");
-      }
+        if (!pendingJobStatuses.includes(flowRunState.type)) {
+          setFetchUpdatesLoading(false);
+          setFetchUpdatesFlowId("");
+        }
 
-      if (res.type === FlowRunJobStateTypes.COMPLETED) {
-        setRefetch((refetch) => refetch + 1);
+        if (flowRunState.type === FlowRunJobStateTypes.COMPLETED) {
+          setRefetch((refetch) => refetch + 1);
+        }
       }
+      return;
     };
 
     const interval = setInterval(() => {
       fetchFlowRunState();
     }, 10000);
 
-    if (!fetchUpdatesLoading) {
+    if (!fetchUpdatesFlowId) {
       clearInterval(interval);
     }
 
     return (): void => clearInterval(interval);
-  }, [fetchUpdatesLoading, fetchUpdatesFlowId]);
+  }, [fetchUpdatesFlowId]);
 
   const handleUpdateStudy = useCallback(
     (study: Study) => {
