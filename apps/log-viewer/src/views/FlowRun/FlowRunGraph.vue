@@ -4,11 +4,11 @@ import {
   RunGraphData,
   RunGraphConfig,
   RunGraphNode,
-  GraphItemSelection
+  GraphItemSelection,
+  RunGraphStateEvent
 } from '@prefecthq/graphs'
 import { getRunsForFlowRun } from '@/api'
 import { FlowRun, GetRunsForFlowRunResponse } from '@/types'
-import { RunGraphStateEvent } from '@prefecthq/graphs/dist/types/src/models/states'
 import { computed, ref } from 'vue'
 const props = defineProps<{ flowRun?: FlowRun }>()
 
