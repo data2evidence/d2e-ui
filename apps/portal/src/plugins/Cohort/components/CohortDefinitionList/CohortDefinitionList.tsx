@@ -7,32 +7,25 @@ import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import { Button, IconButton, Loader, TableCell, TableRow, TablePaginationActions, TrashIcon } from "@portal/components";
-import { useFeedback, useTranslation } from "../../../../contexts";
+import { useFeedback, useTranslation, useActiveDataset } from "../../../../contexts";
 import { CohortMapping } from "../../../../types";
 import { CohortMgmt } from "../../../../axios/cohort-mgmt";
 import "./CohortDefinitionList.scss";
 
+import CohortDeleteDialog from "../CohortDeleteDialog/CohortDeleteDialog";
+import DataQualityDialog from "../DataQualityDialog/DataQualityDialog";
+import { useDialogHelper } from "../../../../hooks";
+
 interface CohortDefinitionListProps {
   userId?: string;
   cohortMgmtClient: CohortMgmt;
-  setActiveCohort: React.Dispatch<React.SetStateAction<CohortMapping | undefined>>;
-  openDeleteCohortDialog: () => void;
-  openDataQualityDialog: () => void;
   refetch: boolean;
   setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 dayjs.extend(customParseFormat);
 
-const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
-  userId,
-  cohortMgmtClient,
-  setActiveCohort,
-  openDeleteCohortDialog,
-  openDataQualityDialog,
-  refetch,
-  setRefetch,
-}) => {
+const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgmtClient, refetch, setRefetch }) => {
   const { getText, i18nKeys } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
@@ -40,6 +33,12 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
   const { setFeedback } = useFeedback();
+
+  const [activeCohort, setActiveCohort] = useState<CohortMapping>();
+  const [showDeleteCohortDialog, openDeleteCohortDialog, closeDeleteCohortDialog] = useDialogHelper(false);
+  const [showDataQualityDialog, openDataQualityDialog, closeDataQualityDialog] = useDialogHelper(false);
+
+  const { activeDataset } = useActiveDataset();
 
   useEffect(() => {
     // Fetch all cohorts
@@ -123,7 +122,7 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
                 </TableRow>
               )}
               {data.length > 0 &&
-                data.map((cohort, index) => (
+                data.map((cohort) => (
                   <TableRow key={cohort.id}>
                     <TableCell>{cohort.id}</TableCell>
                     <TableCell>{cohort.name}</TableCell>
@@ -166,6 +165,25 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({
           ActionsComponent={TablePaginationActions}
         />
       </div>
+      {showDeleteCohortDialog && (
+        <CohortDeleteDialog
+          cohort={activeCohort}
+          cohortMgmtClient={cohortMgmtClient}
+          open={showDeleteCohortDialog}
+          setMainFeedback={setFeedback}
+          onClose={closeDeleteCohortDialog}
+          setRefetch={setRefetch}
+        />
+      )}
+
+      {showDataQualityDialog && activeCohort && (
+        <DataQualityDialog
+          datasetId={activeDataset.id}
+          cohort={activeCohort}
+          open={showDataQualityDialog}
+          onClose={closeDataQualityDialog}
+        />
+      )}
     </>
   );
 };
