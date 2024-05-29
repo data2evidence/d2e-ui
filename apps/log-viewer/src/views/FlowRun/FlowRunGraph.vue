@@ -7,10 +7,13 @@ import {
   GraphItemSelection,
   RunGraphStateEvent
 } from '@prefecthq/graphs'
-import { getRunsForFlowRun } from '@/api'
-import { FlowRun, GetRunsForFlowRunResponse } from '@/types'
-import { computed, ref } from 'vue'
+import { getFlowRunById, getRunsForFlowRun, getTaskRunById } from '@/api'
+import { FlowRun, GetRunsForFlowRunResponse, TaskRun } from '@/types'
+import { computed, ref, watchEffect } from 'vue'
+import SidePanelFlowRunDetails from './SidePanelFlowRunDetails.vue'
+
 const props = defineProps<{ flowRun?: FlowRun }>()
+const sidePanelData = ref<TaskRun | FlowRun>()
 
 const selectedNode = ref<GraphItemSelection | null>(null)
 const processRunData = (runData: GetRunsForFlowRunResponse): RunGraphData => {
@@ -51,7 +54,6 @@ const config = computed<RunGraphConfig>(() => ({
     const data = await getRunsForFlowRun(flowRunId)
     return processRunData(data)
   },
-  fetchEvents: '',
   styles: {
     colorMode: 'dark',
     textDefault: getColorToken('--p-color-text-default'),
@@ -69,21 +71,43 @@ const config = computed<RunGraphConfig>(() => ({
     })
   }
 }))
+
+watchEffect(() => {
+  selectedNode.value?.kind
+  if (selectedNode.value?.kind === 'flow-run') {
+    const asyncFn = async (id: string) => {
+      const detailsData = await getFlowRunById(id)
+      sidePanelData.value = { ...detailsData }
+    }
+    asyncFn(selectedNode.value.id)
+  } else if (selectedNode.value?.kind === 'task-run') {
+    const asyncFn = async (id: string) => {
+      const detailsData = await getTaskRunById(id)
+      sidePanelData.value = { ...detailsData }
+    }
+    asyncFn(selectedNode.value.id)
+  }
+})
 </script>
 
 <template>
-  <div class="flow-run-graph">
-    <RunGraph
-      class="flow-run-graph__graph p-background run-graph"
-      :config="config"
-      :selected="null"
-      :fullscreen="false"
-      @update:selected="
-        (selected) => {
-          selectedNode = selected
-        }
-      "
-    />
+  <div class="run-graph-container">
+    <div style="width: calc(100% - 100px)">
+      <RunGraph
+        class="flow-run-graph__graph p-background run-graph"
+        :config="config"
+        :selected="selectedNode"
+        :fullscreen="false"
+        @update:selected="
+          (selected) => {
+            selectedNode = selected
+          }
+        "
+      />
+    </div>
+    <div v-if="selectedNode?.kind === 'flow-run' && sidePanelData" style="width: 300px">
+      <SidePanelFlowRunDetails :flowRun="sidePanelData" />
+    </div>
   </div>
 </template>
 
@@ -91,5 +115,8 @@ const config = computed<RunGraphConfig>(() => ({
 .run-graph {
   height: 300px;
   width: 100%;
+}
+.run-graph-container {
+  display: flex;
 }
 </style>

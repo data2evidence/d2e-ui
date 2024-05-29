@@ -78,6 +78,8 @@ export type FlowRun = {
   }
 }
 
+export type TaskRun = FlowRun
+
 export type Mode = 'flowRun' | 'taskRun'
 
 export type Params = {
