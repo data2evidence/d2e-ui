@@ -8,6 +8,7 @@ export interface AppState {
   feedback: FeedbackState | undefined;
   translation: TranslationState;
   activeDataset: DatasetState;
+  postLoginRedirectUri: string | undefined;
 
   // auth data
   token: TokenState;
@@ -24,6 +25,7 @@ export const initialState: AppState = {
     id: "",
     releaseId: "",
   },
+  postLoginRedirectUri: undefined,
   token: {
     idToken: null,
     idTokenClaims: {

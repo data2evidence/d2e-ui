@@ -143,7 +143,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
       } else {
         setVocabSchemaOptions(["cdmvocab"]);
       }
-      handleFormDataChange({ dialect });
+      handleFormDataChange({ dialect, vocabSchemas: [] });
     },
     [handleFormDataChange]
   );
@@ -279,7 +279,6 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         <Box mb={4}>
           <Autocomplete
             multiple
-            freeSolo
             options={vocabSchemaOptions}
             sx={styles}
             id="autocomplete-vocab-schemas"

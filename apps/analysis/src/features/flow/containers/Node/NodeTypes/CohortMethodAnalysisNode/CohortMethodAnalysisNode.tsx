@@ -7,10 +7,6 @@ import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
 import { CohortMethodAnalysisDrawer } from "./CohortMethodAnalysisDrawer";
 import "./CohortMethodAnalysisNode.scss";
 
-interface Covariant {
-  addDescendantsToExclude: boolean;
-}
-
 interface DbCohortMethodDataArgs {
   washoutPeriod: number;
   firstExposureOnly: boolean;
@@ -18,14 +14,21 @@ interface DbCohortMethodDataArgs {
   maxCohortSize: number;
 }
 
-export interface CohortMethodAnalysisNodeData extends NodeDataState {
-  covariant: Covariant;
-  dbCohortMethodDataArgs: DbCohortMethodDataArgs;
+interface FitOutcomeModelArgs {
   modelType: string;
+}
+
+interface PsArgs {
   stopOnError: boolean;
-  // TODO: check the type of :: function in R, how to represent in the UI, currently use string
-  control: string;
-  covariateFilter: string;
+  control: boolean;
+  cvRepetition: number;
+}
+
+export interface CohortMethodAnalysisNodeData extends NodeDataState {
+  analysisId: number;
+  dbCohortMethodDataArgs: DbCohortMethodDataArgs;
+  fitOutcomeModelArgs: FitOutcomeModelArgs;
+  psArgs: PsArgs;
 }
 
 export const CohortMethodAnalysisNode = (
