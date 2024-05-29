@@ -2,7 +2,7 @@
 import { format } from 'date-fns'
 import { FlowRun } from '@/types'
 
-const props = defineProps<{ flowRun?: FlowRun }>()
+defineProps<{ flowRun?: FlowRun }>()
 </script>
 <template>
   <div class="details-container">

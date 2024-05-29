@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const props = defineProps<{ taskRuns: FlowRun[] }>()
+defineProps<{ taskRuns: FlowRun[] }>()
 
 const onClickTaskRunId = (taskRunId: string) => {
   router.push(`/taskrun/${taskRunId}`)
