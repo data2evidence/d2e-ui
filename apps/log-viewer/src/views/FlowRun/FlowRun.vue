@@ -14,12 +14,13 @@ import {
   getTaskRunsByFlowRunId
 } from '@/api'
 import { computed, ref, watchEffect } from 'vue'
-import LogScroller from '../components/LogScroller.vue'
-import { format } from 'date-fns'
-import { PCodeHighlight } from '@prefecthq/prefect-design'
-import { getPortalAPI } from '../utils/portalApi'
+import LogScroller from '../../components/LogScroller.vue'
+import { getPortalAPI } from '../../utils/portalApi'
 import { useRoute, useRouter } from 'vue-router'
 import { RunGraphStateEvent } from '@prefecthq/graphs/dist/types/src/models/states'
+import TaskRuns from './TaskRuns.vue'
+import FlowRunDetails from './FlowRunDetails.vue'
+import FlowRunParameters from './FlowRunParameters.vue'
 
 const { backToJobs } = getPortalAPI()
 const route = useRoute()
@@ -49,10 +50,6 @@ const processRunData = (runData: GetRunsForFlowRunResponse): RunGraphData => {
 
 const onClickTab = (tabName: FlowRunTabName) => {
   selectedTab.value = tabName
-}
-
-const onClickTaskRunId = (taskRunId: string) => {
-  router.push(`/taskrun/${taskRunId}`)
 }
 
 const onClickBackToJobs = () => {
@@ -184,74 +181,9 @@ const config = computed<RunGraphConfig>(() => ({
     </div>
   </div>
   <LogScroller v-if="selectedTab === 'LOGS'" :logs="logs" />
-  <div v-if="selectedTab === 'TASK_RUNS'">
-    <template v-if="taskRuns.length">
-      <template v-for="taskRun in taskRuns" :key="taskRun.id">
-        <div class="task-run-container" @click="onClickTaskRunId(taskRun.id)">
-          <div class="task-run-name">
-            <div>
-              {{ taskRun.name }}
-            </div>
-          </div>
-          <div class="task-run-details">
-            <div
-              :style="`padding: 0px 10px; background-color: ${taskRun.stateType === 'COMPLETED' ? 'green' : 'red'}; color: white; border-radius: 10px`"
-            >
-              {{ taskRun.stateName }}
-            </div>
-            <div style="margin: 0px 20px; color: white">{{ Math.ceil(taskRun.totalRunTime) }}s</div>
-            <div style="color: white">{{ format(taskRun.startTime, 'yyyy/MM/dd h:mm:ss a') }}</div>
-          </div>
-        </div></template
-      >
-    </template>
-    <template v-else><div style="padding: 20px; color: white">No task flows</div></template>
-  </div>
-  <div v-if="selectedTab === 'DETAILS'" class="details-container">
-    <div class="details-attribute">
-      <div>Run Count:</div>
-      <div>{{ flowRun?.runCount }}</div>
-    </div>
-    <div class="details-attribute">
-      <div>Created</div>
-      <div>{{ flowRun?.created && format(flowRun?.created, 'yyyy/MM/dd h:mm:ss a') }}</div>
-    </div>
-    <div class="details-attribute">
-      <div>Last Updated</div>
-      <div>{{ flowRun?.updated && format(flowRun?.updated, 'yyyy/MM/dd h:mm:ss a') }}</div>
-    </div>
-    <div class="details-attribute">
-      <div>Tags</div>
-      <div>{{ flowRun?.tags.length ? flowRun.tags.join(', ') : 'None' }}</div>
-    </div>
-    <div class="details-attribute">
-      <div>Flow Run ID</div>
-      <div>{{ flowRun?.id }}</div>
-    </div>
-    <div class="details-attribute">
-      <div>State Message</div>
-      <div>{{ flowRun?.state?.message || 'None' }}</div>
-    </div>
-    <div class="details-attribute">
-      <div>Flow Version</div>
-      <div>{{ flowRun?.flowVersion }}</div>
-    </div>
-    <div class="details-attribute">
-      <div>Retries</div>
-      <div>{{ flowRun?.empiricalPolicy?.retries }}</div>
-    </div>
-    <div class="details-attribute">
-      <div>Retry Delay</div>
-      <div>{{ flowRun?.empiricalPolicy?.retryDelaySeconds }}s</div>
-    </div>
-  </div>
-  <div class="parameters-container" v-if="selectedTab === 'PARAMETERS'">
-    <p-code-highlight
-      style="overflow-x: auto"
-      lang="json"
-      :text="JSON.stringify(flowRun?.parameters || {}, null, 2)"
-    />
-  </div>
+  <TaskRuns v-if="selectedTab === 'TASK_RUNS'" :taskRuns="taskRuns" />
+  <FlowRunDetails v-if="selectedTab === 'DETAILS'" class="details-container" :flowRun="flowRun" />
+  <FlowRunParameters v-if="selectedTab === 'PARAMETERS'" :flowRun="flowRun" />
 </template>
 
 <style scoped>
@@ -259,7 +191,6 @@ const config = computed<RunGraphConfig>(() => ({
   height: 300px;
   width: 100%;
 }
-
 .tabs {
   height: 50px;
   width: auto;
@@ -275,49 +206,11 @@ const config = computed<RunGraphConfig>(() => ({
   cursor: pointer;
   @apply text-gray-400;
 }
-
 .tab:hover {
   color: white;
 }
 .selected {
   color: white;
   border-bottom: solid grey 5px;
-}
-.task-run-container {
-  background-color: #181818;
-  margin: 0px 20px 10px 20px;
-  border-radius: 10px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  font-size: small;
-  cursor: pointer;
-}
-.task-run-container:hover {
-  background-color: #111;
-}
-.task-run-name {
-  @apply text-blue-400 pb-1;
-  font-size: large;
-}
-.task-run-details {
-  display: flex;
-}
-.details-container {
-  background-color: #181818;
-  color: white;
-  padding: 20px;
-  margin: 0px 20px 10px 20px;
-  border-radius: 10px;
-}
-.details-attribute {
-  margin-bottom: 20px;
-}
-.parameters-container {
-  background-color: #181818;
-  color: white;
-  padding: 20px;
-  margin: 0px 20px 10px 20px;
-  border-radius: 10px;
 }
 </style>

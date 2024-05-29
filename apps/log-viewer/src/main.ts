@@ -6,7 +6,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
-import FlowRun from './views/FlowRun.vue'
+import FlowRun from './views/FlowRun'
 import { createRouter, createWebHistory } from 'vue-router'
 import TaskRun from './views/TaskRun.vue'
 
