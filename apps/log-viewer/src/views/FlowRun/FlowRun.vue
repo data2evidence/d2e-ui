@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FlowRun, FlowRunTabName, LogInfo } from '@/types'
-import { getLogsByFlowRunId, getParametersByFlowRunId, getTaskRunsByFlowRunId } from '@/api'
+import { getLogsByFlowRunId, getFlowRunById, getTaskRunsByFlowRunId } from '@/api'
 import { ref, watchEffect } from 'vue'
 import LogScroller from '../../components/LogScroller.vue'
 import { getPortalAPI } from '../../utils/portalApi'
@@ -33,7 +33,7 @@ watchEffect(() => {
     const asyncFn = async () => {
       const data = await getLogsByFlowRunId(flowRunId)
       logs.value = data
-      const detailsData = await getParametersByFlowRunId(flowRunId)
+      const detailsData = await getFlowRunById(flowRunId)
       flowRun.value = detailsData
       const taskRunsData = await getTaskRunsByFlowRunId(flowRunId)
       taskRuns.value = taskRunsData

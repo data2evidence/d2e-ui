@@ -17,7 +17,7 @@ export const getLogsByFlowRunId = async (flowRunId: string) => {
   return convertKeysToCamelCase<LogInfo[]>(data)
 }
 
-export const getParametersByFlowRunId = async (flowRunId: string) => {
+export const getFlowRunById = async (flowRunId: string) => {
   const { baseUrl, getAuthToken } = getPortalAPI()
   const token = await getAuthToken()
   if (!token) {
