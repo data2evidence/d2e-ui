@@ -4,18 +4,19 @@ import { useBooleanHelper } from "~/features/flow/hooks";
 import { NodeDataState } from "../../../../types";
 import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
-import { TargetComparatorOutcomesDrawer } from "./TargetComparatorOutcomesDrawer";
-import "./TargetComparatorOutcomesNode.scss";
+import { DefaultCovariateSettingsDrawer } from "./DefaultCovariateSettingsDrawer";
+import "./DefaultCovariateSettingsNode.scss";
 
-export interface TargetComparatorOutcomesNodeData extends NodeDataState {
-  targetId: number;
-  comparatorId: number;
-  excludedCovariateConceptIds: string[];
-  includedCovariateConceptIds: string[];
+export interface DefaultCovariateSettingsNodeData extends NodeDataState {
+  excludedCovariateConceptIds?: string[];
+  includedCovariateConceptIds?: string[];
+  addDescendantsToInclude?: boolean;
+  addDescendantsToExclude?: boolean;
+  includedCovariateIds?: string[];
 }
 
-export const TargetComparatorOutcomesNode = (
-  node: NodeProps<TargetComparatorOutcomesNodeData>
+export const DefaultCovariateSettingsNode = (
+  node: NodeProps<DefaultCovariateSettingsNodeData>
 ) => {
   const { data } = node;
   const [settingVisible, openSetting, closeSetting] = useBooleanHelper(false);
@@ -23,8 +24,8 @@ export const TargetComparatorOutcomesNode = (
 
   return (
     <>
-      <NodeLayout<TargetComparatorOutcomesNodeData>
-        className="target-comparator-outcomes-node"
+      <NodeLayout<DefaultCovariateSettingsNodeData>
+        className="default-covariate-settings-node"
         name={data.name}
         onSettingClick={openSetting}
         resultType={data.error ? "error" : "success"}
@@ -33,10 +34,10 @@ export const TargetComparatorOutcomesNode = (
       >
         {data.description}
       </NodeLayout>
-      <TargetComparatorOutcomesDrawer
+      <DefaultCovariateSettingsDrawer
         node={node}
-        title="Configure Target Comparator Outcomes Node"
-        className="target-comparator-outcomes-drawer"
+        title="Configure Default Covariate Settings Node"
+        className="default-covariate-settings-drawer"
         open={settingVisible}
         onClose={closeSetting}
       />

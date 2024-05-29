@@ -1,7 +1,14 @@
 import React, { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { NodeProps } from "reactflow";
-import { Box, TextInput, Autocomplete, TextField } from "@portal/components";
+import {
+  Box,
+  TextInput,
+  Autocomplete,
+  TextField,
+  IconButton,
+  AddSquareIcon,
+} from "@portal/components";
 import { useFormData } from "~/features/flow/hooks";
 import {
   markStatusAsDraft,
@@ -13,6 +20,10 @@ import { RootState, dispatch } from "~/store";
 import { NodeDrawer, NodeDrawerProps } from "../../NodeDrawer/NodeDrawer";
 import { NodeChoiceMap } from "../../NodeTypes";
 import { CharacterizationNodeData } from "./CharacterizationNode";
+import {
+  TimeAtRiskConfigsForm,
+  EMPTY_TIMEATRISK_FORM_DATA,
+} from "./TimeAtRiskConfigsForm/TimeAtRiskConfigsForm";
 import { CONFIGS_USER_INPUT_ARRAY_STYLES } from "../common";
 
 export interface CharacterizationDrawerProps
@@ -31,6 +42,14 @@ const EMPTY_FORM_DATA: FormData = {
   minPriorObservation: 0,
   targetIds: ["1", "2"],
   outcomeIds: ["3", "2"],
+  timeAtRiskConfigs: [
+    {
+      riskWindowStart: 1,
+      riskWindowEnd: 1,
+      startAnchor: "cohort start",
+      endAnchor: "cohort end",
+    },
+  ],
 };
 
 export const CharacterizationDrawer: FC<CharacterizationDrawerProps> = ({
@@ -54,6 +73,7 @@ export const CharacterizationDrawer: FC<CharacterizationDrawerProps> = ({
         minPriorObservation: node.data.minPriorObservation,
         targetIds: node.data.targetIds,
         outcomeIds: node.data.outcomeIds,
+        timeAtRiskConfigs: node.data.timeAtRiskConfigs,
       });
     } else {
       setFormData({
@@ -82,8 +102,45 @@ export const CharacterizationDrawer: FC<CharacterizationDrawerProps> = ({
     onFormDataChange({ outcomeIds: value });
   }, []);
 
+  const handleRemove = useCallback(
+    (indexToRemove: number) => {
+      onFormDataChange({
+        timeAtRiskConfigs: [
+          ...formData.timeAtRiskConfigs.slice(0, indexToRemove),
+          ...formData.timeAtRiskConfigs.slice(indexToRemove + 1),
+        ],
+      });
+    },
+    [formData]
+  );
+
+  const handleChange = useCallback(
+    (
+      indexToUpdate: number,
+      riskWindowStart: number,
+      riskWindowEnd: number,
+      startAnchor: string,
+      endAnchor: string
+    ) => {
+      onFormDataChange({
+        timeAtRiskConfigs: [
+          ...formData.timeAtRiskConfigs.slice(0, indexToUpdate),
+          {
+            ...formData.timeAtRiskConfigs[indexToUpdate],
+            riskWindowStart,
+            riskWindowEnd,
+            startAnchor,
+            endAnchor,
+          },
+          ...formData.timeAtRiskConfigs.slice(indexToUpdate + 1),
+        ],
+      });
+    },
+    [formData]
+  );
+
   return (
-    <NodeDrawer {...props} width="500px" onOk={handleOk} onClose={onClose}>
+    <NodeDrawer {...props} width="800px" onOk={handleOk} onClose={onClose}>
       <Box mb={4}>
         <TextInput
           label="Name"
@@ -165,6 +222,49 @@ export const CharacterizationDrawer: FC<CharacterizationDrawerProps> = ({
             />
           )}
         />
+      </Box>
+      <Box mb={4}>
+        <Box fontWeight="bold" mb={1}>
+          Time At Risk Dataframe Configs
+        </Box>
+        {formData.timeAtRiskConfigs.length !== 0 &&
+          formData.timeAtRiskConfigs.map((data, index) => (
+            <TimeAtRiskConfigsForm
+              key={index}
+              index={index}
+              configs={data}
+              onRemove={() => handleRemove(index)}
+              onChange={(
+                riskWindowStart: number,
+                riskWindowEnd: number,
+                startAnchor: string,
+                endAnchor: string
+              ) =>
+                handleChange(
+                  index,
+                  riskWindowStart,
+                  riskWindowEnd,
+                  startAnchor,
+                  endAnchor
+                )
+              }
+            />
+          ))}
+        <Box mt={2}>
+          <IconButton
+            startIcon={<AddSquareIcon />}
+            title="Add timeAtRisk configuration"
+            onClick={() =>
+              setFormData((prevFormData) => ({
+                ...prevFormData,
+                timeAtRiskConfigs: [
+                  ...prevFormData.timeAtRiskConfigs,
+                  EMPTY_TIMEATRISK_FORM_DATA,
+                ],
+              }))
+            }
+          />
+        </Box>
       </Box>
     </NodeDrawer>
   );
