@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
-import CohortPlugin from "./utils/CohortPlugin";
 import { CohortMgmt } from "../../axios/cohort-mgmt";
 import { useDialogHelper } from "../../hooks";
 import { useTranslation, useFeedback, useActiveDataset } from "../../contexts";
