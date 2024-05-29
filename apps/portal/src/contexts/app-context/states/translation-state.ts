@@ -813,6 +813,8 @@ export const i18nDefault = {
     STUDY_NAV__NO_STUDY: "No study",
     STUDY_NAV__UNTITLED: "Untitled",
     STUDY_OVERVIEW__ACTIONS: "Actions",
+    STUDY_OVERVIEW__ADD_DATASET: "Add dataset",
+    STUDY_OVERVIEW__CHECK_DATAMODEL_UPDATES: "Check for data model updates",
     STUDY_OVERVIEW__DATA_MODEL: "Data model",
     STUDY_OVERVIEW__DATASETS: "Datasets",
     STUDY_OVERVIEW__LATEST_AVAILABLE: "Latest available schema version",
