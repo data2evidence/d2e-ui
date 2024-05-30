@@ -8,7 +8,7 @@ defineProps<{ run: FlowRun | TaskRun; kind: string }>()
 
 <template>
   <div class="details-container">
-    <!-- <div class="flow-run-timeline-sub-flow-run-details__heading" :crumbs="crumbs" /> -->
+    <!-- <div class="" :crumbs="crumbs" /> -->
     <div class="attributes-container">
       <div class="attribute">
         <div>State</div>
@@ -37,10 +37,10 @@ defineProps<{ run: FlowRun | TaskRun; kind: string }>()
 <style scoped>
 .details-container {
   color: white;
-  background-color: #181818;
+  background-color: #1c1d20;
   padding: 20px;
-  margin: 0px 20px 10px 20px;
-  border-radius: 10px;
+  margin: 0px 0px 10px 10px;
+  height: 300px;
 }
 .attributes-container {
   display: flex;

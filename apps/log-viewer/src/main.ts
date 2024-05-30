@@ -1,9 +1,11 @@
 import './assets/main.css'
 import '@prefecthq/graphs/dist/style.css'
 import 'highlight.js/styles/monokai.css'
+import '@prefecthq/prefect-design/dist/style.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { plugin as PrefectDesign } from '@prefecthq/prefect-design'
 
 import App from './App.vue'
 import FlowRun from './views/FlowRun'
@@ -23,6 +25,7 @@ const mountLogViewer = () => {
     const app = createApp(App)
     app.use(createPinia())
     app.use(router)
+    app.use(PrefectDesign)
     app.mount('#log-viewer-main')
   } catch (err) {
     console.log(err)

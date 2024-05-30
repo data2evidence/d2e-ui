@@ -14,6 +14,7 @@ import SidePanelDetails from './SidePanelDetails.vue'
 
 const props = defineProps<{ flowRun?: FlowRun }>()
 const sidePanelData = ref<TaskRun | FlowRun>()
+const fullscreen = ref<boolean>(false)
 
 const selectedNode = ref<GraphItemSelection | null>(null)
 const processRunData = (runData: GetRunsForFlowRunResponse): RunGraphData => {
@@ -92,12 +93,17 @@ watchEffect(() => {
 
 <template>
   <div class="run-graph-container">
-    <div style="width: calc(100% - 100px)">
+    <div style="width: 100%">
       <RunGraph
         class="flow-run-graph__graph p-background run-graph"
         :config="config"
         :selected="selectedNode"
-        :fullscreen="false"
+        :fullscreen="fullscreen"
+        @update:fullscreen="
+          () => {
+            fullscreen = !fullscreen
+          }
+        "
         @update:selected="
           (selected) => {
             selectedNode = selected
@@ -105,7 +111,10 @@ watchEffect(() => {
         "
       />
     </div>
-    <div v-if="selectedNode && sidePanelData" style="width: 500px">
+    <div
+      v-if="selectedNode && sidePanelData"
+      :class="fullscreen ? 'side-panel-float' : 'side-panel'"
+    >
       <SidePanelDetails :kind="selectedNode.kind" :run="sidePanelData" />
     </div>
   </div>
@@ -118,5 +127,17 @@ watchEffect(() => {
 }
 .run-graph-container {
   display: flex;
+}
+.side-panel {
+  width: 500px;
+}
+.side-panel-float {
+  width: 500px;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+.side-panel-float {
+  width: 500px;
 }
 </style>
