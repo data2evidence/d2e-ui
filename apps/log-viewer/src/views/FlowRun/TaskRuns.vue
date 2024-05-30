@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import StateLabel from '@/components/StateLabel.vue'
 import { FlowRun } from '@/types'
 import { format } from 'date-fns'
 import { useRouter } from 'vue-router'
@@ -21,11 +22,7 @@ const onClickTaskRunId = (taskRunId: string) => {
           </div>
         </div>
         <div class="task-run-details">
-          <div
-            :style="`padding: 0px 10px; background-color: ${taskRun.stateType === 'COMPLETED' ? 'green' : 'red'}; color: white; border-radius: 10px`"
-          >
-            {{ taskRun.stateName }}
-          </div>
+          <StateLabel :run="taskRun" />
           <div style="margin: 0px 20px; color: white">{{ Math.ceil(taskRun.totalRunTime) }}s</div>
           <div style="color: white">
             {{ format(taskRun.startTime, 'yyyy/MM/dd h:mm:ss a') }}

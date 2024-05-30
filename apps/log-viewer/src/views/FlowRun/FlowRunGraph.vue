@@ -10,8 +10,7 @@ import {
 import { getFlowRunById, getRunsForFlowRun, getTaskRunById } from '@/api'
 import { FlowRun, GetRunsForFlowRunResponse, TaskRun } from '@/types'
 import { computed, ref, watchEffect } from 'vue'
-import SidePanelFlowRunDetails from './SidePanelFlowRunDetails.vue'
-import SidePanelTaskRunDetails from './SidePanelTaskRunDetails.vue'
+import SidePanelDetails from './SidePanelDetails.vue'
 
 const props = defineProps<{ flowRun?: FlowRun }>()
 const sidePanelData = ref<TaskRun | FlowRun>()
@@ -106,9 +105,8 @@ watchEffect(() => {
         "
       />
     </div>
-    <div v-if="selectedNode && sidePanelData" style="width: 300px">
-      <SidePanelFlowRunDetails v-if="selectedNode.kind === 'flow-run'" :flowRun="sidePanelData" />
-      <SidePanelTaskRunDetails v-if="selectedNode.kind === 'task-run'" :taskRun="sidePanelData" />
+    <div v-if="selectedNode && sidePanelData" style="width: 500px">
+      <SidePanelDetails :kind="selectedNode.kind" :run="sidePanelData" />
     </div>
   </div>
 </template>
