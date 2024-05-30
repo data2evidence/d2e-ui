@@ -129,7 +129,7 @@ watchEffect(() => {
       v-if="selectedNode && sidePanelData"
       :class="fullscreen ? 'side-panel-float' : 'side-panel'"
     >
-      <SidePanelDetails :kind="selectedNode.kind" :run="sidePanelData" />
+      <SidePanelDetails :kind="selectedNode.kind" :run="sidePanelData" :float="fullscreen" />
     </div>
   </div>
 </template>
@@ -148,10 +148,7 @@ watchEffect(() => {
 .side-panel-float {
   width: 500px;
   position: fixed;
-  right: 0;
-  top: 0;
-}
-.side-panel-float {
-  width: 500px;
+  right: 20px;
+  top: 30px;
 }
 </style>

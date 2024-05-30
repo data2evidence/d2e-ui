@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-defineProps<{ run: FlowRun | TaskRun; kind: string }>()
+defineProps<{ run: FlowRun | TaskRun; kind: string; float: boolean }>()
 
 const onClickRunId = (kind: string, id: string) => {
   if (kind === 'flow-run') {
@@ -18,7 +18,7 @@ const onClickRunId = (kind: string, id: string) => {
 </script>
 
 <template>
-  <div class="details-container">
+  <div class="details-container" :style="float ? 'background-color:#36454F' : ''">
     <!-- <div class="" :crumbs="crumbs" /> -->
     <div class="attributes-container">
       <div class="attribute">
