@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { TaskRun, FlowRun } from '@/types'
+import { stateTypeColors } from '@/const'
+import { StateType } from '@prefecthq/graphs'
 
 defineProps<{ run: TaskRun | FlowRun }>()
 </script>
@@ -7,7 +9,7 @@ defineProps<{ run: TaskRun | FlowRun }>()
 <template>
   <div>
     <div
-      :style="`display: inline; padding: 0px 10px; background-color: ${run.stateType === 'COMPLETED' ? 'green' : 'red'}; color: white; border-radius: 10px`"
+      :style="`display: inline; padding: 0px 10px; background-color: ${stateTypeColors[run.stateType as StateType]}; color: white; border-radius: 10px`"
     >
       {{ run.stateName }}
     </div>

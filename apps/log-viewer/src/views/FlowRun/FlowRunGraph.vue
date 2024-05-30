@@ -11,6 +11,7 @@ import { getFlowRunById, getRunsForFlowRun, getTaskRunById } from '@/api'
 import { FlowRun, GetRunsForFlowRunResponse, TaskRun } from '@/types'
 import { computed, nextTick, ref, watchEffect } from 'vue'
 import SidePanelDetails from './SidePanelDetails.vue'
+import { stateTypeColors } from '@/const'
 
 const props = defineProps<{ flowRun?: FlowRun }>()
 const sidePanelData = ref<TaskRun | FlowRun>()
@@ -35,21 +36,6 @@ const processRunData = (runData: GetRunsForFlowRunResponse): RunGraphData => {
   }
   return data
 }
-const stateTypeColors = {
-  COMPLETED: '#219D4B',
-  RUNNING: '#09439B',
-  SCHEDULED: '#E08504',
-  PENDING: '#554B58',
-  FAILED: '#DE0529',
-  CANCELLED: '#333333',
-  CANCELLING: '#333333',
-  CRASHED: '#EA580C',
-  PAUSED: '#554B58'
-} as const
-
-function getColorToken(cssVariable: string): string {
-  return 'white'
-}
 
 const config = computed<RunGraphConfig>(() => ({
   runId: props.flowRun?.id || '',
@@ -59,13 +45,6 @@ const config = computed<RunGraphConfig>(() => ({
   },
   styles: {
     colorMode: 'dark',
-    textDefault: getColorToken('--p-color-text-default'),
-    textInverse: getColorToken('--p-color-text-inverse'),
-    nodeToggleBorderColor: getColorToken('--p-color-button-default-border'),
-    selectedBorderColor: getColorToken('--p-color-flow-run-graph-node-selected-border'),
-    edgeColor: getColorToken('--p-color-flow-run-graph-edge'),
-    guideLineColor: getColorToken('--p-color-divider'),
-    guideTextColor: getColorToken('--p-color-text-subdued'),
     node: (node: RunGraphNode) => ({
       background: stateTypeColors[node.state_type]
     }),
@@ -108,7 +87,7 @@ watchEffect(() => {
   <div class="run-graph-container">
     <div style="width: 100%">
       <RunGraph
-        class="flow-run-graph__graph p-background run-graph"
+        class="p-background run-graph"
         :config="config"
         :selected="selectedNode"
         :fullscreen="fullscreen"
