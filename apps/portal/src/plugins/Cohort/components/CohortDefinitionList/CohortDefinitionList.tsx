@@ -133,7 +133,10 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgm
                     </TableCell>
                     <TableCell>{cohort.owner}</TableCell>
                     <TableCell className="col-action">
-                      <Button onClick={() => handleDataQualityButtonPress(cohort)} text="Data Quality" />
+                      <Button
+                        onClick={() => handleDataQualityButtonPress(cohort)}
+                        text={getText(i18nKeys.JOB_RUN_BUTTONS__RUN_DATA_QUALITY)}
+                      />
                     </TableCell>
                     <TableCell className="col-action">
                       <div className="table-button-container">

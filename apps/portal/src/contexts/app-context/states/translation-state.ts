@@ -391,7 +391,7 @@ export const i18nDefault = {
     DQD__OVERVIEW: "Overview",
     DQD__REFRESH: "Refresh Table",
     DQD__SELECT: "Select a Study to view {0} results",
-    DQD_COMBINED_RESULTS__DETAIL: "DETAIL",
+    DQD_COMBINED_RESULTS__DETAIL: "Detail",
     DQD_COMBINED_RESULTS__LOADER_1: "Loading DQD Overview",
     DQD_COMBINED_RESULTS__LOADER_2: "Loading DQD Results",
     DQD_COMBINED_RESULTS__LOADER_MESSAGE_1: "Error loading DQD Overview",
