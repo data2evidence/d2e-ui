@@ -9,12 +9,14 @@ import {
 } from '@prefecthq/graphs'
 import { getFlowRunById, getRunsForFlowRun, getTaskRunById } from '@/api'
 import { FlowRun, GetRunsForFlowRunResponse, TaskRun } from '@/types'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, nextTick, ref, watchEffect } from 'vue'
 import SidePanelDetails from './SidePanelDetails.vue'
 
 const props = defineProps<{ flowRun?: FlowRun }>()
 const sidePanelData = ref<TaskRun | FlowRun>()
 const fullscreen = ref<boolean>(false)
+const flowRunId = ref<string>()
+const showGraph = ref(false)
 
 const selectedNode = ref<GraphItemSelection | null>(null)
 const processRunData = (runData: GetRunsForFlowRunResponse): RunGraphData => {
@@ -73,6 +75,17 @@ const config = computed<RunGraphConfig>(() => ({
   }
 }))
 
+watchEffect(async () => {
+  if (flowRunId.value !== props.flowRun?.id) {
+    showGraph.value = false
+    await nextTick()
+    flowRunId.value = props.flowRun?.id
+    showGraph.value = true
+    sidePanelData.value = undefined
+    fullscreen.value = false
+  }
+})
+
 watchEffect(() => {
   selectedNode.value?.kind
   if (selectedNode.value?.kind === 'flow-run') {
@@ -109,6 +122,7 @@ watchEffect(() => {
             selectedNode = selected
           }
         "
+        v-if="showGraph"
       />
     </div>
     <div
