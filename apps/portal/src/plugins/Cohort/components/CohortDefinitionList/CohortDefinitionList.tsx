@@ -28,8 +28,7 @@ dayjs.extend(customParseFormat);
 const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgmtClient, refetch, setRefetch }) => {
   const { getText, i18nKeys } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<any[]>([]);
-  const [cohortDefinitionCount, setCohortDefinitionCount] = useState(0);
+  const [data, setData] = useState<CohortMapping[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
   const { setFeedback } = useFeedback();
@@ -41,17 +40,13 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgm
   const { activeDataset } = useActiveDataset();
 
   useEffect(() => {
-    // Fetch all cohorts
     setIsLoading(true);
     const fetchData = async () => {
       if (userId) {
         try {
-          // Get all cohorts based on pagination
-          const result = await cohortMgmtClient.getCohorts(page * rowsPerPage, rowsPerPage);
+          const result = await cohortMgmtClient.getCohorts();
           setData(result.data);
-          setCohortDefinitionCount(result.cohortDefinitionCount);
         } catch (err) {
-          console.error(err);
           setFeedback({
             type: "error",
             message: getText(i18nKeys.COHORT_DEFINITION_LIST__ERROR_OCCURRED),
@@ -157,7 +152,7 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgm
         </TableContainer>
         <TablePagination
           component="div"
-          count={cohortDefinitionCount}
+          count={Object.keys(data).length}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
