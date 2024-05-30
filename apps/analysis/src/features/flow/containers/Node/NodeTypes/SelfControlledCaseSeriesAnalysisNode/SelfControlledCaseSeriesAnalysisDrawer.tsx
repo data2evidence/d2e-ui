@@ -25,6 +25,7 @@ interface FormData extends SelfControlledCaseSeriesAnalysisNodeData {}
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "SCCS age 18-",
+  analysisId: undefined,
   dbSccsDataArgs: {
     studyStartDate: "",
     studyEndDate: "",
@@ -61,6 +62,7 @@ export const SelfControlledCaseSeriesAnalysisDrawer: FC<
       setFormData({
         name: node.data.name,
         description: node.data.description,
+        analysisId: node.data.analysisId,
         dbSccsDataArgs: node.data.dbSccsDataArgs,
         sccsIntervalDataArgs: node.data.sccsIntervalDataArgs,
         fitSccsModelArgs: node.data.fitSccsModelArgs,
@@ -103,6 +105,16 @@ export const SelfControlledCaseSeriesAnalysisDrawer: FC<
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             onFormDataChange({ description: e.target.value })
           }
+        />
+      </Box>
+      <Box mb={4}>
+        <TextInput
+          label="Analysis ID"
+          value={formData.analysisId}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onFormDataChange({ analysisId: e.target.value })
+          }
+          type="number"
         />
       </Box>
       <Box mb={4} border={"0.5px solid grey"} padding={"20px"}>
