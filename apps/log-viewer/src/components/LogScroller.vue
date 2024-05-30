@@ -56,8 +56,7 @@ const getLocaleTimestamp = (timestamp: string) => {
 
 <style scoped>
 .virtual-scroller {
-  @apply border
-  overflow-auto
+  @apply overflow-auto
   max-h-[calc(100vh-72px-56px-24px)];
 }
 .code-block {
