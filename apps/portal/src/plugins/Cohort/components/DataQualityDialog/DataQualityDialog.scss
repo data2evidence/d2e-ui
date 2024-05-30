@@ -5,10 +5,15 @@
   }
 
   &__content {
+    min-height: 250px;
     padding: 1.5em;
     overflow: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  &__table {
+    width: 100%;
   }
 }

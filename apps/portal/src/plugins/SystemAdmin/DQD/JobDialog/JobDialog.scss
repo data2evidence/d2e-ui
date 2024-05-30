@@ -4,11 +4,8 @@
     overflow: auto;
   }
 
-  .button-group-actions {
+  &__button-groups {
     padding: 1.5em;
-  }
-
-  .button-group-actions > * {
-    padding: 6px 0;
+    display: flex;
   }
 }

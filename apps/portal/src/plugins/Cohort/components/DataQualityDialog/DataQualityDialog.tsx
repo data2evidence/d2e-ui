@@ -101,25 +101,27 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
           />
         </div>
 
-        {loadingLatestFlowRun ? (
-          <Loader text={getText(i18nKeys.DATA_QUALITY_DIALOG__LOAD_LATEST_RUN)} />
-        ) : errorLatestFlowRun ? (
-          <div>{errorLatestFlowRun.message}</div>
-        ) : latestFlowRun ? (
-          renderDataQualityJobState()
-        ) : (
-          <SubTitle>{getText(i18nKeys.DATA_QUALITY_DIALOG__NO_JOB_FOUND)}</SubTitle>
-        )}
-
-        <JobDialog
-          jobRunType={JobRunTypes.DQD}
-          datasetId={datasetId}
-          cohortDefinitionId={cohort.id.toString()}
-          handleGenerateJob={handleGenerateJob}
-          open={showJobDialog}
-          onClose={closeJobDialog}
-        />
+        <div className="results-dialog__table">
+          {loadingLatestFlowRun ? (
+            <Loader text={getText(i18nKeys.DATA_QUALITY_DIALOG__LOAD_LATEST_RUN)} />
+          ) : errorLatestFlowRun ? (
+            <div>{errorLatestFlowRun.message}</div>
+          ) : latestFlowRun ? (
+            renderDataQualityJobState()
+          ) : (
+            <SubTitle>{getText(i18nKeys.DATA_QUALITY_DIALOG__NO_JOB_FOUND)}</SubTitle>
+          )}
+        </div>
       </div>
+
+      <JobDialog
+        jobRunType={JobRunTypes.DQD}
+        datasetId={datasetId}
+        cohortDefinitionId={cohort.id.toString()}
+        handleGenerateJob={handleGenerateJob}
+        open={showJobDialog}
+        onClose={closeJobDialog}
+      />
     </Dialog>
   );
 };

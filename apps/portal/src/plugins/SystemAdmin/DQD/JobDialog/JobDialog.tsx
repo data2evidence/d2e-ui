@@ -94,31 +94,30 @@ const JobDialog: FC<JobDialogProps> = ({
         {datasetDialect === "hana" ? (
           <ReleaseSelector datasetId={datasetId} handleReleaseSelect={handleReleaseSelect} />
         ) : null}
-        <div className="job-dialog__edit-input u-padding-vertical--normal">
-          {/* @ts-ignore */}
-          <d4l-input
-            value={comment}
-            label={getText(i18nKeys.JOB_DIALOG__COMMENT)}
-            required
-            // @ts-ignore
-            ref={webComponentWrapper({
-              handleInput: (event: UsefulEvent) => {
-                setComment(event.target.value);
-              },
-            })}
-          />
+
+        {/* @ts-ignore */}
+        <d4l-input
+          value={comment}
+          label={getText(i18nKeys.JOB_DIALOG__COMMENT)}
+          required
+          // @ts-ignore
+          ref={webComponentWrapper({
+            handleInput: (event: UsefulEvent) => {
+              setComment(event.target.value);
+            },
+          })}
+        />
+
+        <div className="job-dialog__button-groups">
+          {isLoading ? (
+            <Loader text={getText(i18nKeys.JOB_DIALOG__GENERATING_JOB)} />
+          ) : (
+            <>
+              <Button text={getText(i18nKeys.JOB_DIALOG__GENERATE)} onClick={runJob} disabled={isLoading} />
+              <Button text={getText(i18nKeys.JOB_DIALOG__CANCEL)} onClick={handleClose} variant="outlined" />
+            </>
+          )}
         </div>
-      </div>
-      <Divider />
-      <div className="button-group-actions">
-        {isLoading ? (
-          <Loader text={getText(i18nKeys.JOB_DIALOG__GENERATING_JOB)} />
-        ) : (
-          <>
-            <Button text={getText(i18nKeys.JOB_DIALOG__GENERATE)} onClick={runJob} block disabled={isLoading} />
-            <Button text={getText(i18nKeys.JOB_DIALOG__CANCEL)} onClick={handleClose} variant="outlined" block />
-          </>
-        )}
       </div>
     </Dialog>
   );
