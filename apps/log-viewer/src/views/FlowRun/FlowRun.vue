@@ -83,10 +83,12 @@ watchEffect(() => {
       </div>
     </div>
   </div>
-  <LogScroller v-if="selectedTab === 'LOGS'" :logs="logs" />
-  <TaskRuns v-if="selectedTab === 'TASK_RUNS'" :taskRuns="taskRuns" />
-  <FlowRunDetails v-if="selectedTab === 'DETAILS'" class="details-container" :flowRun="flowRun" />
-  <FlowRunParameters v-if="selectedTab === 'PARAMETERS'" :flowRun="flowRun" />
+  <div class="info-container">
+    <LogScroller v-if="selectedTab === 'LOGS'" :logs="logs" />
+    <TaskRuns v-if="selectedTab === 'TASK_RUNS'" :taskRuns="taskRuns" />
+    <FlowRunDetails v-if="selectedTab === 'DETAILS'" class="details-container" :flowRun="flowRun" />
+    <FlowRunParameters v-if="selectedTab === 'PARAMETERS'" :flowRun="flowRun" />
+  </div>
 </template>
 
 <style scoped>
@@ -96,6 +98,7 @@ watchEffect(() => {
   justify-content: space-between;
   align-items: center;
   padding: 0px 20px;
+  height: 30px;
 }
 .tabs-container {
   display: flex;
@@ -103,6 +106,7 @@ watchEffect(() => {
   justify-content: space-between;
   align-items: center;
   padding: 0px 20px;
+  height: 56px;
 }
 .tabs {
   height: 50px;
@@ -125,5 +129,9 @@ watchEffect(() => {
 .selected-tab {
   color: white;
   border-bottom: solid grey 5px;
+}
+.info-container {
+  height: calc(100% - 30px - 56px - 300px);
+  overflow-y: auto;
 }
 </style>
