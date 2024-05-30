@@ -15,11 +15,27 @@ const onClickRunId = (kind: string, id: string) => {
     router.push(`/taskrun/${id}`)
   }
 }
+const emit = defineEmits<{
+  (event: 'update:run'): void
+}>()
+const onClickClose = () => {
+  emit('update:run')
+}
 </script>
 
 <template>
-  <div class="details-container" :style="float ? 'background-color:#36454F' : ''">
-    <!-- <div class="" :crumbs="crumbs" /> -->
+  <div class="details-container" :style="float ? 'background-color:#36454F;' : ''">
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 10px;
+      "
+    >
+      <div style="font-size: 16px">{{ run.name }}</div>
+      <div style="cursor: pointer" @click="onClickClose">X</div>
+    </div>
     <div class="attributes-container">
       <div class="attribute">
         <div>State</div>
@@ -49,9 +65,11 @@ const onClickRunId = (kind: string, id: string) => {
 .details-container {
   color: white;
   background-color: #1c1d20;
-  padding: 20px;
-  margin: 0px 0px 10px 10px;
+  padding: 15px;
+  margin-left: 10px;
   height: 300px;
+  overflow-y: auto;
+  font-size: 12px;
 }
 .attributes-container {
   display: flex;
