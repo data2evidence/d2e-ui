@@ -55,7 +55,7 @@ const onClickClose = () => {
       </div>
       <div class="attribute">
         <div>Tags</div>
-        <div>{{ run.tags }}</div>
+        <div>{{ run.tags.length ? run.tags.join(', ') : 'None' }}</div>
       </div>
     </div>
   </div>
