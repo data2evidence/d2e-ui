@@ -219,4 +219,12 @@ export class Dataflow {
       method: "GET",
     });
   }
+
+  public getFlowRunState(flowId: string) {
+    return request({
+      baseURL: DATAFLOW_MGMT_URL,
+      url: `prefect/flow-run/${flowId}/state`,
+      method: "GET",
+    });
+  }
 }

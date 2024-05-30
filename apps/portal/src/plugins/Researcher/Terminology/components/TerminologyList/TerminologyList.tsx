@@ -402,7 +402,10 @@ const TerminologyList: FC<TerminologyListProps> = ({
           return (
             <div
               style={{ display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}
-              onClick={() => onClickAddRemoveButton(terminology)}
+              onClick={(event) => {
+                event.stopPropagation();
+                onClickAddRemoveButton(terminology);
+              }}
             >
               {isSelected ? <RemoveIcon /> : <AddIcon />}
             </div>
@@ -484,9 +487,6 @@ const TerminologyList: FC<TerminologyListProps> = ({
     enablePagination: false, // Use TablePagination instead of built in
     muiTableBodyRowProps: ({ row, staticRowIndex }) => ({
       onClick: () => {
-        if (isConceptSet) {
-          return;
-        }
         const terminology = row.original;
         onConceptClick(terminology.conceptId);
       },
@@ -499,7 +499,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
               : staticRowIndex % 2
               ? "#edf2f7  !important"
               : "transparent !important",
-          cursor: selectedConceptId === row.original.conceptId || isConceptSet ? "auto" : "pointer",
+          cursor: selectedConceptId === row.original.conceptId ? "auto" : "pointer",
         },
         "&.MuiTableRow-root:hover": {
           backgroundColor: "#ccdef1 !important",

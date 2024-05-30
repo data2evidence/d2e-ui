@@ -52,15 +52,23 @@
   &__actions {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     .studyoverview__actions-title {
-      flex: 1;
       font-size: 20px;
       font-weight: 500;
     }
 
-    .alp-button {
-      min-width: 180px;
+    .studyoverview__actions-btn-container {
+      display: flex;
+      justify-content: space-between;
+      .alp-button__container:first-child {
+        margin-right: 0.5rem;
+      }
+
+      .alp-button {
+        min-width: 180px;
+      }
     }
   }
 
