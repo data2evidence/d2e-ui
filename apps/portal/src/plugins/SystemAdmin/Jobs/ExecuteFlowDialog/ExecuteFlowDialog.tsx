@@ -1,11 +1,14 @@
-import React, { FC, useCallback, useState, useEffect } from "react";
+import React, { FC, useCallback, useState, useEffect, ChangeEvent } from "react";
 import { Button, Dialog, FormControl, TextField } from "@portal/components";
 import { Feedback, CloseDialogType, Flow } from "../../../../types";
 import Divider from "@mui/material/Divider";
 import { api } from "../../../../axios/api";
 import { useTranslation } from "../../../../contexts";
 import { getParameters, getProperties } from "../../../../utils";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup, FormControlLabel, RadioGroup, Radio } from "@mui/material";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 import JSONEditor from "../JSONEditor/JSONEditor";
 import ParamsForm from "../ParamsForm/ParamsForm";
 import "./ExecuteFlowDialog.scss";
@@ -25,6 +28,11 @@ enum ParamType {
   JSON = "json",
 }
 
+enum FlowRunType {
+  NOW = "NOW",
+  SCHEDULE = "SCHEDULE",
+}
+
 const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) => {
   const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormDataField>({});
@@ -35,6 +43,8 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   const [flowRunName, setFlowRunName] = useState("");
   const [flowRunNameError, setFlowRunNameError] = useState(false);
   const [paramType, setParamType] = useState(ParamType.Field);
+  const [schedule, setSchedule] = useState<Dayjs | null>(dayjs());
+  const [flowRunType, setFlowRunType] = useState<string>(FlowRunType.NOW);
   const [errors, setErrors] = useState<string[]>([]);
   const flowName = flow?.name || "";
 
@@ -186,6 +196,18 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     }
   }, [deploymentName, flowName, flowRunName, formData, formDataIsEmpty, handleClose, validateFormData, getText]);
 
+  const handleScheduleChange = useCallback((date: Dayjs | null) => {
+    if (date) {
+      setSchedule(dayjs(date));
+    } else {
+      setSchedule(null);
+    }
+  }, []);
+
+  const handleFlowRunTypeChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setFlowRunType(event.target.value);
+  }, []);
+
   return (
     <Dialog
       className="execute-flow-dialog"
@@ -239,6 +261,29 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
             <JSONEditor value={formData} onChange={handleJSONChange}></JSONEditor>
           </div>
         )}
+        <>
+          <span className="subheader">{getText(i18nKeys.EXECUTE_FLOWDIALOG__SCHEDULE)}</span>
+          <RadioGroup name="flowruntype" value={flowRunType} onChange={handleFlowRunTypeChange}>
+            <FormControlLabel
+              value="NOW"
+              control={<Radio />}
+              label={getText(i18nKeys.EXECUTE_FLOWDIALOG__RUN_IMMEDIATELY)}
+            />
+            <FormControlLabel
+              value="SCHEDULE"
+              control={<Radio />}
+              label={getText(i18nKeys.EXECUTE_FLOWDIALOG__RUN_SCHEDULE)}
+            />
+          </RadioGroup>
+
+          {flowRunType === FlowRunType.SCHEDULE && (
+            <div className="u-padding-vertical--normal">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker label="Job Run Schedule" defaultValue={schedule} onChange={handleScheduleChange} />
+              </LocalizationProvider>
+            </div>
+          )}
+        </>
       </div>
 
       <Divider />
