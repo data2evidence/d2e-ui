@@ -4,7 +4,6 @@ import os
 from pyqe.api.base import _AuthApi
 from pyqe.setup import setup_simple_console_log
 from pyqe.shared import decorator
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 setup_simple_console_log()
@@ -15,5 +14,9 @@ class Study(_AuthApi):
         super().__init__()
 
     def get_user_study_list(self):
-        response = self._get('api/services/userStudies', {})
+        study_url = os.getenv('PYQE_STUDY_URL')
+        params = {
+            'role': 'researcher'
+            }
+        response = self._get('dataset/list', params, basePath= study_url)
         return json.loads(response.text)

@@ -22,17 +22,17 @@ class _Api():
         self._load_environment_variables()
         self._session = requests
 
-    def _get(self, path: str, params=None, **kwargs) -> requests.Response:
+    def _get(self, path: str, params=None, basePath: str = None, **kwargs) -> requests.Response:
         """Request HTTP GET method"""
-
-        url = urljoin(str(self._base_url), str(path))
+        
+        url = urljoin(str(self._base_url) if basePath == None or basePath == '' else str(basePath), str(path))
         logger.debug(f'GET {url}')
 
-        # if os.getenv('PYQE_URL') in url:
-        #     response = self._session.get(
-        #         url, params=params, timeout=self._timeout, verify=self._pyqe_tls_ca_cert_path, **kwargs)
-        # else:
-        response = self._session.get(url, params=params, timeout=self._timeout, **kwargs)
+        if os.getenv('PYQE_URL') in url:
+            response = self._session.get(
+                url, params=params, timeout=self._timeout, verify=self._pyqe_tls_ca_cert_path, **kwargs)
+        else:
+            response = self._session.get(url, params=params, timeout=self._timeout, **kwargs)
 
         response.raise_for_status()
         return response
@@ -42,11 +42,11 @@ class _Api():
         url = urljoin(str(self._base_url), str(path))
         logger.debug(f'GET {url}')
 
-        # if os.getenv('PYQE_URL') in url:
-        #     return self._session.get(
-        #         url, params=params, timeout=self._timeout, verify=self._pyqe_tls_ca_cert_path, stream=True, **kwargs)
-        # else:
-        return self._session.get(
+        if os.getenv('PYQE_URL') in url:
+            return self._session.get(
+                url, params=params, timeout=self._timeout, verify=self._pyqe_tls_ca_cert_path, stream=True, **kwargs)
+        else:
+            return self._session.get(
                 url, params=params, timeout=self._timeout, stream=True, **kwargs)
 
     def _post(self, path: str, json=None, data=None, **kwargs) -> requests.Response:
@@ -151,9 +151,9 @@ class _AuthApi(_Api):
     def _create_authorization_header(self):
         return {'Authorization': f'{self.id_token}'}
     
-    def _get(self, path: str, params=None, **kwargs) -> requests.Response:
+    def _get(self, path: str, params=None, basePath: str = None, **kwargs) -> requests.Response:
         try:
-            response = super()._get(path, params=params, **kwargs)
+            response = super()._get(path, params=params, basePath=basePath, **kwargs)
             return response
         except requests.HTTPError as e:
             self._validate_response(e.response)

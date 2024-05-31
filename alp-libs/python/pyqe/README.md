@@ -32,6 +32,9 @@ Documentation for getting started can be viewed at `Getting_started_guide.md`.
   ```
   # PYQE WEB API INSTANCE CONNECTION
   PYQE_URL="http://localhost:41100/analytics-svc/"
+
+  # PYQE STUDY WEB API INSTANCE CONNECTION
+  PYQE_URL="https://localhost:41100/system-portal/"
   ```
 - Run tests
   ```bash
@@ -39,10 +42,6 @@ Documentation for getting started can be viewed at `Getting_started_guide.md`.
   pytest
   ```
 - view additional info below for setting up vscode
-
-# CFUAA Authentication
-- navigate to `/pyqe/settings.yaml`
-- set `cfuaa` to `true`
 
 # Connecting to the backend
 

@@ -8,12 +8,13 @@ from test.mock_object import MockResponse
 @pytest.fixture
 def setup(monkeypatch):
     monkeypatch.setenv('PYQE_URL', 'http://pyqe.url')
+    monkeypatch.setenv('PYQE_STUDY_URL', 'http://pyqe.url')
     monkeypatch.setenv('PYQE_AUTH_TYPE', '0')
     monkeypatch.setenv('PYQE_TLS_CLIENT_CA_CERT_PATH', 'empty')
     monkeypatch.setattr(_Api, '_delete', _delete_cohort)
     monkeypatch.setattr(_Api, '_get', _get_all_cohorts)
     monkeypatch.setattr(_Api, '_post', _create_cohort)
-    monkeypatch.setenv('ID_TOKEN', 'Bearer eyJhbGciOiJFUzM4NCIsInR5cCI6ImF0K2p3dCIsImtpZCI6IjhUMHp1NGJRQ0VmVzgyaGVBUE03X25LbDR1UWFiN05KRTR2MzcwQ2loM0EifQ.eyJqdGkiOiJ5a05hQ2JVdEZEcG5ubThvU0ppd20iLCJzdWIiOiJoczJnbDF5bmc4MWoiLCJpYXQiOjE3MTU3NTU2ODAsImV4cCI6MTcxNTc1OTI4MCwic2NvcGUiOiIiLCJjbGllbnRfaWQiOiIxZDZ3dXlkYW55YWl5cGJrY2h4enUiLCJpc3MiOiJodHRwczovL2hvc3QuZG9ja2VyLmludGVybmFsOjMwMDEvb2lkYyIsImF1ZCI6Imh0dHBzOi8vYWxwLWRlZmF1bHQifQ.uIgi-MXvryUxuAeQyHJiWnJaUEqNkkqyHL50ROjd4yyxc4RQvUrboOJfSUzCJFFIKIlE0Ptc_gIuvCVRPqDRTvHwzUWbpYE0viMpZAWYxDura-e3C0B03wwxnnJydIhT')
+    monkeypatch.setenv('ID_TOKEN', 'Bearer eyJhbGciOiJFUzM4NCIsInR5cCI6ImF0K2p3dCIsImtpZCI6IjhUMHp1NGJRQ0VmVzgyaGVBUE03X25LbDR1UWFiN05KRTR2MzcwQ2loM0EifQ.eyJqdGkiOiJ3OXJjeURiRGczZ0pyS0xZM01Ka28iLCJzdWIiOiJoczJnbDF5bmc4MWoiLCJpYXQiOjE3MTY4ODM5OTIsImV4cCI6MTcxNjg4NzU5Miwic2NvcGUiOiIiLCJjbGllbnRfaWQiOiIxZDZ3dXlkYW55YWl5cGJrY2h4enUiLCJpc3MiOiJodHRwczovL2hvc3QuZG9ja2VyLmludGVybmFsOjMwMDEvb2lkYyIsImF1ZCI6Imh0dHBzOi8vYWxwLWRlZmF1bHQifQ.3Bu9WIMGId9kOOgL-vPzi4r6pJlzMK9tVDDI6B8xoC--lf_i9zCf-aJ5DTU_FmRJSghgs6paACjZr5mU_jTGhI0px6NIVednFzL6eS6rgwOVxASRWB1sAwzS66hKRztm')
 
 
 def test_init_cohort(setup, monkeypatch):
@@ -108,7 +109,7 @@ COHORT_DEFINITION = {'mriquery': 'eJxTSs7PyC8qCUotLE0tLlECAC2ABb0=',
                      'owner': 'hs2gl1yng81j'}
 
 
-def _get_all_cohorts(auth_api, path, params):
+def _get_all_cohorts(auth_api, path, params, basePath):
 
     assert params == PARAMS
     if path == GET_ALL_COHORTS_PATH:
