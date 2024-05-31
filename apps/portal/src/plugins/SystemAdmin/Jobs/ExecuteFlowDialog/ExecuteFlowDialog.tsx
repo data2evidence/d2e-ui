@@ -43,7 +43,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   const [flowRunName, setFlowRunName] = useState("");
   const [flowRunNameError, setFlowRunNameError] = useState(false);
   const [paramType, setParamType] = useState(ParamType.Field);
-  const [schedule, setSchedule] = useState<Dayjs | null>(dayjs());
+  const [schedule, setSchedule] = useState<Dayjs | null>(null);
   const [flowRunType, setFlowRunType] = useState<string>(FlowRunType.NOW);
   const [errors, setErrors] = useState<string[]>([]);
   const flowName = flow?.name || "";
@@ -135,6 +135,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
 
   const validateFormData = useCallback(() => {
     let errorsArr: string[] = [];
+    let isInvalidDate = false;
 
     if (flowRunName === "") {
       setFlowRunNameError(true);
@@ -152,9 +153,14 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
         }
       }
     }
+
+    // Empty and past time is not allowed
+    if (flowRunType === FlowRunType.SCHEDULE && (!schedule || schedule.isAfter(dayjs()))) {
+      isInvalidDate = true;
+    }
     setErrors(errorsArr);
-    return errors.length !== 0 || flowRunName === "";
-  }, [flowRunName, formData, errors]);
+    return errors.length !== 0 || flowRunName === "" || isInvalidDate;
+  }, [flowRunName, formData, errors, flowRunType, schedule]);
 
   function hasError(property: Record<string, any>, form: Record<string, any>) {
     if (property.type === "boolean") {
@@ -279,7 +285,12 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
           {flowRunType === FlowRunType.SCHEDULE && (
             <div className="u-padding-vertical--normal">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker label="Job Run Schedule" defaultValue={schedule} onChange={handleScheduleChange} />
+                <DateTimePicker
+                  label="Job Run Schedule"
+                  defaultValue={schedule}
+                  onChange={handleScheduleChange}
+                  disablePast
+                />
               </LocalizationProvider>
             </div>
           )}
