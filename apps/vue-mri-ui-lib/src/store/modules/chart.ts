@@ -175,29 +175,35 @@ const actions = {
   },
   downloadZIP({ state, dispatch, rootGetters }, additionalParameter) {
     const getAllColumns = () => {
-      const interactionPaths = rootGetters.getColumnSelectionMenu
-        .map(menu => {
-          if (
-            menu.path?.startsWith('patient.interactions.Consent') ||
-            menu.path?.startsWith('patient.interactions.questionnaire') ||
-            menu.path?.startsWith('patient.interactions.ptoken') ||
-            // TODO: temp here as it fails
-            menu.path?.startsWith('patient.interactions.proc')
-          ) {
-            return
-          }
-          return menu.path
-        })
-        .filter(path => path)
-      const allColumnPaths = []
+      const interactionPaths = rootGetters.getColumnSelectionMenu.map(menu => menu.path).filter(path => path)
+      const allInteractionAttributePaths = []
       interactionPaths.forEach((path: string) => {
-        allColumnPaths.push(
-          rootGetters.getColumnSelectionMenuByPath(path).subMenu.forEach(sm => {
+        allInteractionAttributePaths.push(
+          rootGetters.getColumnSelectionMenuByPath(path)?.subMenu.forEach(sm => {
             if (sm.data.oInternalConfigAttribute.type !== 'conceptSet') {
-              allColumnPaths.push(sm.path)
+              allInteractionAttributePaths.push(sm.path)
             }
           })
         )
+      })
+
+      const allBasicAttributePaths = rootGetters.getMriFrontendConfig
+        .getPatientListConfig()
+        .getBasicDataCols()
+        .attributes.map(attr => attr.sConfigPath)
+      allInteractionAttributePaths.concat(allBasicAttributePaths)
+      const allColumnPaths = allBasicAttributePaths.concat(allInteractionAttributePaths).filter(path => {
+        if (
+          !path ||
+          path.startsWith('patient.interactions.Consent') ||
+          path.startsWith('patient.interactions.questionnaire') ||
+          path.startsWith('patient.interactions.ptoken') ||
+          path.startsWith('patient.interactions.proc') ||
+          path.startsWith('patient.attributes.ethnicitysourcevalue')
+        ) {
+          return false
+        }
+        return true
       })
       additionalParameter.cohortDefinition.columns = allColumnPaths
         .map(path => {
@@ -235,7 +241,6 @@ const actions = {
         params = rootGetters.getBookmarksData
       }
       const url = zipEndpoints[state.layout.activeChart]
-
       try {
         entityColumns = splitEntitiesByColumns(params.cohortDefinition.columns)
       } catch (e) {
