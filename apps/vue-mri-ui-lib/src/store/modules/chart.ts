@@ -193,14 +193,7 @@ const actions = {
         .attributes.map(attr => attr.sConfigPath)
       allInteractionAttributePaths.concat(allBasicAttributePaths)
       const allColumnPaths = allBasicAttributePaths.concat(allInteractionAttributePaths).filter(path => {
-        if (
-          !path ||
-          path.startsWith('patient.interactions.Consent') ||
-          path.startsWith('patient.interactions.questionnaire') ||
-          path.startsWith('patient.interactions.ptoken') ||
-          path.startsWith('patient.interactions.proc') ||
-          path.startsWith('patient.attributes.ethnicitysourcevalue')
-        ) {
+        if (!path) {
           return false
         }
         return true
