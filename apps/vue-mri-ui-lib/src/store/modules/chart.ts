@@ -35,6 +35,7 @@ const state = {
 
   zipFireDownload: '',
   zipDownloadCompleted: false,
+  columnsToInclude: 'SELECTED',
 
   // fire chart request
   fireRequest: false,
@@ -254,9 +255,10 @@ const actions = {
     commit(types.CSV_DOWNLOAD_COMPLETED, { csvDownloadCompleted: false })
     commit(types.CHART_CSV_DOWNLOAD, Math.random())
   },
-  setFireDownloadZIP({ commit }) {
+  setFireDownloadZIP({ commit }, { columnsToInclude }) {
     commit(types.ZIP_DOWNLOAD_COMPLETED, { downloadCompleted: false })
     commit(types.CHART_ZIP_DOWNLOAD, Math.random())
+    commit(types.CHART_COLUMNS_TO_INCLUDE, columnsToInclude)
   },
   setInitialAxisSelection({ getters, dispatch, rootGetters }) {
     const initialAxis = rootGetters.getMriFrontendConfig.getInitialAxisSelection()
@@ -328,6 +330,9 @@ const mutations = {
   },
   [types.CHART_SET_FIRE_REQUEST](modulestate) {
     modulestate.fireRequest = !modulestate.fireRequest
+  },
+  [types.CHART_COLUMNS_TO_INCLUDE](modulestate, columnsToInclude) {
+    modulestate.columnsToInclude = columnsToInclude
   },
 }
 
