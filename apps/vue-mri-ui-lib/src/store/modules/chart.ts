@@ -175,6 +175,7 @@ const actions = {
   },
   downloadZIP({ state, dispatch, rootGetters }, additionalParameter) {
     const getAllColumns = () => {
+      const updatedParameters = JSON.parse(JSON.stringify(additionalParameter))
       const interactionPaths = rootGetters.getColumnSelectionMenu.map(menu => menu.path).filter(path => path)
       const allInteractionAttributePaths = []
       interactionPaths.forEach((path: string) => {
@@ -198,7 +199,7 @@ const actions = {
         }
         return true
       })
-      additionalParameter.cohortDefinition.columns = allColumnPaths
+      updatedParameters.cohortDefinition.columns = allColumnPaths
         .map(path => {
           return {
             configPath: path,
@@ -207,7 +208,7 @@ const actions = {
           }
         })
         .filter(columnObj => columnObj.configPath)
-      return additionalParameter
+      return updatedParameters
     }
     if (state.layout.activeChart in zipEndpoints) {
       // const fileStream = streamSaver.createWriteStream('archive.txt')
