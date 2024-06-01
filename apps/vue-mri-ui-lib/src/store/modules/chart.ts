@@ -174,6 +174,42 @@ const actions = {
     })
   },
   downloadZIP({ state, dispatch, rootGetters }, additionalParameter) {
+    const getAllColumns = () => {
+      const interactionPaths = rootGetters.getColumnSelectionMenu
+        .map(menu => {
+          if (
+            menu.path?.startsWith('patient.interactions.Consent') ||
+            menu.path?.startsWith('patient.interactions.questionnaire') ||
+            menu.path?.startsWith('patient.interactions.ptoken') ||
+            // TODO: temp here as it fails
+            menu.path?.startsWith('patient.interactions.proc')
+          ) {
+            return
+          }
+          return menu.path
+        })
+        .filter(path => path)
+      const allColumnPaths = []
+      interactionPaths.forEach((path: string) => {
+        allColumnPaths.push(
+          rootGetters.getColumnSelectionMenuByPath(path).subMenu.forEach(sm => {
+            if (sm.data.oInternalConfigAttribute.type !== 'conceptSet') {
+              allColumnPaths.push(sm.path)
+            }
+          })
+        )
+      })
+      additionalParameter.cohortDefinition.columns = allColumnPaths
+        .map(path => {
+          return {
+            configPath: path,
+            order: '',
+            seq: 0,
+          }
+        })
+        .filter(columnObj => columnObj.configPath)
+      return additionalParameter
+    }
     if (state.layout.activeChart in zipEndpoints) {
       // const fileStream = streamSaver.createWriteStream('archive.txt')
 
@@ -190,6 +226,7 @@ const actions = {
       let entityColumns
 
       if (state.layout.activeChart === 'list') {
+        additionalParameter = state.columnsToInclude === 'SELECTED' ? additionalParameter : getAllColumns()
         params = rootGetters.getMriFrontendConfig.reverseTranslate({
           ...rootGetters.getRequest,
           ...additionalParameter,
