@@ -483,6 +483,8 @@ export const i18nDefault = {
     EXECUTE_FLOWDIALOG__SCHEDULE: "Schedule",
     EXECUTE_FLOWDIALOG__RUN_IMMEDIATELY: "Run immediately",
     EXECUTE_FLOWDIALOG__RUN_SCHEDULE: "Run on schedule",
+    EXECUTE_FLOWDIALOG__EMPTY_SCHEDULE_ERROR: "Schedule is not specified",
+    EXECUTE_FLOWDIALOG__PAST_SCHEDULE_ERROR: "Past schedule is not allowed",
     EXECUTE_FLOW_DIALOG__FLOW_RUN: "Flow run",
     EXECUTE_FLOW_DIALOG__NAME: "Name",
     EXECUTE_FLOW_DIALOG__REQUIRED: "This is required",

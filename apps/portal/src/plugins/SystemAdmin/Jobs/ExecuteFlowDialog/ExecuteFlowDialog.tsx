@@ -135,7 +135,6 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
 
   const validateFormData = useCallback(() => {
     let errorsArr: string[] = [];
-    let isInvalidDate = false;
 
     if (flowRunName === "") {
       setFlowRunNameError(true);
@@ -153,14 +152,39 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
         }
       }
     }
+    setErrors(errorsArr);
+    return errors.length !== 0 || flowRunName === "";
+  }, [flowRunName, formData, errors, flowRunType, schedule]);
+
+  const validateSchedule = useCallback(() => {
+    let isInvalidDate = false;
+    if (flowRunType === FlowRunType.NOW) {
+      return isInvalidDate;
+    }
 
     // Empty and past time is not allowed
-    if (flowRunType === FlowRunType.SCHEDULE && (!schedule || schedule.isAfter(dayjs()))) {
+    if (flowRunType === FlowRunType.SCHEDULE && (!schedule || schedule.isBefore(dayjs()))) {
       isInvalidDate = true;
     }
-    setErrors(errorsArr);
-    return errors.length !== 0 || flowRunName === "" || isInvalidDate;
-  }, [flowRunName, formData, errors, flowRunType, schedule]);
+
+    return isInvalidDate;
+  }, [flowRunType, schedule]);
+
+  const getScheduleErrorAndHelperText = useCallback(() => {
+    let error = false;
+    let helperText = "";
+
+    if (flowRunType === FlowRunType.SCHEDULE) {
+      if (schedule === null) {
+        error = true;
+        helperText = getText(i18nKeys.EXECUTE_FLOWDIALOG__EMPTY_SCHEDULE_ERROR);
+      } else if (schedule.isBefore(dayjs())) {
+        error = true;
+        helperText = getText(i18nKeys.EXECUTE_FLOWDIALOG__PAST_SCHEDULE_ERROR);
+      }
+    }
+    return { error, helperText };
+  }, [schedule, flowRunType]);
 
   function hasError(property: Record<string, any>, form: Record<string, any>) {
     if (property.type === "boolean") {
@@ -170,7 +194,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   }
 
   const handleAdd = useCallback(async () => {
-    if (formDataIsEmpty() || validateFormData()) {
+    if (formDataIsEmpty() || validateFormData() || validateSchedule()) {
       return;
     }
 
@@ -182,6 +206,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
         flowName: flowName,
         deploymentName: deploymentName,
         params: formData,
+        schedule: schedule ? schedule.toISOString() : null,
       };
 
       await api.dataflow.executeFlowRunByDeployment(flowRun);
@@ -290,6 +315,11 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
                   defaultValue={schedule}
                   onChange={handleScheduleChange}
                   disablePast
+                  slotProps={{
+                    textField: {
+                      ...getScheduleErrorAndHelperText(),
+                    },
+                  }}
                 />
               </LocalizationProvider>
             </div>

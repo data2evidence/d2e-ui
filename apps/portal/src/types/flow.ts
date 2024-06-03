@@ -38,6 +38,7 @@ export interface ExecuteFlowRunByDeployment {
   flowName: string;
   deploymentName: string;
   params: object;
+  schedule: string | null;
 }
 
 export interface CreateFlowRunByMetadata {
