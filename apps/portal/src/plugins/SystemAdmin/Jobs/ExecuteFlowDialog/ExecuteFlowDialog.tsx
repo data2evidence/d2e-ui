@@ -162,8 +162,11 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       return isInvalidDate;
     }
 
-    // Empty and past time is not allowed
-    if (flowRunType === FlowRunType.SCHEDULE && (!schedule || schedule.isBefore(dayjs()))) {
+    // Empty, past time and invalid schedule format is not allowed
+    if (
+      flowRunType === FlowRunType.SCHEDULE &&
+      (!schedule || schedule.isBefore(dayjs()) || !dayjs(schedule).isValid())
+    ) {
       isInvalidDate = true;
     }
 
