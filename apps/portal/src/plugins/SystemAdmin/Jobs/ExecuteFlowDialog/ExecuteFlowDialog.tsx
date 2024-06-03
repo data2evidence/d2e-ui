@@ -181,6 +181,9 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       } else if (schedule.isBefore(dayjs())) {
         error = true;
         helperText = getText(i18nKeys.EXECUTE_FLOWDIALOG__PAST_SCHEDULE_ERROR);
+      } else if (!dayjs(schedule).isValid()) {
+        error = true;
+        helperText = getText(i18nKeys.EXECUTE_FLOWDIALOG__INVALID_SCHEDULE_ERROR);
       }
     }
     return { error, helperText };
