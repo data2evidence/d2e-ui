@@ -14,6 +14,7 @@ def setup(monkeypatch):
     monkeypatch.setattr(_Api, '_delete', _delete_cohort)
     monkeypatch.setattr(_Api, '_get', _get_all_cohorts)
     monkeypatch.setattr(_Api, '_post', _create_cohort)
+    monkeypatch.setattr(Cohort, 'get_id', _get_id)
 
 def test_init_cohort(setup, monkeypatch):
     # when
@@ -43,30 +44,20 @@ def test_delete_cohort(setup):
     assert response == json.dumps("Deleted 1 row from cohort 1")
 
 
-# def test_create_cohort(setup):
+def test_create_cohort(setup):
+    # when
+    cohort = Cohort(STUDY_ID)
 
-#     # when
-#     cohort = Cohort(STUDY_ID)
+    cohort_definition = {
+        "mriquery": "cohortRequest",
+        "name": "my test cohort",
+        "description": "hello",
+        "syntax": {"ConceptSets": [], "CensorWindow": {}, "InclusionRules": [{"name": "Age", "expression": {"Type": "ALL", "Groups": [], "CriteriaList": [], "DemographicCriteriaList": [{"Age": {"Op": "gt", "Value": 18}}]}}], "QualifiedLimit": {"Type": "First"}, "ExpressionLimit": {"Type": "All"}, "PrimaryCriteria": {"CriteriaList": [{"VisitOccurrence": {"VisitTypeExclude": "false"}}], "ObservationWindow": {"PostDays": 0, "PriorDays": 0}, "PrimaryCriteriaLimit": {"Type": "All"}}, "cdmVersionRange": ">=5.0.0", "CollapseSettings": {"EraPad": 0, "CollapseType": "ERA"}, "CensoringCriteria": []}
+    }
+    
+    response = cohort.create_cohort(cohort_definition)
 
-#     cohort_definition = {'mriquery': 'eJxTSs7PyC8qCUotLE0tLlECAC2ABb0=',
-#                      'name': 'my test cohort',
-#                      'description': 'hello',
-#                      'studyId': 'studyId',
-#                      'syntax': '{"ConceptSets": [], "CensorWindow": {}, "InclusionRules": '
-#                      '[{"name": "Age", "expression": {"Type": "ALL", "Groups": [], '
-#                      '"CriteriaList": [], "DemographicCriteriaList": [{"Age": {"Op": '
-#                      '"gt", "Value": 18}}]}}], "QualifiedLimit": {"Type": "First"}, '
-#                      '"ExpressionLimit": {"Type": "All"}, "PrimaryCriteria": '
-#                      '{"CriteriaList": [{"VisitOccurrence": {"VisitTypeExclude": '
-#                      '"false"}}], "ObservationWindow": {"PostDays": 0, "PriorDays": 0}, '
-#                      '"PrimaryCriteriaLimit": {"Type": "All"}}, "cdmVersionRange": '
-#                      '">=5.0.0", "CollapseSettings": {"EraPad": 0, "CollapseType": '
-#                                 '"ERA"}, "CensoringCriteria": []}',
-#                      'owner': 'hs2gl1yng81j'}
-
-#     response = cohort.create_cohort(cohort_definition)
-
-#     assert response == json.dumps("cohort created")
+    assert response == json.dumps("cohort created")
 
 
 GET_ALL_COHORTS_PATH = "api/services/cohort"
@@ -133,11 +124,13 @@ def _delete_cohort(auth_api, path):
     return MockResponse(404, None)
 
 
-def _create_cohort(auth_api, path, json):
+def _create_cohort(auth_api, path, json, data):
 
     if path == CREATE_COHORT_PATH:
-        print('Entered')
         assert json == COHORT_DEFINITION
         return MockResponse(200, 'cohort created')
 
     return MockResponse(404, None)
+
+def _get_id(setup):
+    return 'hs2gl1yng81j'
