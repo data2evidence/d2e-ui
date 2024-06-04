@@ -73,7 +73,6 @@ export type FilterOptions = {
 export type ConceptHierarchyLink = {
   source: number;
   target: number;
-  depth: number;
 };
 
 export type ConceptHierarchyNode = {
@@ -82,7 +81,7 @@ export type ConceptHierarchyNode = {
   level: number;
 };
 
-export type ConceptHierarchy = {
+export type ConceptHierarchyResponse = {
   edges: ConceptHierarchyLink[];
   nodes: ConceptHierarchyNode[];
 };

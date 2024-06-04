@@ -1,18 +1,21 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useCallback } from "react";
 import ReactFlow, { Node, Edge, Position } from "reactflow";
+import { Select, SelectChangeEvent, SelectProps, InputLabel } from "@portal/components";
+import { MenuItem } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { Terminology } from "../../../../../axios/terminology";
-import { ConceptHierarchy, ConceptHierarchyNode } from "../../utils/types";
+import { ConceptHierarchyResponse, ConceptHierarchyNode } from "../../utils/types";
+import "./ConceptHierarchy.scss";
 import "reactflow/dist/style.css";
 
-interface ConceptHierachyProps {
+interface ConceptHierarchyProps {
   userId?: string;
   conceptId: number;
   datasetId?: string;
 }
 
-const xAxisOffset: number = 200;
-const yAxisOffset: number = 150;
+const xAxisOffset = 200;
+const yAxisOffset = 150;
 
 interface ConceptHierarchyNodeCounts {
   [level: number]: {
@@ -20,6 +23,9 @@ interface ConceptHierarchyNodeCounts {
     nodes: ConceptHierarchyNode[];
   };
 }
+
+const numParentLevels = 10;
+const numParentLevelsArray = [...Array(numParentLevels).keys()].map((i) => i + 1);
 
 const countAndGroupNodesByLevel = (nodes: ConceptHierarchyNode[]) => {
   const nodeCounts: ConceptHierarchyNodeCounts = {};
@@ -60,18 +66,25 @@ const createNodes = (nodes: ConceptHierarchyNode[]): Node[] => {
   return parsedNodes;
 };
 
-const ConceptHierachy: FC<ConceptHierachyProps> = ({ userId, conceptId, datasetId }) => {
-  const [isLoading, setIsLoading] = useState<any>(false);
-  const [data, setData] = useState<ConceptHierarchy>();
+const ConceptHierarchy: FC<ConceptHierarchyProps> = ({ userId, conceptId, datasetId }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [level, setLevel] = useState<string>("1");
+  const [data, setData] = useState<ConceptHierarchyResponse>();
+
+  const handleChange = useCallback(
+    (level: string) => {
+      setLevel(level);
+    },
+    [level]
+  );
 
   useEffect(() => {
     if (userId && datasetId) {
-      const depth = 3;
       const fetchData = async () => {
         if (userId) {
           try {
             const terminologyApi = new Terminology();
-            const response = await terminologyApi.getConceptHierarchy(datasetId, conceptId, depth);
+            const response = await terminologyApi.getConceptHierarchy(datasetId, conceptId, parseInt(level));
             setData(response);
           } catch (error) {
             console.log(error);
@@ -80,7 +93,7 @@ const ConceptHierachy: FC<ConceptHierachyProps> = ({ userId, conceptId, datasetI
       };
       fetchData();
     }
-  }, []);
+  }, [level]);
 
   const nodes: Node[] = data ? createNodes(data.nodes) : [];
 
@@ -92,7 +105,37 @@ const ConceptHierachy: FC<ConceptHierachyProps> = ({ userId, conceptId, datasetI
       }))
     : [];
 
-  return <>{data && <ReactFlow nodes={nodes} edges={edges} fitView></ReactFlow>}</>;
+  return (
+    <div className="concept-hierarchy__container">
+      <div className="concept-hierarchy__select">
+        <InputLabel>Number of Parent Levels</InputLabel>
+
+        <Select
+          variant="outlined"
+          sx={{
+            minWidth: "50px",
+            borderRadius: "6px",
+            backgroundColor: "#000080",
+            color: "white",
+            ".MuiSelect-select": {
+              padding: "8px 14px",
+            },
+            ".MuiSvgIcon-root": { fill: "white" },
+          }}
+          value={level}
+          onChange={(e: SelectChangeEvent) => handleChange(e.target.value)}
+        >
+          {numParentLevelsArray.map((parentLevel) => (
+            <MenuItem key={parentLevel} value={parentLevel}>
+              {parentLevel}
+            </MenuItem>
+          ))}
+        </Select>
+      </div>
+
+      {data && <ReactFlow nodes={nodes} edges={edges} fitView></ReactFlow>}
+    </div>
+  );
 };
 
-export default ConceptHierachy;
+export default ConceptHierarchy;
