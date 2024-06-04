@@ -168,7 +168,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
         params: formData,
       };
 
-      // await api.dataflow.executeFlowRunByDeployment(flowRun);
+      await api.dataflow.executeFlowRunByDeployment(flowRun);
       handleClose("success");
     } catch (err: any) {
       if (err.data?.message) {

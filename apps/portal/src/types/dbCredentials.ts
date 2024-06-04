@@ -67,4 +67,5 @@ export interface IDatabaseDetailsUpdate
   extends Omit<IDatabase, "code" | "host" | "port" | "name" | "dialect" | "extra" | "credentials"> {
   id: string;
   vocabSchemas: string[];
+  extra: { [key: string]: string | number | boolean };
 }

@@ -201,10 +201,13 @@ export const Db: FC = () => {
                 <TableCell>
                   <div className="db__button-group">
                     <FormControl sx={styles}>
-                      <Select value="" onChange={(event) => handleActionChange(event, db)} displayEmpty sx={styles}>
-                        <MenuItem value="" sx={styles} disableRipple>
-                          {getText(i18nKeys.DB__EDIT)}
-                        </MenuItem>
+                      <Select
+                        value=""
+                        onChange={(event) => handleActionChange(event, db)}
+                        displayEmpty
+                        sx={styles}
+                        renderValue={(value) => (value ? value : getText(i18nKeys.DB__EDIT))}
+                      >
                         {actionsList.map((action: Action) => (
                           <MenuItem value={action.value} key={action.name} sx={styles} disableRipple>
                             {action.name}

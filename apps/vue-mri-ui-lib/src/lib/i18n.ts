@@ -23,8 +23,9 @@ export const i18n = {
     MRI_PA_COLL_ERROR: 'Error',
     MRI_PA_COLL_FAILURE_CREATE_COLLECTION: 'Failed to create cohort.',
     MRI_PA_COLL_FAILURE_ADD_PATIENT: 'Failed to add patients to cohort.',
-    MRI_PA_COLL_LIST: 'List of Cohorts by {0}',
-    MRI_PA_COLL_NO_COHORTS_TEXT: 'There are no created cohorts. You can save your current bookmark to create a cohort.',
+    MRI_PA_COLL_LIST: 'List of materialized cohorts by {0}',
+    MRI_PA_COLL_NO_COHORTS_TEXT:
+      'There are no materialized cohorts. You can save your current cohort, and click on the "Materialize cohort" button to begin.',
     BY: '-- {0}',
     MRI_PA_CFG_ERROR_APPLICATION_PRIVILEGE_NOT_FOUND: "Couldn't find the application privilege.",
     MRI_PA_CFG_ERROR_MISSING_APPLICATION_PRIVILEGE:
@@ -420,8 +421,8 @@ export const i18n = {
     MRI_PA_BUTTON_DRILL_DOWN: 'Filter by Selection',
     MRI_PA_VIEW_COHORT_TITLE: 'Cohorts',
     MRI_PA_BUTTON_COHORT_BUTTON_TOOLTIP: 'Cohorts',
-    MRI_PA_BUTTON_SHOW_COLLECTION: 'Show cohorts',
-    MRI_PA_BUTTON_ADD_TO_COLLECTION: 'Add to Cohort',
+    MRI_PA_BUTTON_SHOW_COLLECTION: 'Show materialized cohorts',
+    MRI_PA_BUTTON_ADD_TO_COLLECTION: 'Materialize cohort',
     MRI_PA_BUTTON_VIEW_COHORT: 'View Cohort',
     MRI_PA_BUTTON_IMPORT_COHORT: 'Import Cohort',
     MRI_PA_TOOLTIP_DELETE_BOOKMARK: 'Delete Saved Filter',
