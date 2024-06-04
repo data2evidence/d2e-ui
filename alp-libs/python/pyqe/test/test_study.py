@@ -4,7 +4,7 @@ from pyqe.api.study import Study
 from test.mock_object import MockResponse
 
 
-STUDY_LIST_PATH = 'dataset/list'
+STUDY_LIST_PATH = '/system-portal/dataset/list'
 
 mock_study_list = [
     { 
@@ -42,7 +42,7 @@ def test_get_user_study_list(setup):
     assert study_list == mock_study_list
 
 
-def _get_mock_response(auth_api, path, params, basePath):
+def _get_mock_response(auth_api, path, params):
     if path == STUDY_LIST_PATH:
         return MockResponse(200, mock_study_list)
 

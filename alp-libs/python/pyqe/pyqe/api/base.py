@@ -22,10 +22,10 @@ class _Api():
         self._load_environment_variables()
         self._session = requests
 
-    def _get(self, path: str, params=None, basePath: str = None, **kwargs) -> requests.Response:
+    def _get(self, path: str, params=None, **kwargs) -> requests.Response:
         """Request HTTP GET method"""
         
-        url = urljoin(str(self._base_url) if basePath == None or basePath == '' else str(basePath), str(path))
+        url = urljoin(str(self._base_url), str(path))
         logger.debug(f'GET {url}')
 
         if os.getenv('PYQE_URL') in url:
@@ -82,6 +82,7 @@ class _Api():
         load_dotenv()
 
         self._base_url = os.getenv('PYQE_URL')
+        self.api_url = self._base_url
         self._pyqe_tls_ca_cert_path = os.getenv('PYQE_TLS_CLIENT_CA_CERT_PATH')
 
         if self._base_url is None:
@@ -147,13 +148,13 @@ class _AuthApi(_Api):
     @property
     def has_id_token(self):
         return True if self.id_token else False
-
+  
     def _create_authorization_header(self):
         return {'Authorization': f'{self.id_token}'}
     
-    def _get(self, path: str, params=None, basePath: str = None, **kwargs) -> requests.Response:
+    def _get(self, path: str, params=None, **kwargs) -> requests.Response:
         try:
-            response = super()._get(path, params=params, basePath=basePath, **kwargs)
+            response = super()._get(path, params=params, **kwargs)
             return response
         except requests.HTTPError as e:
             self._validate_response(e.response)

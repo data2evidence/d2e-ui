@@ -29,7 +29,7 @@ class _StarboardApi():
 
         self._load_environment_variables()
 
-    async def _get(self, path: str, params=None, basePath: str = None, **kwargs) -> FetchResponse:
+    async def _get(self, path: str, params=None, **kwargs) -> FetchResponse:
         """Request HTTP GET method"""
         if params:
             query_string = '?'
@@ -40,7 +40,7 @@ class _StarboardApi():
             path += query_string
             print(path)
 
-        url = urljoin(str(self._base_url) if basePath == None or basePath == '' else str(basePath), str(path))
+        url = urljoin(str(self._base_url), str(path))
         logger.debug(f'GET {url}')
         headers = {"Authorization": f'Bearer {os.getenv("TOKEN")}'}
         response = await pyfetch(url=url, method="GET", headers=headers, **kwargs)
@@ -174,9 +174,9 @@ class _AuthApi(_StarboardApi):
         else:
             return {'Authorization': f'Bearer {self.id_token}'}
 
-    async def _get(self, path: str, params=None,  basePath: str = None, **kwargs):
+    async def _get(self, path: str, params=None, **kwargs):
         try:
-            response = await super()._get(path, params=params, basePath=basePath, **kwargs)
+            response = await super()._get(path, params=params, **kwargs)
             return response
         except requests.HTTPError as e:
             self._validate_response(e.response)

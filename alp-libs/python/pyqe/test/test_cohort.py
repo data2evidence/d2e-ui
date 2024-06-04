@@ -8,8 +8,6 @@ from test.mock_object import MockResponse
 @pytest.fixture
 def setup(monkeypatch):
     monkeypatch.setenv('PYQE_URL', 'http://pyqe.url')
-    monkeypatch.setenv('PYQE_STUDY_URL', 'http://pyqe.url')
-    monkeypatch.setenv('PYQE_AUTH_TYPE', '0')
     monkeypatch.setenv('PYQE_TLS_CLIENT_CA_CERT_PATH', 'empty')
     monkeypatch.setattr(_Api, '_delete', _delete_cohort)
     monkeypatch.setattr(_Api, '_get', _get_all_cohorts)
@@ -60,11 +58,11 @@ def test_create_cohort(setup):
     assert response == json.dumps("cohort created")
 
 
-GET_ALL_COHORTS_PATH = "api/services/cohort"
+GET_ALL_COHORTS_PATH = "/analytics-svc/api/services/cohort"
 
-DELETE_COHORT_PATH = "api/services/cohort?cohortId=1&studyId=studyId"
+DELETE_COHORT_PATH = "/analytics-svc/api/services/cohort?cohortId=1&studyId=studyId"
 
-CREATE_COHORT_PATH = "api/services/cohort"
+CREATE_COHORT_PATH = "/analytics-svc/api/services/cohort"
 
 STUDY_ID = "studyId"
 
@@ -107,7 +105,7 @@ COHORT_DEFINITION = {'mriquery': 'eJxTSs7PyC8qCUotLE0tLlECAC2ABb0=',
                      'owner': 'hs2gl1yng81j'}
 
 
-def _get_all_cohorts(auth_api, path, params, basePath):
+def _get_all_cohorts(auth_api, path, params):
 
     assert params == PARAMS
     if path == GET_ALL_COHORTS_PATH:

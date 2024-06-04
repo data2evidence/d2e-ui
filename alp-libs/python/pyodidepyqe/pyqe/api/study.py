@@ -15,11 +15,10 @@ class Study(_AuthApi):
         super().__init__()
 
     async def get_user_study_list(self):
-        study_url = os.getenv('PYQE_STUDY_URL')
         params = {
             'role': 'researcher'
             }
-        response = await self._get('dataset/list', params, basePath=study_url)
+        response = await self._get('/system-portal/dataset/list', params)
         if response.ok:
             return await response.json()
         

@@ -29,7 +29,7 @@ class ConceptQuery(_AuthApi):
             'conceptCode': concept_code,
             'vocabularyId': vocabulary_id
         }
-        response = self._get(f'api/services/standard-concept', params=params)
+        response = self._get(f'/analytics-svc/api/services/standard-concept', params=params)
         concept = json.loads(response.text)
         return concept['conceptCode']
 
@@ -42,7 +42,7 @@ class ConceptQuery(_AuthApi):
         params = {
             'conceptCode': concept_code
         }
-        response = self._get(f'api/services/descendant-concepts', params=params)
+        response = self._get(f'/analytics-svc/api/services/descendant-concepts', params=params)
         json_response = json.loads(response.text)
         concepts = json_response['descendants']
         if len(concepts) > 0:
@@ -63,7 +63,7 @@ class ConceptQuery(_AuthApi):
             'vocabularyId': vocabulary_id
         }
 
-        response = await self._get('api/services/standard-concept-ids', params)
+        response = await self._get('/analytics-svc/api/services/standard-concept-ids', params)
         res = await response.json()
         concept_id_list = res['concept_id']
         return concept_id_list
