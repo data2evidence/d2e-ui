@@ -212,7 +212,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
         flowName: flowName,
         deploymentName: deploymentName,
         params: formData,
-        schedule: schedule ? schedule.toISOString() : null,
+        schedule: flowRunType === FlowRunType.SCHEDULE && schedule ? schedule.toISOString() : null,
       };
 
       await api.dataflow.executeFlowRunByDeployment(flowRun);
