@@ -70,6 +70,23 @@ export type FilterOptions = {
   };
 };
 
+export type ConceptHierarchyLink = {
+  source: number;
+  target: number;
+  depth: number;
+};
+
+export type ConceptHierarchyNode = {
+  conceptId: number;
+  display: string;
+  level: number;
+};
+
+export type ConceptHierarchy = {
+  edges: ConceptHierarchyLink[];
+  nodes: ConceptHierarchyNode[];
+};
+
 export interface FhirConceptMap {
   resourceType: string;
   group: FhirConceptMapGroup[];
