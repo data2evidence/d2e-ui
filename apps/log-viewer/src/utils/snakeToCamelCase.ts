@@ -7,6 +7,10 @@ export const snakeToCamelCase = (str: string): string => {
 }
 
 export const convertKeysToCamelCase = <T>(obj: any): T => {
+  if (typeof obj === 'string') {
+    // Typing as T even though it is string so type of result is T
+    return obj as T
+  }
   if (Array.isArray(obj)) {
     return obj.map((obj1) => convertKeysToCamelCase(obj1)) as T
   }

@@ -162,26 +162,34 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
       const dataPlatformExtra = formData.extra.find((ext) => ext.serviceScope === SERVICE_SCOPE_TYPES.DATA_PLATFORM);
 
       const newExtra: { [key: string]: object } = {};
-      if (internalExtra?.value) {
-        if (!isValidJson(internalExtra.value)) {
-          setFeedback({
-            type: "error",
-            message: getText(i18nKeys.SAVE_DB_DIALOG__ENTER_VALID_JSON_INTERNAL),
-          });
-          return;
+      if (internalExtra) {
+        if (internalExtra.value) {
+          if (!isValidJson(internalExtra.value)) {
+            setFeedback({
+              type: "error",
+              message: getText(i18nKeys.SAVE_DB_DIALOG__ENTER_VALID_JSON_INTERNAL),
+            });
+            return;
+          }
+          newExtra["Internal"] = JSON.parse(internalExtra.value);
+        } else {
+          newExtra["Internal"] = {};
         }
-        newExtra["Internal"] = JSON.parse(internalExtra.value);
       }
 
-      if (dataPlatformExtra?.value) {
-        if (!isValidJson(dataPlatformExtra.value)) {
-          setFeedback({
-            type: "error",
-            message: getText(i18nKeys.SAVE_DB_DIALOG__ENTER_VALID_JSON_DATA_PLATFORM),
-          });
-          return;
+      if (dataPlatformExtra) {
+        if (dataPlatformExtra.value) {
+          if (!isValidJson(dataPlatformExtra.value)) {
+            setFeedback({
+              type: "error",
+              message: getText(i18nKeys.SAVE_DB_DIALOG__ENTER_VALID_JSON_DATA_PLATFORM),
+            });
+            return;
+          }
+          newExtra["DataPlatform"] = JSON.parse(dataPlatformExtra.value);
+        } else {
+          newExtra["DataPlatform"] = {};
         }
-        newExtra["DataPlatform"] = JSON.parse(dataPlatformExtra.value);
       }
 
       const encrypted: INewDatabase = { ...formData, extra: newExtra, credentials };

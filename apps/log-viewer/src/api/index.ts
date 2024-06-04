@@ -1,4 +1,4 @@
-import { FlowRun, LogInfo } from '@/types'
+import { FlowRun, GetRunsForFlowRunResponse, LogInfo, TaskRun } from '@/types'
 import { getPortalAPI } from '@/utils/portalApi'
 import { convertKeysToCamelCase } from '@/utils/snakeToCamelCase'
 import axios from 'axios'
@@ -17,7 +17,7 @@ export const getLogsByFlowRunId = async (flowRunId: string) => {
   return convertKeysToCamelCase<LogInfo[]>(data)
 }
 
-export const getParametersByFlowRunId = async (flowRunId: string) => {
+export const getFlowRunById = async (flowRunId: string) => {
   const { baseUrl, getAuthToken } = getPortalAPI()
   const token = await getAuthToken()
   if (!token) {
@@ -45,6 +45,20 @@ export const getTaskRunsByFlowRunId = async (flowRunId: string) => {
   return convertKeysToCamelCase<FlowRun[]>(data)
 }
 
+export const getTaskRunById = async (taskRunId: string) => {
+  const { baseUrl, getAuthToken } = getPortalAPI()
+  const token = await getAuthToken()
+  if (!token) {
+    throw new Error('No auth token present')
+  }
+  const path = `dataflow-mgmt/prefect/task-run/${taskRunId}`
+  const { data } = await axios.get(path, {
+    baseURL: baseUrl,
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  return convertKeysToCamelCase<TaskRun>(data)
+}
+
 export const getLogsByTaskRunId = async (taskRunId: string) => {
   const { baseUrl, getAuthToken } = getPortalAPI()
   const token = await getAuthToken()
@@ -57,4 +71,18 @@ export const getLogsByTaskRunId = async (taskRunId: string) => {
     headers: { Authorization: `Bearer ${token}` }
   })
   return convertKeysToCamelCase<LogInfo[]>(data)
+}
+
+export const getRunsForFlowRun = async (flowRunId: string) => {
+  const { baseUrl, getAuthToken } = getPortalAPI()
+  const token = await getAuthToken()
+  if (!token) {
+    throw new Error('No auth token present')
+  }
+  const path = `dataflow-mgmt/prefect/flow-run/${flowRunId}/runs`
+  const { data } = await axios.get<GetRunsForFlowRunResponse>(path, {
+    baseURL: baseUrl,
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  return data
 }

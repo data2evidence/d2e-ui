@@ -18,4 +18,5 @@ test('convertKeysToCamelCase', () => {
     cD: 2,
     eF: [{ gH: 3, iJ: [{ kL: 4 }] }]
   })
+  expect(convertKeysToCamelCase({ test: ['ab'] })).toStrictEqual({ test: ['ab'] })
 })
