@@ -1,9 +1,10 @@
 import React, { FC, useEffect, useState, useCallback } from "react";
 import ReactFlow, { Node, Edge, Position } from "reactflow";
-import { Select, SelectChangeEvent, SelectProps, InputLabel } from "@portal/components";
+import { Select, SelectChangeEvent, SelectProps, InputLabel, Loader } from "@portal/components";
 import { MenuItem } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { Terminology } from "../../../../../axios/terminology";
+import { useFeedback, useTranslation } from "../../../../../contexts";
 import { ConceptHierarchyResponse, ConceptHierarchyNode } from "../../utils/types";
 import "./ConceptHierarchy.scss";
 import "reactflow/dist/style.css";
@@ -70,6 +71,8 @@ const ConceptHierarchy: FC<ConceptHierarchyProps> = ({ userId, conceptId, datase
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [level, setLevel] = useState<string>("1");
   const [data, setData] = useState<ConceptHierarchyResponse>();
+  const { setFeedback } = useFeedback();
+  const { getText, i18nKeys } = useTranslation();
 
   const handleChange = useCallback(
     (level: string) => {
@@ -83,11 +86,19 @@ const ConceptHierarchy: FC<ConceptHierarchyProps> = ({ userId, conceptId, datase
       const fetchData = async () => {
         if (userId) {
           try {
+            setIsLoading(true);
             const terminologyApi = new Terminology();
             const response = await terminologyApi.getConceptHierarchy(datasetId, conceptId, parseInt(level));
             setData(response);
           } catch (error) {
-            console.log(error);
+            console.error(error);
+            setFeedback({
+              type: "error",
+              message: getText(i18nKeys.TERMINOLOGY_LIST__ERROR),
+              description: getText(i18nKeys.TERMINOLOGY_LIST__ERROR_DESCRIPTION),
+            });
+          } finally {
+            setIsLoading(false);
           }
         }
       };
@@ -133,7 +144,9 @@ const ConceptHierarchy: FC<ConceptHierarchyProps> = ({ userId, conceptId, datase
         </Select>
       </div>
 
-      {data && <ReactFlow nodes={nodes} edges={edges} fitView></ReactFlow>}
+      {isLoading && <Loader />}
+
+      {!isLoading && data && <ReactFlow nodes={nodes} edges={edges} fitView></ReactFlow>}
     </div>
   );
 };
