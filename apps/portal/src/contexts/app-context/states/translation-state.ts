@@ -861,6 +861,8 @@ export const i18nDefault = {
     TERMINOLOGY_DETAIL__DOMAIN_ID: "Domain ID",
     TERMINOLOGY_DETAIL__ERROR_DESCRIPTION: "Please try again.",
     TERMINOLOGY_DETAIL__ERROR: "An error has occurred",
+    TERMINOLOGY_DETAIL__HIERARCHY: "Hierarchy",
+    TERMINOLOGY_DETAIL__RELATED_CONCEPTS: "Related Concepts",
     TERMINOLOGY_DETAIL__RELATES_TO: "Relates to",
     TERMINOLOGY_DETAIL__RELATIONSHIP: "Relationship",
     TERMINOLOGY_DETAIL__VALIDITY: "Validity",
