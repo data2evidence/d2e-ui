@@ -1,13 +1,13 @@
 import React, { FC, useEffect, useState, useCallback } from "react";
-import ReactFlow, { Node, Edge, Position } from "reactflow";
-import { Select, SelectChangeEvent, SelectProps, InputLabel, Loader } from "@portal/components";
+import ReactFlow, { Node, Edge, Position, MarkerType } from "reactflow";
+import { Select, SelectChangeEvent, InputLabel, Loader } from "@portal/components";
 import { MenuItem } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { Terminology } from "../../../../../axios/terminology";
 import { useFeedback, useTranslation } from "../../../../../contexts";
 import { ConceptHierarchyResponse, ConceptHierarchyNode } from "../../utils/types";
-import "./ConceptHierarchy.scss";
 import "reactflow/dist/style.css";
+import "./ConceptHierarchy.scss";
 
 interface ConceptHierarchyProps {
   userId?: string;
@@ -49,7 +49,7 @@ const createNodes = (nodes: ConceptHierarchyNode[]): Node[] => {
   const nodeLevels: ConceptHierarchyNodeCounts = countAndGroupNodesByLevel(nodes);
 
   for (const [level, value] of Object.entries(nodeLevels)) {
-    const { count, nodes } = value as any;
+    const { nodes } = value;
     const mid = Math.floor(nodes.length / 2);
     for (let i = 0; i < nodes.length; i++) {
       const positionY: number = yAxisOffset * (i - mid);
@@ -113,6 +113,9 @@ const ConceptHierarchy: FC<ConceptHierarchyProps> = ({ userId, conceptId, datase
         id: uuidv4(),
         source: edge.source.toString(),
         target: edge.target.toString(),
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+        },
       }))
     : [];
 
