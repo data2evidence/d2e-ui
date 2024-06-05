@@ -34,6 +34,7 @@ interface FitSccsModelArgs {
 
 export interface SelfControlledCaseSeriesAnalysisNodeData
   extends NodeDataState {
+  analysisId: number;
   dbSccsDataArgs: DbSccsDataArgs;
   sccsIntervalDataArgs: SccsIntervalDataArgs;
   fitSccsModelArgs: FitSccsModelArgs;
