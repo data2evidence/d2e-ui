@@ -28,7 +28,6 @@ const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, onClose }) =>
     try {
       setLoading(true);
       await api.dataflow.triggerPluginUpload();
-      // await api.dataflow.getPluginUploadStatus();
       handleClose("success");
     } catch (err: any) {
       console.error("err", err);
