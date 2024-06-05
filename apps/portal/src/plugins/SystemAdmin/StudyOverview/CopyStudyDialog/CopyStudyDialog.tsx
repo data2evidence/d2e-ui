@@ -238,6 +238,7 @@ const CopyStudyDialog: FC<CopyStudyDialogProps> = ({ study, open, onClose, loadi
         newStudyName: name,
         sourceStudyId: study.id,
         snapshotLocation: `${snapshotLocation}`,
+        dataModel: study.dataModel,
       };
       // If snapshotCopyConfig is not empty, add to CopyStudyInput
       if (!(Object.keys(snapshotCopyConfig).length === 0)) {

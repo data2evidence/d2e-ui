@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import Divider from "@mui/material/Divider";
 import { SxProps } from "@mui/material";
-import { Autocomplete, Box, Button, Chip, Dialog, TextField } from "@portal/components";
+import { Autocomplete, Box, Button, Chip, Dialog, TextArea, TextField } from "@portal/components";
 import { CloseDialogType, Feedback, IDatabase } from "../../../../types";
 import { api } from "../../../../axios/api";
 import { isEqual } from "lodash";
@@ -15,10 +15,12 @@ interface EditDbDialogProps {
 
 interface FormData {
   vocabSchemas: string[];
+  extra: string;
 }
 
 const EMPTY_FORM_DATA: FormData = {
   vocabSchemas: [],
+  extra: "",
 };
 
 const styles: SxProps = {
@@ -40,14 +42,25 @@ const styles: SxProps = {
   },
 };
 
+const mapExtraToHashmap = (extraArr: any[]): { [key: string]: any } => {
+  const extra: any = {};
+  extraArr.forEach((e) => {
+    extra[e.serviceScope] = e.value;
+  });
+  return extra;
+};
+
 export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }) => {
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
+  const [originalExtra, setOriginalExtra] = useState("");
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
   const [vocabSchemaOptions, setVocabSchemaOptions] = useState<string[]>([]);
   const hasChanges = useMemo(
-    () => !isEqual(db.vocabSchemas, formData.vocabSchemas) && formData.vocabSchemas.length > 0,
-    [db, formData]
+    () =>
+      (!isEqual(db.vocabSchemas, formData.vocabSchemas) && formData.vocabSchemas.length > 0) ||
+      originalExtra !== formData.extra,
+    [db, formData, originalExtra]
   );
 
   useEffect(() => {
@@ -57,7 +70,9 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
       } else {
         setVocabSchemaOptions(["cdmvocab"]);
       }
-      setFormData({ vocabSchemas: db.vocabSchemas });
+      const extraStr = JSON.stringify(mapExtraToHashmap(db.extra), null, 4);
+      setFormData({ vocabSchemas: db.vocabSchemas, extra: extraStr });
+      setOriginalExtra(extraStr);
       setFeedback({});
       setLoading(false);
     }
@@ -78,7 +93,11 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
   const handleUpdate = useCallback(async () => {
     try {
       setLoading(true);
-      await api.dbCredentialsMgr.updateDbDetails({ id: db.id, vocabSchemas: formData.vocabSchemas });
+      await api.dbCredentialsMgr.updateDbDetails({
+        id: db.id,
+        vocabSchemas: formData.vocabSchemas,
+        extra: formData.extra ? JSON.parse(formData.extra) : {},
+      });
       setFeedback({
         type: "success",
         message: `Database ${db.code} details updated`,
@@ -135,6 +154,18 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
               renderInput={(params) => <TextField {...params} variant="standard" />}
               value={formData.vocabSchemas}
               onChange={(event, vocabSchemas) => handleFormDataChange({ vocabSchemas })}
+            />
+          </Box>
+        </Box>
+        <Box mb={4}>
+          <Box mb={2}>
+            <b>Extra</b>
+          </Box>
+          <Box>
+            <TextArea
+              rows={10}
+              value={formData.extra}
+              onChange={(event) => handleFormDataChange({ extra: event.target.value })}
             />
           </Box>
         </Box>

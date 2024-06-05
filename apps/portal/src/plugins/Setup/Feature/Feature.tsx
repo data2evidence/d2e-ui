@@ -44,6 +44,9 @@ export const Feature: FC = () => {
       dataflow: {
         name: getText(i18nKeys.FEATURE__DATAFLOW),
       },
+      cohorts: {
+        name: "Cohorts",
+      },
     }),
     [getText]
   );

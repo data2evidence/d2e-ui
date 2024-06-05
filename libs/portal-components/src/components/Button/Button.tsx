@@ -16,7 +16,7 @@ export type ButtonProps = MuiButtonProps & {
 
 export const Button = forwardRef<Ref, ButtonProps>(
   (
-    { text, type, loading, className, containerClassName, disabled, block, onClick, variant = "contained", ...props },
+    { text, loading, className, containerClassName, disabled, block, onClick, variant = "contained", ...props },
     ref
   ) => {
     const containerClasses = classNames(
