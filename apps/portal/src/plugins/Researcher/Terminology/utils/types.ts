@@ -81,6 +81,13 @@ export type ConceptHierarchyNode = {
   level: number;
 };
 
+export type ConceptHierarchyNodeCounts = {
+  [level: number]: {
+    count: number;
+    nodes: ConceptHierarchyNode[];
+  };
+};
+
 export type ConceptHierarchyResponse = {
   edges: ConceptHierarchyLink[];
   nodes: ConceptHierarchyNode[];

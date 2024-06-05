@@ -5,7 +5,7 @@ import { MenuItem } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { Terminology } from "../../../../../axios/terminology";
 import { useFeedback, useTranslation } from "../../../../../contexts";
-import { ConceptHierarchyResponse, ConceptHierarchyNode } from "../../utils/types";
+import { ConceptHierarchyResponse, ConceptHierarchyNode, ConceptHierarchyNodeCounts } from "../../utils/types";
 import "reactflow/dist/style.css";
 import "./ConceptHierarchy.scss";
 
@@ -17,13 +17,6 @@ interface ConceptHierarchyProps {
 
 const xAxisOffset = 200;
 const yAxisOffset = 150;
-
-interface ConceptHierarchyNodeCounts {
-  [level: number]: {
-    count: number;
-    nodes: ConceptHierarchyNode[];
-  };
-}
 
 const numParentLevels = 10;
 const numParentLevelsArray = [...Array(numParentLevels).keys()].map((i) => i + 1);
@@ -74,12 +67,9 @@ const ConceptHierarchy: FC<ConceptHierarchyProps> = ({ userId, conceptId, datase
   const { setFeedback } = useFeedback();
   const { getText, i18nKeys } = useTranslation();
 
-  const handleChange = useCallback(
-    (level: string) => {
-      setLevel(level);
-    },
-    [level]
-  );
+  const handleChange = useCallback((level: string) => {
+    setLevel(level);
+  }, []);
 
   useEffect(() => {
     if (userId && datasetId) {
@@ -104,7 +94,7 @@ const ConceptHierarchy: FC<ConceptHierarchyProps> = ({ userId, conceptId, datase
       };
       fetchData();
     }
-  }, [level]);
+  }, [level, conceptId, datasetId, userId, setFeedback, getText, i18nKeys]);
 
   const nodes: Node[] = data ? createNodes(data.nodes) : [];
 
