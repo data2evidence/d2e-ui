@@ -26,8 +26,8 @@ export interface DatasetRelease {
 }
 
 export enum JobRunTypes {
-  DQD = "DQD",
-  DataCharacterization = "DataCharacterization",
+  DQD = "dqd",
+  DataCharacterization = "data_characterization",
 }
 
 export enum FlowRunJobStateTypes {
