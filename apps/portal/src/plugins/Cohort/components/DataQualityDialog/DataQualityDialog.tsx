@@ -100,7 +100,8 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
             disabled={FlowRunInProgressJobStateTypes.includes(latestFlowRun?.state?.type) || !user.isSystemAdmin}
           />
         </div>
-        <div>
+
+        <div className="results-dialog__table">
           {loadingLatestFlowRun ? (
             <Loader text={getText(i18nKeys.DATA_QUALITY_DIALOG__LOAD_LATEST_RUN)} />
           ) : errorLatestFlowRun ? (
@@ -111,15 +112,16 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
             <SubTitle>{getText(i18nKeys.DATA_QUALITY_DIALOG__NO_JOB_FOUND)}</SubTitle>
           )}
         </div>
-        <JobDialog
-          jobRunType={JobRunTypes.DQD}
-          datasetId={datasetId}
-          cohortDefinitionId={cohort.id.toString()}
-          handleGenerateJob={handleGenerateJob}
-          open={showJobDialog}
-          onClose={closeJobDialog}
-        />
       </div>
+
+      <JobDialog
+        jobRunType={JobRunTypes.DQD}
+        datasetId={datasetId}
+        cohortDefinitionId={cohort.id.toString()}
+        handleGenerateJob={handleGenerateJob}
+        open={showJobDialog}
+        onClose={closeJobDialog}
+      />
     </Dialog>
   );
 };

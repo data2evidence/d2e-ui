@@ -95,17 +95,6 @@ export default {
           }
           this.setupPlotly()
           this.$emit('busyEv', false)
-
-          if (this.chartData.hasOwnProperty('noDataReason')) {
-            this.setCurrentPatientCount({
-              currentPatientCount: '--',
-            })
-            this.setAlertMessage({
-              message: this.chartData.noDataReason,
-            })
-            return
-          }
-          // Render chart only if there is data
           this.renderChart()
         }
 
@@ -130,13 +119,13 @@ export default {
                 }
               }
 
-              callback({
-                data: [],
-                measures: [],
-                categories: [],
-                totalPatientCount: 0,
-                noDataReason,
+              this.setCurrentPatientCount({
+                currentPatientCount: '--',
               })
+              this.setAlertMessage({
+                message: noDataReason,
+              })
+              return
             }
           })
       }
