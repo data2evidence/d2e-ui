@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ErrorBoundary, IconButton, Title } from "@portal/components";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -9,6 +9,10 @@ import { IPluginItem, LocationState } from "../../types";
 import { SetupPluginRenderer } from "../core/SetupPluginRenderer";
 import "./SetupOverview.scss";
 import { useTranslation } from "../../contexts";
+import { useDialogHelper } from "../../hooks";
+import TriggerUploadDialog from "./PluginMenuItem/TriggerUploadDialog/TriggerUploadDialog";
+import { PluginMenuItem } from "./PluginMenuItem/PluginMenuItem";
+import { api } from "../../axios/api";
 
 const plugins = loadPlugins();
 
@@ -17,8 +21,34 @@ export const SetupOverview: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as LocationState;
+  const [showTriggerUploadDialog, openTriggerUploadDialog, closeTriggerUploadDialog] = useDialogHelper(false);
+  const [uploadActive, setUploadActive] = useState(false);
   const enabledPlugins = useMemo(() => plugins.setup?.filter((plugin: IPluginItem) => plugin.enabled) || [], []);
   const state = useMemo(() => locationState || { state: { tab: "setup", subTab: null } }, [locationState]);
+
+  const fetchUploadStatus = useCallback(async () => {
+    const res = await api.dataflow.getPluginUploadStatus();
+    console.log(`res status: ${res.noActiveInstallations}`);
+    console.log(JSON.stringify(res));
+    if (res.noActiveInstallations === false) {
+      setUploadActive(true);
+    } else {
+      setUploadActive(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Initial fetch
+    fetchUploadStatus();
+
+    // Set up interval to fetch status every 10 seconds
+    const intervalId = setInterval(fetchUploadStatus, 10000);
+
+    // Clear interval on unmount
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [fetchUploadStatus]);
 
   const handleOpenPlugin = useCallback(
     (plugin: IPluginItem) => {
@@ -67,6 +97,13 @@ export const SetupOverview: FC = () => {
                   />
                 );
               })}
+              <PluginMenuItem
+                key={`default-plugin`}
+                name={`Plugins`}
+                description={`Trigger default plugins installation`}
+                notes={`Installing: ${uploadActive}`}
+                onClick={() => openTriggerUploadDialog()}
+              />
             </div>
           </>
         )}
@@ -82,6 +119,7 @@ export const SetupOverview: FC = () => {
             )}
           </div>
         )}
+        <TriggerUploadDialog open={showTriggerUploadDialog} onClose={closeTriggerUploadDialog} />
       </div>
     </div>
   );

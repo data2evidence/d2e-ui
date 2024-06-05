@@ -227,4 +227,20 @@ export class Dataflow {
       method: "GET",
     });
   }
+
+  public getPluginUploadStatus() {
+    return request({
+      baseURL: DATAFLOW_MGMT_URL,
+      url: "prefect/flow/default-deployment",
+      method: "GET",
+    });
+  }
+
+  public triggerPluginUpload() {
+    return request({
+      baseURL: DATAFLOW_MGMT_URL,
+      url: "prefect/flow/default-deployment",
+      method: "POST",
+    });
+  }
 }
