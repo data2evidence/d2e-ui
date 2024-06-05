@@ -119,7 +119,11 @@ export const SetupOverview: FC = () => {
             )}
           </div>
         )}
-        <TriggerUploadDialog open={showTriggerUploadDialog} onClose={closeTriggerUploadDialog} />
+        <TriggerUploadDialog
+          open={showTriggerUploadDialog}
+          uploadActive={uploadActive}
+          onClose={closeTriggerUploadDialog}
+        />
       </div>
     </div>
   );

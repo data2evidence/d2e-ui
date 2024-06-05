@@ -8,10 +8,11 @@ import { useTranslation } from "../../../../contexts";
 
 interface TriggerUploadDialogProps {
   open: boolean;
+  uploadActive: boolean;
   onClose?: (type: CloseDialogType) => void;
 }
 
-const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, onClose }) => {
+const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, uploadActive, onClose }) => {
   const { getText, i18nKeys } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
@@ -65,9 +66,14 @@ const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, onClose }) =>
           onClick={() => handleClose("cancelled")}
           variant="outlined"
           block
-          disabled={loading}
+          disabled={loading || uploadActive}
         />
-        <Button text={getText(i18nKeys.SETUP_PLUGIN_UPLOAD__CONFIRM)} onClick={handleUpload} block loading={loading} />
+        <Button
+          text={getText(i18nKeys.SETUP_PLUGIN_UPLOAD__CONFIRM)}
+          onClick={handleUpload}
+          block
+          loading={loading || uploadActive}
+        />
       </div>
     </Dialog>
   );
