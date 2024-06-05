@@ -1,12 +1,6 @@
 import request from "./request";
 import env from "../env";
-import {
-  Flow,
-  GenerateDataQualityFlowRun,
-  GenerateDataCharacterizationFlowRun,
-  ExecuteFlowRunByDeployment,
-  CreateFlowRunByMetadata,
-} from "../types";
+import { Flow, ExecuteFlowRunByDeployment, CreateFlowRunByMetadata } from "../types";
 
 const DATAFLOW_MGMT_URL = `${env.REACT_APP_DN_BASE_URL}dataflow-mgmt/`;
 
@@ -133,24 +127,6 @@ export class Dataflow {
     });
   }
 
-  public generateDataQualityFlowRun(data: GenerateDataQualityFlowRun) {
-    return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: "dqd/data-quality/flow-run",
-      method: "POST",
-      data: data,
-    });
-  }
-
-  public generateDataCharacterizationFlowRun(data: GenerateDataCharacterizationFlowRun) {
-    return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: "dqd/data-characterization/flow-run",
-      method: "POST",
-      data: data,
-    });
-  }
-
   public getDataCharacterizationResults(flowRunId: string, sourceKey: string): Promise<any> {
     return request({
       baseURL: DATAFLOW_MGMT_URL,
@@ -216,6 +192,14 @@ export class Dataflow {
     return request({
       baseURL: DATAFLOW_MGMT_URL,
       url: "prefect/flow/datamodels/list",
+      method: "GET",
+    });
+  }
+
+  public getFlowRunState(flowId: string) {
+    return request({
+      baseURL: DATAFLOW_MGMT_URL,
+      url: `prefect/flow-run/${flowId}/state`,
       method: "GET",
     });
   }
