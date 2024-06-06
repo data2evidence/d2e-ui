@@ -29,6 +29,7 @@ import {
   IDatabase,
   NewStudyMetadataInput,
   DatasetDashboard,
+  NewFhirProjectInput,
 } from "../../../../types";
 import SimpleMDE from "react-simplemde-editor";
 import {
@@ -509,7 +510,11 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
       setLoading(true);
       await api.gateway.createDataset(input);
       if (createFhirProject) {
-        // call endpoint to create project
+        const fhirProjectInput: NewFhirProjectInput = {
+          name: name,
+          description: summary,
+        };
+        await api.gateway.createFhirStaging(fhirProjectInput);
       }
       handleClose("success");
     } catch (err: any) {
