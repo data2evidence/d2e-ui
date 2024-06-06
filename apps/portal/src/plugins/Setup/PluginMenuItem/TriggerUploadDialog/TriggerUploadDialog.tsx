@@ -5,6 +5,7 @@ import { CloseDialogType } from "../../../../types";
 import { api } from "../../../../axios/api";
 import "./TriggerUploadDialog.scss";
 import { useTranslation } from "../../../../contexts";
+import { i18nKeys } from "../../../../contexts/app-context/states";
 
 interface TriggerUploadDialogProps {
   open: boolean;
@@ -13,7 +14,7 @@ interface TriggerUploadDialogProps {
 }
 
 const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, uploadActive, onClose }) => {
-  const { getText, i18nKeys } = useTranslation();
+  const { getText } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
 
@@ -37,8 +38,8 @@ const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, uploadActive,
       } else {
         setFeedback({
           type: "error",
-          message: getText(i18nKeys.DELETE_USER_DIALOG__ERROR),
-          description: getText(i18nKeys.DELETE_USER_DIALOG__DESCRIPTION),
+          message: getText(i18nKeys.TRIGGER_PLUGIN_UPLOAD_DIALOG__ERROR),
+          description: getText(i18nKeys.TRIGGER_PLUGIN_UPLOAD_DIALOG__DESCRIPTION),
         });
       }
     } finally {
@@ -49,7 +50,7 @@ const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, uploadActive,
   return (
     <Dialog
       className="trigger-upload-dialog"
-      title={getText(i18nKeys.SETUP_PLUGIN_UPLOAD__TITLE)}
+      title={getText(i18nKeys.TRIGGER_PLUGIN_UPLOAD_DIALOG__TITLE)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
@@ -57,19 +58,19 @@ const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, uploadActive,
     >
       <Divider />
       <div className="trigger-upload-dialog__content">
-        <div>{getText(i18nKeys.SETUP_PLUGIN_UPLOAD__WARNING)}</div>
+        <div>{getText(i18nKeys.TRIGGER_PLUGIN_UPLOAD_DIALOG__WARNING)}</div>
       </div>
       <Divider />
       <div className="button-group-actions">
         <Button
-          text={getText(i18nKeys.SETUP_PLUGIN_UPLOAD__CANCEL)}
+          text={getText(i18nKeys.TRIGGER_PLUGIN_UPLOAD_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
           variant="outlined"
           block
           disabled={loading || uploadActive}
         />
         <Button
-          text={getText(i18nKeys.SETUP_PLUGIN_UPLOAD__CONFIRM)}
+          text={getText(i18nKeys.TRIGGER_PLUGIN_UPLOAD_DIALOG__CONFIRM)}
           onClick={handleUpload}
           block
           loading={loading || uploadActive}

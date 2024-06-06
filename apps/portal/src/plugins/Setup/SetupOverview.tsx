@@ -100,11 +100,11 @@ export const SetupOverview: FC = () => {
                 );
               })}
               <PluginMenuItem
-                key={`default-plugin`}
-                name={`Plugins`}
-                description={`Trigger default plugins installation`}
+                key={"default-plugin"}
+                name={"Plugins"}
+                description={"Trigger default plugins installation"}
                 notes={`Status: ${pluginInstallationStatus}`}
-                onClick={() => openTriggerUploadDialog()}
+                onClick={openTriggerUploadDialog}
               />
             </div>
           </>
