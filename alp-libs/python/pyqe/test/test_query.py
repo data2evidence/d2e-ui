@@ -1348,10 +1348,45 @@ def _get_mock_omop_frontend_config():
 def _get_mock_study_list(study):
     return [
         {
+            'databaseName': 'alpdev_pg',
             'id': '9f0c44f1-8de9-4d4c-80c0-abcde134799b',
-            'name': 'first.study.name'
+            'dialect': 'postgres', 
+            'vocabSchemaName': 'cdmvocab',
+            'dashboards': [],
+            'tags': [],
+            'attributes': [],
+            'tenant': {
+                'id': 'e0348e4d-2e17-43f2-a3c6-efd752d17c23',
+                'name': 'Tenant',
+                'system': 'Research System'
+            }, 
+            'tokenStudyCode': 'first.study.name', 
+            'studyDetail': {
+                'name': 'first.study.name', 
+                'description': '', 
+                'summary': '', 
+                'showRequestAccess': False
+            }
         },
-        {'id': '7eb1fc8d-5091-4b88-be49-bb1ba014cc99',
-            'name': 'second.study.name'
-         }
+        {
+            'databaseName': 'alpdev_pg',
+            'id': '7eb1fc8d-5091-4b88-be49-bb1ba014cc99',
+            'dialect': 'postgres', 
+            'vocabSchemaName': 'cdmvocab',
+            'dashboards': [],
+            'tags': [],
+            'attributes': [],
+            'tenant': {
+                'id': 'e0348e4d-2e17-43f2-a3c6-efd752d17c23',
+                'name': 'Tenant',
+                'system': 'Research System'
+            }, 
+            'tokenStudyCode': 'second.study.name', 
+            'studyDetail': {
+                'name': 'second.study.name', 
+                'description': '', 
+                'summary': '', 
+                'showRequestAccess': False
+            }
+        }
     ]
