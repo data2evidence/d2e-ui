@@ -5,6 +5,7 @@ import {
   CohortDefinitionList,
   UpdateSchemaInput,
   SchemasVersionInfoResponse,
+  NewFhirProjectInput,
 } from "../types";
 import env from "../env";
 import request from "./request";
@@ -91,6 +92,14 @@ export class Gateway {
       baseURL: env.REACT_APP_DN_BASE_URL,
       url: "/dashboard-gate/register",
       method: "POST",
+    });
+  }
+
+  public createFhirStaging(input: NewFhirProjectInput): Promise<any> {
+    return request({
+      baseURL: GATEWAY_BASE_URL + "/fhir",
+      method: "POST",
+      data: input,
     });
   }
 }
