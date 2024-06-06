@@ -8,7 +8,6 @@ from test.mock_object import MockResponse
 def setup(monkeypatch):
     monkeypatch.setenv('PYQE_URL', 'http://pyqe.url')
     monkeypatch.setenv('PYQE_TLS_CLIENT_CA_CERT_PATH', 'empty')
-    monkeypatch.setenv('PYQE_AUTH_TYPE', '0')
     monkeypatch.setattr(ConceptQuery, '_get', get_mock_response)
 
 
@@ -233,7 +232,7 @@ def test_init_concept_without_including_descendants():
 
 
 def get_mock_response(auth_api, path, params):
-    if path == 'api/services/standard-concept-ids' and \
+    if path == '/analytics-svc/api/services/standard-concept-ids' and \
             params == {'conceptCode': '12345', 'vocabularyId': 'vocabulary_id'}:
         standard_concept_payload = {
             'concept_id': [
@@ -245,7 +244,7 @@ def get_mock_response(auth_api, path, params):
             ]
         }
         return MockResponse(200, standard_concept_payload)
-    elif path == 'api/services/standard-concept-ids' and \
+    elif path == '/analytics-svc/api/services/standard-concept-ids' and \
             params == {'conceptCode': '12345', 'vocabularyId': None}:
         standard_concept_payload = {
             'concept_id': [
@@ -262,7 +261,7 @@ def get_mock_response(auth_api, path, params):
             ]
         }
         return MockResponse(200, standard_concept_payload)
-    elif path == 'api/services/descendant-concepts' and \
+    elif path == '/analytics-svc/api/services/descendant-concepts' and \
             params == {'conceptId': '12345'}:
         descendant_concepts_payload = {
             'descendants': [

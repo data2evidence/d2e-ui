@@ -35,6 +35,7 @@ const state = {
 
   zipFireDownload: '',
   zipDownloadCompleted: false,
+  columnsToInclude: 'SELECTED',
 
   // fire chart request
   fireRequest: false,
@@ -173,6 +174,42 @@ const actions = {
     })
   },
   downloadZIP({ state, dispatch, rootGetters }, additionalParameter) {
+    const getAllColumns = () => {
+      const updatedParameters = JSON.parse(JSON.stringify(additionalParameter))
+      const interactionPaths = rootGetters.getColumnSelectionMenu.map(menu => menu.path).filter(path => path)
+      const allInteractionAttributePaths = []
+      interactionPaths.forEach((path: string) => {
+        allInteractionAttributePaths.push(
+          rootGetters.getColumnSelectionMenuByPath(path)?.subMenu.forEach(sm => {
+            if (sm.data.oInternalConfigAttribute.type !== 'conceptSet') {
+              allInteractionAttributePaths.push(sm.path)
+            }
+          })
+        )
+      })
+
+      const allBasicAttributePaths = rootGetters.getMriFrontendConfig
+        .getPatientListConfig()
+        .getBasicDataCols()
+        .attributes.map(attr => attr.sConfigPath)
+      allInteractionAttributePaths.concat(allBasicAttributePaths)
+      const allColumnPaths = allBasicAttributePaths.concat(allInteractionAttributePaths).filter(path => {
+        if (!path) {
+          return false
+        }
+        return true
+      })
+      updatedParameters.cohortDefinition.columns = allColumnPaths
+        .map(path => {
+          return {
+            configPath: path,
+            order: '',
+            seq: 0,
+          }
+        })
+        .filter(columnObj => columnObj.configPath)
+      return updatedParameters
+    }
     if (state.layout.activeChart in zipEndpoints) {
       // const fileStream = streamSaver.createWriteStream('archive.txt')
 
@@ -189,6 +226,7 @@ const actions = {
       let entityColumns
 
       if (state.layout.activeChart === 'list') {
+        additionalParameter = state.columnsToInclude === 'SELECTED' ? additionalParameter : getAllColumns()
         params = rootGetters.getMriFrontendConfig.reverseTranslate({
           ...rootGetters.getRequest,
           ...additionalParameter,
@@ -197,7 +235,6 @@ const actions = {
         params = rootGetters.getBookmarksData
       }
       const url = zipEndpoints[state.layout.activeChart]
-
       try {
         entityColumns = splitEntitiesByColumns(params.cohortDefinition.columns)
       } catch (e) {
@@ -254,9 +291,10 @@ const actions = {
     commit(types.CSV_DOWNLOAD_COMPLETED, { csvDownloadCompleted: false })
     commit(types.CHART_CSV_DOWNLOAD, Math.random())
   },
-  setFireDownloadZIP({ commit }) {
+  setFireDownloadZIP({ commit }, { columnsToInclude }) {
     commit(types.ZIP_DOWNLOAD_COMPLETED, { downloadCompleted: false })
     commit(types.CHART_ZIP_DOWNLOAD, Math.random())
+    commit(types.CHART_COLUMNS_TO_INCLUDE, columnsToInclude)
   },
   setInitialAxisSelection({ getters, dispatch, rootGetters }) {
     const initialAxis = rootGetters.getMriFrontendConfig.getInitialAxisSelection()
@@ -328,6 +366,9 @@ const mutations = {
   },
   [types.CHART_SET_FIRE_REQUEST](modulestate) {
     modulestate.fireRequest = !modulestate.fireRequest
+  },
+  [types.CHART_COLUMNS_TO_INCLUDE](modulestate, columnsToInclude) {
+    modulestate.columnsToInclude = columnsToInclude
   },
 }
 

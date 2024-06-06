@@ -3,10 +3,18 @@
     <template v-slot:header>{{ getText('MRI_PA_PATIENT_LIST_DOWNLOAD_AS_ZIP') }}</template>
     <template v-slot:body>
       <div>
-        <div style="padding: 24px">{{ getText('MRI_PA_PATIENT_LIST_DOWNLOAD_AS_ZIP_FULL') }}</div>
-        <div class="dialog-warning-delay" v-if="getIsLargePatientData">
+        <div style="margin-left: 24px; display: flex">
+          <input v-model="columnsToInclude" value="SELECTED" type="radio" name="config-selection-radio" />
+          <div style="margin-left: 5px">{{ getText('MRI_PA_PATIENT_LIST_INCLUDE_SELECTED_COLUMNS') }}</div>
+        </div>
+        <div style="margin-left: 24px; margin-bottom: 10px; display: flex">
+          <input v-model="columnsToInclude" value="ALL" type="radio" name="config-selection-radio" />
+          <div style="margin-left: 5px">{{ getText('MRI_PA_PATIENT_LIST_INCLUDE_ALL_COLUMNS') }}</div>
+        </div>
+        <div class="dialog-warning-delay" v-if="getIsLargePatientData || columnsToInclude === 'ALL'">
           {{ getText('MRI_PA_PATIENT_LIST_DOWNLOAD_WARNING') }}
         </div>
+        <div style="padding: 24px">{{ getText('MRI_PA_PATIENT_LIST_DOWNLOAD_AS_ZIP_FULL') }}</div>
       </div>
     </template>
     <template v-slot:footer>
@@ -29,6 +37,7 @@ export default {
   data() {
     return {
       busy: false,
+      columnsToInclude: 'SELECTED',
     }
   },
   computed: {
@@ -45,7 +54,7 @@ export default {
     ...mapActions(['setFireDownloadZIP', 'cancelDownloadZIP']),
     download() {
       this.busy = true
-      this.setFireDownloadZIP()
+      this.setFireDownloadZIP({ columnsToInclude: this.columnsToInclude })
     },
     cancel() {
       if (this.busy) {

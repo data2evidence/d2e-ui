@@ -8,7 +8,7 @@ import { TimeAtRiskDrawer } from "./TimeAtRiskDrawer";
 import "./TimeAtRiskNode.scss";
 
 export interface TimeAtRiskNodeData extends NodeDataState {
-  id: number;
+  timeAtRiskId: number;
   endWith: string;
   startWith: string;
   startOffset?: number;

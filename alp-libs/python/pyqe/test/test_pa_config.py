@@ -4,8 +4,8 @@ from pyqe.api.pa_config import PAConfig
 from test.mock_object import MockResponse
 
 
-PA_PATH = 'pa/services/analytics.xsjs'
-FRONTEND_CONFIG_PATH = 'pa/services/analytics.xsjs'
+PA_PATH = '/analytics-svc/pa/services/analytics.xsjs'
+FRONTEND_CONFIG_PATH = '/analytics-svc/pa/services/analytics.xsjs'
 
 mock_config_list = [{
     'meta': {
@@ -47,7 +47,6 @@ mock_frontend_config = [{
 @pytest.fixture
 def setup(monkeypatch):
     monkeypatch.setenv('PYQE_URL', 'http://pyqe.url')
-    monkeypatch.setenv('PYQE_AUTH_TYPE', '0')
     monkeypatch.setenv('PYQE_TLS_CLIENT_CA_CERT_PATH', 'empty')
     monkeypatch.setattr(_Api, '_get', _get_mock_response)
 
