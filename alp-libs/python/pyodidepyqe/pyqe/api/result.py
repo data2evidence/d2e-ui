@@ -29,7 +29,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
             'mriquery': self._encode_query_string(filter).decode('ascii')
         }
         
-        response = await self._get('api/services/population/json/patientcount', params)
+        response = await self._get('/analytics-svc/api/services/population/json/patientcount', params)
         res = await response.json()
         patient_count = res['data'][0]['patient.attributes.pcount']
         logger.debug(
@@ -61,7 +61,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
                 'mriquery': self._encode_query_string(cohort).decode('ascii')
             }
         print(type(self._encode_query_string(cohort).decode('ascii')))
-        response = await self._get('api/services/patient', params)
+        response = await self._get('/analytics-svc/api/services/patient', params)
         return await response.json()
     #### DEAL WITH STREAMS LATER ##########################
     # def download_stream(self, cohort: dict):
@@ -75,7 +75,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
     #         'mriquery': self._encode_query_string(cohort)
     #     }
 
-    #     return self._get_stream('api/services/datastream/patient', params)
+    #     return self._get_stream('/analytics-svc/api/services/datastream/patient', params)
     ####################
 
     async def download_dataframe(self, cohort: dict, filename: str = "__temp.csv", cohortid: int = 0, limit: int or bool = False, offset: int = 0):
@@ -192,7 +192,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
                 'cohortId': str(cohortId),
                 'returnOnlyPatientCount': 'False'
             }
-        result = await self._get('api/services/datastream/patient', params)
+        result = await self._get('/analytics-svc/api/services/datastream/patient', params)
         return await result.string()
     
     async def get_patientCount_api(self, cohort: dict, cohortId: int = 0):
@@ -206,7 +206,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
                 'cohortId':  str(cohortId),
                 'returnOnlyPatientCount': 'True'
                 }
-        result = await self._get('api/services/datastream/patient', params)
+        result = await self._get('/analytics-svc/api/services/datastream/patient', params)
         return await result.string()
         
     def get_recontact_info(self, cohort: dict, filename: str):
@@ -220,7 +220,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
             'mriquery': self._encode_query_string(cohort)
         }
 
-        response = self._get('api/services/recontact/patient', params)
+        response = self._get('/analytics-svc/api/services/recontact/patient', params)
         g = open(f"{filename}.enc", "wb")
         g.write(bytes.fromhex(response.text))
         g.close()

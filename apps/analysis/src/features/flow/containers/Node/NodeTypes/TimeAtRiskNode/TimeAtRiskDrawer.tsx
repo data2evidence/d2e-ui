@@ -33,7 +33,7 @@ interface FormData extends TimeAtRiskNodeData {}
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   description: "",
-  id: undefined,
+  timeAtRiskId: undefined,
   startWith: "start",
   endWith: "end",
 };
@@ -56,7 +56,7 @@ export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
       setFormData({
         name: node.data.name,
         description: node.data.description,
-        id: node.data.id,
+        timeAtRiskId: node.data.timeAtRiskId,
         startWith: node.data.startWith,
         endWith: node.data.endWith,
         startOffset: node.data.startOffset,
@@ -103,10 +103,10 @@ export const TimeAtRiskDrawer: FC<TimeAtRiskDrawerProps> = ({
       </Box>
       <Box mb={4}>
         <TextInput
-          label="ID"
-          value={formData.id}
+          label="TimeAtRisk ID"
+          value={formData.timeAtRiskId}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onFormDataChange({ id: e.target.value })
+            onFormDataChange({ timeAtRiskId: e.target.value })
           }
           type="number"
         />

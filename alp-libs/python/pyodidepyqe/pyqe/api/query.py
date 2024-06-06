@@ -66,7 +66,7 @@ class Query(_AuthApi):
         if selected_study == None:
             print("\n Study not found or assigned to your account \n")
         else:
-            self._study_name = selected_study['name']
+            self._study_name = selected_study['studyDetail']['name']
             self._selectedStudyId = selected_study['id']
             await self.set_study_config()
 
@@ -107,7 +107,7 @@ class Query(_AuthApi):
         self._assigned_study_list = assigned_studies
         for index, study in enumerate(assigned_studies):
             options.append(str(index + 1))
-            study_name = study['name']
+            study_name = study['studyDetail']['name']
             study_id = study['id']
             available_studies_for_display += f'\n({ index + 1 }) { study_name } - { study_id }'
 
