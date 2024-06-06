@@ -512,7 +512,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
       if (createFhirProject) {
         const fhirProjectInput: NewFhirProjectInput = {
           name: name,
-          description: summary,
+          description: description,
         };
         await api.gateway.createFhirStaging(fhirProjectInput);
       }
