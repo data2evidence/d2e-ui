@@ -780,7 +780,7 @@ export const i18nDefault = {
     SELECT_DATASET__SELECT_DATASET: "Dataset",
     SELECT_RELEASE__SELECT_RELEASE: "Version",
     SETUP_MENU_ITEM__CONFIGURE: "Configure",
-    SETUP_MENU_ITEM__INSTALL: "Install",
+    SETUP_MENU_ITEM__INSTALL: "Initialize",
     SETUP_PLUGIN_UPLOAD__TITLE: "Install default plugins",
     SETUP_PLUGIN_UPLOAD__WARNING: "Installation may take a long time",
     SETUP_PLUGIN_UPLOAD__CANCEL: "Cancel",

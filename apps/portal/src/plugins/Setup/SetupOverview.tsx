@@ -23,6 +23,7 @@ export const SetupOverview: FC = () => {
   const locationState = location.state as LocationState;
   const [showTriggerUploadDialog, openTriggerUploadDialog, closeTriggerUploadDialog] = useDialogHelper(false);
   const [uploadActive, setUploadActive] = useState(false);
+  const [pluginInstallationStatus, setPluginInstallationStatus] = useState("");
   const enabledPlugins = useMemo(() => plugins.setup?.filter((plugin: IPluginItem) => plugin.enabled) || [], []);
   const state = useMemo(() => locationState || { state: { tab: "setup", subTab: null } }, [locationState]);
 
@@ -35,6 +36,7 @@ export const SetupOverview: FC = () => {
     } else {
       setUploadActive(false);
     }
+    setPluginInstallationStatus(res.installationStatus);
   }, []);
 
   useEffect(() => {
@@ -101,7 +103,7 @@ export const SetupOverview: FC = () => {
                 key={`default-plugin`}
                 name={`Plugins`}
                 description={`Trigger default plugins installation`}
-                notes={`Installing: ${uploadActive}`}
+                notes={`Status: ${pluginInstallationStatus}`}
                 onClick={() => openTriggerUploadDialog()}
               />
             </div>
