@@ -117,16 +117,17 @@ const ActionSelector: FC<ActionSelectorProps> = ({
         if (actionVal === "permissions" && !isUserAdmin) {
           return true;
         }
-        if (study.dialect === "postgres") {
-          if (actionVal === "release" || actionVal === "version") {
-            return true;
-          }
+        if (study.dialect === "postgres" && actionVal === "release") {
+          return true;
+        }
+        if (actionVal === "version" && !study.schemaName) {
+          return true;
         }
         return false;
       }
       return true;
     },
-    [isSchemaUpdatable, isUserAdmin]
+    [isSchemaUpdatable, isUserAdmin, study]
   );
 
   return (

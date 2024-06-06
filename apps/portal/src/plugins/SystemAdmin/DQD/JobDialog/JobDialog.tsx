@@ -50,12 +50,15 @@ const JobDialog: FC<JobDialogProps> = ({
     try {
       if (jobRunType === JobRunTypes.DQD) {
         await api.dataflow.createFlowRunByMetadata({
-          type: JobRunTypes.DQD.toLowerCase(),
+          type: JobRunTypes.DQD,
           options: data,
         });
       }
       if (jobRunType === JobRunTypes.DataCharacterization) {
-        await api.dataflow.generateDataCharacterizationFlowRun(data);
+        await api.dataflow.createFlowRunByMetadata({
+          type: JobRunTypes.DataCharacterization,
+          options: data,
+        });
       }
       setFeedback({
         type: "success",
