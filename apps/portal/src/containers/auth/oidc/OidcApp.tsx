@@ -1,6 +1,8 @@
 import React, { FC, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { OidcProvider, useOidc } from "@axa-fr/react-oidc";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { PublicApp } from "../../../apps/PublicApp";
 import { PrivateApp } from "../../../apps/PrivateApp";
 import { AppProvider, usePostLoginRedirectUri, useTranslation } from "../../../contexts";
@@ -52,9 +54,11 @@ export const OidcApp: FC = () => {
       callbackSuccessComponent={OidcCallbackSuccess}
       sessionLostComponent={OidcSessionLost}
     >
-      <AppProvider>
-        <OidcAppInternal />
-      </AppProvider>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <AppProvider>
+          <OidcAppInternal />
+        </AppProvider>
+      </LocalizationProvider>
     </OidcProvider>
   );
 };
