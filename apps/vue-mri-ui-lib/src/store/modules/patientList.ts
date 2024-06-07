@@ -247,8 +247,10 @@ const actions = {
     function addColsToMenu(interaction, submenu) {
       interaction.attributes.forEach((attribute, idx) => {
         const path = attribute.getConfigPath()
-
-        if (!attribute.oInternalConfigAttribute.aggregated) {
+        if (
+          !attribute.oInternalConfigAttribute.aggregated &&
+          attribute.oInternalConfigAttribute.type !== 'conceptSet'
+        ) {
           submenu.push({
             idx,
             path,

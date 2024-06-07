@@ -31,7 +31,7 @@ Documentation for getting started can be viewed at `Getting_started_guide.md`.
 - Create .env file (refer to .env.example) for setting the environment variables (refer to table of `PYQE_URL`s below if needed)
   ```
   # PYQE WEB API INSTANCE CONNECTION
-  PYQE_URL="http://localhost:41100/analytics-svc/"
+  PYQE_URL="http://localhost:41100"
   ```
 - Run tests
   ```bash
@@ -40,21 +40,17 @@ Documentation for getting started can be viewed at `Getting_started_guide.md`.
   ```
 - view additional info below for setting up vscode
 
-# CFUAA Authentication
-- navigate to `/pyqe/settings.yaml`
-- set `cfuaa` to `true`
-
 # Connecting to the backend
 
 - update `PYQE_URL` to the url of choice
 
 | PYQE_URL                                    | environment     |
 | ------------------------------------------- | --------------- |
-| https://localhost:41100/analytics-svc/         | local (gateway) |
-| https://alp-dev.alp-dev.org/analytics-svc/        | dev             |
-| https://alp-dev-eu.alp-dev.org/analytics-svc/     | dev eu          |
-| https://alp-staging.alp-dev.org/analytics-svc/    | staging         |
-| https://alp-staging-eu.alp-dev.org/analytics-svc/ | staging eu      |
+| https://localhost:41100       | local (gateway) |
+| https://alp-dev.alp-dev.org        | dev             |
+| https://alp-dev-eu.alp-dev.org     | dev eu          |
+| https://alp-staging.alp-dev.org    | staging         |
+| https://alp-staging-eu.alp-dev.org | staging eu      |
 
 - if using `FRA Public Url`, ensure that the value of the `PYQE_TLS_CLIENT_CA_CERT_PATH` is set to `PYQE_TLS_CLIENT_CA_CERT_PATH=""`
 

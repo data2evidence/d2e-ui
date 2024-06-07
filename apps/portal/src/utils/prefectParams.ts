@@ -15,10 +15,20 @@ export function getProperties(schema: Record<string, any>) {
     const { required, properties } = result;
 
     if (required) {
-      required.forEach((key: string) => (properties[key]["required"] = true));
+      required.forEach((key: string) => {
+        properties[key]["required"] = true;
+      });
     }
 
     for (const prop in properties) {
+      if (properties[prop]["anyOf"]) {
+        if (properties[prop]["anyOf"].some((i: Record<string, string>) => i.type === "null")) {
+          delete properties[prop]["required"];
+        }
+        const filteredTypes = properties[prop]["anyOf"].filter((i: Record<string, string>) => i.type !== "null");
+        properties[prop] = { ...properties[prop], ...filteredTypes[0] };
+      }
+
       if (properties[prop][referenceKey]) {
         const key = getDefinitionKey(properties[prop][referenceKey]);
         const def = definitions[key];

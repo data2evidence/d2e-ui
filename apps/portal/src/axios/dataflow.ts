@@ -1,12 +1,6 @@
 import request from "./request";
 import env from "../env";
-import {
-  Flow,
-  GenerateDataQualityFlowRun,
-  GenerateDataCharacterizationFlowRun,
-  ExecuteFlowRunByDeployment,
-  CreateFlowRunByMetadata,
-} from "../types";
+import { Flow, ExecuteFlowRunByDeployment, CreateFlowRunByMetadata } from "../types";
 
 const DATAFLOW_MGMT_URL = `${env.REACT_APP_DN_BASE_URL}dataflow-mgmt/`;
 
@@ -130,24 +124,6 @@ export class Dataflow {
       baseURL: DATAFLOW_MGMT_URL,
       url: `dqd/data-quality/dataset/${datasetId}/cohort/${cohortDefinitionId}/flow-run/latest`,
       method: "GET",
-    });
-  }
-
-  public generateDataQualityFlowRun(data: GenerateDataQualityFlowRun) {
-    return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: "dqd/data-quality/flow-run",
-      method: "POST",
-      data: data,
-    });
-  }
-
-  public generateDataCharacterizationFlowRun(data: GenerateDataCharacterizationFlowRun) {
-    return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: "dqd/data-characterization/flow-run",
-      method: "POST",
-      data: data,
     });
   }
 

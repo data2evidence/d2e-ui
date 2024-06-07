@@ -126,3 +126,51 @@ interface BaseGenerateFlowRunParams {
 interface GenerateDataQualityFlowRunParams extends BaseGenerateFlowRunParams {
   cohortDefinitionId?: string
 }
+
+interface ChartZipParameters {
+  cohortDefinition: {
+    cards: {
+      content: {
+        content: {
+          configPath: string
+          instanceNumber: number
+          instanceID: string
+          name: string
+          inactive: boolean
+          type: string
+          attributes: {
+            content: {
+              configPath: string
+              instanceID: string
+              type: string
+              constraints: {
+                content: any[]
+                type: string
+                op: string
+              }
+            }[]
+            type: string
+            op: string
+          }
+          advanceTimeFilter: any
+        }[]
+        type: string
+        op: string
+      }[]
+      type: string
+      op: string
+    }
+    configData: {
+      configId: string
+      configVersion: string
+    }
+    axes: any[]
+    guarded: boolean
+    columns: {
+      configPath: string
+      order: string
+      seq: number
+    }[]
+  }
+  selectedStudyEntityValue: string
+}

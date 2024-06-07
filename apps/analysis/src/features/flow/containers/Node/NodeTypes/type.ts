@@ -93,11 +93,10 @@ export const TWO_INCIDENCE_NODE = [
   "self_controlled_case_series_analysis_node",
   "cohort_incidence_node",
   "cohort_method_analysis_node",
-  "patient_level_prediction_node",
   "self_controlled_case_series_node",
   "strategus_node",
 ];
-export const THREE_INCIDENCE_NODE = [];
+export const THREE_INCIDENCE_NODE = ["patient_level_prediction_node"];
 export const FOUR_INCIDENCE_NODE = [];
 export const FIVE_INCIDENCE_NODE = [];
 
@@ -220,6 +219,11 @@ export const NODE_CONNECTOR_MAPPING = {
         name: "Study Population",
         type: "lightpink",
         classifier: "study_population",
+      },
+      {
+        name: "Default Covariate Settings",
+        type: "darkgreen",
+        classifier: "default_covariate_settings",
       },
     ],
   },
