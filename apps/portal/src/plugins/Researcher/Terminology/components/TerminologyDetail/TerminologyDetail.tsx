@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useCallback } from "react";
 import { Table, TableBody, TableHead } from "@mui/material";
 import { Tabs, Tab } from "@mui/material";
 import { TableRow, TableCell, Loader } from "@portal/components";
@@ -6,6 +6,7 @@ import { useFeedback, useTranslation } from "../../../../../contexts";
 import { TerminologyDetailsList } from "../../utils/types";
 import { Terminology } from "../../../../../axios/terminology";
 import ConceptHierarchy from "../ConceptHierarchy/ConceptHierarchy";
+import { i18nKeys } from "../../../../../contexts/app-context/states";
 import "./TerminologyDetail.scss";
 
 interface TerminologyDetailProps {
@@ -20,15 +21,15 @@ enum TerminologyDetailsTab {
 }
 
 const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, datasetId }) => {
-  const { getText, i18nKeys } = useTranslation();
+  const { getText } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<TerminologyDetailsList | null>();
   const { setFeedback } = useFeedback();
   const [tabValue, setTabValue] = useState(TerminologyDetailsTab.RelatedConcepts);
 
-  const handleTabSelectionChange = async (event: React.SyntheticEvent, value: TerminologyDetailsTab) => {
+  const handleTabSelectionChange = useCallback(async (event: React.SyntheticEvent, value: TerminologyDetailsTab) => {
     setTabValue(value);
-  };
+  }, []);
 
   useEffect(() => {
     if (userId && datasetId) {

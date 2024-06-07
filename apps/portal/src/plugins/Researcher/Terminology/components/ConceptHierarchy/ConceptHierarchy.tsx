@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Terminology } from "../../../../../axios/terminology";
 import { useFeedback, useTranslation } from "../../../../../contexts";
 import { ConceptHierarchyResponse, ConceptHierarchyNode, ConceptHierarchyNodeCounts } from "../../utils/types";
+import { i18nKeys } from "../../../../../contexts/app-context/states";
 import "reactflow/dist/style.css";
 import "./ConceptHierarchy.scss";
 
@@ -65,7 +66,7 @@ const ConceptHierarchy: FC<ConceptHierarchyProps> = ({ userId, conceptId, datase
   const [level, setLevel] = useState<string>("1");
   const [data, setData] = useState<ConceptHierarchyResponse>();
   const { setFeedback } = useFeedback();
-  const { getText, i18nKeys } = useTranslation();
+  const { getText } = useTranslation();
 
   const handleChange = useCallback((level: string) => {
     setLevel(level);
