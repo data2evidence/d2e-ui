@@ -4,6 +4,14 @@
     margin: 16px 32px 0;
     color: var(--color-primary);
     overflow: auto;
+    
+    .json-editor__header {
+      color: var(--color-neutral);
+    }
+
+    .alp-checkbox {
+      color: var(--color-neutral);
+    }
   }
 
   .subheader {

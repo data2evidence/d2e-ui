@@ -21,7 +21,7 @@ class PAConfig(_AuthApi):
             'action': 'getMyConfig',
             'selectedStudyId': selectedStudyId
         }
-        response = await self._get('pa/services/analytics.xsjs', params)
+        response = await self._get('/analytics-svc/pa/services/analytics.xsjs', params)
         if response.ok:
             return await response.json()
 
@@ -31,7 +31,7 @@ class PAConfig(_AuthApi):
             'action': 'getMyStudyConfigList',
             'selectedStudyEntityValue': study
         }
-        response = await self._get('pa/services/analytics.xsjs', params)
+        response = await self._get('/analytics-svc/pa/services/analytics.xsjs', params)
         if response.ok:
             return await response.json()
 
@@ -43,6 +43,6 @@ class PAConfig(_AuthApi):
             'studyId': selectedStudyId,
             'lang': lang
         }
-        response = await self._get('pa/services/analytics.xsjs', params)
+        response = await self._get('/analytics-svc/pa/services/analytics.xsjs', params)
         if response.ok:
             return await response.json()

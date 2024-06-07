@@ -1,11 +1,14 @@
-import React, { FC, useCallback, useState, useEffect } from "react";
+import React, { FC, useCallback, useState, useEffect, ChangeEvent } from "react";
 import { Button, Dialog, FormControl, TextField } from "@portal/components";
 import { Feedback, CloseDialogType, Flow } from "../../../../types";
 import Divider from "@mui/material/Divider";
 import { api } from "../../../../axios/api";
 import { useTranslation } from "../../../../contexts";
 import { getParameters, getProperties } from "../../../../utils";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup, FormControlLabel, RadioGroup, Radio } from "@mui/material";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 import JSONEditor from "../JSONEditor/JSONEditor";
 import ParamsForm from "../ParamsForm/ParamsForm";
 import "./ExecuteFlowDialog.scss";
@@ -25,6 +28,11 @@ enum ParamType {
   JSON = "json",
 }
 
+enum FlowRunType {
+  NOW = "NOW",
+  SCHEDULE = "SCHEDULE",
+}
+
 const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) => {
   const { getText, i18nKeys } = useTranslation();
   const [formData, setFormData] = useState<FormDataField>({});
@@ -35,6 +43,8 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   const [flowRunName, setFlowRunName] = useState("");
   const [flowRunNameError, setFlowRunNameError] = useState(false);
   const [paramType, setParamType] = useState(ParamType.Field);
+  const [schedule, setSchedule] = useState<Dayjs | null>(null);
+  const [flowRunType, setFlowRunType] = useState<string>(FlowRunType.NOW);
   const [errors, setErrors] = useState<string[]>([]);
   const flowName = flow?.name || "";
 
@@ -144,7 +154,43 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
     }
     setErrors(errorsArr);
     return errors.length !== 0 || flowRunName === "";
-  }, [flowRunName, formData, errors]);
+  }, [flowRunName, formData, errors, flowRunType, schedule]);
+
+  const validateSchedule = useCallback(() => {
+    let isInvalidDate = false;
+    if (flowRunType === FlowRunType.NOW) {
+      return isInvalidDate;
+    }
+
+    // Empty, past time and invalid schedule format is not allowed
+    if (
+      flowRunType === FlowRunType.SCHEDULE &&
+      (!schedule || schedule.isBefore(dayjs()) || !dayjs(schedule).isValid())
+    ) {
+      isInvalidDate = true;
+    }
+
+    return isInvalidDate;
+  }, [flowRunType, schedule]);
+
+  const getScheduleErrorAndHelperText = useCallback(() => {
+    let error = false;
+    let helperText = "";
+
+    if (flowRunType === FlowRunType.SCHEDULE) {
+      if (schedule === null) {
+        error = true;
+        helperText = getText(i18nKeys.EXECUTE_FLOWDIALOG__EMPTY_SCHEDULE_ERROR);
+      } else if (schedule.isBefore(dayjs())) {
+        error = true;
+        helperText = getText(i18nKeys.EXECUTE_FLOWDIALOG__PAST_SCHEDULE_ERROR);
+      } else if (!dayjs(schedule).isValid()) {
+        error = true;
+        helperText = getText(i18nKeys.EXECUTE_FLOWDIALOG__INVALID_SCHEDULE_ERROR);
+      }
+    }
+    return { error, helperText };
+  }, [schedule, flowRunType]);
 
   function hasError(property: Record<string, any>, form: Record<string, any>) {
     if (property.type === "boolean") {
@@ -154,7 +200,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
   }
 
   const handleAdd = useCallback(async () => {
-    if (formDataIsEmpty() || validateFormData()) {
+    if (formDataIsEmpty() || validateFormData() || validateSchedule()) {
       return;
     }
 
@@ -166,6 +212,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
         flowName: flowName,
         deploymentName: deploymentName,
         params: formData,
+        schedule: flowRunType === FlowRunType.SCHEDULE && schedule ? schedule.toISOString() : null,
       };
 
       await api.dataflow.executeFlowRunByDeployment(flowRun);
@@ -185,6 +232,18 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
       setLoading(false);
     }
   }, [deploymentName, flowName, flowRunName, formData, formDataIsEmpty, handleClose, validateFormData, getText]);
+
+  const handleScheduleChange = useCallback((date: Dayjs | null) => {
+    if (date) {
+      setSchedule(dayjs(date));
+    } else {
+      setSchedule(null);
+    }
+  }, []);
+
+  const handleFlowRunTypeChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setFlowRunType(event.target.value);
+  }, []);
 
   return (
     <Dialog
@@ -239,6 +298,39 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
             <JSONEditor value={formData} onChange={handleJSONChange}></JSONEditor>
           </div>
         )}
+        <div className="u-padding-vertical--normal">
+          <span className="subheader">{getText(i18nKeys.EXECUTE_FLOWDIALOG__SCHEDULE)}</span>
+          <RadioGroup name="flowruntype" value={flowRunType} onChange={handleFlowRunTypeChange}>
+            <FormControlLabel
+              value="NOW"
+              control={<Radio />}
+              label={getText(i18nKeys.EXECUTE_FLOWDIALOG__RUN_IMMEDIATELY)}
+            />
+            <FormControlLabel
+              value="SCHEDULE"
+              control={<Radio />}
+              label={getText(i18nKeys.EXECUTE_FLOWDIALOG__RUN_SCHEDULE)}
+            />
+          </RadioGroup>
+
+          {flowRunType === FlowRunType.SCHEDULE && (
+            <div className="u-padding-vertical--normal">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Job Run Schedule"
+                  defaultValue={schedule}
+                  onChange={handleScheduleChange}
+                  disablePast
+                  slotProps={{
+                    textField: {
+                      ...getScheduleErrorAndHelperText(),
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            </div>
+          )}
+        </div>
       </div>
 
       <Divider />

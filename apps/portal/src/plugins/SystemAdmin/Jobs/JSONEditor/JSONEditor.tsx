@@ -44,7 +44,7 @@ const JSONEditor: FC<JSONEditorProps> = ({ value, onChange, parentKey, childKey,
 
   return (
     <>
-      {name}
+      <span className="json-editor__header">{name}</span>
       <Editor
         value={code}
         onValueChange={handleChange}
