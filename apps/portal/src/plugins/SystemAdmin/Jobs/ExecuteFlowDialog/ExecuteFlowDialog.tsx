@@ -298,7 +298,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
             <JSONEditor value={formData} onChange={handleJSONChange}></JSONEditor>
           </div>
         )}
-        <>
+        <div className="u-padding-vertical--normal">
           <span className="subheader">{getText(i18nKeys.EXECUTE_FLOWDIALOG__SCHEDULE)}</span>
           <RadioGroup name="flowruntype" value={flowRunType} onChange={handleFlowRunTypeChange}>
             <FormControlLabel
@@ -330,7 +330,7 @@ const ExecuteFlowDialog: FC<ExecuteFlowDialogProps> = ({ flow, open, onClose }) 
               </LocalizationProvider>
             </div>
           )}
-        </>
+        </div>
       </div>
 
       <Divider />
