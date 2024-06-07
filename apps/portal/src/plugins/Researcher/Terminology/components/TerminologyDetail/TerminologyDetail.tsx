@@ -27,7 +27,7 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
   const { setFeedback } = useFeedback();
   const [tabValue, setTabValue] = useState(TerminologyDetailsTab.RelatedConcepts);
 
-  const handleTabSelectionChange = useCallback(async (event: React.SyntheticEvent, value: TerminologyDetailsTab) => {
+  const handleTabSelectionChange = useCallback((event: React.SyntheticEvent, value: TerminologyDetailsTab) => {
     setTabValue(value);
   }, []);
 
