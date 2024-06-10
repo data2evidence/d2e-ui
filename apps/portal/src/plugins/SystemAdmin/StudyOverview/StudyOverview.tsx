@@ -39,7 +39,7 @@ const StudyOverview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [fetchUpdatesLoading, setFetchUpdatesLoading] = useState(false);
-  const [fetchUpdatesFlowId, setFetchUpdatesFlowId] = useState("");
+  const [fetchUpdatesFlowIds, setFetchUpdatesFlowIds] = useState<string[]>([]);
   const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, undefined, refetch);
   const [databases] = useDatabases();
 
@@ -71,31 +71,48 @@ const StudyOverview: FC = () => {
         FlowRunJobStateTypes.PAUSED as string,
         FlowRunJobStateTypes.PENDING as string,
       ];
-      if (fetchUpdatesFlowId) {
-        const flowRunState = await api.dataflow.getFlowRunState(fetchUpdatesFlowId);
 
-        if (!pendingJobStatuses.includes(flowRunState.type)) {
-          setFetchUpdatesLoading(false);
-          setFetchUpdatesFlowId("");
-        }
+      const completedJobStatuses = [
+        FlowRunJobStateTypes.COMPLETED as string,
+        FlowRunJobStateTypes.CANCELLED as string,
+        FlowRunJobStateTypes.FAILED as string,
+        FlowRunJobStateTypes.CRASHED as string,
+      ];
 
-        if (flowRunState.type === FlowRunJobStateTypes.COMPLETED) {
-          setRefetch((refetch) => refetch + 1);
+      if (fetchUpdatesFlowIds && fetchUpdatesFlowIds.length > 0) {
+        try {
+          let allCompleted = true;
+          for (const flowId of fetchUpdatesFlowIds) {
+            const flowRunState = await api.dataflow.getFlowRunState(flowId);
+
+            if (completedJobStatuses.includes(flowRunState.state_type)) {
+              setFetchUpdatesFlowIds((prevFlowIds) => prevFlowIds.filter((id) => id !== flowId));
+            } else if (pendingJobStatuses.includes(flowRunState.state_type)) {
+              allCompleted = false;
+            }
+          }
+
+          if (allCompleted) {
+            setFetchUpdatesLoading(false);
+            setFetchUpdatesFlowIds([]);
+            setRefetch((refetch) => refetch + 1);
+          }
+        } catch (error) {
+          console.error("Error fetching flow run state:", error);
         }
       }
-      return;
     };
 
     const interval = setInterval(() => {
       fetchFlowRunState();
-    }, 10000);
+    }, 60000);
 
-    if (!fetchUpdatesFlowId) {
+    if (fetchUpdatesFlowIds.length === 0) {
       clearInterval(interval);
     }
 
-    return (): void => clearInterval(interval);
-  }, [fetchUpdatesFlowId]);
+    return () => clearInterval(interval);
+  }, [fetchUpdatesFlowIds]);
 
   const handleUpdateStudy = useCallback(
     (study: Study) => {
@@ -216,26 +233,53 @@ const StudyOverview: FC = () => {
   );
 
   const fetchDatamodelUpdates = useCallback(async () => {
-    const options = {
-      options: {
-        flow_action_type: "get_version_info",
-        token: "",
-        database_code: "",
-        data_model: "",
-      },
-    };
+    const flowMetadata = await api.dataflow.getFlowMetadata();
+
+    const datasetsByFlow: Record<string, Study[]> = {};
+
+    datasets.forEach((item: Study) => {
+      const regex = /\[([^[\]]*)\]/;
+      const match = item.dataModel.match(regex);
+      const dataModelValue = match ? match[1].trim() : "";
+
+      if (!datasetsByFlow[dataModelValue]) {
+        datasetsByFlow[dataModelValue] = [];
+      }
+      datasetsByFlow[dataModelValue].push(item);
+    });
+
+    function getFlowId(flowName: string) {
+      const foundFlow = flowMetadata.find((flow: Record<string, any>) => flow.name === flowName);
+      return foundFlow.flowId;
+    }
+
+    const apiRequests = [];
+    for (const flow in datasetsByFlow) {
+      apiRequests.push(
+        api.dataflow.createFlowRunByMetadata({
+          type: "datamodel",
+          options: {
+            options: {
+              flow_action_type: "get_version_info",
+              token: "",
+              database_code: "",
+              data_model: "",
+              datasets: datasetsByFlow[flow],
+            },
+          },
+          flowId: getFlowId(flow),
+        })
+      );
+    }
     try {
-      const res = await api.dataflow.createFlowRunByMetadata({
-        type: "datamodel",
-        options,
-      });
+      const res: string[] = await Promise.all(apiRequests);
       setFetchUpdatesLoading(true);
-      setFetchUpdatesFlowId(res);
+      setFetchUpdatesFlowIds(res);
     } catch (error) {
       console.error(error);
     }
-  }, [setFetchUpdatesLoading, setFetchUpdatesFlowId]);
-  
+  }, [setFetchUpdatesLoading, setFetchUpdatesFlowIds, datasets]);
+
   const getAttributeValue = (
     studyAttributes: StudyAttribute[] | undefined,
     attributeConfigId: StudyAttributeConfigIds
