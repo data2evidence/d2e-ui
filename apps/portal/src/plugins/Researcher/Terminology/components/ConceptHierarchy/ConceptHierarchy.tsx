@@ -85,8 +85,8 @@ const ConceptHierarchy: FC<ConceptHierarchyProps> = ({ userId, conceptId, datase
             console.error(error);
             setFeedback({
               type: "error",
-              message: getText(i18nKeys.TERMINOLOGY_LIST__ERROR),
-              description: getText(i18nKeys.TERMINOLOGY_LIST__ERROR_DESCRIPTION),
+              message: getText(i18nKeys.COHORT_HIERARCHY__ERROR),
+              description: getText(i18nKeys.COHORT_HIERARCHY__ERROR),
             });
           } finally {
             setIsLoading(false);
