@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../../axios/api";
 import { HistoryJob } from "../../plugins/SystemAdmin/DQD/types";
-import { AppError } from "../../types";
+import { AppError, FlowRunFilters } from "../../types";
 
 export const useJobs = (
+  filter: FlowRunFilters | undefined,
   refetch = 0,
   isSilentRefresh = false
 ): [HistoryJob[] | undefined, boolean, AppError | undefined] => {
@@ -14,7 +15,7 @@ export const useJobs = (
   const fetchJobs = useCallback(async () => {
     try {
       setLoading(!isSilentRefresh);
-      const results = await api.dataflow.getFlowRuns("all");
+      const results = await api.dataflow.getFlowRuns("all", filter);
       setJobs(results);
     } catch (error: any) {
       console.error(error);
@@ -22,7 +23,7 @@ export const useJobs = (
     } finally {
       setLoading(false);
     }
-  }, [refetch, isSilentRefresh]);
+  }, [filter, refetch, isSilentRefresh]);
 
   useEffect(() => {
     fetchJobs();
