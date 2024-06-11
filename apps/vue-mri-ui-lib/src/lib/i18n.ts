@@ -522,6 +522,8 @@ export const i18n = {
     MRI_PA_CONFIG_TEST_ERRORS: 'Error Check',
     MRI_PA_PATIENT_LIST_DOWNLOAD_AS_CSV_FULL: 'Export results to a CSV file?',
     MRI_PA_PATIENT_LIST_DOWNLOAD_AS_ZIP_FULL: 'Export results to a ZIP file?',
+    MRI_PA_PATIENT_LIST_INCLUDE_SELECTED_COLUMNS: 'Include selected columns',
+    MRI_PA_PATIENT_LIST_INCLUDE_ALL_COLUMNS: 'Include all columns',
     MRI_PA_CONFIG_TEST_MAX: 'Maximum Value',
     MRI_PA_CONFIG_TEST_COUNT: 'Number of Distinct Values',
     MRI_PA_CONFIG_TEST_SAMPLES: 'Sample Values',

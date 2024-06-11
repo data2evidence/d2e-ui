@@ -149,7 +149,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run time at risk code.",
     tag: NodeTag.Wheat,
     defaultData: {
-      id: undefined,
+      timeAtRiskId: undefined,
       startWith: "start",
       endWith: "end",
     },
@@ -276,6 +276,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     tag: NodeTag.Red,
     defaultData: {
       description: "SCCS age 18-",
+      analysisId: undefined,
       dbSccsDataArgs: {
         studyStartDate: "",
         studyEndDate: "",

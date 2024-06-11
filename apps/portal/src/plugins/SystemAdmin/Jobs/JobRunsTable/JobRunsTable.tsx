@@ -1,15 +1,15 @@
 import React, { FC, useState, useCallback, ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, TablePaginationActions, IconButton, FileIcon } from "@portal/components";
 import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, TablePagination } from "@mui/material";
 import { Study } from "../../../../types";
 import { HistoryJob } from "../types";
 import { useDialogHelper } from "../../../../hooks/useDialogHelper";
 import ResultsDialog from "../../DQD/ResultsDialog/ResultsDialog";
-import "./JobRunsTable.scss";
 import { useDatasets } from "../../../../hooks";
 import { FlowRunJobStateTypes } from "../types";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "../../../../contexts";
+import "./JobRunsTable.scss";
 
 const JobStatusColorMapping = {
   // Blue
@@ -37,26 +37,26 @@ interface ExpandingRowProps {
   handleStudySelect: (schemaName: string, studyId: string) => void;
   handleViewDetailClick: (job: HistoryJob) => void;
   row: HistoryJob;
-  studies: Study[];
+  datasets: Study[];
   handleCancelJobClick: (id: string) => void;
   handleViewLogsClick: (id: string) => void;
 }
 
 const ExpandingRow: FC<ExpandingRowProps> = ({
   row,
-  studies,
+  datasets,
   handleViewDetailClick,
   handleStudySelect,
   handleCancelJobClick,
   handleViewLogsClick,
 }) => {
   const { getText, i18nKeys } = useTranslation();
-  const study = studies.find((s) => s.id === row.datasetId);
+  const dataset = datasets.find((s) => s.id === row.datasetId);
   return (
     <>
       <TableRow key={row.schemaName + row.type + row.completedAt}>
         <TableCell sx={{ color: "#050080" }} align="left">
-          {study?.studyDetail?.name || "-"}
+          {dataset?.studyDetail?.name || "-"}
         </TableCell>
         <TableCell sx={{ color: "#050080" }} align="left">
           {row.type ? row.type : "-"}
@@ -83,7 +83,7 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
             onClick={() => {
               handleViewLogsClick(row.flowRunId);
             }}
-          ></IconButton>
+          />
         </TableCell>
         <TableCell sx={{ color: "#050080" }} align="left">
           {
@@ -107,11 +107,11 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
               startIcon={<FileIcon />}
               title={getText(i18nKeys.JOB_RUNS_TABLE__VIEW)}
               onClick={() => {
-                const studyId = row.datasetId ?? (studies.find((s) => s.schemaName === row.schemaName)?.id || "");
+                const studyId = row.datasetId ?? (datasets.find((s) => s.schemaName === row.schemaName)?.id || "");
                 handleStudySelect(row.schemaName, studyId);
                 handleViewDetailClick(row);
               }}
-            ></IconButton>
+            />
           ) : (
             getText(i18nKeys.JOB_RUNS_TABLE__NOT_AVAILABLE)
           )}
@@ -129,11 +129,10 @@ interface JobRunsTableProps {
 
 const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCancelJobClick }) => {
   const { getText, i18nKeys } = useTranslation();
-  const studies = useDatasets("systemAdmin")[0];
+  const datasets = useDatasets("systemAdmin")[0];
   // Dialog show hooks
   const [showResultsDialog, openResultsDialog, closeResultsDialog] = useDialogHelper(false);
   const [selectedJob, setSelectedJob] = useState<HistoryJob | null>(null);
-  const location = useLocation();
   const navigate = useNavigate();
 
   const handleViewDetailClick = (job: HistoryJob) => {
@@ -172,7 +171,7 @@ const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCa
                 {getText(i18nKeys.JOB_RUNS_TABLE__DATASETS)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                {getText(i18nKeys.JOB_RUNS_TABLE__TYPE)}
+                {getText(i18nKeys.JOB_RUNS_TABLE__TAG)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
                 {getText(i18nKeys.JOB_RUNS_TABLE__NAME)}
@@ -187,7 +186,7 @@ const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCa
                 {getText(i18nKeys.JOB_RUNS_TABLE__COMPLETED_TIME)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
-                {getText(i18nKeys.JOB_RUNS_TABLE__STATUS)}
+                {getText(i18nKeys.JOB_RUNS_TABLE__STATE)}
               </TableCell>
               <TableCell align="left" colSpan={1}>
                 {getText(i18nKeys.JOB_RUNS_TABLE__LOGS)}
@@ -205,7 +204,7 @@ const JobRunsTable: FC<JobRunsTableProps> = ({ data, handleStudySelect, handleCa
               <ExpandingRow
                 key={row.flowRunId}
                 row={row}
-                studies={studies}
+                datasets={datasets}
                 handleStudySelect={handleStudySelect}
                 handleViewDetailClick={handleViewDetailClick}
                 handleCancelJobClick={handleCancelJobClick}

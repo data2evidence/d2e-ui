@@ -24,15 +24,15 @@ class _Api():
 
     def _get(self, path: str, params=None, **kwargs) -> requests.Response:
         """Request HTTP GET method"""
-
+        
         url = urljoin(str(self._base_url), str(path))
         logger.debug(f'GET {url}')
 
-        # if os.getenv('PYQE_URL') in url:
-        #     response = self._session.get(
-        #         url, params=params, timeout=self._timeout, verify=self._pyqe_tls_ca_cert_path, **kwargs)
-        # else:
-        response = self._session.get(url, params=params, timeout=self._timeout, **kwargs)
+        if os.getenv('PYQE_URL') in url:
+            response = self._session.get(
+                url, params=params, timeout=self._timeout, verify=self._pyqe_tls_ca_cert_path, **kwargs)
+        else:
+            response = self._session.get(url, params=params, timeout=self._timeout, **kwargs)
 
         response.raise_for_status()
         return response
@@ -42,11 +42,11 @@ class _Api():
         url = urljoin(str(self._base_url), str(path))
         logger.debug(f'GET {url}')
 
-        # if os.getenv('PYQE_URL') in url:
-        #     return self._session.get(
-        #         url, params=params, timeout=self._timeout, verify=self._pyqe_tls_ca_cert_path, stream=True, **kwargs)
-        # else:
-        return self._session.get(
+        if os.getenv('PYQE_URL') in url:
+            return self._session.get(
+                url, params=params, timeout=self._timeout, verify=self._pyqe_tls_ca_cert_path, stream=True, **kwargs)
+        else:
+            return self._session.get(
                 url, params=params, timeout=self._timeout, stream=True, **kwargs)
 
     def _post(self, path: str, json=None, data=None, **kwargs) -> requests.Response:
@@ -82,6 +82,7 @@ class _Api():
         load_dotenv()
 
         self._base_url = os.getenv('PYQE_URL')
+        self.api_url = self._base_url
         self._pyqe_tls_ca_cert_path = os.getenv('PYQE_TLS_CLIENT_CA_CERT_PATH')
 
         if self._base_url is None:
@@ -147,7 +148,7 @@ class _AuthApi(_Api):
     @property
     def has_id_token(self):
         return True if self.id_token else False
-
+  
     def _create_authorization_header(self):
         return {'Authorization': f'{self.id_token}'}
     

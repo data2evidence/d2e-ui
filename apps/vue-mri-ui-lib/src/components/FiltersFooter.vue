@@ -67,12 +67,15 @@
         <div>
           <div class="save-bookmark">
             <div class="form-group">
-              <div class="name" v-if="this.isNewCohort">
+              <div class="name" v-if="this.isNewCohort || this.isNotUserSharedBookmark">
                 <div class="row">
                   <div class="col-sm-12 form-check col-form-label">
-                    <label>
-                      Enter a new name if you would like to overwrite the current name ({{ this.getActiveBookmark.bookmarkname }}).
+                    <label v-if="this.isNewCohort">
+                      Enter a new name if you would like to overwrite the current name ({{
+                        this.getActiveBookmark.bookmarkname
+                      }}).
                     </label>
+                    <label v-else> Enter a new name for the cohort. </label>
                   </div>
                 </div>
                 <div class="row">
@@ -94,7 +97,7 @@
                       Filter name must not exceed 40 characters
                     </div>
                   </div>
-                </div>  
+                </div>
               </div>
 
               <div class="row row-checkbox">
@@ -110,8 +113,17 @@
       </template>
       <template v-slot:footer>
         <div class="flex-spacer"></div>
-        <appButton :click="saveBookmark" :text="getText('MRI_PA_BUTTON_SAVE')" :tooltip="getText('MRI_PA_BUTTON_SAVE')" :disabled="this.hasExceededLength"></appButton>
-        <appButton :click="closeSaveBookmark" :text="getText('MRI_PA_BUTTON_CANCEL')" :tooltip="getText('MRI_PA_BUTTON_CANCEL')"></appButton>
+        <appButton
+          :click="saveBookmark"
+          :text="getText('MRI_PA_BUTTON_SAVE')"
+          :tooltip="getText('MRI_PA_BUTTON_SAVE')"
+          :disabled="this.hasExceededLength"
+        ></appButton>
+        <appButton
+          :click="closeSaveBookmark"
+          :text="getText('MRI_PA_BUTTON_CANCEL')"
+          :tooltip="getText('MRI_PA_BUTTON_CANCEL')"
+        ></appButton>
       </template>
     </messageBox>
 
@@ -166,7 +178,7 @@ export default {
       saveDialogWidth: 260,
       isInvalidName: false,
       cohortName: '',
-      maxLength: 40
+      maxLength: 40,
     }
   },
   computed: {
@@ -182,27 +194,26 @@ export default {
       'getBookmarkByNameAndUserId',
     ]),
     hasChanges() {
-      const userId = getPortalAPI().userId
-      if (this.getActiveBookmark.shared && userId !== this.getActiveBookmark.user_id) {        
-        return false
-      } else {
-        return this.getActiveBookmark.isNew || this.getCurrentBookmarkHasChanges
-      }
-    },
-    shareBookmark: {
-      get() {
-        return this.getActiveBookmark.shared || false
-      },
-      set(value) {
-        this.shareBookmark = value
-      },
+      return this.getActiveBookmark.isNew || this.getCurrentBookmarkHasChanges
     },
     isNewCohort() {
       return this.getActiveBookmark.isNew
     },
     hasExceededLength() {
       return this.cohortName.length == this.maxLength
-    }
+    },
+    isNotUserSharedBookmark() {
+      const userId = getPortalAPI().userId
+      return this.getActiveBookmark.shared && userId !== this.getActiveBookmark.user_id
+    },
+  },
+  watch: {
+    getActiveBookmark: {
+      handler(newVal) {
+        this.shareBookmark = newVal.shared
+      },
+      immediate: true,
+    },
   },
   methods: {
     ...mapActions(['fireBookmarkQuery', 'resetChartProperties', 'loadbookmarkToState']),
@@ -246,7 +257,7 @@ export default {
 
         const bookmarkName = this.cohortName ? this.cohortName : activeBookmark.bookmarkname
 
-        if (isNewBookmark) {
+        if (isNewBookmark || this.isNotUserSharedBookmark) {
           const params = {
             cmd: 'insert',
             bookmarkname: bookmarkName,
@@ -269,6 +280,7 @@ export default {
         await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
         const savedBookmark = this.getBookmarkByNameAndUserId(bookmarkName, userId)
         this[types.SET_ACTIVE_BOOKMARK](savedBookmark)
+        this.cohortName = ''
         this.closeSaveBookmark()
       }
     },

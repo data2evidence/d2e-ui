@@ -1,6 +1,6 @@
 import request from "./request";
 import env from "../env";
-import { Flow, ExecuteFlowRunByDeployment, CreateFlowRunByMetadata } from "../types";
+import { Flow, ExecuteFlowRunByDeployment, CreateFlowRunByMetadata, FlowRunFilters } from "../types";
 
 const DATAFLOW_MGMT_URL = `${env.REACT_APP_DN_BASE_URL}dataflow-mgmt/`;
 
@@ -59,13 +59,14 @@ export class Dataflow {
     });
   }
 
-  public getFlowRuns(filter: string) {
+  public getFlowRuns(filter: string, extraFilters: FlowRunFilters = {}) {
     return request({
       baseURL: DATAFLOW_MGMT_URL,
       url: "job-history/flow-runs",
       method: "GET",
       params: {
-        filter: filter,
+        filter,
+        ...extraFilters,
       },
     });
   }
@@ -201,6 +202,22 @@ export class Dataflow {
       baseURL: DATAFLOW_MGMT_URL,
       url: `prefect/flow-run/${flowId}/state`,
       method: "GET",
+    });
+  }
+
+  public getPluginUploadStatus() {
+    return request({
+      baseURL: DATAFLOW_MGMT_URL,
+      url: "prefect/flow/default-deployment",
+      method: "GET",
+    });
+  }
+
+  public triggerPluginUpload() {
+    return request({
+      baseURL: DATAFLOW_MGMT_URL,
+      url: "prefect/flow/default-deployment",
+      method: "POST",
     });
   }
 }

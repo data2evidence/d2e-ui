@@ -1,7 +1,7 @@
 import React, { FC, useState, useCallback, useMemo, useEffect } from "react";
-import "./Jobs.scss";
 import { Title, Button, Loader, ErrorBoundary, IconButton } from "@portal/components";
-import { Tabs, Tab } from "@mui/material";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import DatasetSelector from "../DQD/DatasetSelector/DatasetSelector";
 import JobRunButtons from "../DQD/JobRunButtons/JobRunButtons";
 import JobRunsTable from "./JobRunsTable/JobRunsTable";
@@ -11,7 +11,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useJobs } from "../../../hooks";
 import { api } from "../../../axios/api";
 import { mapTime } from "../DQD/Utils/Shared";
-import { CloseDialogType, IPluginItem } from "../../../types";
+import { CloseDialogType, FlowRunFilters, IPluginItem } from "../../../types";
 import { loadPlugins } from "../../../utils";
 import { SystemAdminPluginRenderer } from "../../core/SystemAdminPluginRenderer";
 import env from "../../../env";
@@ -21,6 +21,8 @@ import LogViewer from "./LogViewer/LogViewer";
 import { FeatureGate } from "../../../config/FeatureGate";
 import { FEATURE_DATAFLOW } from "../../../config";
 import { useTranslation } from "../../../contexts";
+import { JobRunsFilter } from "./JobRunsFilter/JobRunsFilter";
+import "./Jobs.scss";
 
 enum JobTabs {
   Runs = "Job Runs",
@@ -37,7 +39,8 @@ const Jobs: FC = () => {
   const [isSilentRefresh, setIsSilentRefresh] = useState(false);
   const [refetchJobs, setRefetchJobs] = useState(0);
   const [refetchAddFlow, setRefetchAddFlow] = useState(0);
-  const [jobs, loadingJobs, errorJobs] = useJobs(refetchJobs, isSilentRefresh);
+  const [filter, setFilter] = useState<FlowRunFilters>();
+  const [jobs, loadingJobs, errorJobs] = useJobs(filter, refetchJobs, isSilentRefresh);
   const [showAddFlow, setShowAddFlow] = useState(false);
   const [showDataflow, setShowDataflow] = useState(false);
   const [logViewerScriptsLoaded, setLogViewerScriptsLoaded] = useState(false);
@@ -45,6 +48,8 @@ const Jobs: FC = () => {
   const [showLogViewer, setShowLogViewer] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const handleFilterChange = useCallback((filter: FlowRunFilters) => setFilter(filter), []);
 
   const dataflowPlugin = useMemo(
     () => plugins.systemadmin.find((plugin: IPluginItem) => plugin.name === "Dataflow"),
@@ -96,7 +101,7 @@ const Jobs: FC = () => {
     setShowDataflow(false);
   }, []);
 
-  const renderJobRunsTable = () => {
+  const JobRunTable = useMemo(() => {
     return (
       <>
         {loadingJobs ? (
@@ -105,19 +110,16 @@ const Jobs: FC = () => {
           <div>{errorJobs.message}</div>
         ) : (
           jobs && (
-            <>
-              {/* <Button onClick={handleRefreshJobStatus} text="Refresh Table" /> */}
-              <JobRunsTable
-                data={mapTime(jobs)}
-                handleStudySelect={handleStudySelect}
-                handleCancelJobClick={handleCancelJobClick}
-              />
-            </>
+            <JobRunsTable
+              data={mapTime(jobs)}
+              handleStudySelect={handleStudySelect}
+              handleCancelJobClick={handleCancelJobClick}
+            />
           )
         )}
       </>
     );
-  };
+  }, [jobs, loadingJobs, errorJobs]);
 
   const backToJobs = () => {
     navigate("jobs", { replace: true });
@@ -193,7 +195,12 @@ const Jobs: FC = () => {
                     </Tabs>
                   </div>
                   <div className="jobs_content__table">
-                    {tabValue === JobTabs.Runs && renderJobRunsTable()}
+                    {tabValue === JobTabs.Runs && (
+                      <>
+                        <JobRunsFilter onChange={handleFilterChange} onRefresh={handleRefreshJobStatus} result={jobs} />
+                        {JobRunTable}
+                      </>
+                    )}
                     {tabValue === JobTabs.Jobs && <JobTable />}
                   </div>
                 </div>
