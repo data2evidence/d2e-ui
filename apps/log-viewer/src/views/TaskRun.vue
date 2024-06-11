@@ -3,9 +3,7 @@ import { LogInfo } from '@/types'
 import { getLogsByTaskRunId } from '@/api'
 import { ref, watchEffect } from 'vue'
 import LogScroller from '../components/LogScroller.vue'
-import { getPortalAPI } from '../utils/portalApi'
 import { useRoute, useRouter } from 'vue-router'
-const { backToJobs } = getPortalAPI()
 
 type TabName = 'LOGS' | 'TASK_RUNS' | 'DETAILS' | 'PARAMETERS'
 const route = useRoute()
@@ -19,8 +17,8 @@ const onClickTab = (tabName: TabName) => {
 }
 
 const onClickBackToJobs = () => {
-  router.push(`/`)
-  backToJobs()
+  const taskRunId = route.params.taskRunId
+  router.push(`${router.currentRoute.value.path.replace(`/taskrun/${taskRunId}`, '')}`)
 }
 
 watchEffect(() => {
@@ -46,7 +44,7 @@ watchEffect(() => {
     "
   >
     <div style="color: white; cursor: pointer" @click="onClickBackToJobs">
-      &#60; back to Jobs list
+      &#60; back to Flow run
     </div>
     <div style="font-size: small">
       <div style="color: white">Task Run ID: {{ route.params.taskRunId }}</div>
