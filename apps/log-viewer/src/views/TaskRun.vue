@@ -16,7 +16,7 @@ const onClickTab = (tabName: TabName) => {
   selected.value = tabName
 }
 
-const onClickBackToJobs = () => {
+const onClickBackToFlowRun = () => {
   const taskRunId = route.params.taskRunId
   router.push(`${router.currentRoute.value.path.replace(`/taskrun/${taskRunId}`, '')}`)
 }
@@ -44,7 +44,7 @@ watchEffect(() => {
       height: 30px;
     "
   >
-    <div style="color: white; cursor: pointer" @click="onClickBackToJobs">
+    <div style="color: white; cursor: pointer" @click="onClickBackToFlowRun">
       &#60; back to Flow run
     </div>
     <div style="font-size: small">
