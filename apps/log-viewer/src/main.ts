@@ -15,7 +15,7 @@ import TaskRun from './views/TaskRun.vue'
 const mountLogViewer = () => {
   const routes = [
     { path: '/flowrun/:flowRunId', component: FlowRun },
-    { path: '/taskrun/:taskRunId', component: TaskRun }
+    { path: '/flowrun/:flowRunId/taskrun/:taskRunId', component: TaskRun }
   ]
   const router = createRouter({
     history: createWebHistory('/portal/systemadmin/jobs'),

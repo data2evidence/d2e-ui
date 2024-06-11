@@ -8,7 +8,7 @@ const router = useRouter()
 defineProps<{ taskRuns: FlowRun[] }>()
 
 const onClickTaskRunId = (taskRunId: string) => {
-  router.push(`/taskrun/${taskRunId}`)
+  router.push(`${router.currentRoute.value.path}/taskrun/${taskRunId}`)
 }
 </script>
 
