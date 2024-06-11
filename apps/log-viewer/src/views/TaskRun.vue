@@ -41,6 +41,7 @@ watchEffect(() => {
       justify-content: space-between;
       align-items: center;
       padding: 0px 20px;
+      height: 30px;
     "
   >
     <div style="color: white; cursor: pointer" @click="onClickBackToJobs">
@@ -96,5 +97,9 @@ watchEffect(() => {
 .selected {
   color: white;
   border-bottom: solid grey 5px;
+}
+.virtual-scroller {
+  @apply overflow-auto
+  max-h-[calc(100vh-80px-56px-30px)];
 }
 </style>
