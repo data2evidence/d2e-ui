@@ -15,6 +15,10 @@ class Study(_AuthApi):
         super().__init__()
 
     async def get_user_study_list(self):
-        response = await self._get('api/services/userStudies', {})
+        params = {
+            'role': 'researcher'
+            }
+        response = await self._get('/system-portal/dataset/list', params)
         if response.ok:
             return await response.json()
+        

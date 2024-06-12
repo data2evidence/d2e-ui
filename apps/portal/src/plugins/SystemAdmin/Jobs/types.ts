@@ -15,13 +15,13 @@ export interface HistoryJob {
 }
 
 export enum FlowRunJobStateTypes {
-  "COMPLETED" = "COMPLETED",
-  "SCHEDULED" = "SCHEDULED",
-  "PENDING" = "PENDING",
-  "RUNNING" = "RUNNING",
-  "PAUSED" = "PAUSED",
-  "CANCELLING" = "CANCELLING",
-  "CANCELLED" = "CANCELLED",
-  "FAILED" = "FAILED",
-  "CRASHED" = "CRASHED",
+  "COMPLETED" = "Completed",
+  "SCHEDULED" = "Scheduled",
+  "PENDING" = "Pending",
+  "RUNNING" = "Running",
+  "PAUSED" = "Paused",
+  "CANCELLING" = "Cancelling",
+  "CANCELLED" = "Cancelled",
+  "FAILED" = "Failed",
+  "CRASHED" = "Crashed",
 }

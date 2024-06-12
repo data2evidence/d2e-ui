@@ -21,7 +21,7 @@ class PAConfig(_AuthApi):
             'action': 'getMyConfig',
             'selectedStudyId': selectedStudyId
         }
-        response = self._get('pa/services/analytics.xsjs', params)
+        response = self._get('/analytics-svc/pa/services/analytics.xsjs', params)
         return json.loads(response.text)
     
     def _get_study_config_list(self, study):
@@ -29,7 +29,7 @@ class PAConfig(_AuthApi):
             'action': 'getMyStudyConfigList',
             'selectedStudyEntityValue': study
         }
-        response = self._get('pa/services/analytics.xsjs', params)
+        response = self._get('/analytics-svc/pa/services/analytics.xsjs', params)
         return json.loads(response.text)
 
     def _get_frontend_config(self, config_id, config_version, selectedStudyId, lang = 'eng'):
@@ -40,5 +40,5 @@ class PAConfig(_AuthApi):
             'studyId': selectedStudyId,
             'lang': lang
         }
-        response = self._get('pa/services/analytics.xsjs', params)
+        response = self._get('/analytics-svc/pa/services/analytics.xsjs', params)
         return json.loads(response.text)

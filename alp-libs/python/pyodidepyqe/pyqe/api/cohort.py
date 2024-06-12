@@ -36,12 +36,12 @@ class Cohort(_EncodeQueryStringMixin, _AuthApi):
             "offset": str(offset),
             "limit": str(limit)
         }
-        response = await self._get('api/services/cohort', params)
+        response = await self._get('/analytics-svc/api/services/cohort', params)
         return await response.json()
 
     async def delete_cohort(self, cohort_id: int) -> bool:
         response = await self._delete(
-            f'api/services/cohort?cohortId={cohort_id}&studyId={self.study_id}')
+            f'/analytics-svc/api/services/cohort?cohortId={cohort_id}&studyId={self.study_id}')
         return response.string()
 
     async def create_cohort(self, cohort_definition: dict) -> str:
@@ -57,5 +57,5 @@ class Cohort(_EncodeQueryStringMixin, _AuthApi):
         cohort_definition['owner'] = self.get_id()
         cohort_definition['syntax'] = json.dumps(cohort_definition['syntax'])
 
-        response = await self._post('api/services/cohort', json=cohort_definition)
+        response = await self._post('/analytics-svc/api/services/cohort', json=cohort_definition)
         return response.string()

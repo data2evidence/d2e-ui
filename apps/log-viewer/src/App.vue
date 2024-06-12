@@ -8,6 +8,6 @@
 
 <style scoped>
 .router {
-  @apply bg-gray-800 h-[calc(100vh-72px)];
+  @apply bg-gray-800 h-[calc(100vh-80px)];
 }
 </style>
