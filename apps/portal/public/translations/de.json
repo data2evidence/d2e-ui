@@ -457,6 +457,7 @@
   "FEATURE__CONCEPTS": "Konzepte",
   "FEATURE__DATAFLOW": "Datenfluss",
   "FEATURE__DATASET_FILTER": "Datensatzfilter",
+  "FEATURE__DATASET_SEARCH": "Datensatzsuche",
   "FEATURE__ERROR_DESCRIPTION": "Bitte versuche es erneut. Um den Fehler zu melden, senden Sie bitte eine E-Mail an help@data4life.care.",
   "FEATURE__ERROR": "Ein Fehler ist aufgetreten.",
   "FEATURE__FEATURE_FLAGS": "Feature-Flags",

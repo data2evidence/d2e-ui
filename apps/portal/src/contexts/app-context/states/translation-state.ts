@@ -496,6 +496,7 @@ export const i18nDefault = {
     FEATURE__CONCEPTS: "Concepts",
     FEATURE__DATAFLOW: "Dataflow",
     FEATURE__DATASET_FILTER: "Dataset filter",
+    FEATURE__DATASET_SEARCH: "Dataset search",
     FEATURE__ERROR_DESCRIPTION: "Please try again. To report the error, please send an email to help@data4life.care.",
     FEATURE__ERROR: "An error has occurred.",
     FEATURE__FEATURE_FLAGS: "Feature flags",
