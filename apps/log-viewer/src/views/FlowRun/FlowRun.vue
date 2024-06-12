@@ -134,4 +134,8 @@ watchEffect(() => {
   height: calc(100% - 30px - 56px - 300px);
   overflow-y: auto;
 }
+.virtual-scroller {
+  @apply overflow-auto
+  max-h-[calc(100vh-80px-56px-30px-300px)];
+}
 </style>
