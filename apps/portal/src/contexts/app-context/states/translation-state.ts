@@ -787,6 +787,7 @@ export const i18nDefault = {
     SEARCH_BAR_DATASET__PLACEHOLDER: "Search datasets",
     SELECT_DATASET__SELECT_DATASET: "Dataset",
     SELECT_RELEASE__SELECT_RELEASE: "Release",
+    SELECT_RELEASE__SELECT_CURRENT: "Current",
     SETUP_MENU_ITEM__CONFIGURE: "Configure",
     PLUGIN_MENU_ITEM__INSTALL: "Initialize",
     TRIGGER_PLUGIN_UPLOAD_DIALOG__ERROR: "An error has occurred.",
