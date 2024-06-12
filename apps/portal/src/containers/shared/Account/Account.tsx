@@ -89,9 +89,19 @@ export const Account: FC<AccountProps> = ({ portalType }) => {
               {portalType === "researcher" && user.canAccessSystemAdminPortal && (
                 <Button block text={getText(i18nKeys.ACCOUNT__SWITCH_TO_ADMIN_PORTAL)} onClick={handleSwitch} />
               )}
-              <Button block text={getText(i18nKeys.ACCOUNT__CHANGE_PASSWORD)} onClick={openPwdDialog} />
               <Button block text={getText(i18nKeys.ACCOUNT__LOGOUT)} onClick={handleLogout} />
-              <Button block text={getText(i18nKeys.ACCOUNT__DELETE_ACCOUNT)} onClick={openDeleteAccount} />
+              <Button
+                block
+                variant="outlined"
+                text={getText(i18nKeys.ACCOUNT__CHANGE_PASSWORD)}
+                onClick={openPwdDialog}
+              />
+              <Button
+                block
+                variant="outlined"
+                text={getText(i18nKeys.ACCOUNT__DELETE_ACCOUNT)}
+                onClick={openDeleteAccount}
+              />
             </div>
           </div>
           <div className="account__content_legal">
