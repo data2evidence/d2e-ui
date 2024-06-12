@@ -235,7 +235,13 @@ const StudyOverview: FC = () => {
   const fetchDatamodelUpdates = useCallback(async () => {
     const flowMetadata = await api.dataflow.getFlowMetadata();
 
+    function getFlowId(flowName: string) {
+      const foundFlow = flowMetadata.find((flow: Record<string, any>) => flow.name === flowName);
+      return foundFlow.flowId;
+    }
+
     const datasetsByFlow: Record<string, Study[]> = {};
+    const apiRequests = [];
 
     datasets.forEach((item: Study) => {
       const regex = /\[([^[\]]*)\]/;
@@ -245,15 +251,10 @@ const StudyOverview: FC = () => {
       if (!datasetsByFlow[dataModelValue]) {
         datasetsByFlow[dataModelValue] = [];
       }
+
       datasetsByFlow[dataModelValue].push(item);
     });
 
-    function getFlowId(flowName: string) {
-      const foundFlow = flowMetadata.find((flow: Record<string, any>) => flow.name === flowName);
-      return foundFlow.flowId;
-    }
-
-    const apiRequests = [];
     for (const flow in datasetsByFlow) {
       apiRequests.push(
         api.dataflow.createFlowRunByMetadata({
@@ -264,13 +265,13 @@ const StudyOverview: FC = () => {
               token: "",
               database_code: "",
               data_model: "",
-              datasets: datasetsByFlow[flow],
             },
           },
           flowId: getFlowId(flow),
         })
       );
     }
+
     try {
       const res: string[] = await Promise.all(apiRequests);
       setFetchUpdatesLoading(true);
