@@ -120,7 +120,7 @@
                           <td class="bookmark-filtercard">
                             <div style="display: block">
                               <span class="bookmark-headelement bookmark-element">By:</span>
-                              {{ bookmark.userId }}
+                              {{ bookmark.username }}
                             </div>
                             <div style="display: block margin-right: 16px">
                               <span class="bookmark-headelement bookmark-element">Version:</span>
@@ -427,25 +427,25 @@ export default {
     bookmarksDisplay() {
       const bookmarkData = this.getBookmarks
       const returnValue = []
-      const userId = getPortalAPI().userId
+      const username = getPortalAPI().username
       if (this.showSharedBookmarks) this.aSelBookmarkList = []
       bookmarkData.forEach(element => {
         const bookmarkObj = JSON.parse(element.bookmark)
 
         if (bookmarkObj.filter && bookmarkObj.filter.cards) {
           if (this.showSharedBookmarks) {
-            if (userId == element.user_id || element.shared) {
+            if (username == element.user_id || element.shared) {
               // user and shared
               returnValue.push({
                 ...formatBookmarkDisplay(element, bookmarkObj),
-                disableUpdate: userId != element.user_id,
+                disableUpdate: username != element.user_id,
               })
             }
-          } else if (!this.showSharedBookmarks && userId == element.user_id) {
+          } else if (!this.showSharedBookmarks && username == element.user_id) {
             // only user
             returnValue.push({
               ...formatBookmarkDisplay(element, bookmarkObj),
-              disableUpdate: userId != element.user_id,
+              disableUpdate: username != element.user_id,
             })
           }
         }
@@ -773,10 +773,10 @@ export default {
       this.$emit('hideEv')
     },
     checkCohortName(bookmarkName, suffix = '') {
-      const userId = getPortalAPI().userId
+      const username = getPortalAPI().username
       let uniqueName = bookmarkName + (suffix ? ` ${suffix}` : '')
       for (const bookmark of this.getBookmarks) {
-        if (userId === bookmark.user_id && bookmark.bookmarkname === uniqueName) {
+        if (username === bookmark.user_id && bookmark.bookmarkname === uniqueName) {
           return this.checkCohortName(bookmarkName, suffix ? parseInt(suffix) + 1 : 1)
         }
       }

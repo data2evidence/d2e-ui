@@ -4,6 +4,7 @@ import BMv2Parser from '../../lib/bookmarks/BMv2Parser'
 import Constants from '../../utils/Constants'
 import * as types from '../mutation-types'
 import isEqual from 'lodash/isEqual'
+import { getPortalAPI } from '@/utils/PortalUtils'
 
 const CancelToken = axios.CancelToken
 let cancel
@@ -110,8 +111,8 @@ const getters = {
     JSON.parse(modulestate.bookmarks.find(b => b.bmkId === bmkId).bookmark || '{}'),
   getActiveBookmark: modulestate => modulestate.activeBookmark,
   getBookmark: modulestate => bmkId => modulestate.bookmarks.find(b => b.bmkId === bmkId),
-  getBookmarkByNameAndUserId: modulestate => (name, userId) => {
-    return modulestate.bookmarks.find(b => b.bookmarkname === name && b.user_id === userId)
+  getBookmarkByNameAndUsername: modulestate => (name, username) => {
+    return modulestate.bookmarks.find(b => b.bookmarkname === name && b.user_id === username)
   },
   getCurrentBookmarkHasChanges: (modulestate, moduleGetters) => {
     if (modulestate.activeBookmark == null) {
@@ -138,12 +139,15 @@ const actions = {
 
     let url = ''
     if (params.cmd === 'loadAll') {
-      url = `${bookmarkURL}?paConfigId=${rootGetters.getMriFrontendConfig.getPaConfigId()}&r=${Math.random()}`
+      url = `${bookmarkURL}?paConfigId=${rootGetters.getMriFrontendConfig.getPaConfigId()}&r=${Math.random()}&username=${
+        getPortalAPI().username
+      }`
     } else {
       url = `${bookmarkURL}/${bookmarkId || ''}`
       params.paConfigId = rootGetters.getMriFrontendConfig.getPaConfigId()
       params.cdmConfigId = rootGetters.getMriFrontendConfig.getDatamodelConfigId()
       params.cdmConfigVersion = rootGetters.getMriFrontendConfig.getVersion()
+      params.username = getPortalAPI().username
     }
 
     return dispatch('ajaxAuth', { url, method, params, cancelToken })
