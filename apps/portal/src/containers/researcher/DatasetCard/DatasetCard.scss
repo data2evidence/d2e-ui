@@ -62,13 +62,9 @@
   &__permission-icon {
     margin-right: 8px;
 
-    path[fill="navy"] {
-      fill: #d53939;
-    }
-
-    &--accessible {
+    &--inaccessible {
       path[fill="navy"] {
-        fill: navy;
+        fill: #d53939;
       }
     }
   }
