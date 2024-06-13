@@ -8,6 +8,7 @@ import { DatasetRelease } from "../../../plugins/SystemAdmin/DQD/types";
 interface SelectReleaseProps extends Omit<SelectProps, "onChange"> {
   onChange?: (datasetId: string) => void;
 }
+const CURRENT_RELEASE_ID = "";
 
 export const SelectRelease: FC<SelectReleaseProps> = ({ onChange, ...props }) => {
   const { getText, i18nKeys } = useTranslation();
@@ -15,9 +16,9 @@ export const SelectRelease: FC<SelectReleaseProps> = ({ onChange, ...props }) =>
   const [releases, loading, error] = useDatasetReleases(activeDataset.id);
 
   const handleChange = useCallback(
-    (datasetId: string) => {
-      setActiveReleaseId(datasetId);
-      typeof onChange === "function" && onChange(datasetId);
+    (releaseId: string) => {
+      setActiveReleaseId(releaseId);
+      typeof onChange === "function" && onChange(releaseId);
     },
     [onChange]
   );
@@ -49,6 +50,7 @@ export const SelectRelease: FC<SelectReleaseProps> = ({ onChange, ...props }) =>
       <MenuItem value="" disabled>
         {getText(i18nKeys.SELECT_RELEASE__SELECT_RELEASE)}
       </MenuItem>
+      <MenuItem value={CURRENT_RELEASE_ID}>{getText(i18nKeys.SELECT_RELEASE__SELECT_CURRENT)}</MenuItem>
       {releases?.map((release: DatasetRelease) => (
         <MenuItem value={release.id} key={release.id}>
           {release.name} - {release.releaseDate}

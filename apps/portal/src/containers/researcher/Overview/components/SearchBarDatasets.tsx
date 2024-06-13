@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import { useTranslation } from "../../../../contexts";
+import { FeatureGate, FEATURE_DATASET_SEARCH } from "../../../../config";
 
 interface SearchBarDatasetProps {
   width?: string;
@@ -13,13 +14,15 @@ export const SearchBarDataset: FC<SearchBarDatasetProps> = ({ width = "100%", ke
   const { getText, i18nKeys } = useTranslation();
 
   return (
-    <SearchBar
-      keyword={keyword}
-      placeholder={getText(i18nKeys.SEARCH_BAR_DATASET__PLACEHOLDER)}
-      onEnter={onEnter}
-      onChange={onChange}
-      width={width}
-      height="48px"
-    />
+    <FeatureGate featureFlags={[FEATURE_DATASET_SEARCH]}>
+      <SearchBar
+        keyword={keyword}
+        placeholder={getText(i18nKeys.SEARCH_BAR_DATASET__PLACEHOLDER)}
+        onEnter={onEnter}
+        onChange={onChange}
+        width={width}
+        height="48px"
+      />
+    </FeatureGate>
   );
 };
