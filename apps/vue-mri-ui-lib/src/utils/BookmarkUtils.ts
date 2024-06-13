@@ -5,7 +5,7 @@ export default function formatBookmarkDisplay(element, bookmarkObj) {
   const boolContainers = filterCards.content
   return {
     id: element.bmkId,
-    userId: element.user_id,
+    username: element.user_id,
     name: element.bookmarkname,
     viewName: element.viewname,
     data: element.bookmark,
