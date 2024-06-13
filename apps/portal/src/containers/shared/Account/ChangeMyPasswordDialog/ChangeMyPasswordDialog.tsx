@@ -62,7 +62,7 @@ export const ChangeMyPasswordDialog: FC<ChangeMyPasswordDialogProps> = ({ open, 
       await api.userMgmt.changeMyPassword(formData.oldPassword, formData.password);
       setFeedback({
         type: "success",
-        message: getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__PASSWORD_UPDATED_ERROR_MESSAGE),
+        message: getText(i18nKeys.CHANGE_MY_PASSWORD_DIALOG__PASSWORD_UPDATED),
       });
     } catch (err: any) {
       const message = err?.data?.message || err?.data?.error_description;
