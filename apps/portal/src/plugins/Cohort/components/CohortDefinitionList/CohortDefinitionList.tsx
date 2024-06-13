@@ -6,15 +6,15 @@ import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
-import { Button, IconButton, Loader, TableCell, TableRow, TablePaginationActions, TrashIcon } from "@portal/components";
+import { Button, Loader, TableCell, TableRow, TablePaginationActions } from "@portal/components";
 import { useFeedback, useTranslation, useActiveDataset } from "../../../../contexts";
 import { CohortMapping } from "../../../../types";
 import { CohortMgmt } from "../../../../axios/cohort-mgmt";
 import "./CohortDefinitionList.scss";
 
-import CohortDeleteDialog from "../CohortDeleteDialog/CohortDeleteDialog";
 import DataQualityDialog from "../DataQualityDialog/DataQualityDialog";
 import { useDialogHelper } from "../../../../hooks";
+import { i18nKeys } from "../../../../contexts/app-context/states";
 
 interface CohortDefinitionListProps {
   userId?: string;
@@ -26,7 +26,7 @@ interface CohortDefinitionListProps {
 dayjs.extend(customParseFormat);
 
 const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgmtClient, refetch, setRefetch }) => {
-  const { getText, i18nKeys } = useTranslation();
+  const { getText } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<CohortMapping[]>([]);
   const [page, setPage] = useState(0);
@@ -34,7 +34,6 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgm
   const { setFeedback } = useFeedback();
 
   const [activeCohort, setActiveCohort] = useState<CohortMapping>();
-  const [showDeleteCohortDialog, openDeleteCohortDialog, closeDeleteCohortDialog] = useDialogHelper(false);
   const [showDataQualityDialog, openDataQualityDialog, closeDataQualityDialog] = useDialogHelper(false);
 
   const { activeDataset } = useActiveDataset();
@@ -59,7 +58,7 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgm
       }
     };
     fetchData();
-  }, [userId, cohortMgmtClient, refetch, setRefetch, setFeedback, page, rowsPerPage]);
+  }, [userId, cohortMgmtClient, refetch, setRefetch, setFeedback, page, rowsPerPage, getText]);
 
   const handleChangePage = useCallback((event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
     setPage(page);
@@ -68,14 +67,6 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgm
   const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setRowPerPage(Number(event.target.value) || 10);
   }, []);
-
-  const handleDeleteCohort = useCallback(
-    (cohort: CohortMapping) => {
-      setActiveCohort(cohort);
-      openDeleteCohortDialog();
-    },
-    [openDeleteCohortDialog, setActiveCohort]
-  );
 
   const handleDataQualityButtonPress = useCallback(
     (cohort: CohortMapping) => {
@@ -138,16 +129,6 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgm
                         text={getText(i18nKeys.JOBS__DATA_QUALITY_ANALYSIS)}
                       />
                     </TableCell>
-                    <TableCell className="col-action">
-                      <div className="table-button-container">
-                        <IconButton
-                          startIcon={<TrashIcon />}
-                          title={getText(i18nKeys.COHORT_DEFINITION_LIST__DELETE)}
-                          disabled={cohort.owner !== userId}
-                          onClick={() => handleDeleteCohort(cohort)}
-                        />
-                      </div>
-                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
@@ -163,16 +144,6 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgm
           ActionsComponent={TablePaginationActions}
         />
       </div>
-      {showDeleteCohortDialog && (
-        <CohortDeleteDialog
-          cohort={activeCohort}
-          cohortMgmtClient={cohortMgmtClient}
-          open={showDeleteCohortDialog}
-          setMainFeedback={setFeedback}
-          onClose={closeDeleteCohortDialog}
-          setRefetch={setRefetch}
-        />
-      )}
 
       {showDataQualityDialog && activeCohort && (
         <DataQualityDialog

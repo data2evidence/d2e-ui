@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useEffect } from "react";
-import { useUser, useToken } from "../../../contexts";
+import { useToken } from "../../../contexts";
 import env from "../../../env";
 
 interface PluginContainerProps {
