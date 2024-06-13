@@ -65,13 +65,6 @@ const StudyOverview: FC = () => {
 
   useEffect(() => {
     const fetchFlowRunState = async () => {
-      const pendingJobStatuses = [
-        FlowRunJobStateTypes.SCHEDULED as string,
-        FlowRunJobStateTypes.RUNNING as string,
-        FlowRunJobStateTypes.PAUSED as string,
-        FlowRunJobStateTypes.PENDING as string,
-      ];
-
       const completedJobStatuses = [
         FlowRunJobStateTypes.COMPLETED as string,
         FlowRunJobStateTypes.CANCELLED as string,
@@ -81,34 +74,27 @@ const StudyOverview: FC = () => {
 
       if (fetchUpdatesFlowIds && fetchUpdatesFlowIds.length > 0) {
         try {
-          let allCompleted = true;
-          for (const flowId of fetchUpdatesFlowIds) {
-            const flowRunState = await api.dataflow.getFlowRunState(flowId);
-
-            if (completedJobStatuses.includes(flowRunState.state_type)) {
-              setFetchUpdatesFlowIds((prevFlowIds) => prevFlowIds.filter((id) => id !== flowId));
-            } else if (pendingJobStatuses.includes(flowRunState.state_type)) {
-              allCompleted = false;
+          const flowRunStatePromises = fetchUpdatesFlowIds.map((flowId) => api.dataflow.getFlowRunState(flowId));
+          const flowRunStates = await Promise.all(flowRunStatePromises);
+          flowRunStates.forEach((flowRunState) => {
+            if (completedJobStatuses.includes(flowRunState.state_name)) {
+              setFetchUpdatesFlowIds((prevFlowIds) => prevFlowIds.filter((id) => id !== flowRunState.id));
             }
-          }
-
-          if (allCompleted) {
-            setFetchUpdatesLoading(false);
-            setFetchUpdatesFlowIds([]);
-            setRefetch((refetch) => refetch + 1);
-          }
+          });
         } catch (error) {
-          console.error("Error fetching flow run state:", error);
+          console.error("Error fetching flow run states:", error);
         }
       }
     };
 
     const interval = setInterval(() => {
       fetchFlowRunState();
-    }, 60000);
+    }, 30000);
 
     if (fetchUpdatesFlowIds.length === 0) {
       clearInterval(interval);
+      setFetchUpdatesLoading(false);
+      setRefetch((refetch) => refetch + 1);
     }
 
     return () => clearInterval(interval);
@@ -259,6 +245,7 @@ const StudyOverview: FC = () => {
       apiRequests.push(
         api.dataflow.createFlowRunByMetadata({
           type: "datamodel",
+          flowRunName: `${flow}-get_version_info`,
           options: {
             options: {
               flow_action_type: "get_version_info",
