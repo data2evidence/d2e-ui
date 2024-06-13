@@ -191,7 +191,7 @@ export default {
       'getActiveBookmark',
       'getCurrentBookmarkHasChanges',
       'getBookmark',
-      'getBookmarkByNameAndUserId',
+      'getBookmarkByNameAndUsername',
     ]),
     hasChanges() {
       return this.getActiveBookmark.isNew || this.getCurrentBookmarkHasChanges
@@ -203,14 +203,14 @@ export default {
       return this.cohortName.length == this.maxLength
     },
     isNotUserSharedBookmark() {
-      const userId = getPortalAPI().userId
-      return this.getActiveBookmark.shared && userId !== this.getActiveBookmark.user_id
+      const username = getPortalAPI().username
+      return this.getActiveBookmark.shared && username !== this.getActiveBookmark.user_id
     },
   },
   watch: {
     getActiveBookmark: {
       handler(newVal) {
-        this.shareBookmark = newVal.shared
+        this.shareBookmark = !!newVal.shared
       },
       immediate: true,
     },
@@ -246,10 +246,10 @@ export default {
         const bookmark = this.getBookmarksData
         const activeBookmark = this.getActiveBookmark
         const isNewBookmark = activeBookmark.isNew || false
-        const userId = getPortalAPI().userId
+        const username = getPortalAPI().username
 
         for (const bookmark of this.getBookmarks) {
-          if (userId === bookmark.user_id && bookmark.bookmarkname === this.cohortName) {
+          if (username === bookmark.user_id && bookmark.bookmarkname === this.cohortName) {
             this.isInvalidName = true
             return
           }
@@ -278,7 +278,7 @@ export default {
           })
         }
         await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
-        const savedBookmark = this.getBookmarkByNameAndUserId(bookmarkName, userId)
+        const savedBookmark = this.getBookmarkByNameAndUsername(bookmarkName, username)
         this[types.SET_ACTIVE_BOOKMARK](savedBookmark)
         this.cohortName = ''
         this.closeSaveBookmark()

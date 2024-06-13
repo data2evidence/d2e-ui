@@ -45,12 +45,10 @@ watchEffect(() => {
 
 <template>
   <div class="top-bar-container">
-    <div style="color: white; cursor: pointer" @click="onClickBackToJobs">
-      &#60; back to Jobs list
-    </div>
+    <div style="cursor: pointer" @click="onClickBackToJobs">&#60; back to Jobs list</div>
 
     <div style="font-size: small">
-      <div style="color: white">Flow Run ID: {{ flowRun?.id }}</div>
+      <div>Flow Run ID: {{ flowRun?.id }}</div>
     </div>
   </div>
 
@@ -99,6 +97,7 @@ watchEffect(() => {
   align-items: center;
   padding: 0px 20px;
   height: 30px;
+  color: var(--color-primary);
 }
 .tabs-container {
   display: flex;
@@ -121,18 +120,19 @@ watchEffect(() => {
   display: flex;
   align-items: center;
   cursor: pointer;
-  @apply text-gray-400;
+  color: var(--color-primary);
 }
 .tab:hover {
-  color: white;
+  color: var(--color-primary-light);
 }
 .selected-tab {
-  color: white;
-  border-bottom: solid grey 5px;
+  font-weight: 500;
+  border-bottom: solid var(--color-primary) 5px;
 }
 .info-container {
   height: calc(100% - 30px - 56px - 300px);
   overflow-y: auto;
+  color: var(--color-primary);
 }
 .virtual-scroller {
   @apply overflow-auto

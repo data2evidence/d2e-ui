@@ -457,6 +457,7 @@
   "FEATURE__CONCEPTS": "概念",
   "FEATURE__DATAFLOW": "数据流",
   "FEATURE__DATASET_FILTER": "数据集过滤器",
+  "FEATURE__DATASET_SEARCH": "数据集搜索",
   "FEATURE__ERROR_DESCRIPTION": "请再试一次。要报告错误，请发送电子邮件至help@data4life.care。",
   "FEATURE__ERROR": "发生了错误。",
   "FEATURE__FEATURE_FLAGS": "功能标志",
