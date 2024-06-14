@@ -91,8 +91,8 @@
         <div class="bookmark-list-header">
           <appCheckbox
             v-model="showSharedBookmarks"
-            :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_BOOKMARKS_TEXT')"
-            :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_BOOKMARKS_TITLE')"
+            :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TEXT')"
+            :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TITLE')"
             :labelClass="'font-color-blue'"
           ></appCheckbox>
         </div>
