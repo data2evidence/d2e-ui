@@ -11,13 +11,17 @@ interface SelectDatasetInternalProps extends Omit<SelectProps, "onChange"> {
   onChange?: (datasetId: string) => void;
 }
 
+const CURRENT_RELEASE_ID = "";
+
 const SelectDatasetInternal: FC<SelectDatasetInternalProps> = ({ datasets, loading, onChange, ...props }) => {
   const { getText, i18nKeys } = useTranslation();
-  const { activeDataset, setActiveDatasetId } = useActiveDataset();
+  const { activeDataset, setActiveDatasetId, setActiveReleaseId } = useActiveDataset();
 
   const handleChange = useCallback(
     (datasetId: string) => {
       setActiveDatasetId(datasetId);
+      setActiveReleaseId(CURRENT_RELEASE_ID);
+
       typeof onChange === "function" && onChange(datasetId);
     },
     [onChange]

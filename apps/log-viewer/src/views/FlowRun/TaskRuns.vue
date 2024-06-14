@@ -31,7 +31,7 @@ const onClickTaskRunId = (taskRunId: string) => {
       </div></template
     >
   </template>
-  <template v-else><div style="padding: 20px; color: white">No task flows</div></template>
+  <template v-else><div style="padding: 20px">No task flows</div></template>
 </template>
 
 <style scoped>

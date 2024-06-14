@@ -35,20 +35,13 @@ watchEffect(() => {
 
 <template>
   <div
-    style="
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0px 20px;
-      height: 30px;
-    "
+    class="top-bar-container"
   >
-    <div style="color: white; cursor: pointer" @click="onClickBackToFlowRun">
+    <div style="cursor: pointer" @click="onClickBackToFlowRun">
       &#60; back to Flow run
     </div>
     <div style="font-size: small">
-      <div style="color: white">Task Run ID: {{ route.params.taskRunId }}</div>
+      <div>Task Run ID: {{ route.params.taskRunId }}</div>
     </div>
   </div>
   <div
@@ -76,6 +69,16 @@ watchEffect(() => {
   width: 100%;
 }
 
+.top-bar-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 20px;
+  height: 30px;
+  color: var(--color-primary);
+}
+
 .tabs {
   height: 50px;
   width: auto;
@@ -89,14 +92,14 @@ watchEffect(() => {
   display: flex;
   align-items: center;
   cursor: pointer;
-  @apply text-gray-400;
+  color: var(--color-primary);
 }
 .tab:hover {
-  color: white;
+  color: var(--color-primary-light);
 }
 .selected {
-  color: white;
-  border-bottom: solid grey 5px;
+  font-weight: 500;
+  border-bottom: solid var(--color-primary) 5px;
 }
 .virtual-scroller {
   @apply overflow-auto
