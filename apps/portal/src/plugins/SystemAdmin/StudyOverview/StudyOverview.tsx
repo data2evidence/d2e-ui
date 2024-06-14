@@ -252,6 +252,7 @@ const StudyOverview: FC = () => {
               token: "",
               database_code: "",
               data_model: "",
+              datasets: datasetsByFlow[flow],
             },
           },
           flowId: getFlowId(flow),
