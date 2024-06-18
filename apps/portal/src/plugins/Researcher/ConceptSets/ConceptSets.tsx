@@ -36,7 +36,6 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
   const { user, userId } = useUser();
   const { activeDataset } = useActiveDataset();
   const activeDatasetId = activeDataset.id;
-  console.log("findme, activeDataset", activeDataset)
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
   const [page, setPage] = useState(0);
