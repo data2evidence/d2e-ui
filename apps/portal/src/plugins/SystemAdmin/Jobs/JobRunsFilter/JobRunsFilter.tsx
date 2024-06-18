@@ -4,6 +4,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { FlowRunJobStateTypes, HistoryJob } from "../types";
 import { Flow, FlowRunFilters } from "../../../../types";
 import { api } from "../../../../axios/api";
+import { isEqual } from "lodash";
 
 const flowRunStateOptions: FlowRunJobStateTypes[] = [
   FlowRunJobStateTypes.SCHEDULED,
@@ -126,7 +127,11 @@ export const JobRunsFilter: FC<JobRunsFilterProps> = ({ result, onChange, onRefr
             }
           />
         </Box>
-        <Button onClick={() => handleFilterChange(EMPTY_FILTERS)} text="Clear selections" />
+        <Button
+          onClick={() => handleFilterChange(EMPTY_FILTERS)}
+          text="Clear selections"
+          disabled={isEqual(filter, EMPTY_FILTERS)}
+        />
         <Button variant="outlined" onClick={handleRefresh} text="Refresh" />
       </Box>
     </>
