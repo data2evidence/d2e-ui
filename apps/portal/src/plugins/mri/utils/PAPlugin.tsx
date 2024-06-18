@@ -47,7 +47,19 @@ const PAPlugin: FC<PAPluginProps> = ({ studyId, releaseId, getToken }) => {
           callbacks = [...scriptCallbacks, ...styleSheetCallbacks];
         });
       })
-      .then(() => setIsLoading(false));
+      .then(() => {
+        setIsLoading(false);
+        setTimeout(dispatchPluginEvent, 1000);
+      });
+
+    const dispatchPluginEvent = () => {
+      const pluginEvent = new CustomEvent("menuClicked", {
+        detail: {
+          event: "cohortsOverview",
+        },
+      });
+      window.dispatchEvent(pluginEvent);
+    };
 
     //Remove scripts and links upon component unmounting
     return () => {
