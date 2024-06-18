@@ -3,14 +3,14 @@ const REDIRECT_URL = 'https://localhost:8081'
 const config = {
   client_id: '1d6wuydanyaiypbkchxzu',
   redirect_uri: REDIRECT_URL,
-  authority: 'https://host.docker.internal:3001',
+  authority: 'https://localhost:41100',
   metadata: {
-    issuer: 'https://host.docker.internal:3001/oidc',
-    authorization_endpoint: 'https://host.docker.internal:3001/oidc/auth',
+    issuer: 'https://localhost:41100/oidc',
+    authorization_endpoint: 'https://localhost:41100/oidc/auth',
     token_endpoint: 'https://localhost:41100/oauth/token',
     end_session_endpoint:
-      'https://host.docker.internal:3001/oidc/session/end?client_id=1d6wuydanyaiypbkchxzu&redirect={window.location.origin}/portal',
-    revocation_endpoint: 'https://host.docker.internal:3001/oidc/token/revocation',
+      'https://localhost:41100/oidc/session/end?client_id=1d6wuydanyaiypbkchxzu&redirect={window.location.origin}/portal',
+    revocation_endpoint: 'https://localhost:41100/oidc/token/revocation',
   },
   scope: 'openid offline',
 }
