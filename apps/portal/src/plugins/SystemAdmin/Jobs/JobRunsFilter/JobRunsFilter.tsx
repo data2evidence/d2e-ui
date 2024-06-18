@@ -5,6 +5,8 @@ import { FlowRunJobStateTypes, HistoryJob } from "../types";
 import { Flow, FlowRunFilters } from "../../../../types";
 import { api } from "../../../../axios/api";
 import { isEqual } from "lodash";
+import { useTranslation } from "../../../../contexts";
+import { i18nKeys } from "../../../../contexts/app-context/states";
 
 const flowRunStateOptions: FlowRunJobStateTypes[] = [
   FlowRunJobStateTypes.SCHEDULED,
@@ -27,6 +29,7 @@ interface JobRunsFilterProps {
 const EMPTY_FILTERS = { startDate: null, endDate: null, states: [], flowIds: [], tags: [] };
 
 export const JobRunsFilter: FC<JobRunsFilterProps> = ({ result, onChange, onRefresh }) => {
+  const { getText } = useTranslation();
   const [filter, setFilter] = useState<FlowRunFilters>(EMPTY_FILTERS);
   const [flows, setFlows] = useState<Flow[]>();
   const [tags, setTags] = useState<string[]>();
@@ -129,10 +132,10 @@ export const JobRunsFilter: FC<JobRunsFilterProps> = ({ result, onChange, onRefr
         </Box>
         <Button
           onClick={() => handleFilterChange(EMPTY_FILTERS)}
-          text="Clear selections"
           disabled={isEqual(filter, EMPTY_FILTERS)}
+          text={getText(i18nKeys.JOB_RUNS_FILTER__CLEAR_SELECTIONS)}
         />
-        <Button variant="outlined" onClick={handleRefresh} text="Refresh" />
+        <Button variant="outlined" onClick={handleRefresh} text={getText(i18nKeys.JOB_RUNS_FILTER__REFRESH)} />
       </Box>
     </>
   );
