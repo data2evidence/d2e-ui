@@ -69,13 +69,13 @@ export const JobRunsFilter: FC<JobRunsFilterProps> = ({ result, onChange, onRefr
         <DatePicker
           label="Start date"
           slotProps={{ textField: { size: "small", sx: { width: "150px" } } }}
-          value={filter?.startDate}
+          value={filter.startDate}
           onChange={(startDate) => handleFilterChange({ startDate })}
         />
         <DatePicker
           label="End date"
           slotProps={{ textField: { size: "small", sx: { width: "150px" } } }}
-          value={filter?.endDate}
+          value={filter.endDate}
           onChange={(endDate) => handleFilterChange({ endDate })}
         />
         <Box flex="1" display="flex" gap="8px">
@@ -83,7 +83,7 @@ export const JobRunsFilter: FC<JobRunsFilterProps> = ({ result, onChange, onRefr
             multiple
             style={{ flexGrow: 1 }}
             options={flowRunStateOptions}
-            value={filter?.states}
+            value={filter.states}
             onChange={(_, states) => handleFilterChange({ states })}
             renderInput={(params) => <TextField {...params} label="State" size="small" />}
             renderTags={(value: string[], getTagProps) =>
@@ -96,7 +96,7 @@ export const JobRunsFilter: FC<JobRunsFilterProps> = ({ result, onChange, onRefr
             multiple
             style={{ flexGrow: 1 }}
             options={flows?.map((f) => f.id) || []}
-            value={filter?.flowIds}
+            value={filter.flowIds}
             onChange={(_, flowIds) => handleFilterChange({ flowIds })}
             getOptionLabel={(option) => flows?.find((f) => f.id === option)?.name || ""}
             renderInput={(params) => <TextField {...params} label="Flow" size="small" />}
@@ -116,7 +116,7 @@ export const JobRunsFilter: FC<JobRunsFilterProps> = ({ result, onChange, onRefr
             multiple
             style={{ flexGrow: 1 }}
             options={tags || []}
-            value={filter?.tags}
+            value={filter.tags}
             onChange={(_, tags) => handleFilterChange({ tags })}
             renderInput={(params) => <TextField {...params} label="Tags" size="small" />}
             renderTags={(value: string[], getTagProps) =>
@@ -126,7 +126,7 @@ export const JobRunsFilter: FC<JobRunsFilterProps> = ({ result, onChange, onRefr
             }
           />
         </Box>
-        <Button onClick={() => handleFilterChange(EMPTY_FILTERS)} text="Clear selection" />
+        <Button onClick={() => handleFilterChange(EMPTY_FILTERS)} text="Clear selections" />
         <Button variant="outlined" onClick={handleRefresh} text="Refresh" />
       </Box>
     </>
