@@ -9,6 +9,7 @@ import ResultsDialog from "../../DQD/ResultsDialog/ResultsDialog";
 import { useDatasets } from "../../../../hooks";
 import { FlowRunJobStateTypes } from "../types";
 import { useTranslation } from "../../../../contexts";
+import { DQD_RUN_TYPES } from "../../../../components/DQD/types";
 import "./JobRunsTable.scss";
 
 const JobStatusColorMapping = {
@@ -52,6 +53,14 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
 }) => {
   const { getText, i18nKeys } = useTranslation();
   const dataset = datasets.find((s) => s.id === row.datasetId);
+
+  const isHasResults = useCallback((row: HistoryJob) => {
+    return (
+      (row.type.includes(DQD_RUN_TYPES.DATA_QUALITY) || row.type.includes(DQD_RUN_TYPES.DATA_CHARACTERIZATION)) &&
+      row.status === FlowRunJobStateTypes.COMPLETED
+    );
+  }, []);
+
   return (
     <>
       <TableRow key={row.schemaName + row.type + row.completedAt}>
@@ -101,8 +110,7 @@ const ExpandingRow: FC<ExpandingRowProps> = ({
           }
         </TableCell>
         <TableCell sx={{ color: "#050080" }} align="left">
-          {row.status === FlowRunJobStateTypes.COMPLETED ? (
-            // If status is COMPLETED, show view detail button
+          {isHasResults(row) ? (
             <IconButton
               startIcon={<FileIcon />}
               title={getText(i18nKeys.JOB_RUNS_TABLE__VIEW)}

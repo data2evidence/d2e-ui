@@ -85,7 +85,7 @@ const actions = {
           configId: configMetadata.configId,
           configVersion: configMetadata.configVersion,
         },
-        selectedStudyEntityValue: this.getSelectedDataset.id,
+        selectedStudyEntityValue: rootGetters.getSelectedDataset.id,
       }
       dispatch('firePatientListCountQuery', {
         type: 'total',
