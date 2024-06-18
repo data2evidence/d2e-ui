@@ -3,9 +3,7 @@ import { LogInfo } from '@/types'
 import { getLogsByTaskRunId } from '@/api'
 import { ref, watchEffect } from 'vue'
 import LogScroller from '../components/LogScroller.vue'
-import { getPortalAPI } from '../utils/portalApi'
 import { useRoute, useRouter } from 'vue-router'
-const { backToJobs } = getPortalAPI()
 
 type TabName = 'LOGS' | 'TASK_RUNS' | 'DETAILS' | 'PARAMETERS'
 const route = useRoute()
@@ -18,9 +16,9 @@ const onClickTab = (tabName: TabName) => {
   selected.value = tabName
 }
 
-const onClickBackToJobs = () => {
-  router.push(`/`)
-  backToJobs()
+const onClickBackToFlowRun = () => {
+  const taskRunId = route.params.taskRunId
+  router.push(`${router.currentRoute.value.path.replace(`/taskrun/${taskRunId}`, '')}`)
 }
 
 watchEffect(() => {
@@ -37,19 +35,13 @@ watchEffect(() => {
 
 <template>
   <div
-    style="
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0px 20px;
-    "
+    class="top-bar-container"
   >
-    <div style="color: white; cursor: pointer" @click="onClickBackToJobs">
-      &#60; back to Jobs list
+    <div style="cursor: pointer" @click="onClickBackToFlowRun">
+      &#60; back to Flow run
     </div>
     <div style="font-size: small">
-      <div style="color: white">Task Run ID: {{ route.params.taskRunId }}</div>
+      <div>Task Run ID: {{ route.params.taskRunId }}</div>
     </div>
   </div>
   <div
@@ -77,6 +69,16 @@ watchEffect(() => {
   width: 100%;
 }
 
+.top-bar-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 20px;
+  height: 30px;
+  color: var(--color-primary);
+}
+
 .tabs {
   height: 50px;
   width: auto;
@@ -90,13 +92,17 @@ watchEffect(() => {
   display: flex;
   align-items: center;
   cursor: pointer;
-  @apply text-gray-400;
+  color: var(--color-primary);
 }
 .tab:hover {
-  color: white;
+  color: var(--color-primary-light);
 }
 .selected {
-  color: white;
-  border-bottom: solid grey 5px;
+  font-weight: 500;
+  border-bottom: solid var(--color-primary) 5px;
+}
+.virtual-scroller {
+  @apply overflow-auto
+  max-h-[calc(100vh-80px-56px-30px)];
 }
 </style>

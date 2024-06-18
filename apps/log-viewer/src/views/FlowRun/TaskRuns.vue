@@ -8,7 +8,7 @@ const router = useRouter()
 defineProps<{ taskRuns: FlowRun[] }>()
 
 const onClickTaskRunId = (taskRunId: string) => {
-  router.push(`/taskrun/${taskRunId}`)
+  router.push(`${router.currentRoute.value.path}/taskrun/${taskRunId}`)
 }
 </script>
 
@@ -31,7 +31,7 @@ const onClickTaskRunId = (taskRunId: string) => {
       </div></template
     >
   </template>
-  <template v-else><div style="padding: 20px; color: white">No task flows</div></template>
+  <template v-else><div style="padding: 20px">No task flows</div></template>
 </template>
 
 <style scoped>

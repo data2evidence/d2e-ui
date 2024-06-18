@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Card, Tab, Tabs } from "@portal/components";
 import { PortalType, User } from "../../../types";
 import { useDialogHelper } from "../../../hooks";
-import { useToken, useTranslation } from "../../../contexts";
+import { useToken, useTranslation, useUser } from "../../../contexts";
 import env from "../../../env";
 import { config } from "../../../config";
 import { ChangeMyPasswordDialog } from "./ChangeMyPasswordDialog/ChangeMyPasswordDialog";
@@ -36,6 +36,7 @@ export const Account: FC<AccountProps> = ({ portalType }) => {
   const [myUser, setMyUser] = useState(EMPTY_MY_USER);
   const [showDeleteAccount, openDeleteAccount, closeDeleteAccount] = useDialogHelper(false);
   const [showPwd, openPwdDialog, closePwdDialog] = useDialogHelper(false);
+  const { user } = useUser();
 
   const legalTabs = [
     getText(i18nKeys.ACCOUNT__TERMS_OF_USE),
@@ -82,18 +83,25 @@ export const Account: FC<AccountProps> = ({ portalType }) => {
               </div>
             </Card>
             <div className="account__content_actions">
+              {portalType === "system_admin" && user.canAccessResearcherPortal && (
+                <Button block text={getText(i18nKeys.ACCOUNT__SWITCH_TO_RESEARCHER_PORTAL)} onClick={handleSwitch} />
+              )}
+              {portalType === "researcher" && user.canAccessSystemAdminPortal && (
+                <Button block text={getText(i18nKeys.ACCOUNT__SWITCH_TO_ADMIN_PORTAL)} onClick={handleSwitch} />
+              )}
+              <Button block text={getText(i18nKeys.ACCOUNT__LOGOUT)} onClick={handleLogout} />
               <Button
                 block
-                text={getText(
-                  portalType === "researcher"
-                    ? i18nKeys.ACCOUNT__SWITCH_TO_ADMIN_PORTAL
-                    : i18nKeys.ACCOUNT__SWITCH_TO_RESEARCHER_PORTAL
-                )}
-                onClick={handleSwitch}
+                variant="outlined"
+                text={getText(i18nKeys.ACCOUNT__CHANGE_PASSWORD)}
+                onClick={openPwdDialog}
               />
-              <Button block text={getText(i18nKeys.ACCOUNT__CHANGE_PASSWORD)} onClick={openPwdDialog} />
-              <Button block text={getText(i18nKeys.ACCOUNT__LOGOUT)} onClick={handleLogout} />
-              <Button block text={getText(i18nKeys.ACCOUNT__DELETE_ACCOUNT)} onClick={openDeleteAccount} />
+              <Button
+                block
+                variant="outlined"
+                text={getText(i18nKeys.ACCOUNT__DELETE_ACCOUNT)}
+                onClick={openDeleteAccount}
+              />
             </div>
           </div>
           <div className="account__content_legal">

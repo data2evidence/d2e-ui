@@ -1,8 +1,15 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactECharts from "echarts-for-react";
-import classNames from "classnames";
-import { Card, CalendarIcon, DatabaseIcon, DocPlayIcon, PadlockEmptyIcon, UsersIcon } from "@portal/components";
+import {
+  Card,
+  CalendarIcon,
+  DatabaseIcon,
+  DocPlayIcon,
+  PadlockEmptyUnlockIcon,
+  UsersIcon,
+  PadlockEmptyIcon,
+} from "@portal/components";
 import { HighlightText } from "../../../components";
 import { Study } from "../../../types";
 import { DatasetAttribute } from "../../../constant";
@@ -90,7 +97,9 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path, highlightText
   const entityCounts = getAttributeValue(DatasetAttribute.ENTITY_COUNT_DISTRIBUTION);
   const chartData = useMemo(() => {
     try {
-      return JSON.parse(entityCounts || "{}");
+      const data = JSON.parse(entityCounts || "{}");
+      const filteredData = Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== "0"));
+      return filteredData;
     } catch {
       return {};
     }
@@ -114,11 +123,11 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path, highlightText
       <div className="dataset-card__content">
         <div className="dataset-card__title">
           {dataset.visibilityStatus}
-          <PadlockEmptyIcon
-            className={classNames("dataset-card__permission-icon", {
-              "dataset-card__permission-icon--accessible": user.isDatasetResearcher[dataset.id],
-            })}
-          />
+          {user.isDatasetResearcher[dataset.id] ? (
+            <PadlockEmptyUnlockIcon className="dataset-card__permission-icon" />
+          ) : (
+            <PadlockEmptyIcon className="dataset-card__permission-icon dataset-card__permission-icon--inaccessible" />
+          )}
           <HighlightText text={dataset.studyDetail?.name || "Untitled"} searchText={highlightText} />
         </div>
         <div className="dataset-card__description">

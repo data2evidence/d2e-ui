@@ -18,7 +18,7 @@ div.app-checkbox {
   align-items: center;
   gap: 8px;
   div.app-checkbox-container {
-    border: 2px solid $CheckboxBorder;
+    border: 2px solid $Checkbox;
     border-radius: 5px;
     cursor: pointer;
     display: block;
@@ -79,7 +79,7 @@ div.app-checkbox {
   .app-checkbox-checked:before {
     content: '\e05b';
     font-family: 'app-icons';
-    color: #007cc0;
+    color: $Checkbox;
     font-size: 20px;
     margin-top: 2px;
     display: flex;

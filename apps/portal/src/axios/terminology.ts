@@ -8,6 +8,7 @@ import {
   FilterOptions,
   HybridSearchConfig,
   Concept,
+  ConceptHierarchyResponse,
 } from "../plugins/Researcher/Terminology/utils/types";
 
 const TERMINOLOGY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}terminology`;
@@ -79,6 +80,18 @@ export class Terminology {
       method: "GET",
     });
     return filterOptions;
+  }
+
+  public async getConceptHierarchy(
+    datasetId: string,
+    conceptId: number,
+    depth: number
+  ): Promise<ConceptHierarchyResponse> {
+    return await request({
+      baseURL: TERMINOLOGY_BASE_URL,
+      url: `concept/hierarchy?datasetId=${datasetId}&conceptId=${conceptId}&depth=${depth}`,
+      method: "GET",
+    });
   }
 
   // CONCEPT SETS

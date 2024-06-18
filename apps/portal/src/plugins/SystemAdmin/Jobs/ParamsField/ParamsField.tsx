@@ -61,7 +61,7 @@ const ParamsField: FC<ParamsFieldProps> = ({
       if (param.type === "enum" || param.enum) {
         return (
           <FormControl fullWidth sx={styles} className="select" variant="standard" error={hasError}>
-            <InputLabel>{paramKey}</InputLabel>
+            <InputLabel>{getLabel(param)}</InputLabel>
             <Select
               sx={styles}
               value={getValue()}
@@ -102,7 +102,7 @@ const ParamsField: FC<ParamsFieldProps> = ({
             onChange={handleInputChange}
             parentKey={parentKey}
             childKey={childKey}
-            name={paramKey}
+            name={getLabel(param)}
           />
         );
       }

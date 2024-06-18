@@ -26,6 +26,9 @@ export const Feature: FC = () => {
       datasetFilter: {
         name: getText(i18nKeys.FEATURE__DATASET_FILTER),
       },
+      datasetSearch: {
+        name: getText(i18nKeys.FEATURE__DATASET_SEARCH),
+      },
       terminology: {
         name: getText(i18nKeys.FEATURE__TERMINOLOGY),
       },
