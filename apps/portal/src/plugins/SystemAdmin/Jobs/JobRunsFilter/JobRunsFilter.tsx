@@ -23,8 +23,10 @@ interface JobRunsFilterProps {
   onRefresh?: () => void;
 }
 
+const EMPTY_FILTERS = { startDate: null, endDate: null, states: [], flowIds: [], tags: [] };
+
 export const JobRunsFilter: FC<JobRunsFilterProps> = ({ result, onChange, onRefresh }) => {
-  const [filter, setFilter] = useState<FlowRunFilters>();
+  const [filter, setFilter] = useState<FlowRunFilters>(EMPTY_FILTERS);
   const [flows, setFlows] = useState<Flow[]>();
   const [tags, setTags] = useState<string[]>();
 
@@ -124,6 +126,7 @@ export const JobRunsFilter: FC<JobRunsFilterProps> = ({ result, onChange, onRefr
             }
           />
         </Box>
+        <Button onClick={() => handleFilterChange(EMPTY_FILTERS)} text="Clear selection" />
         <Button variant="outlined" onClick={handleRefresh} text="Refresh" />
       </Box>
     </>
