@@ -60,7 +60,7 @@ export const Researcher: FC = () => {
   const featureFlagsDict = useMemo(() => {
     // Convert to dictionary of { [featureFlag]: { [subFeatureFlag]: enabledBoolean } }
     const result: { [featureFlag: string]: SubFeatureFlags } = {};
-    plugins.researcher?.forEach((plugin: IPluginItem) => {
+    const featureFlagProcessor = (plugin: IPluginItem) => {
       if (plugin.featureFlag && plugin.subFeatureFlags && plugin.subFeatureFlags.length > 0) {
         const subFeatureFlags = plugin.subFeatureFlags.map((f: string) => ({
           featureFlag: f,
@@ -69,9 +69,22 @@ export const Researcher: FC = () => {
 
         result[plugin.featureFlag] = Object.fromEntries(subFeatureFlags.map((f) => [f.featureFlag, f.enabled]));
       }
-    });
+      plugin.children?.forEach(featureFlagProcessor);
+    };
+    plugins.researcher?.forEach(featureFlagProcessor);
     return result;
   }, [featureFlags]);
+
+  const researcherPluginsFlat = useMemo(() => {
+    const flatPlugins: IPluginItem[] = [];
+    plugins.researcher.forEach((plugin) => {
+      flatPlugins.push(plugin);
+      plugin.children?.forEach((childPlugin) => {
+        flatPlugins.push(childPlugin);
+      });
+    });
+    return flatPlugins;
+  }, [plugins]);
 
   const onFetchMenus = useCallback((route: string, menus: PluginDropdownItem[]) => {
     setPluginDropdown((current: any) => ({ ...current, [route]: menus }));
@@ -98,7 +111,7 @@ export const Researcher: FC = () => {
             <Route path={ROUTES.overview} element={<Overview />} />
             <Route path={ROUTES.info} element={<Information />} />
             <Route path={ROUTES.account} element={<Account portalType="researcher" />} />
-            {plugins.researcher.map((item: IPluginItem) => {
+            {researcherPluginsFlat.map((item: IPluginItem) => {
               const subFeatureFlags = item.featureFlag ? featureFlagsDict[item.featureFlag] : {};
               return (
                 <Route

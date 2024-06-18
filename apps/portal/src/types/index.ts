@@ -62,6 +62,7 @@ export interface IPluginItem {
   iframeUrlEnv?: string;
   description?: string;
   notes?: string;
+  children?: IPluginItem[];
 }
 
 export interface IPlugin {

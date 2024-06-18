@@ -9,6 +9,7 @@ const moduleNames = [
   "mri/PatientSummaryConfig",
   "mri/Search",
   "Researcher/ConceptSets",
+  "Researcher/KaplanMeier",
   "SystemAdmin/Nifi",
   "SystemAdmin/StudyOverview",
   "SystemAdmin/UserOverview",
