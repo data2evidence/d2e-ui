@@ -547,6 +547,8 @@
   "JOB_DIALOG__SUCCESS": "{0} Job erfolgreich gestartet.",
   "JOB_RUN_BUTTONS__RUN_DATA_CHARACTERIZATION": "Führen Sie die Datencharakterisierung durch",
   "JOB_RUN_BUTTONS__RUN_DATA_QUALITY": "Führen Sie Datenqualität aus",
+  "JOB_RUNS_FILTER__CLEAR_SELECTIONS": "Klare Auswahl",
+  "JOB_RUNS_FILTER__REFRESH": "Aktualisierung",
   "JOB_RUNS_TABLE__ACTION": "Aktion",
   "JOB_RUNS_TABLE__CANCEL": "Auftrag abbrechen",
   "JOB_RUNS_TABLE__COMPLETED_TIME": "Abgeschlossene Zeit",
