@@ -195,7 +195,7 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
                           </TableCell>
                           <TableCell>{row.createdDate}</TableCell>
                           <TableCell>{row.modifiedDate}</TableCell>
-                          <TableCell>{row.createdBy}</TableCell>
+                          <TableCell>{row.userName}</TableCell>
                           <TableCell>
                             <IconButton
                               startIcon={row.createdBy === user.idpUserId ? <EditIcon /> : <VisibilityOnIcon />}
