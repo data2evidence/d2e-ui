@@ -591,6 +591,8 @@ export const i18nDefault = {
     JOB_RUN_BUTTONS__RUN_DATA_CHARACTERIZATION: "Run Data Characterization",
     JOB_RUN_BUTTONS__RUN_DATA_QUALITY: "Run Data Quality",
     JOB_RUN_BUTTONS__NO_DATA_QUALITY_JOB_TOOLTIP: "Data Quality job not installed",
+    JOB_RUNS_FILTER__CLEAR_SELECTIONS: "Clear selections",
+    JOB_RUNS_FILTER__REFRESH: "Refresh",
     JOB_RUNS_TABLE__ACTION: "Action",
     JOB_RUNS_TABLE__CANCEL: "Cancel Job",
     JOB_RUNS_TABLE__COMPLETED_TIME: "Completed time",

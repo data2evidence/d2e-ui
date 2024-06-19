@@ -189,133 +189,131 @@
       padding: 30px;
       white-space: normal;
     }
-    ul.bookmark-list {
-      list-style: none;
-      padding-left: 0;
-      position: relative;
-      margin-top: 0;
-      margin-bottom: 0;
+    .bookmark-list {
       display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      flex-wrap: wrap;
-      margin: 5px;
       .bookmark-list-header {
+        padding: 1em;
+      }
+      .bookmark-list-content {
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-auto-rows: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+        gap: 1em;
         width: 100%;
-        margin-left: -20px;
-        padding: 0 15px;
-        display: flex;
-        justify-content: center;
-      }
-      .bookmark-item {
-        margin: 5px;
-      }
-      .bookmark-item-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        box-sizing: border-box;
-        background-color: $UiLightestBG;
-        border: 1px solid $UiMediumBorder;
-        border-radius: 18px;
-        box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.08);
-        font-size: 12px;
-        padding: 10px;
-        width: 290px;
-        height: 100%;
-        overflow-wrap: anywhere;
-        cursor: pointer;
-        .bookmark-item-table {
-          color: $UiLightText;
-          width: 100%;
-          .bookmark-item-cards {
+        justify-items: center;
+        padding: 1em;
+
+        .bookmark-item-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          box-sizing: border-box;
+          background-color: $UiLightestBG;
+          border: 1px solid $UiMediumBorder;
+          border-radius: 18px;
+          box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.08);
+          font-size: 12px;
+          padding: 10px;
+          width: 290px;
+          height: 100%;
+          overflow-wrap: anywhere;
+          cursor: pointer;
+          .bookmark-item-table {
+            color: $UiLightText;
             width: 100%;
-            td.bookmark-item-cards-icon {
-              vertical-align: top;
+            .bookmark-item-cards {
+              width: 100%;
+              td.bookmark-item-cards-icon {
+                vertical-align: top;
+              }
+              td.bookmark-item-cards-items {
+                vertical-align: middle;
+              }
             }
-            td.bookmark-item-cards-items {
-              vertical-align: middle;
+            .bookmark-item-info {
+              display: flex;
+              column-gap: 32px;
+              align-items: baseline;
+              margin-bottom: 8px;
             }
-          }
-          .bookmark-item-info {
-            display: flex;
-            column-gap: 32px;
-            align-items: baseline;
-            margin-bottom: 8px;
-          }
-          .bookmark-item-header {
-            font-size: 16px;
-            font-weight: bold;
-            position: relative;
-            color: #ff5e59;
-            span.selectable {
-              user-select: all;
-              font-weight: normal;
-            }
-          }
-          .bookmark-item-content {
-            padding-left: 9px;
-            padding-right: 9px;
-          }
-          .bookmark-filtercard {
-            display: inline-block;
-            .bookmark-element {
-              margin: 0.125rem 0.25rem 0 0;
-              color: #585757;
-            }
-            .bookmark-headelement {
+            .bookmark-item-header {
+              font-size: 16px;
               font-weight: bold;
-              color: $UiDarkText;
-            }
-            .bookmark-constraint {
-              border-radius: 0.125rem;
-              color: $UiLightText;
-              font-weight: normal;
-              padding: 0 2px;
-            }
-          }
-          .bookmark-item-axes {
-            label {
-              margin: 0;
-            }
-          }
-          .bookmark-row-separator {
-            padding: 3px;
-          }
-        }
-        .bookmark-item-footer {
-          bottom: 5px;
-          &__break {
-            opacity: 0.5;
-            margin: 10px -10px;
-            border-bottom: solid 1px #acaba8;
-          }
-          .bookmark-item-buttons {
-            width: 100%;
-            td {
-              vertical-align: middle;
-              .icon {
-                font-family: app-icons;
-                font-size: 12px;
-                margin-top: 1px;
+              position: relative;
+              color: #ff5e59;
+              span.selectable {
+                user-select: all;
                 font-weight: normal;
-                line-height: 18px;
-                height: 18px;
-                cursor: pointer;
-                text-align: center;
-                display: inline-block;
+              }
+            }
+            .bookmark-item-content {
+              padding-left: 9px;
+              padding-right: 9px;
+            }
+            .bookmark-filtercard {
+              display: inline-block;
+              .bookmark-element {
+                margin: 0.125rem 0.25rem 0 0;
+                color: #585757;
+              }
+              .bookmark-headelement {
+                font-weight: bold;
+                color: $UiDarkText;
+              }
+              .bookmark-constraint {
+                border-radius: 0.125rem;
+                color: $UiLightText;
+                font-weight: normal;
+                padding: 0 2px;
+              }
+            }
+            .bookmark-item-axes {
+              label {
+                margin: 0;
+              }
+            }
+            .bookmark-row-separator {
+              padding: 3px;
+            }
+          }
+          .bookmark-item-footer {
+            bottom: 5px;
+            &__break {
+              opacity: 0.5;
+              margin: 10px -10px;
+              border-bottom: solid 1px #acaba8;
+            }
+            .bookmark-item-buttons {
+              width: 100%;
+              td {
+                vertical-align: middle;
+                .icon {
+                  font-family: app-icons;
+                  font-size: 12px;
+                  margin-top: 1px;
+                  font-weight: normal;
+                  line-height: 18px;
+                  height: 18px;
+                  cursor: pointer;
+                  text-align: center;
+                  display: inline-block;
+                }
               }
             }
           }
         }
-      }
-      .bookmark-item-container:hover {
-        border: 1px solid $MriButtonHoverDark;
-        .bookmark-item-table {
-          color: $MriButtonHoverDark;
-          .bookmark-filtercard {
-            .bookmark-constraint {
-              border-color: $MriTokenValidBorder;
-              color: $UiLightText;
+        .bookmark-item-container:hover {
+          border: 1px solid $MriButtonHoverDark;
+          .bookmark-item-table {
+            .bookmark-filtercard {
+              .bookmark-constraint {
+                border-color: $MriTokenValidBorder;
+                color: $UiLightText;
+              }
             }
           }
         }
