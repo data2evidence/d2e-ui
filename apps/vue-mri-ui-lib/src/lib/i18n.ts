@@ -290,6 +290,7 @@ export const i18n = {
     MRI_PA_CFG_COHORT_SETTING_LABEL: 'Enable "Add to Cohort"',
     MRI_PA_CFG_COHORT_SETTING_TOOLTIP: 'Activate "Add to Cohort"',
     MRI_PA_CFG_MAX_ENTRIES_TEXT_ATTRIBUTE_LABEL: 'Maximum No. of Dropdown Entries for Text Attributes',
+    MRI_PA_CFG_MAX_FILTERCARD_TEXT_ATTRIBUTE_LABEL: 'Maximum No. of Filtercards that can be added in Patient Analytics',
     MRI_PA_CFG_MAX_ENTRIES_TEXT_ATTRIBUTE_PLACEHOLDER: 'Enter No. of Entries',
     MRI_PA_CFG_ACCESS_POINT_CALCVIEW_LABEL: 'Enable Calculation View as External Access Point',
     MRI_PA_CFG_ACCESS_POINT_CALCVIEW_TOOLTIP:
@@ -830,6 +831,7 @@ export const i18n = {
     MRI_PA_VB_CREATE_FILTERS_INCLUDED: 'Add filter to Inclusion',
     MRI_PA_VB_CREATE_FILTERS_EXCLUDED: 'Add filter to Exclusion',
     MRI_PA_TOOLTIP_CREATE_FILTERS: 'Add Filter Card',
+    MRI_PA_TOOLTIP_CREATE_FILTERS_DISABLED_DUE_TO_EXCEEDING_MAX_FILTERCARD_COUNT: 'Maximum number of filtercards allowed is {0}',
     MRI_PA_TOOLTIP_CREATE_FILTERS_INCLUDED: 'Add Included Filter Card',
     MRI_PA_TOOLTIP_CREATE_FILTERS_EXCLUDED: 'Add Excluded Filter Card',
     MRI_PA_TOOLTIP_SAVE_FILTERS: 'Save Current Filters',

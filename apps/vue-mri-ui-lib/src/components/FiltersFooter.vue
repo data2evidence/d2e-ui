@@ -13,10 +13,11 @@
       <div class="d-flex justify-content-center align-items-center">
         <b-dropdown variant="link" size="sm" no-caret style="margin-left: 8px">
           <template v-slot:button-content>
-            <d4l-button
+            <d4l-button 
               v-if="!splitAddButton"
               :text="getText('MRI_PA_VB_CREATE_FILTERS')"
-              :title="getText('MRI_PA_TOOLTIP_CREATE_FILTERS')"
+              :title="this.hasExceededMaxFilterCount ? getText('MRI_PA_TOOLTIP_CREATE_FILTERS_DISABLED_DUE_TO_EXCEEDING_MAX_FILTERCARD_COUNT', this.maxFiltercardCount) : getText('MRI_PA_TOOLTIP_CREATE_FILTERS')"
+              :disabled="this.hasExceededMaxFilterCount"
             />
             <d4l-button
               v-else
@@ -179,11 +180,17 @@ export default {
       isInvalidName: false,
       cohortName: '',
       maxLength: 40,
+      maxFiltercardCount: 10,
     }
+  },
+  mounted() {
+    // Take maxFiltercardCount from config, else use default value if maxFiltercardCount is not set.
+    this.maxFiltercardCount = this.getMriFrontendConfig._internalConfig.panelOptions.maxFiltercardCount || this.maxFiltercardCount
   },
   computed: {
     ...mapGetters([
       'getFilterCardMenu',
+      'getFilterCardCount',
       'getText',
       'getBookmarksData',
       'getBookmarks',
@@ -201,6 +208,14 @@ export default {
     },
     hasExceededLength() {
       return this.cohortName.length == this.maxLength
+    },
+    hasExceededMaxFilterCount() {
+      const filtercardCount = this.getFilterCardCount({
+        excludeBasicCard: true,
+        excludedOnly: false,
+        matchType: 'matchall',
+      })
+      return filtercardCount >= this.maxFiltercardCount
     },
     isNotUserSharedBookmark() {
       const username = getPortalAPI().username
