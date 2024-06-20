@@ -478,6 +478,9 @@ sap.ui.define([
             if (oldConfig.panelOptions.hasOwnProperty("domainValuesLimit")) {
                 newConfig.panelOptions.domainValuesLimit = oldConfig.panelOptions.domainValuesLimit;
             }
+            if (oldConfig.panelOptions.hasOwnProperty("maxFiltercardCount")) {
+                newConfig.panelOptions.maxFiltercardCount = oldConfig.panelOptions.maxFiltercardCount;
+            }
             if (oldConfig.panelOptions.hasOwnProperty("externalAccessPoints")) {
                 newConfig.panelOptions.externalAccessPoints = oldConfig.panelOptions.externalAccessPoints;
             }
