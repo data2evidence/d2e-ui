@@ -290,8 +290,9 @@ export const i18n = {
     MRI_PA_CFG_COHORT_SETTING_LABEL: 'Enable "Add to Cohort"',
     MRI_PA_CFG_COHORT_SETTING_TOOLTIP: 'Activate "Add to Cohort"',
     MRI_PA_CFG_MAX_ENTRIES_TEXT_ATTRIBUTE_LABEL: 'Maximum No. of Dropdown Entries for Text Attributes',
-    MRI_PA_CFG_MAX_FILTERCARD_TEXT_ATTRIBUTE_LABEL: 'Maximum No. of Filtercards that can be added in Patient Analytics',
     MRI_PA_CFG_MAX_ENTRIES_TEXT_ATTRIBUTE_PLACEHOLDER: 'Enter No. of Entries',
+    MRI_PA_CFG_MAX_FILTERCARD_TEXT_ATTRIBUTE_LABEL: 'Maximum No. of Filtercards Allowed in Patient Analytics',
+    MRI_PA_CFG_MAX_FILTERCARD_TEXT_ATTRIBUTE_PLACEHOLDER: 'Enter No. of Maximum Filtercards Allowed',
     MRI_PA_CFG_ACCESS_POINT_CALCVIEW_LABEL: 'Enable Calculation View as External Access Point',
     MRI_PA_CFG_ACCESS_POINT_CALCVIEW_TOOLTIP:
       'Activate the option to generate a calculation view as external access point',
