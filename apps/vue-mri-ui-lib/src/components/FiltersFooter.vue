@@ -184,7 +184,7 @@ export default {
     }
   },
   mounted() {
-    // Take maxFiltercardCount from config, else use default value if maxFiltercardCount is not set.
+    // Get maxFiltercardCount from config if available.
     this.maxFiltercardCount = this.getMriFrontendConfig._internalConfig.panelOptions.maxFiltercardCount || this.maxFiltercardCount
   },
   computed: {
