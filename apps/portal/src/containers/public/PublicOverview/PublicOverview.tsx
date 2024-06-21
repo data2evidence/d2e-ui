@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState, useMemo, useCallback } from "react";
 import classNames from "classnames";
+import ReactMarkdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@portal/components";
 import { useOverviewDescription, usePublicDatasets } from "../../../hooks";
@@ -93,7 +94,7 @@ export const PublicOverview: FC = () => {
           <div className="public-overview__banner-title">
             <div className="public-overview__banner-title-text">Data2Evidence</div>
             <div className="public-overview__banner-description">
-              {overviewDescription.text || getText(i18nKeys.HOME__DESCRIPTION)}
+              <ReactMarkdown>{overviewDescription.text || getText(i18nKeys.HOME__DESCRIPTION)}</ReactMarkdown>
             </div>
             <SearchBarDataset keyword={searchString} onEnter={handleSearchEnter} onChange={handleSearchChange} />
           </div>
