@@ -9,7 +9,10 @@ import { OnCloseReturnValues, FhirValueSetExpansionContainsWithExt, TerminologyR
 import { tabNames } from "./utils/constants";
 import { TabName, ConceptSet } from "./utils/types";
 import { terminologyApi } from "../../../axios/terminology";
-import { useActiveDataset, useTranslation, useUser } from "../../../contexts";
+import { useActiveDataset, useToken, useTranslation, useUser } from "../../../contexts";
+import env from "../../../env";
+
+const nameProp = env.REACT_APP_IDP_NAME_PROP;
 
 export interface TerminologyProps extends PageProps<ResearcherStudyMetadata> {
   onConceptIdSelect?: (conceptData: any) => void;
@@ -233,6 +236,7 @@ export const Terminology: FC<TerminologyProps> = ({
   const [conceptsResult, setConceptsResult] = useState<TerminologyResult | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
   const { activeDataset } = useActiveDataset();
+  const { idTokenClaims } = useToken();
   const activeDatasetId = activeDataset.id;
 
   const isConceptSet = mode === "CONCEPT_SET";
@@ -274,6 +278,7 @@ export const Terminology: FC<TerminologyProps> = ({
       }),
       name: conceptSetName,
       shared: conceptSetShared,
+      ...(!conceptSetId && { userName: idTokenClaims[nameProp] }),
     };
     setIsConceptSetLoading(true);
     try {
