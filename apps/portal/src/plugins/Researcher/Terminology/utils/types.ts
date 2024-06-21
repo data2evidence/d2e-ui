@@ -39,6 +39,7 @@ export type ConceptSet = {
   createdDate?: string;
   modifiedBy?: string;
   modifiedDate?: string;
+  userName?: string;
 };
 
 export type ConceptSetWithConceptDetails = ConceptSet & {
