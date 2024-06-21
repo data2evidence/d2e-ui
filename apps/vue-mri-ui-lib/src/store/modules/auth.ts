@@ -5,7 +5,7 @@ import { AUTHENTICATE, AUTHENTICATE_FAILURE, SET_JWT_TOKEN_VALUE } from '../muta
 import { getPortalAPI } from '../../utils/PortalUtils'
 
 const Ajax = axios.create({
-  timeout: 100000,
+  timeout: 300000,
   headers: {
     'sap-language': document.getElementsByTagName('html')[0].lang,
   },
