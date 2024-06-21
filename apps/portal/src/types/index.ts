@@ -11,6 +11,7 @@ export * from "./system";
 export * from "./paConfig";
 export * from "./flow";
 export * from "./dbCredentials";
+export * from "./overviewDescription";
 
 export interface NavLink {
   id: string;

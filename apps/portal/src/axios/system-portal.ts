@@ -15,6 +15,7 @@ import {
   DatasetTagConfig,
   DatasetAttributeConfig,
   FeatureInput,
+  OverviewDescription,
 } from "../types";
 
 const SYSTEM_PORTAL_URL = `${env.REACT_APP_DN_BASE_URL}system-portal/`;
@@ -254,6 +255,31 @@ export class SystemPortal {
       baseURL: SYSTEM_PORTAL_URL,
       url: `dataset/dashboard/${id}`,
       method: "GET",
+    });
+  }
+
+  public getPublicOverviewDescription() {
+    return request({
+      baseURL: SYSTEM_PORTAL_URL,
+      url: "overview-description/public",
+      method: "GET",
+    });
+  }
+
+  public getOverviewDescription() {
+    return request({
+      baseURL: SYSTEM_PORTAL_URL,
+      url: "overview-description",
+      method: "GET",
+    });
+  }
+
+  public updateOverviewDescription(overviewDescription: OverviewDescription) {
+    return request({
+      baseURL: SYSTEM_PORTAL_URL,
+      url: `overview-description`,
+      method: "PUT",
+      data: overviewDescription,
     });
   }
 }
