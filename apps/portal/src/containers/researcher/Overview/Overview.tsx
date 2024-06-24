@@ -1,8 +1,9 @@
 import React, { FC, useMemo, useState, useCallback } from "react";
 import classNames from "classnames";
 import debounce from "lodash/debounce";
+import ReactMarkdown from "react-markdown";
 import { Loader } from "@portal/components";
-import { useDatasets } from "../../../hooks";
+import { useDatasets, useOverviewDescription } from "../../../hooks";
 import { FEATURE_DATASET_FILTER, config } from "../../../config/index";
 import { DatasetFilters } from "./components/DatasetFilters";
 import { DatasetCard } from "../DatasetCard/DatasetCard";
@@ -23,6 +24,7 @@ export const Overview: FC = () => {
   const debounceSetFilters = debounce((filters: Record<string, string>) => setFilters(filters), 300);
   const [refetch, setRefetch] = useState(0);
   const [datasets, loading, error] = useDatasets("researcher", searchText, filters, refetch);
+  const [overviewDescription] = useOverviewDescription();
 
   const RenderDatasets = useMemo(() => {
     const isEmpty = datasets.length === 0;
@@ -83,7 +85,9 @@ export const Overview: FC = () => {
           <img alt="Illustration" src={`${env.PUBLIC_URL}/assets/landing-page-illustration.svg`} />
           <div className="overview__banner-title">
             <div className="overview__banner-title-text">Data2Evidence</div>
-            <div className="overview__banner-description">{getText(i18nKeys.HOME__DESCRIPTION)}</div>
+            <div className="overview__banner-description">
+              <ReactMarkdown>{overviewDescription.value || getText(i18nKeys.HOME__DESCRIPTION)}</ReactMarkdown>
+            </div>
             <SearchBarDataset keyword={searchString} onEnter={handleSearchEnter} onChange={handleSearchChange} />
           </div>
         </div>
