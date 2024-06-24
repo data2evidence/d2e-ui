@@ -22,24 +22,24 @@ export const OverviewDescription: FC = () => {
 
   useEffect(() => {
     if (overviewDescription) {
-      setInput(overviewDescription.text);
+      setInput(overviewDescription.value);
     }
   }, [overviewDescription]);
 
-  const hasChanges = useMemo(() => input !== overviewDescription.text, [input, overviewDescription]);
+  const hasChanges = useMemo(() => input !== overviewDescription.value, [input, overviewDescription]);
 
   const handleInputChange = useCallback((value: string) => {
     setInput(value);
   }, []);
 
   const handleRevertChanges = useCallback(() => {
-    setInput(overviewDescription.text);
+    setInput(overviewDescription.value);
   }, [overviewDescription]);
 
   const handleSave = useCallback(async () => {
     try {
       setLoading(true);
-      await api.systemPortal.updateOverviewDescription({ id: overviewDescription.id, text: input });
+      await api.systemPortal.updateConfig({ type: overviewDescription.type, value: input });
       setFeedback({
         type: "success",
         message: getText(i18nKeys.OVERVIEW_DESCRIPTION__SUCCESS_MESSAGE),

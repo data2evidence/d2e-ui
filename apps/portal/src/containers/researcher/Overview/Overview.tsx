@@ -86,7 +86,7 @@ export const Overview: FC = () => {
           <div className="overview__banner-title">
             <div className="overview__banner-title-text">Data2Evidence</div>
             <div className="overview__banner-description">
-              <ReactMarkdown>{overviewDescription.text || getText(i18nKeys.HOME__DESCRIPTION)}</ReactMarkdown>
+              <ReactMarkdown>{overviewDescription.value || getText(i18nKeys.HOME__DESCRIPTION)}</ReactMarkdown>
             </div>
             <SearchBarDataset keyword={searchString} onEnter={handleSearchEnter} onChange={handleSearchChange} />
           </div>

@@ -15,7 +15,7 @@ import {
   DatasetTagConfig,
   DatasetAttributeConfig,
   FeatureInput,
-  OverviewDescription,
+  Config,
 } from "../types";
 
 const SYSTEM_PORTAL_URL = `${env.REACT_APP_DN_BASE_URL}system-portal/`;
@@ -261,7 +261,7 @@ export class SystemPortal {
   public getPublicOverviewDescription() {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: "overview-description/public",
+      url: "config/public/overview-description",
       method: "GET",
     });
   }
@@ -269,17 +269,17 @@ export class SystemPortal {
   public getOverviewDescription() {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: "overview-description",
+      url: "config/overview-description",
       method: "GET",
     });
   }
 
-  public updateOverviewDescription(overviewDescription: OverviewDescription) {
+  public updateConfig(config: Config) {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `overview-description`,
+      url: `config`,
       method: "PUT",
-      data: overviewDescription,
+      data: config,
     });
   }
 }

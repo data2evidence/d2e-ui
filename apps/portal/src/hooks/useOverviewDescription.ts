@@ -1,12 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../axios/api";
-import { AppError, OverviewDescription } from "../types";
+import { AppError, Config } from "../types";
 
-export const useOverviewDescription = (
-  isPublic?: boolean,
-  refetch = 0
-): [OverviewDescription, boolean, AppError | undefined] => {
-  const [overviewDescription, setOverviewDescription] = useState<OverviewDescription>({ id: "", text: "" });
+export const useOverviewDescription = (isPublic?: boolean, refetch = 0): [Config, boolean, AppError | undefined] => {
+  const [overviewDescription, setOverviewDescription] = useState<Config>({ type: "", value: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<AppError>();
 
