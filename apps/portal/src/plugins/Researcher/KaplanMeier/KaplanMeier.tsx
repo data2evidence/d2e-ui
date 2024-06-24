@@ -86,86 +86,91 @@ const data = data1;
 // const upperCI = data.survivalY.map((d) => d * 1.05);
 
 // Transform the data for step plot and confidence intervals
-const times = [];
-const survivals: number[] = [];
-const lowerBounds: number[] = [];
-const upperBounds: number[] = [];
-for (let i = 0; i < data.survivalY.length; i++) {
-  times.push(data.timeX[i]);
-  survivals.push(data.survivalY[i]);
-  // lowerBounds.push(lowerCI[i]);
-  // upperBounds.push(upperCI[i]);
-  if (i < data.survivalY.length - 1) {
-    times.push(data.timeX[i + 1]);
-    survivals.push(data.survivalY[i]);
+type GraphData = { timeX: number[]; survivalY: number[] };
+const getKaplanMeierGraphOption = (data: GraphData | null) => {
+  const _data = data || { timeX: [], survivalY: [] };
+  const times = [];
+  const survivals: number[] = [];
+  const lowerBounds: number[] = [];
+  const upperBounds: number[] = [];
+  for (let i = 0; i < _data.survivalY.length; i++) {
+    times.push(_data.timeX[i]);
+    survivals.push(_data.survivalY[i]);
     // lowerBounds.push(lowerCI[i]);
     // upperBounds.push(upperCI[i]);
+    if (i < _data.survivalY.length - 1) {
+      times.push(_data.timeX[i + 1]);
+      survivals.push(_data.survivalY[i]);
+      // lowerBounds.push(lowerCI[i]);
+      // upperBounds.push(upperCI[i]);
+    }
   }
-}
-const option = {
-  title: {
-    text: "Kaplan-Meier Survival Curve",
-  },
-  xAxis: {
-    type: "value",
-    name: "Time",
-  },
-  yAxis: {
-    type: "value",
-    name: "Survival Probability",
-  },
-  tooltip: {
-    trigger: "axis",
-    formatter: function (params: any) {
-      let result = params[0].axisValueLabel + "<br>";
-      const displayed = new Set(); // To keep track of displayed survival probabilities
-      params.forEach(function (item: any) {
-        if (item.seriesName === "Survival Probability" && !displayed.has(item.data[1])) {
-          result += item.marker + item.seriesName + ": " + item.data[1] + "<br>";
-          displayed.add(item.data[1]); // Mark the survival probability as displayed
-        }
-      });
-      return result;
+  const option = {
+    title: {
+      text: "Kaplan-Meier Survival Curve",
     },
-  },
-  series: [
-    {
+    xAxis: {
+      type: "value",
+      name: "Time",
+    },
+    yAxis: {
+      type: "value",
       name: "Survival Probability",
-      data: times.map((time, index) => [time, survivals[index]]),
-      type: "line",
-      step: "end",
-      smooth: true,
-      lineStyle: {
-        color: "black",
+    },
+    tooltip: {
+      trigger: "axis",
+      formatter: function (params: any) {
+        let result = params[0].axisValueLabel + "<br>";
+        const displayed = new Set(); // To keep track of displayed survival probabilities
+        params.forEach(function (item: any) {
+          if (item.seriesName === "Survival Probability" && !displayed.has(item.data[1])) {
+            result += item.marker + item.seriesName + ": " + item.data[1] + "<br>";
+            displayed.add(item.data[1]); // Mark the survival probability as displayed
+          }
+        });
+        return result;
       },
     },
-    {
-      name: "Lower CI",
-      data: times.map((time, index) => [time, lowerBounds[index]]),
-      type: "line",
-      step: "end",
-      lineStyle: {
-        opacity: 0,
+    series: [
+      {
+        name: "Survival Probability",
+        data: times.map((time, index) => [time, survivals[index]]),
+        type: "line",
+        step: "end",
+        smooth: true,
+        lineStyle: {
+          color: "black",
+        },
       },
-      areaStyle: {
-        color: "rgba(0, 0, 0, 0.2)",
-        origin: "start",
+      {
+        name: "Lower CI",
+        data: times.map((time, index) => [time, lowerBounds[index]]),
+        type: "line",
+        step: "end",
+        lineStyle: {
+          opacity: 0,
+        },
+        areaStyle: {
+          color: "rgba(0, 0, 0, 0.2)",
+          origin: "start",
+        },
       },
-    },
-    {
-      name: "Upper CI",
-      data: times.map((time, index) => [time, upperBounds[index]]),
-      type: "line",
-      step: "end",
-      lineStyle: {
-        opacity: 0,
+      {
+        name: "Upper CI",
+        data: times.map((time, index) => [time, upperBounds[index]]),
+        type: "line",
+        step: "end",
+        lineStyle: {
+          opacity: 0,
+        },
+        areaStyle: {
+          color: "rgba(0, 0, 0, 0.2)",
+          origin: "end",
+        },
       },
-      areaStyle: {
-        color: "rgba(0, 0, 0, 0.2)",
-        origin: "end",
-      },
-    },
-  ],
+    ],
+  };
+  return option;
 };
 
 export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps) => {
@@ -173,7 +178,8 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
 
   const { getText } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
-  const [isGraphLoading, setIsGraphLoading] = useState(true);
+  const [isGraphLoading, setIsGraphLoading] = useState(false);
+  const [graphData, setGraphData] = useState<GraphData | null>(null);
   const [cohortList, setCohortList] = useState<CohortMapping[]>([]);
   const [targetCohortId, setTargetCohortId] = useState<number | null>(null);
   const [outcomeCohortId, setOutcomeCohortId] = useState<number | null>(null);
@@ -222,12 +228,23 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
     const fetchGraphData = async (flowRunId: string) => {
       try {
         const result = await cohortMgmtClient.getKmAnalysisResults(flowRunId);
-        console.log(result);
+        const parsedData = JSON.parse(result.data);
+        if (parsedData.status === "SUCCESS") {
+          const newGraphData = { timeX: parsedData.x, survivalY: parsedData.y };
+          setGraphData(newGraphData);
+        } else {
+          setGraphData(null);
+          setFeedback({
+            type: "error",
+            message: getText(i18nKeys.COHORT_SURVIVAL__ERROR_OCCURRED),
+            description: getText(i18nKeys.COHORT_SURVIVAL__TRY_AGAIN),
+          });
+        }
       } catch (err) {
         setFeedback({
           type: "error",
-          message: getText(i18nKeys.COHORT_DEFINITION_LIST__ERROR_OCCURRED),
-          description: getText(i18nKeys.COHORT_DEFINITION_LIST__TRY_AGAIN),
+          message: getText(i18nKeys.COHORT_SURVIVAL__ERROR_OCCURRED),
+          description: getText(i18nKeys.COHORT_SURVIVAL__TRY_AGAIN),
         });
       } finally {
         setIsGraphLoading(false);
@@ -244,21 +261,26 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
           message: getText(i18nKeys.COHORT_DEFINITION_LIST__ERROR_OCCURRED),
           description: getText(i18nKeys.COHORT_DEFINITION_LIST__TRY_AGAIN),
         });
-      } finally {
         setIsGraphLoading(false);
       }
     };
     fetchData();
   }, [cohortMgmtClient, setFeedback, getText, targetCohortId, outcomeCohortId]);
 
+  const option = useMemo(() => {
+    return getKaplanMeierGraphOption(graphData);
+  }, [graphData]);
+
   return (
     <Card className="kaplan_meier__container">
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", fontSize: 20 }}>
-        <div>Kaplan-Meier Survival Analysis</div>
+        <div>{getText(i18nKeys.COHORT_SURVIVAL__TITLE)}</div>
       </div>
       <div>
         <div className="kaplan_meier__cohort_selector">
-          <div className="kaplan_meier__cohort_selector_label">Select target Cohort: </div>
+          <div className="kaplan_meier__cohort_selector_label">
+            {getText(i18nKeys.COHORT_SURVIVAL__SELECT_TARGET_COHORT)}:{" "}
+          </div>
           <CohortSelector
             cohortTableName="Target cohort"
             setCohortId={setTargetCohortId}
@@ -269,7 +291,9 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
       </div>
       <div>
         <div className="kaplan_meier__cohort_selector">
-          <div className="kaplan_meier__cohort_selector_label">Select Outcome Cohort: </div>
+          <div className="kaplan_meier__cohort_selector_label">
+            {getText(i18nKeys.COHORT_SURVIVAL__SELECT_OUTCOME_COHORT)}:{" "}
+          </div>
           <CohortSelector
             cohortTableName="Outcome cohort"
             setCohortId={setOutcomeCohortId}
@@ -289,10 +313,17 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
           />
         </div>
       </div> */}
-      <Button className="jobs__button" text={"Run Survival Analysis"} onClick={onClickRunAnalysis} />
-      <div>graph and loading...</div>
+      <Button
+        className="jobs__button"
+        text={getText(i18nKeys.COHORT_SURVIVAL__RUN_SURVIVAL_ANALYSIS)}
+        onClick={onClickRunAnalysis}
+      />
 
-      <ReactECharts option={option} />
+      {isGraphLoading ? (
+        <div>{getText(i18nKeys.COHORT_SURVIVAL__GRAPH_LOADING)}</div>
+      ) : graphData ? (
+        <ReactECharts option={option} />
+      ) : null}
     </Card>
   );
 };
