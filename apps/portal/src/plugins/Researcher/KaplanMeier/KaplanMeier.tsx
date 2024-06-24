@@ -120,14 +120,20 @@ const getKaplanMeierGraphOption = (data: GraphData | null) => {
     tooltip: {
       trigger: "axis",
       formatter: function (params: any) {
-        let result = params[0].axisValueLabel + "<br>";
-        const displayed = new Set(); // To keep track of displayed survival probabilities
+        let result = "Time: " + Math.floor(params[0].axisValueLabel) + "<br>";
+        let probability = 1;
+        let marker = "";
+        let seriesName = "";
         params.forEach(function (item: any) {
-          if (item.seriesName === "Survival Probability" && !displayed.has(item.data[1])) {
-            result += item.marker + item.seriesName + ": " + item.data[1] + "<br>";
-            displayed.add(item.data[1]); // Mark the survival probability as displayed
+          if (item.seriesName === "Survival Probability") {
+            if (item.data[1] < probability) {
+              probability = item.data[1];
+            }
+            marker = item.marker;
+            seriesName = item.seriesName;
           }
         });
+        result += marker + seriesName + ": " + probability;
         return result;
       },
     },
@@ -179,7 +185,7 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
   const { getText } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [isGraphLoading, setIsGraphLoading] = useState(false);
-  const [graphData, setGraphData] = useState<GraphData | null>(null);
+  const [graphData, setGraphData] = useState<GraphData | null>(data1);
   const [cohortList, setCohortList] = useState<CohortMapping[]>([]);
   const [targetCohortId, setTargetCohortId] = useState<number | null>(null);
   const [outcomeCohortId, setOutcomeCohortId] = useState<number | null>(null);
