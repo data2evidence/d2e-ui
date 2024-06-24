@@ -305,7 +305,11 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
         </div>
       </div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "10px" }}>
-        <Button text={getText(i18nKeys.COHORT_SURVIVAL__RUN_SURVIVAL_ANALYSIS)} onClick={onClickRunAnalysis} />
+        <Button
+          text={getText(i18nKeys.COHORT_SURVIVAL__RUN_SURVIVAL_ANALYSIS)}
+          onClick={onClickRunAnalysis}
+          disabled={isGraphLoading}
+        />
       </div>
       {/* <div>
         <div className="kaplan_meier__cohort_selector">
