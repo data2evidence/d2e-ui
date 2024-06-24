@@ -26,7 +26,7 @@ export class CohortSurvival {
     });
   }
 
-  public getKmAnalysisResults(flowRunId: string): Promise<{ data: any[] }> {
+  public getKmAnalysisResults(flowRunId: string): Promise<{ data: string }> {
     return request({
       baseURL: MRI_BASE_URL,
       url: `/api/services/kaplan-meier`,

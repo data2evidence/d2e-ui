@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from "react";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
-import { Button, Card, Checkbox, Title } from "@portal/components";
+import { Button, Card, Checkbox, Loader, Title } from "@portal/components";
 import "./KaplanMeier.scss";
 import { Box, Drawer, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { tabNames } from "./utils/constants";
@@ -318,9 +318,10 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
         text={getText(i18nKeys.COHORT_SURVIVAL__RUN_SURVIVAL_ANALYSIS)}
         onClick={onClickRunAnalysis}
       />
-
       {isGraphLoading ? (
-        <div>{getText(i18nKeys.COHORT_SURVIVAL__GRAPH_LOADING)}</div>
+        <div>
+          <Loader text={getText(i18nKeys.COHORT_SURVIVAL__GRAPH_LOADING)} />
+        </div>
       ) : graphData ? (
         <ReactECharts option={option} />
       ) : null}
