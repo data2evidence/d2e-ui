@@ -141,7 +141,6 @@ export default {
       }
       const regex = new RegExp(escapeStringRegExp(this.searchQuery), 'gi')
       const list = [...this.myDomainValues.values, ...this.newTags]
-
       const updatedList = []
       if (this.isLoading) {
         this.tagPlaceHolder = this.getText('MRI_PA_LOADING_SUGGESTIONS')
@@ -246,18 +245,15 @@ export default {
       if (this.model.props.type === 'conceptSet') {
         return
       }
-      const tags = newTag.split(' ')
-      tags.forEach(tag => {
-        if (tag.length > 0) {
-          const addThis = {
-            text: tag,
-            value: tag,
-            hidden: true,
-          }
-          this.newTags.push(addThis)
-          this.updateValue([...this.model.props.value, addThis])
+      if (newTag.length > 0) {
+        const addThis = {
+          text: newTag,
+          value: newTag,
+          hidden: true,
         }
-      })
+        this.newTags.push(addThis)
+        this.updateValue([...this.model.props.value, addThis])
+        }
     },
     updateValue(value) {
       const payload = {
