@@ -276,31 +276,36 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", fontSize: 20 }}>
         <div>{getText(i18nKeys.COHORT_SURVIVAL__TITLE)}</div>
       </div>
-      <div>
-        <div className="kaplan_meier__cohort_selector">
-          <div className="kaplan_meier__cohort_selector_label">
-            {getText(i18nKeys.COHORT_SURVIVAL__SELECT_TARGET_COHORT)}:{" "}
+      <div style={{ display: "flex", marginTop: "30px" }}>
+        <div>
+          <div className="kaplan_meier__cohort_selector">
+            <div className="kaplan_meier__cohort_selector_label">
+              {getText(i18nKeys.COHORT_SURVIVAL__SELECT_TARGET_COHORT)}:{" "}
+            </div>
+            <CohortSelector
+              cohortTableName="Target cohort"
+              setCohortId={setTargetCohortId}
+              cohortId={targetCohortId}
+              cohortList={cohortList}
+            />
           </div>
-          <CohortSelector
-            cohortTableName="Target cohort"
-            setCohortId={setTargetCohortId}
-            cohortId={targetCohortId}
-            cohortList={cohortList}
-          />
+        </div>
+        <div>
+          <div className="kaplan_meier__cohort_selector">
+            <div className="kaplan_meier__cohort_selector_label">
+              {getText(i18nKeys.COHORT_SURVIVAL__SELECT_OUTCOME_COHORT)}:{" "}
+            </div>
+            <CohortSelector
+              cohortTableName="Outcome cohort"
+              setCohortId={setOutcomeCohortId}
+              cohortId={outcomeCohortId}
+              cohortList={cohortList}
+            />
+          </div>
         </div>
       </div>
-      <div>
-        <div className="kaplan_meier__cohort_selector">
-          <div className="kaplan_meier__cohort_selector_label">
-            {getText(i18nKeys.COHORT_SURVIVAL__SELECT_OUTCOME_COHORT)}:{" "}
-          </div>
-          <CohortSelector
-            cohortTableName="Outcome cohort"
-            setCohortId={setOutcomeCohortId}
-            cohortId={outcomeCohortId}
-            cohortList={cohortList}
-          />
-        </div>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "10px" }}>
+        <Button text={getText(i18nKeys.COHORT_SURVIVAL__RUN_SURVIVAL_ANALYSIS)} onClick={onClickRunAnalysis} />
       </div>
       {/* <div>
         <div className="kaplan_meier__cohort_selector">
@@ -313,13 +318,8 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
           />
         </div>
       </div> */}
-      <Button
-        className="jobs__button"
-        text={getText(i18nKeys.COHORT_SURVIVAL__RUN_SURVIVAL_ANALYSIS)}
-        onClick={onClickRunAnalysis}
-      />
       {isGraphLoading ? (
-        <div>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
           <Loader text={getText(i18nKeys.COHORT_SURVIVAL__GRAPH_LOADING)} />
         </div>
       ) : graphData ? (
