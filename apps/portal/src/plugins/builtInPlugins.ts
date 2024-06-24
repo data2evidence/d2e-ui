@@ -31,6 +31,7 @@ const moduleNames = [
   "Setup/Db",
   "Setup/ConceptMapping",
   "Setup/HybridSearch",
+  "Setup/OverviewDescription",
 ];
 
 const modulePaths = moduleNames.reduce(

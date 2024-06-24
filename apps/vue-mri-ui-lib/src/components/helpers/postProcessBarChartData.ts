@@ -236,14 +236,18 @@ export function makeBinLabel(
 
 export function postProcessBarChartData(preProcessedData: IMRIEndpointResultType) {
   let result = preProcessedData
-  if (result.postProcessingConfig.fillMissingValuesEnabled) {
-    result = fillMissingValues(result)
-  } else {
-    result = formatData(result, result.postProcessingConfig.NOVALUE)
+
+  if (result.postProcessingConfig) {
+    if (result.postProcessingConfig.fillMissingValuesEnabled) {
+      result = fillMissingValues(result)
+    } else {
+      result = formatData(result, result.postProcessingConfig.NOVALUE)
+    }
+    if (result.postProcessingConfig.shouldFormatBinningLabels) {
+      result = formatBinningLabels(result)
+    }
   }
-  if (result.postProcessingConfig.shouldFormatBinningLabels) {
-    result = formatBinningLabels(result)
-  }
+
   return result
 }
 

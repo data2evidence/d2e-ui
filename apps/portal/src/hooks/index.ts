@@ -26,3 +26,4 @@ export * from "./useVocabSchemas";
 export * from "./useDatasetReleases";
 export * from "./useDashboard";
 export * from "./useHybridSearchConfigs";
+export * from "./useOverviewDescription";

@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { getAuthToken } from "../containers/auth/auth";
 
-const PUBLIC_URLS = ["dataset/public/list"];
+const PUBLIC_URLS = ["dataset/public/list", "config/public/overview-description"];
 const client = axios.create();
 
 client.interceptors.request.use(

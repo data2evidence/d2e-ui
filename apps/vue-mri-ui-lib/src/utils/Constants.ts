@@ -258,10 +258,10 @@ const PlotlyConsts = {
     bargap: 0.5,
     clickmode: 'event+select',
     colorway: [
-      '#FDA2A2',
+      '#FF5E59',
       '#000E7E',
       '#A2FDCD',
-      '#FF5E59',
+      '#FDA2A2',
       '#CCDEF1',
       '#2599A7',
       '#FFC4AD',
