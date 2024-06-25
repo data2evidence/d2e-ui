@@ -447,7 +447,9 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
                 key={index}
                 studyMetadata={data}
                 index={index}
-                attributeConfigs={attributeConfigs}
+                attributeConfigs={attributeConfigs.filter(
+                  (a) => !studyMetadata.some((m) => m.attributeId === a.id) || data.attributeId === a.id
+                )}
                 handleRemoveMetadata={() => handleRemoveLine(index, studyMetadata, setStudyMetadata)}
                 handleMetadataChange={handleMetadataChange}
                 error={formMetadataErrorIndex.includes(index)}
