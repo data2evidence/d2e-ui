@@ -106,6 +106,15 @@ const getKaplanMeierGraphOption = (data: GraphData | null) => {
     }
   }
   const option = {
+    toolbox: {
+      feature: {
+        dataZoom: {
+          yAxisIndex: "none",
+        },
+        restore: {},
+        saveAsImage: {},
+      },
+    },
     title: {
       text: "Kaplan-Meier Survival Curve",
     },
