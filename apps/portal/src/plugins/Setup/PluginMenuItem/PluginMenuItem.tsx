@@ -32,11 +32,15 @@ export const PluginMenuItem: FC = () => {
 
   return (
     <>
-      <div className="plugin-menu-item" onClick={openTriggerUploadDialog}>
+      <div className="plugin-menu-item">
         <div className="plugin-menu-item__info">
           <div className="plugin-menu-item__title">{getText(i18nKeys.PLUGIN_MENU_ITEM__TITLE)}</div>
           {<div className="plugin-menu-item__description">{getText(i18nKeys.PLUGIN_MENU_ITEM__DESCRIPTION)}</div>}
-          {<div className="plugin-menu-item__notes">{`Status: ${pluginInstallationStatus}`}</div>}
+          {
+            <div className="plugin-menu-item__notes">{`${getText(
+              i18nKeys.PLUGIN_MENU_ITEM__STATUS
+            )}: ${pluginInstallationStatus}`}</div>
+          }
         </div>
         <div className="plugin-menu-item__action">
           <Button text={getText(i18nKeys.PLUGIN_MENU_ITEM__INSTALL)} onClick={openTriggerUploadDialog} />
