@@ -111,7 +111,7 @@ const getKaplanMeierGraphOption = (data: GraphData | null) => {
     },
     xAxis: {
       type: "value",
-      name: "Time",
+      name: "Days",
     },
     yAxis: {
       type: "value",
@@ -120,7 +120,7 @@ const getKaplanMeierGraphOption = (data: GraphData | null) => {
     tooltip: {
       trigger: "axis",
       formatter: function (params: any) {
-        let result = "Time: " + Math.floor(params[0].axisValueLabel) + "<br>";
+        let result = "Days: " + Math.floor(params[0].axisValueLabel) + "<br>";
         let probability = 1;
         let marker = "";
         let seriesName = "";
@@ -146,32 +146,6 @@ const getKaplanMeierGraphOption = (data: GraphData | null) => {
         smooth: true,
         lineStyle: {
           color: "black",
-        },
-      },
-      {
-        name: "Lower CI",
-        data: times.map((time, index) => [time, lowerBounds[index]]),
-        type: "line",
-        step: "end",
-        lineStyle: {
-          opacity: 0,
-        },
-        areaStyle: {
-          color: "rgba(0, 0, 0, 0.2)",
-          origin: "start",
-        },
-      },
-      {
-        name: "Upper CI",
-        data: times.map((time, index) => [time, upperBounds[index]]),
-        type: "line",
-        step: "end",
-        lineStyle: {
-          opacity: 0,
-        },
-        areaStyle: {
-          color: "rgba(0, 0, 0, 0.2)",
-          origin: "end",
         },
       },
     ],
@@ -328,13 +302,16 @@ export const KaplanMeier: FC<TerminologyProps> = ({ metadata }: TerminologyProps
           />
         </div>
       </div> */}
+      <div style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
       {isGraphLoading ? (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
           <Loader text={getText(i18nKeys.COHORT_SURVIVAL__GRAPH_LOADING)} />
         </div>
       ) : graphData ? (
-        <ReactECharts option={option} />
+          // <div>he</div>
+          <ReactECharts option={option} style={{ width: "100%", height: "100%" }} />
       ) : null}
+      </div>
     </Card>
   );
 };
