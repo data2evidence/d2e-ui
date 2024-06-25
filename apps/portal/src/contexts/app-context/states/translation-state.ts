@@ -797,6 +797,8 @@ export const i18nDefault = {
     SELECT_RELEASE__SELECT_CURRENT: "Current",
     SETUP_MENU_ITEM__CONFIGURE: "Configure",
     PLUGIN_MENU_ITEM__INSTALL: "Initialize",
+    PLUGIN_MENU_ITEM__DESCRIPTION: "Trigger default plugins installation",
+    PLUGIN_MENU_ITEM__TITLE: "Plugins",
     TRIGGER_PLUGIN_UPLOAD_DIALOG__ERROR: "An error has occurred.",
     TRIGGER_PLUGIN_UPLOAD_DIALOG__DESCRIPTION:
       "Please try again. To report the error, please send an email to help@data4life.care.",
