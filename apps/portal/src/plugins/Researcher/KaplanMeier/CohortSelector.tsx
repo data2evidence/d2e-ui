@@ -12,6 +12,7 @@ interface CohortSelectorProps {
   cohortList: CohortMapping[];
   cohortId: number | null;
   setCohortId: (cohortId: number) => void;
+  disabled: boolean;
 }
 
 const styles: SxProps = {
@@ -37,7 +38,7 @@ const styles: SxProps = {
   },
 };
 
-const CohortSelector: FC<CohortSelectorProps> = ({ cohortTableName, cohortList, cohortId, setCohortId }) => {
+const CohortSelector: FC<CohortSelectorProps> = ({ cohortTableName, cohortList, cohortId, setCohortId, disabled }) => {
   const { getText, i18nKeys } = useTranslation();
 
   const handleCohortSelection = (event: SelectChangeEvent) => {
@@ -46,7 +47,7 @@ const CohortSelector: FC<CohortSelectorProps> = ({ cohortTableName, cohortList, 
   };
 
   return (
-    <FormControl sx={styles} size="small">
+    <FormControl sx={styles} size="small" disabled={disabled}>
       <InputLabel id="study-selector-label">{cohortTableName}</InputLabel>
       <Select
         labelId="study-selector-label"
