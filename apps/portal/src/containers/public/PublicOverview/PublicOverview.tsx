@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useState, useMemo, useCallback } from "react";
 import classNames from "classnames";
+import ReactMarkdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@portal/components";
-import { usePublicDatasets } from "../../../hooks";
+import { useOverviewDescription, usePublicDatasets } from "../../../hooks";
 import { config } from "../../../config/index";
 import { useTranslation } from "../../../contexts";
 import noStudyImg from "../../shared/StudyOverview/images/no-study.png";
@@ -23,6 +24,7 @@ export const PublicOverview: FC = () => {
 
   const [refetch, setRefetch] = useState(0);
   const [datasets, loading, error] = usePublicDatasets(searchText, refetch);
+  const [overviewDescription] = useOverviewDescription(true);
 
   useEffect(() => {
     if (hasPublicDatasets) {
@@ -91,7 +93,9 @@ export const PublicOverview: FC = () => {
           <img alt="Illustration" src={`${env.PUBLIC_URL}/assets/landing-page-illustration.svg`} />
           <div className="public-overview__banner-title">
             <div className="public-overview__banner-title-text">Data2Evidence</div>
-            <div className="public-overview__banner-description">{getText(i18nKeys.HOME__DESCRIPTION)}</div>
+            <div className="public-overview__banner-description">
+              <ReactMarkdown>{overviewDescription.value || getText(i18nKeys.HOME__DESCRIPTION)}</ReactMarkdown>
+            </div>
             <SearchBarDataset keyword={searchString} onEnter={handleSearchEnter} onChange={handleSearchChange} />
           </div>
         </div>
