@@ -780,7 +780,7 @@
   "STUDY_OVERVIEW__NO_DATA": "Keine Daten verfügbar",
   "STUDY_OVERVIEW__SCHEMA_NAME": "Schemaname",
   "STUDY_OVERVIEW__SCHEMA_VERSION": "Schemaversion",
-  "STUDY_OVERVIEW__STUDY_ID": "Studienausweis",
+  "STUDY_OVERVIEW__DATASET_ID": "Datensatz-ID",
   "STUDY_OVERVIEW__UNTITLED": "Ohne Titel",
   "SUPER_ADMIN_PAGE__GET_JWT_TOKEN": "Holen Sie sich das JWT-Token",
   "SUPER_ADMIN_PAGE__HELLO": "Hallo {0}",
