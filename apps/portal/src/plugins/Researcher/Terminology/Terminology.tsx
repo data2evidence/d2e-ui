@@ -9,8 +9,10 @@ import { OnCloseReturnValues, FhirValueSetExpansionContainsWithExt, TerminologyR
 import { tabNames } from "./utils/constants";
 import { TabName, ConceptSet } from "./utils/types";
 import { terminologyApi } from "../../../axios/terminology";
-import { useDatasets } from "../../../hooks";
-import { useTranslation, useUser } from "../../../contexts";
+import { useActiveDataset, useToken, useTranslation, useUser } from "../../../contexts";
+import env from "../../../env";
+
+const nameProp = env.REACT_APP_IDP_NAME_PROP;
 
 export interface TerminologyProps extends PageProps<ResearcherStudyMetadata> {
   onConceptIdSelect?: (conceptData: any) => void;
@@ -233,8 +235,9 @@ export const Terminology: FC<TerminologyProps> = ({
   const [currentConceptSet, setCurrentConceptSet] = useState<ConceptSet | null>(null);
   const [conceptsResult, setConceptsResult] = useState<TerminologyResult | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
-  const [datasets] = useDatasets("researcher");
-  const [datasetId, setDatasetId] = useState<string>();
+  const { activeDataset } = useActiveDataset();
+  const { idTokenClaims } = useToken();
+  const activeDatasetId = activeDataset.id;
 
   const isConceptSet = mode === "CONCEPT_SET";
 
@@ -248,7 +251,6 @@ export const Terminology: FC<TerminologyProps> = ({
     setIsConceptSetLoading(false);
     setCurrentConceptSet(null);
     setErrorMsg("");
-    setDatasetId(undefined);
     setConceptSetShared(false);
     setIsUserConceptSet(false);
     setConceptsResult(null);
@@ -276,6 +278,7 @@ export const Terminology: FC<TerminologyProps> = ({
       }),
       name: conceptSetName,
       shared: conceptSetShared,
+      ...(!conceptSetId && { userName: idTokenClaims[nameProp] }),
     };
     setIsConceptSetLoading(true);
     try {
@@ -303,12 +306,12 @@ export const Terminology: FC<TerminologyProps> = ({
 
   const getConceptSet = useCallback(
     async (conceptSetId: string) => {
-      if (!datasetId) {
+      if (!activeDatasetId) {
         return;
       }
       setIsConceptSetLoading(true);
       try {
-        const conceptSet = await terminologyApi.getConceptSet(conceptSetId, datasetId);
+        const conceptSet = await terminologyApi.getConceptSet(conceptSetId, activeDatasetId);
         setConceptSetName(conceptSet.name);
         sortAndSetSelectedConcepts(conceptSet.concepts);
         setCurrentConceptSet(conceptSet);
@@ -319,7 +322,7 @@ export const Terminology: FC<TerminologyProps> = ({
         setIsConceptSetLoading(false);
       }
     },
-    [datasetId]
+    [activeDatasetId]
   );
   const isDrawer = !!onClose;
 
@@ -331,7 +334,7 @@ export const Terminology: FC<TerminologyProps> = ({
   const searchAndDetailsHeightOffsetPx =
     (isDrawer ? terminologyHeaderHeightPx : terminologyHeaderHeightPx + portalHeaderHeightPx) +
     (isConceptSet ? conceptSetNameHeightPx + conceptSetTabsHeightPx : 0) +
-    (!selectedDatasetId ? datasetSelectorHeightPx : 0);
+    (!activeDatasetId ? datasetSelectorHeightPx : 0);
 
   const onSelectConceptId = useCallback(
     (concept: FhirValueSetExpansionContainsWithExt) => {
@@ -412,17 +415,6 @@ export const Terminology: FC<TerminologyProps> = ({
     }
   }, [getConceptSet, selectedConceptSetId]);
 
-  useEffect(() => {
-    // Initialise datasetId for component
-    if (!datasetId) {
-      if (selectedDatasetId) {
-        setDatasetId(selectedDatasetId);
-      } else if (datasets?.[0]?.id) {
-        setDatasetId(datasets[0].id);
-      }
-    }
-  }, [selectedDatasetId, datasets]);
-
   const onClickClose = useCallback(() => {
     if (!onClose) {
       return;
@@ -437,7 +429,7 @@ export const Terminology: FC<TerminologyProps> = ({
     resetState();
   }, [currentConceptSet, onClose, resetState]);
 
-  if (!datasetId) {
+  if (!activeDatasetId) {
     return null;
   }
   return (
@@ -508,7 +500,7 @@ export const Terminology: FC<TerminologyProps> = ({
                 showAddIcon={showAddIcon}
                 conceptsResult={conceptsResult}
                 setConceptsResult={setConceptsResult}
-                datasetId={datasetId}
+                datasetId={activeDatasetId}
                 isDrawer={isDrawer}
                 defaultFilters={defaultFilters}
               />
@@ -516,7 +508,7 @@ export const Terminology: FC<TerminologyProps> = ({
           </div>
           <div className="terminology__details" style={{ height: showDetails ? "35%" : "0%", overflowY: "auto" }}>
             {showDetails && conceptId !== null ? (
-              <TerminologyDetail conceptId={conceptId} userId={userId} datasetId={datasetId} />
+              <TerminologyDetail conceptId={conceptId} userId={userId} datasetId={activeDatasetId} />
             ) : null}
           </div>
         </div>

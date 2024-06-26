@@ -99,11 +99,11 @@ class Query(_AuthApi):
         if len(assigned_studies) == 0:
             print(
                 'There are no study assigned to your account\n')
-
+        else:
+            assigned_studies.sort(key=lambda x: x.get('studyDetail').get('name'))
         options = []
         available_studies_for_display = 'Study Name - Study Id'
 
-        assigned_studies.sort(key=lambda x: x.get('name'))
         self._assigned_study_list = assigned_studies
         for index, study in enumerate(assigned_studies):
             options.append(str(index + 1))
