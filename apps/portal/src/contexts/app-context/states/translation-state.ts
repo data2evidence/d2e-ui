@@ -804,6 +804,9 @@ export const i18nDefault = {
     SELECT_RELEASE__SELECT_CURRENT: "Current",
     SETUP_MENU_ITEM__CONFIGURE: "Configure",
     PLUGIN_MENU_ITEM__INSTALL: "Initialize",
+    PLUGIN_MENU_ITEM__DESCRIPTION: "Trigger default plugins installation",
+    PLUGIN_MENU_ITEM__TITLE: "Plugins",
+    PLUGIN_MENU_ITEM__STATUS: "Status",
     TRIGGER_PLUGIN_UPLOAD_DIALOG__ERROR: "An error has occurred.",
     TRIGGER_PLUGIN_UPLOAD_DIALOG__DESCRIPTION:
       "Please try again. To report the error, please send an email to help@data4life.care.",
@@ -853,7 +856,7 @@ export const i18nDefault = {
     STUDY_OVERVIEW__NO_DATA: "No data available",
     STUDY_OVERVIEW__SCHEMA_NAME: "Schema name",
     STUDY_OVERVIEW__SCHEMA_VERSION: "Schema version",
-    STUDY_OVERVIEW__STUDY_ID: "Study ID",
+    STUDY_OVERVIEW__DATASET_ID: "Dataset ID",
     STUDY_OVERVIEW__UNTITLED: "Untitled",
     SUPER_ADMIN_PAGE__GET_JWT_TOKEN: "Get JWT token",
     SUPER_ADMIN_PAGE__HELLO: "Hello {0}",

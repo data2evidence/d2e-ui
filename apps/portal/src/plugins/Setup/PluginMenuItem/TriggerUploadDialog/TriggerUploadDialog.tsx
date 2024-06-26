@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useState, useEffect } from "react";
 import Divider from "@mui/material/Divider";
 import { Button, Dialog, Feedback } from "@portal/components";
 import { CloseDialogType } from "../../../../types";
@@ -9,14 +9,31 @@ import { i18nKeys } from "../../../../contexts/app-context/states";
 
 interface TriggerUploadDialogProps {
   open: boolean;
-  uploadActive: boolean;
   onClose?: (type: CloseDialogType) => void;
+  onStatusUpdate: (status: string) => void;
 }
 
-const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, uploadActive, onClose }) => {
+const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, onClose, onStatusUpdate }) => {
   const { getText } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
+  const [uploadActive, setUploadActive] = useState(false);
+
+  const fetchUploadStatus = useCallback(async () => {
+    try {
+      const res = await api.dataflow.getPluginUploadStatus();
+      if (res.noActiveInstallations === false) {
+        setUploadActive(true);
+      } else {
+        setUploadActive(false);
+      }
+      if (onStatusUpdate) {
+        onStatusUpdate(res.installationStatus);
+      }
+    } catch (err) {
+      console.error("Failed to fetch upload status", err);
+    }
+  }, [onStatusUpdate]);
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
@@ -30,6 +47,7 @@ const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, uploadActive,
     try {
       setLoading(true);
       await api.dataflow.triggerPluginUpload();
+      fetchUploadStatus(); // Fetch status immediately after triggering upload
       handleClose("success");
     } catch (err: any) {
       console.error("err", err);
@@ -45,7 +63,21 @@ const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, uploadActive,
     } finally {
       setLoading(false);
     }
-  }, [handleClose, getText]);
+  }, [handleClose, getText, fetchUploadStatus]);
+
+  // Only activate interval if dialog is open
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    if (open) {
+      fetchUploadStatus(); // Fetch status immediately when dialog opens
+      intervalId = setInterval(fetchUploadStatus, 10000);
+    }
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [open, fetchUploadStatus]);
 
   return (
     <Dialog
@@ -67,7 +99,7 @@ const TriggerUploadDialog: FC<TriggerUploadDialogProps> = ({ open, uploadActive,
           onClick={() => handleClose("cancelled")}
           variant="outlined"
           block
-          disabled={loading || uploadActive}
+          disabled={loading}
         />
         <Button
           text={getText(i18nKeys.TRIGGER_PLUGIN_UPLOAD_DIALOG__CONFIRM)}
