@@ -50,6 +50,9 @@ export const Feature: FC = () => {
       cohorts: {
         name: "Cohorts",
       },
+      kaplanMeier: {
+        name: "Kaplan-Meier",
+      },
     }),
     [getText]
   );
