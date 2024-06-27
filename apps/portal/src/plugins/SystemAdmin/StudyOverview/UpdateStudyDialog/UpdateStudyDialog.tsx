@@ -229,11 +229,15 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
     dashboards.forEach((dashboard, index) => {
       formError[index] = EMPTY_DASHBOARD_FORM_ERROR;
       if (!dashboard.name && dashboard.url) {
-        formError[index] = { ...formError[index], name: { required: true } };
+        formError[index] = { ...formError[index], name: { required: true, invalid: false } };
         hasError = true;
       }
       if (!dashboard.url && dashboard.name) {
         formError[index] = { ...formError[index], url: { required: true } };
+        hasError = true;
+      }
+      if (dashboard.name.includes("-")) {
+        formError[index] = { ...formError[index], name: { required: false, invalid: true } };
         hasError = true;
       }
     });
