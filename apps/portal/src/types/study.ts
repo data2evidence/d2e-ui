@@ -51,6 +51,11 @@ export interface CopyStudyInput {
   snapshotCopyConfig?: SnapshotCopyConfig;
 }
 
+export interface NewFhirProjectInput {
+  name: string;
+  description: string;
+}
+
 export interface CopyStudyTableMetadata {
   tableName: string;
   tableColumnsMetadata: CopyStudyColumnMetadata[];
