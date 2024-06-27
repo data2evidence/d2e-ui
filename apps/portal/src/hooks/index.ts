@@ -27,3 +27,4 @@ export * from "./useDatasetReleases";
 export * from "./useDashboard";
 export * from "./useHybridSearchConfigs";
 export * from "./useOverviewDescription";
+export * from "./useDashboards";

@@ -258,6 +258,14 @@ export class SystemPortal {
     });
   }
 
+  public getDashboards() {
+    return request({
+      baseURL: SYSTEM_PORTAL_URL,
+      url: `dataset/dashboards/list`,
+      method: "GET",
+    });
+  }
+
   public getPublicOverviewDescription() {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
