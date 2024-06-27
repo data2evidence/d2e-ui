@@ -29,6 +29,7 @@ import {
   IDatabase,
   NewStudyMetadataInput,
   DatasetDashboard,
+  NewFhirProjectInput,
 } from "../../../../types";
 import SimpleMDE from "react-simplemde-editor";
 import {
@@ -73,6 +74,7 @@ interface FormData {
   name: string;
   summary: string;
   showRequestAccess: boolean;
+  createFhirProject: boolean;
   cleansedSchemaOption: boolean;
   description: string;
   dataModel: string;
@@ -135,6 +137,7 @@ const EMPTY_FORM_DATA: FormData = {
   name: "",
   summary: "",
   showRequestAccess: false,
+  createFhirProject: false,
   cleansedSchemaOption: false,
   description: "",
   dataModel: "", //Optional
@@ -466,6 +469,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
       cdmSchemaValue,
       vocabSchemaValue,
       cleansedSchemaOption,
+      createFhirProject,
       name,
       summary,
       showRequestAccess,
@@ -505,6 +509,13 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
     try {
       setLoading(true);
       await api.gateway.createDataset(input);
+      if (createFhirProject) {
+        const fhirProjectInput: NewFhirProjectInput = {
+          name: name,
+          description: description,
+        };
+        await api.gateway.createFhirStaging(fhirProjectInput);
+      }
       handleClose("success");
     } catch (err: any) {
       setFeedback({
@@ -573,6 +584,16 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
             label={getText(i18nKeys.ADD_STUDY_DIALOG__SHOW_REQUEST_ACCESS)}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               handleFormDataChange({ showRequestAccess: event.target.checked });
+            }}
+          />
+        </div>
+        <div>
+          <Checkbox
+            checked={formData.createFhirProject}
+            checkbox-id="create-fhir-server"
+            label={getText(i18nKeys.ADD_STUDY_DIALOG__CREATE_FHIR)}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              handleFormDataChange({ createFhirProject: event.target.checked });
             }}
           />
         </div>
