@@ -36,6 +36,7 @@ import { useTranslation } from "../../../../contexts";
 
 interface UpdateStudyDialogProps {
   dataset: Study;
+  allDashboards: DatasetDashboard[];
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
 }
@@ -109,7 +110,7 @@ const styles: SxProps = {
 
 const EMPTY_STUDY_METADATA: NewStudyMetadataInput = { attributeId: "", value: "" };
 
-const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose }) => {
+const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards, open, onClose }) => {
   const { getText, i18nKeys } = useTranslation();
   const datasetId = dataset.id;
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
@@ -229,11 +230,20 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
     dashboards.forEach((dashboard, index) => {
       formError[index] = EMPTY_DASHBOARD_FORM_ERROR;
       if (!dashboard.name && dashboard.url) {
-        formError[index] = { ...formError[index], name: { required: true } };
+        formError[index] = { ...formError[index], name: { required: true, invalid: false, duplicate: false } };
         hasError = true;
       }
       if (!dashboard.url && dashboard.name) {
         formError[index] = { ...formError[index], url: { required: true } };
+        hasError = true;
+      }
+      if (dashboard.name.includes("-")) {
+        formError[index] = { ...formError[index], name: { required: false, invalid: true, duplicate: false } };
+        hasError = true;
+      }
+      const duplicateName = allDashboards.some((dash) => dash.name === dashboard.name && dash.id !== dashboard.id);
+      if (duplicateName) {
+        formError[index] = { ...formError[index], name: { required: false, invalid: false, duplicate: true } };
         hasError = true;
       }
     });

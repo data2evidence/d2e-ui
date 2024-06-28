@@ -243,6 +243,8 @@ export const i18nDefault = {
     DASHBOARD__NOT_FOUND: "Dashboard not found!",
     DASHBOARD__PIE_CHART_TITLE: "Gender",
     DASHBOARD_FORM__REQUIRED: "This is required",
+    DASHBOARD_FORM__INVALID: "Please enter a name without hyphens (-).",
+    DASHBOARD_FORM__DUPLICATE: "Please enter another name.",
     DATA_CHARACTERIZATION_REPORTS__REPORT_SELECTOR_LABEL: "Select Data Characterization Report",
     DATA_DENSITY__BOX_PLOT_TITLE: "Concepts Per Person",
     DATA_DENSITY__BOX_PLOT_X_AXIS_NAME: "Concept Type",

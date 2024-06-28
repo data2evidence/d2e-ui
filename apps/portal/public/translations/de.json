@@ -215,6 +215,8 @@
   "DASHBOARD__NOT_FOUND": "Dashboard nicht gefunden!",
   "DASHBOARD__PIE_CHART_TITLE": "Geschlecht",
   "DASHBOARD_FORM__REQUIRED": "Dies ist erforderlich",
+  "DASHBOARD_FORM__INVALID": "Bitte geben Sie einen Namen ohne Bindestriche (-) ein.",
+  "DASHBOARD_FORM__DUPLICATE": "Bitte geben Sie einen anderen Namen ein.",
   "DATA_CHARACTERIZATION_REPORTS__REPORT_SELECTOR_LABEL": "Wählen Sie Datencharakterisierungsbericht aus",
   "DATA_DENSITY__BOX_PLOT_TITLE": "Konzepte pro Person",
   "DATA_DENSITY__BOX_PLOT_X_AXIS_NAME": "Konzepttyp",

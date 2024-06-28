@@ -250,10 +250,18 @@ export class SystemPortal {
     });
   }
 
-  public getDashboardById(id: string) {
+  public getDashboardByName(name: string) {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/dashboard/${id}`,
+      url: `dataset/dashboard/${name}`,
+      method: "GET",
+    });
+  }
+
+  public getDashboards() {
+    return request({
+      baseURL: SYSTEM_PORTAL_URL,
+      url: `dataset/dashboards/list`,
       method: "GET",
     });
   }

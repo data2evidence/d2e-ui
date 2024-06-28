@@ -3,10 +3,7 @@ import { api } from "../axios/api";
 import { AppError, DatasetDashboard } from "../types";
 import { useTranslation } from "../contexts";
 
-export const useDashboard = (
-  id: string,
-  refetch = 0
-): [DatasetDashboard | undefined, boolean, AppError | undefined] => {
+export const useDashboard = (name: string, refetch = 0): [DatasetDashboard | undefined, boolean, AppError | undefined] => {
   const { getText, i18nKeys } = useTranslation();
   const [dashboard, setDashboard] = useState<DatasetDashboard>();
   const [loading, setLoading] = useState(false);
@@ -14,9 +11,9 @@ export const useDashboard = (
 
   const fetchDashboards = useCallback(async () => {
     try {
-      if (id) {
+      if (name) {
         setLoading(refetch ? false : true);
-        const dashboard = await api.systemPortal.getDashboardById(id);
+        const dashboard = await api.systemPortal.getDashboardByName(name);
         setDashboard(dashboard);
       } else {
         setError({ message: getText(i18nKeys.USE_DASHBOARD__ERROR) });
@@ -28,7 +25,7 @@ export const useDashboard = (
     } finally {
       setLoading(false);
     }
-  }, [id, refetch]);
+  }, [name, refetch]);
 
   useEffect(() => {
     fetchDashboards();

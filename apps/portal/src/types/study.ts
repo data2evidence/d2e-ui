@@ -172,6 +172,7 @@ export interface DatasetDashboard {
   name: string;
   url: string;
   basePath: string;
+  id?: string;
 }
 
 export interface TokenMapping {

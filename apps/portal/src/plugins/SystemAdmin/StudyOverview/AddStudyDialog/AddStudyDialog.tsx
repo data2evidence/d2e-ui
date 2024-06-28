@@ -57,6 +57,7 @@ interface AddStudyDialogProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   studies: Study[];
   databases: IDatabase[];
+  allDashboards: DatasetDashboard[];
 }
 
 const mdeOptions = {
@@ -194,7 +195,15 @@ const styles: SxProps = {
  * @param param0 AddStudyDialogProps
  * @returns The dialog object
  */
-const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLoading, studies, databases }) => {
+const AddStudyDialog: FC<AddStudyDialogProps> = ({
+  open,
+  onClose,
+  loading,
+  setLoading,
+  studies,
+  databases,
+  allDashboards,
+}) => {
   const { getText, i18nKeys } = useTranslation();
   const [tenant] = useTenant();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
@@ -441,11 +450,19 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
     dashboards.forEach((dashboard, index) => {
       formError[index] = EMPTY_DASHBOARD_FORM_ERROR;
       if (!dashboard.name && dashboard.url) {
-        formError[index] = { ...formError[index], name: { required: true } };
+        formError[index] = { ...formError[index], name: { required: true, invalid: false, duplicate: false } };
         hasError = true;
       }
       if (!dashboard.url && dashboard.name) {
         formError[index] = { ...formError[index], url: { required: true } };
+        hasError = true;
+      }
+      if (dashboard.name.includes("-")) {
+        formError[index] = { ...formError[index], name: { required: false, invalid: true, duplicate: false } };
+        hasError = true;
+      }
+      if (allDashboards.some((dash) => dash.name === dashboard.name)) {
+        formError[index] = { ...formError[index], name: { required: false, invalid: false, duplicate: true } };
         hasError = true;
       }
     });

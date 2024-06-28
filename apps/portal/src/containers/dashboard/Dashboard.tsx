@@ -6,8 +6,8 @@ import { useTranslation, useUser } from "../../contexts";
 
 export const Dashboard: FC = () => {
   const { getText, i18nKeys } = useTranslation();
-  const { id } = useParams();
-  const [dashboard] = useDashboard(id || "");
+  const { name } = useParams();
+  const [dashboard] = useDashboard(name || "");
   const { user } = useUser();
 
   return (

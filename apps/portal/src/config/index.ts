@@ -22,7 +22,7 @@ export const config: Config = {
     login: "/login",
     logout: "/logout",
     noAccess: "/no-access",
-    dashboard: "/dashboard/:id",
+    dashboard: "/dashboard/:name",
   },
 };
 
