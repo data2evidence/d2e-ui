@@ -88,7 +88,9 @@ export const PublicDatasetCard: FC<PublicDatasetCardProps> = ({ dataset, path, h
   const entityCounts = getAttributeValue(DatasetAttribute.ENTITY_COUNT_DISTRIBUTION);
   const chartData = useMemo(() => {
     try {
-      return JSON.parse(entityCounts || "{}");
+      const data = JSON.parse(entityCounts || "{}");
+      const filteredData = Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== "0"));
+      return filteredData;
     } catch {
       return {};
     }
