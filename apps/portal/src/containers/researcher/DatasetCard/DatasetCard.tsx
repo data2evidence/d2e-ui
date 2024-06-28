@@ -23,24 +23,21 @@ interface DatasetCardProps {
 }
 
 const colorPalette = [
-  "#FFEDD5",
-  "#FFD4C0",
-  "#F3A77B",
-  "#F05416",
-  "#630707",
-  "#C8AEBF",
-  "#CE7AEB",
-  "#9D56B5",
-  "#ABABE9",
-  "#6464C6",
-  "#000080",
-  "#BDD4F0",
+  "#FDA2A2",
+  "#000E7E",
+  "#A2FDCD",
+  "#FF5E59",
+  "#CCDEF1",
+  "#2599A7",
+  "#FFC4AD",
+  "#999FCB",
   "#EBF0C8",
-  "#D3DFCC",
-  "#BBCAB3",
-  "#ABEEF6",
+  "#CE7AEB",
   "#69BBF6",
-  "#07609F",
+  "#FDEEA2",
+  "#9215BC",
+  "#9FC5E8",
+  "#FFD9A5",
 ];
 
 export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path, highlightText }) => {
