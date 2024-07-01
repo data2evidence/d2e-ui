@@ -127,9 +127,9 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path, highlightText
           )}
           <HighlightText text={dataset.studyDetail?.name || "Untitled"} searchText={highlightText} />
         </div>
-        <div className="dataset-card__description">
+        <div className="dataset-card__summary">
           <HighlightText
-            text={dataset.studyDetail?.description || getText(i18nKeys.DATASET_CARD__NO_DATASET_SUMMARY)}
+            text={dataset.studyDetail?.summary || getText(i18nKeys.DATASET_CARD__NO_DATASET_SUMMARY)}
             searchText={highlightText}
           />
         </div>
