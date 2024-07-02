@@ -205,7 +205,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
 
       handleClose("success");
     } catch (err: any) {
-      const message = err?.data?.message || err?.data?.error_description;
+      const message = err?.data?.message || err?.data?.error_description || err.message;
       if (message) {
         setFeedback({ type: "error", message });
       } else {
