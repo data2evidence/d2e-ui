@@ -1,0 +1,23 @@
+@import '../../theme/variables.scss';
+
+.react-flow__node {
+
+  .cell {
+    cursor: default;
+    border: 2px solid #ddd;
+    font-size: 2em;
+    color: var(--color-primary);
+    width: 24.8vw;
+    height: 4vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    background-color: white;
+
+    .content {
+      font-size: small;
+      padding-left: 15px;
+      padding-top: 5px;
+    }
+  }
+}

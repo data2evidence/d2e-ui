@@ -1,8 +1,9 @@
-import React, { useCallback } from "react";
+import React from "react";
 import ReactFlow, {
   Node,
   ReactFlowProvider,
   addEdge,
+  applyNodeChanges,
   useEdgesState,
   useNodesState,
   useReactFlow,
@@ -12,52 +13,36 @@ import "reactflow/dist/style.css";
 import SourceColumnNode from "./Nodes/SourceColumnNode";
 import SourceTableNode from "./Nodes/SourceTableNode";
 import TargetTableNode from "./Nodes/TargetTableNode";
+import CellNode from "./Nodes/CellNode";
+import { useFlow } from "../contexts/FlowContext";
 
 const nodeTypes = {
   sourceColumn: SourceColumnNode,
   sourceTable: SourceTableNode,
   targetTable: TargetTableNode,
+  cellNode: CellNode,
 };
 const Flow = () => {
   const reactFlow = useReactFlow();
 
   console.log(reactFlow.getViewport());
 
-  const initialNodes = [
-    {
-      id: "A",
-      type: "sourceColumn",
-      position: { x: 0, y: 0 },
-      style: {
-        width: "25vw",
-        height: "100vh",
-      },
-    },
-    {
-      id: "B",
-      type: "sourceTable",
-      position: { x: 500, y: 0 },
-      style: {
-        width: "25vw",
-        height: "100vh",
-      },
-    },
-    {
-      id: "C",
-      type: "targetTable",
-      position: { x: 1000, y: 0 },
-      style: {
-        width: "25vw",
-        height: "100vh",
-      },
-    },
-  ];
+  const { nodes, setNodes } = useFlow();
 
   return (
     <div className="flow-container">
-      {/* <ReactFlowProvider> */}
-      <ReactFlow nodes={initialNodes} nodeTypes={nodeTypes} fitView></ReactFlow>
-      {/* </ReactFlowProvider> */}
+      <ReactFlowProvider>
+        {/* <FlowProvider> */}
+        <ReactFlow
+          nodes={nodes}
+          nodeTypes={nodeTypes}
+          onNodesChange={(changes) =>
+            setNodes((nds) => applyNodeChanges(changes, nds))
+          }
+          fitView
+        ></ReactFlow>
+        {/* </FlowProvider> */}
+      </ReactFlowProvider>
     </div>
   );
 };
