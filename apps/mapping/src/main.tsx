@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { LinkTables } from "./LinkTables/LinkTables.tsx";
 import { LinkFields } from "./LinkFields/LinkFields.tsx";
 import Flow from "./Flow/Flow.tsx";
 
@@ -13,7 +12,6 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        // element: <LinkTables />,
         element: <Flow />,
       },
       {
