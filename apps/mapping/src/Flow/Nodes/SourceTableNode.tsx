@@ -1,36 +1,52 @@
-import { Button } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import sourceTableData from "../../../dummyData/create_source_schema_scan.json";
-import { useFlow } from "../../contexts/FlowContext";
-import { Position } from "reactflow";
+import { DispatchType, NodeType, useFlow } from "../../contexts/FlowContext";
+import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
+import { Button } from "@mui/material";
+import { MappingNode } from "./MappingNode";
 import "./node.scss";
 
-const SourceTableNode = () => {
-  const { nodes, setNodes } = useFlow();
-  const [loaded, setLoaded] = useState(false);
+const SourceTableNode = (props: NodeProps) => {
+  const { state, dispatch } = useFlow();
+  const updateNodeInternals = useUpdateNodeInternals();
   const scanData = () => {
     // Populate Source Table with table-name
     const data = sourceTableData;
     const table_name = data.source_tables[0].table_name;
-    const sourceTableNode = {
-      id: `C.0`,
-      type: "cellNode",
-      position: { x: 500, y: 200 },
-      style: {
-        width: "25vw",
-        height: "4vh",
+    const sourceTableNode = [
+      {
+        id: `C.0`,
+        type: "mappingNode",
+        position: { x: 0, y: 0 },
+        data: { label: table_name, type: "input" },
+        sourcePosition: Position.Right,
       },
-      data: { label: table_name },
-      targetPosition: Position.Right,
-    };
-    setNodes([...nodes, sourceTableNode]);
-    setLoaded(true);
+      {
+        id: `C.1`,
+        type: "mappingNode",
+        position: { x: 0, y: 0 },
+        data: { label: "c2", type: "input" },
+        sourcePosition: Position.Right,
+      },
+    ];
+    dispatch({
+      type: DispatchType.SET_MAPPING_NODES,
+      payload: sourceTableNode,
+      stateName: NodeType.TABLE_SOURCE_STATE,
+    });
+    updateNodeInternals(props.id);
   };
+
   return (
     <div className="link-tables__column nodrag">
-      <h3>Source tables</h3>
       <div className="content-container">
-        {!loaded && (
+        {state.tableSourceState.length ? (
+          <div className="node-container">
+            {state.tableSourceState.map((node) => (
+              <MappingNode {...node} key={node.id} />
+            ))}
+          </div>
+        ) : (
           <div className="action-container">
             <div className="description">
               Please load New Report to see Source tables

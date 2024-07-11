@@ -18,24 +18,43 @@
   }
 
   .content-container {
+    height: 100%;
     width: 100%;
-    flex: 1;
     border-radius: 0.3em;
-    border: 1px solid black;
-    background-color: lightblue;
+    // border: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
 
     .action-container {
-      width: 50%;
+      width: 100%;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
 
       .button-group {
+        width: 70%;
         .MuiButtonBase-root {
           margin-top: 1em;
         }
       }
+    }
+
+    .node-container {
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5em;
+    }
+
+    .node-container:hover,
+    .node-container:focus {
+      overflow-y: auto;
     }
   }
 }

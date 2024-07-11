@@ -2,11 +2,13 @@ import { Button } from "@mui/material";
 import React, { useCallback } from "react";
 import targetSourceData from "../../../dummyData/5.4Version.json";
 import "./node.scss";
-import { useFlow } from "../../contexts/FlowContext";
-import { Position } from "reactflow";
+import { DispatchType, NodeType, useFlow } from "../../contexts/FlowContext";
+import { NodeProps, useUpdateNodeInternals } from "reactflow";
+import { MappingNode } from "./MappingNode";
 
-const TargetTableNode = () => {
-  const { nodes, setNodes } = useFlow();
+const TargetTableNode = (props: NodeProps) => {
+  const { state, dispatch } = useFlow();
+  const updateNodeInternals = useUpdateNodeInternals();
 
   // Populate version 5.4
   const populateCDMVersion = useCallback(() => {
@@ -14,22 +16,34 @@ const TargetTableNode = () => {
     const data = targetSourceData;
     const targetTableNodes = data.map((table, index) => ({
       id: `C.${index + 1}`,
-      type: "cellNode",
-      position: { x: 1000, y: 200 + index * 35 },
-      style: {
-        width: "25vw",
-        height: "4vh",
-      },
+      type: "mappingNode",
+      position: { x: 900, y: 0 + index * 50 },
       data: { label: table.table_name },
-      targetPosition: Position.Left,
+      targetPosition: "left",
     }));
-    setNodes((nds) => [...nds, ...targetTableNodes]);
-  }, [nodes, targetSourceData, setNodes]);
+
+    dispatch({
+      type: DispatchType.SET_MAPPING_NODES,
+      payload: targetTableNodes,
+      stateName: NodeType.TABLE_TARGET_STATE,
+    });
+
+    updateNodeInternals(props.id);
+  }, []);
+
   return (
-    <div className="link-tables__column nodrag">
-      <h3>Target tables</h3>
+    <div
+      className="link-tables__column nodrag nowheel"
+      onWheel={() => updateNodeInternals(props.id)}
+    >
       <div className="content-container">
-        {nodes.length <= 4 && (
+        {state.tableTargetState.length ? (
+          <div className="node-container">
+            {state.tableTargetState.map((node) => (
+              <MappingNode {...node} key={node.id} />
+            ))}
+          </div>
+        ) : (
           <div className="action-container">
             <div className="description">
               Please select CDM version to see Target tables
@@ -51,7 +65,6 @@ const TargetTableNode = () => {
             </div>
           </div>
         )}
-        <div className="targetTable"></div>
       </div>
     </div>
   );
