@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import sourceTableData from "../../../dummyData/create_source_schema_scan.json";
 import { DispatchType, NodeType, useFlow } from "../../contexts/FlowContext";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
+import ScanDataDialog from "../../ScanDataDialog/ScanDataDialog";
 import { Button } from "@mui/material";
 import { MappingNode } from "./MappingNode";
 import "./node.scss";
@@ -9,6 +10,7 @@ import "./node.scss";
 const SourceTableNode = (props: NodeProps) => {
   const { state, dispatch } = useFlow();
   const updateNodeInternals = useUpdateNodeInternals();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const scanData = () => {
     // Populate Source Table with table-name
     const data = sourceTableData;
@@ -30,6 +32,14 @@ const SourceTableNode = (props: NodeProps) => {
     updateNodeInternals(props.id);
   };
 
+  const openScanDataDialog = () => {
+    console.log("Open Scan Data");
+    setIsDialogOpen(true);
+  };
+
+  const closeScanDataDialog = () => {
+    setIsDialogOpen(false);
+  };
   return (
     <div className="link-tables__column nodrag">
       <div className="content-container">
@@ -45,10 +55,18 @@ const SourceTableNode = (props: NodeProps) => {
               Please load New Report to see Source tables
             </div>
             <div className="button-group">
-              <Button variant="contained" fullWidth>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={openScanDataDialog}
+              >
                 Load New Report
               </Button>
-              <Button variant="contained" fullWidth onClick={scanData}>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={openScanDataDialog}
+              >
                 Scan Data
               </Button>
               <Button variant="contained" fullWidth>
@@ -58,6 +76,12 @@ const SourceTableNode = (props: NodeProps) => {
           </div>
         )}
       </div>
+      <ScanDataDialog
+        open={isDialogOpen}
+        onClose={closeScanDataDialog}
+        nodeId={props.id}
+        dispatch={dispatch}
+      />
     </div>
   );
 };
