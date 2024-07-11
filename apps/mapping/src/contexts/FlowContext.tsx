@@ -39,6 +39,7 @@ export enum DispatchType {
   UPDATE_NODES = "updateNodes",
   SET_MAPPING_NODES = "setMappingNodes",
   RESET_MAPPING = "resetMapping",
+  CLEAR_MAPPINGS = "clearMappings",
 }
 export enum NodeType {
   TABLE_NODES = "tableNodes",
@@ -155,6 +156,12 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
         };
       case DispatchType.RESET_MAPPING:
         return initialState;
+      case DispatchType.CLEAR_MAPPINGS:
+        return {
+          ...state,
+          tableEdges: [],
+          fieldEdges: [],
+        };
       default:
         throw new Error(`Unhandled action type: ${action.type}`);
     }

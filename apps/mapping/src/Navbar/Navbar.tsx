@@ -34,9 +34,14 @@ export const Navbar = () => {
   };
 
   const handleMenuClick = (menuName: string) => {
-    if (menuName === "New Mapping" || menuName === "Delete All Mappings") {
+    if (menuName === "New Mapping") {
       dispatch({
         type: DispatchType.RESET_MAPPING,
+      });
+    }
+    if (menuName === "Delete All Mappings") {
+      dispatch({
+        type: DispatchType.CLEAR_MAPPINGS,
       });
     }
     handleClose();
