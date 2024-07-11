@@ -35,8 +35,9 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
   nodeId,
   dispatch,
 }) => {
-  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]); // used for test connection, consider removing if test connection is not used
   const [availableFiles, setAvailableFiles] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [delimiter, setDelimiter] = useState(",");
   const updateNodeInternals = useUpdateNodeInternals();
@@ -66,13 +67,12 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
   }, [selectedFiles, delimiter, handleClose]);
 
   const handleFileChange = useCallback((event: SelectChangeEvent<string[]>) => {
-    // setSelectedFiles(event.target.value as string[]);
     setAvailableFiles(event.target.value as string[]);
   }, []);
 
   const handleFileUpload = (event: any) => {
     const files = Array.from(event.target.files).map((file: any) => file.name);
-    setAvailableFiles(files);
+    setUploadedFiles(files);
   };
 
   const handleDelimiterChange = useCallback(
@@ -81,6 +81,10 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
     },
     []
   );
+
+  const handleTestConnection = useCallback(() => {
+    setAvailableFiles(uploadedFiles);
+  }, [uploadedFiles]);
 
   const scanData = () => {
     // Populate Source Table with table-name
@@ -133,11 +137,11 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
             <Select
               multiple
               label="Select Files"
-              value={availableFiles}
+              value={uploadedFiles}
               onChange={handleFileChange}
               renderValue={(selected) => (selected as string[]).join(", ")}
             >
-              {availableFiles.map((file) => (
+              {uploadedFiles.map((file) => (
                 <MenuItem key={file} value={file}>
                   <Checkbox checked={selectedFiles.indexOf(file) > -1} />
                   <ListItemText primary={file} />
@@ -174,10 +178,7 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
               <MenuItem value=",">,</MenuItem>
             </Select>
           </FormControl>
-          <Button
-            onClick={() => console.log("Test Connection")}
-            variant="outlined"
-          >
+          <Button onClick={handleTestConnection} variant="outlined">
             Test Conncetion
           </Button>
         </div>
