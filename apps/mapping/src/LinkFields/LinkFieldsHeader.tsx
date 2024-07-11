@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { MappingNode } from "../Flow/Nodes/MappingNode";
 import { Chip } from "@mui/material";
 

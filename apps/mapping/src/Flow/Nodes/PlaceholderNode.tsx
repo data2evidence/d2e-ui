@@ -1,4 +1,3 @@
-import React from "react";
 import { useFlow } from "../../contexts/FlowContext";
 import { NodeProps } from "reactflow";
 import { MappingNode } from "./MappingNode";

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import ReactFlow, { Controls, Edge } from "reactflow";
 import "./Flow.scss";
 import "reactflow/dist/style.css";
@@ -27,7 +27,7 @@ const Flow = () => {
   const { tableNodes, tableEdges } = state;
   const navigate = useNavigate();
 
-  const handleEdgeClick = useCallback((event: any, edge: Edge) => {
+  const handleEdgeClick = useCallback((_event: any, edge: Edge) => {
     const { sourceFieldNodes, targetFieldNodes } = buildFieldNodes(edge);
 
     dispatch({

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import sourceTableData from "../../../dummyData/create_source_schema_scan.json";
-import { DispatchType, NodeType, useFlow } from "../../contexts/FlowContext";
-import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
+import { useState } from "react";
+import { useFlow } from "../../contexts/FlowContext";
+import { NodeProps } from "reactflow";
 import ScanDataDialog from "../../ScanDataDialog/ScanDataDialog";
 import { Button } from "@mui/material";
 import { MappingNode } from "./MappingNode";
@@ -9,28 +8,7 @@ import "./node.scss";
 
 const SourceTableNode = (props: NodeProps) => {
   const { state, dispatch } = useFlow();
-  const updateNodeInternals = useUpdateNodeInternals();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const scanData = () => {
-    // Populate Source Table with table-name
-    const data = sourceTableData;
-    const table_name = data.source_tables[0].table_name;
-    const sourceTableNode = [
-      {
-        id: `C.0`,
-        type: "mappingNode",
-        position: { x: 0, y: 0 },
-        data: { label: table_name, type: "input", tableName: table_name },
-        sourcePosition: Position.Right,
-      },
-    ];
-    dispatch({
-      type: DispatchType.SET_MAPPING_NODES,
-      payload: sourceTableNode,
-      stateName: NodeType.TABLE_SOURCE_STATE,
-    });
-    updateNodeInternals(props.id);
-  };
 
   const openScanDataDialog = () => {
     console.log("Open Scan Data");
