@@ -23,6 +23,7 @@ interface FlowContextStateType {
   fieldTargetState: NodeProps[];
   fieldNodes: Node[];
   fieldEdges: Edge[];
+  isFieldsPage: boolean;
 }
 
 interface FlowReducerActionType {
@@ -38,6 +39,7 @@ export enum DispatchType {
   HANDLE_CONNECT = "handleConnect",
   UPDATE_NODES = "updateNodes",
   SET_MAPPING_NODES = "setMappingNodes",
+  SET_FIELD_PAGE = "setFieldPage",
 }
 export enum NodeType {
   TABLE_NODES = "tableNodes",
@@ -46,6 +48,7 @@ export enum NodeType {
   FIELD_NODES = "fieldNodes",
   FIELD_SOURCE_STATE = "fieldSourceState",
   FIELD_TARGET_STATE = "fieldTargetState",
+  FIELD_PAGE_STATE = "isFieldsPage",
 }
 export enum EdgeType {
   TABLE_EDGES = "tableEdges",
@@ -81,10 +84,32 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
     tableEdges: [],
     tableSourceState: [],
     tableTargetState: [],
-    fieldNodes: [],
+    fieldNodes: [
+      {
+        id: "source_menu",
+        type: "sourceTable",
+        position: { x: 0, y: 0 },
+        style: {
+          width: "30vw",
+          height: "100vh",
+        },
+        data: null,
+      },
+      {
+        id: "target_menu",
+        type: "targetTable",
+        position: { x: 900, y: 0 },
+        style: {
+          width: "30vw",
+          height: "100vh",
+        },
+        data: null,
+      },
+    ],
     fieldEdges: [],
     fieldSourceState: [],
     fieldTargetState: [],
+    isFieldsPage: false,
   };
 
   const reducer = (state: any, action: FlowReducerActionType) => {
@@ -127,6 +152,11 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
           [action.stateName]: [...state[action.stateName], ...action.payload],
         };
       case DispatchType.SET_MAPPING_NODES:
+        return {
+          ...state,
+          [action.stateName]: action.payload,
+        };
+      case DispatchType.SET_FIELD_PAGE:
         return {
           ...state,
           [action.stateName]: action.payload,

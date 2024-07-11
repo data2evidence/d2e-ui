@@ -1,5 +1,5 @@
-import React from "react";
-import ReactFlow, { PanOnScrollMode, Controls } from "reactflow";
+import React, { useCallback } from "react";
+import ReactFlow, { Controls, Edge } from "reactflow";
 import "./Flow.scss";
 import "reactflow/dist/style.css";
 import SourceTableNode from "./Nodes/SourceTableNode";
@@ -11,15 +11,43 @@ import {
   useFlow,
 } from "../contexts/FlowContext";
 import { MappingNode } from "./Nodes/MappingNode";
+import { buildFieldNodes } from "../utils/nodes";
+import { useNavigate } from "react-router-dom";
 
-const nodeTypes = {
+export const nodeTypes = {
   sourceTable: SourceTableNode,
   targetTable: TargetTableNode,
   mappingNode: MappingNode,
 };
+
 const Flow = () => {
   const { state, dispatch } = useFlow();
   const { tableNodes, tableEdges } = state;
+  const navigate = useNavigate();
+
+  const handleEdgeClick = useCallback((event: any, edge: Edge) => {
+    const { sourceFieldNodes, targetFieldNodes } = buildFieldNodes(edge);
+
+    dispatch({
+      type: DispatchType.SET_MAPPING_NODES,
+      payload: sourceFieldNodes,
+      stateName: NodeType.FIELD_SOURCE_STATE,
+    });
+
+    dispatch({
+      type: DispatchType.SET_MAPPING_NODES,
+      payload: targetFieldNodes,
+      stateName: NodeType.FIELD_TARGET_STATE,
+    });
+
+    dispatch({
+      type: DispatchType.SET_FIELD_PAGE,
+      payload: true,
+      stateName: NodeType.FIELD_PAGE_STATE,
+    });
+
+    navigate("/link-fields");
+  }, []);
 
   return (
     <div className="flow-container">
@@ -49,12 +77,12 @@ const Flow = () => {
               stateName: EdgeType.TABLE_EDGES,
             })
           }
+          zoomOnDoubleClick={false}
           zoomOnScroll={false}
           panOnScroll={false} // change default scroll
-          panOnScrollMode={PanOnScrollMode.Vertical} // only allow vertical scrolling
-          panOnDrag={false}
           zoomOnPinch={false} // diable mouse on pinch zoom
           fitView
+          onEdgeDoubleClick={handleEdgeClick}
         >
           <Controls />
         </ReactFlow>

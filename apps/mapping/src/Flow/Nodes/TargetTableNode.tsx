@@ -19,7 +19,7 @@ const TargetTableNode = (props: NodeProps) => {
       id: `C.${index + 1}`,
       type: "mappingNode",
       position: { x: 900, y: 0 + index * 50 },
-      data: { label: table.table_name },
+      data: { label: table.table_name, tableName: table.table_name },
       targetPosition: "left",
     }));
 

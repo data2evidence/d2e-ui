@@ -18,14 +18,7 @@ const SourceTableNode = (props: NodeProps) => {
         id: `C.0`,
         type: "mappingNode",
         position: { x: 0, y: 0 },
-        data: { label: table_name, type: "input" },
-        sourcePosition: Position.Right,
-      },
-      {
-        id: `C.1`,
-        type: "mappingNode",
-        position: { x: 0, y: 0 },
-        data: { label: "c2", type: "input" },
+        data: { label: table_name, type: "input", tableName: table_name },
         sourcePosition: Position.Right,
       },
     ];
