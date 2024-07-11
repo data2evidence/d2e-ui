@@ -35,20 +35,20 @@ const Flow = () => {
               stateName: NodeType.TABLE_NODES,
             })
           }
-          onEdgesChange={(changes) => {
+          onEdgesChange={(changes) =>
             dispatch({
               type: DispatchType.HANDLE_EDGES_CHANGE,
               payload: changes,
               stateName: EdgeType.TABLE_EDGES,
-            });
-          }}
-          onConnect={(changes) => {
+            })
+          }
+          onConnect={(changes) =>
             dispatch({
               type: DispatchType.HANDLE_CONNECT,
               payload: changes,
               stateName: EdgeType.TABLE_EDGES,
-            });
-          }}
+            })
+          }
           zoomOnScroll={false}
           panOnScroll={false} // change default scroll
           panOnScrollMode={PanOnScrollMode.Vertical} // only allow vertical scrolling
