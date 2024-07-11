@@ -1,7 +1,8 @@
 import { Breadcrumbs, IconButton, Link, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import "./Navbar.scss";
 
 const MENU_ITEMS = [
@@ -13,7 +14,13 @@ const MENU_ITEMS = [
   "Delete All Mappings",
 ];
 
+const BREADCRUMBS_NAME_MAP: { [key: string]: string } = {
+  "/link-fields": "Link Fields",
+};
+
 export const Navbar = () => {
+  const location = useLocation();
+  const pathnames = location.pathname.split("/").filter((x) => x);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -38,10 +45,31 @@ export const Navbar = () => {
       </div>
 
       <div className="breadcrumbs">
-        <Breadcrumbs>
-          <Link to="/" component={RouterLink} underline="hover" color="inherit">
-            Link Tables
-          </Link>
+        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
+          {pathnames.length > 0 ? (
+            <Link to="/" component={RouterLink} color="inherit">
+              Link Tables
+            </Link>
+          ) : (
+            <span>Link Tables</span>
+          )}
+          {pathnames.map((name, index) => {
+            const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
+            const isLast = index === pathnames.length - 1;
+
+            return isLast ? (
+              <span key={name}>{BREADCRUMBS_NAME_MAP[routeTo]}</span>
+            ) : (
+              <Link
+                key={name}
+                to={routeTo}
+                component={RouterLink}
+                color="inherit"
+              >
+                {name}
+              </Link>
+            );
+          })}
         </Breadcrumbs>
       </div>
     </div>
