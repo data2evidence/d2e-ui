@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import ReactFlow, { Controls } from "reactflow";
 import { nodeTypes } from "../Flow/Flow";
 import {
@@ -8,13 +8,27 @@ import {
   useFlow,
 } from "../contexts/FlowContext";
 import { LinkFieldsHeader } from "./LinkFieldsHeader";
+import { useNavigate } from "react-router-dom";
 
 export const LinkFields = () => {
   const { state, dispatch } = useFlow();
-  const { fieldNodes, fieldEdges } = state;
+  const { fieldNodes, fieldEdges, fieldSourceState, fieldTargetState } = state;
+  const navigate = useNavigate();
 
-  const sourceTableName = state.fieldSourceState[0].data.tableName;
-  const targetTableName = state.fieldTargetState[0].data.tableName;
+  useEffect(() => {
+    if (fieldSourceState.length == 0 || fieldTargetState.length === 0) {
+      navigate("/");
+    }
+  }, []);
+
+  const sourceTableName = useMemo(
+    () => (fieldSourceState.length ? fieldSourceState[0].data.tableName : ""),
+    []
+  );
+  const targetTableName = useMemo(
+    () => (fieldTargetState.length ? fieldTargetState[0].data.tableName : ""),
+    []
+  );
 
   return (
     <div className="flow-container">
