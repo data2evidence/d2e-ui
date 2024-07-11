@@ -1,0 +1,49 @@
+.scan-data-dialog {
+  .scan-data-dialog__content {
+    min-height: 100px;
+    margin: 16px 32px 0;
+    color: var(--color-primary);
+  }
+
+  &__section {
+    margin-bottom: 24px;
+
+    h3 {
+      margin-bottom: 30px;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--color-primary);
+    }
+  }
+
+  .scan-data-dialog__form-control {
+    margin-bottom: 24px;
+  }
+
+  .button-group-actions {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0;
+
+    .alp-button__container {
+      margin: 0 0 0 8px;
+      width: 247px;
+    }
+  }
+
+  .MuiTable-root {
+    border: 1px solid #dad7d7;
+  }
+
+  .MuiTableCell-root {
+    padding: 16px;
+  }
+
+  .MuiCheckbox-root {
+    color: var(--color-primary);
+
+    &.Mui-checked {
+      color: var(--color-primary);
+    }
+  }
+}

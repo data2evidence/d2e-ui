@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import sourceTableData from "../../../dummyData/create_source_schema_scan.json";
 import { useFlow } from "../../contexts/FlowContext";
 import { Position } from "reactflow";
+import ScanDataDialog from "../../ScanDataDialog/ScanDataDialog";
 import "./node.scss";
 
 const SourceTableNode = () => {
   const { nodes, setNodes } = useFlow();
   const [loaded, setLoaded] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const scanData = () => {
     // Populate Source Table with table-name
     const data = sourceTableData;
@@ -26,6 +28,15 @@ const SourceTableNode = () => {
     setNodes([...nodes, sourceTableNode]);
     setLoaded(true);
   };
+
+  const openScanDataDialog = () => {
+    console.log("Open Scan Data");
+    setIsDialogOpen(true);
+  };
+
+  const closeScanDataDialog = () => {
+    setIsDialogOpen(false);
+  };
   return (
     <div className="link-tables__column nodrag">
       <h3>Source tables</h3>
@@ -36,7 +47,11 @@ const SourceTableNode = () => {
               Please load New Report to see Source tables
             </div>
             <div className="button-group">
-              <Button variant="contained" fullWidth>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={openScanDataDialog}
+              >
                 Load New Report
               </Button>
               <Button variant="contained" fullWidth onClick={scanData}>
@@ -49,6 +64,7 @@ const SourceTableNode = () => {
           </div>
         )}
       </div>
+      <ScanDataDialog open={isDialogOpen} onClose={closeScanDataDialog} />
     </div>
   );
 };

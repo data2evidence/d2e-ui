@@ -26,7 +26,7 @@ const TargetTableNode = () => {
     setNodes((nds) => [...nds, ...targetTableNodes]);
   }, [nodes, targetSourceData, setNodes]);
   return (
-    <div className="link-tables__column nodrag">
+    <div className="link-tables__column nodrag nowheel">
       <h3>Target tables</h3>
       <div className="content-container">
         {nodes.length <= 4 && (
