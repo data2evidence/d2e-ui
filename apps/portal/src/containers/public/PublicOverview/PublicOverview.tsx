@@ -14,8 +14,6 @@ import { AccountButton } from "../../researcher/Overview/components/AccountButto
 import env from "../../../env";
 import "./PublicOverview.scss";
 
-let hasPublicDatasets = false;
-
 export const PublicOverview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const [searchString, setSearchString] = useState<string>();
@@ -27,16 +25,8 @@ export const PublicOverview: FC = () => {
   const [overviewDescription] = useOverviewDescription(true);
 
   useEffect(() => {
-    if (hasPublicDatasets) {
-      return;
-    }
-
     if (datasets && datasets.length === 0) {
       navigate(config.ROUTES.login);
-    } else {
-      if (!hasPublicDatasets) {
-        hasPublicDatasets = true;
-      }
     }
   }, [datasets, navigate]);
 
