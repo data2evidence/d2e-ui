@@ -5,6 +5,7 @@ import "./node.scss";
 import { DispatchType, NodeType, useFlow } from "../../contexts/FlowContext";
 import { NodeProps, useUpdateNodeInternals } from "reactflow";
 import { MappingNode } from "./MappingNode";
+import { debounce } from "lodash";
 
 const TargetTableNode = (props: NodeProps) => {
   const { state, dispatch } = useFlow();
@@ -31,10 +32,16 @@ const TargetTableNode = (props: NodeProps) => {
     updateNodeInternals(props.id);
   }, []);
 
+  const handleWheel = debounce(() => {
+    updateNodeInternals(props.id);
+  }, 100);
+
   return (
     <div
       className="link-tables__column nodrag nowheel"
-      onWheel={() => updateNodeInternals(props.id)}
+      onWheel={() => {
+        handleWheel();
+      }}
     >
       <div className="content-container">
         {state.tableTargetState.length ? (
