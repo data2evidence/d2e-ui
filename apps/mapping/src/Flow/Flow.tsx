@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import ReactFlow, { Controls, Edge } from "reactflow";
 import "./Flow.scss";
 import "reactflow/dist/style.css";
@@ -13,11 +13,13 @@ import {
 import { MappingNode } from "./Nodes/MappingNode";
 import { buildFieldNodes } from "../utils/nodes";
 import { useNavigate } from "react-router-dom";
+import { PlaceholderNode } from "./Nodes/PlaceholderNode";
 
 export const nodeTypes = {
   sourceTable: SourceTableNode,
   targetTable: TargetTableNode,
   mappingNode: MappingNode,
+  placeholderNode: PlaceholderNode,
 };
 
 const Flow = () => {
@@ -38,12 +40,6 @@ const Flow = () => {
       type: DispatchType.SET_MAPPING_NODES,
       payload: targetFieldNodes,
       stateName: NodeType.FIELD_TARGET_STATE,
-    });
-
-    dispatch({
-      type: DispatchType.SET_FIELD_PAGE,
-      payload: true,
-      stateName: NodeType.FIELD_PAGE_STATE,
     });
 
     navigate("/link-fields");

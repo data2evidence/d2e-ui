@@ -7,12 +7,12 @@ export const buildFieldNodes = (edge: Edge) => {
 
   const sourceFieldNodes = buildFieldNode(
     getColumnData(sourceHandle),
-    sourceHandle
+    sourceHandle,
+    true
   );
   const targetFieldNodes = buildFieldNode(
     getColumnData(targetHandle, true),
-    targetHandle,
-    true
+    targetHandle
   );
 
   return { sourceFieldNodes, targetFieldNodes };
@@ -31,6 +31,7 @@ const buildFieldNode = (
       isField: true,
       columnType: column.column_type,
       isNullable: column.is_column_nullable,
+      type: isSource ? "input" : "output",
     },
     targetPosition: isSource ? "right" : "left",
   }));
