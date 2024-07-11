@@ -6,6 +6,7 @@ import {
   applyNodeChanges,
   addEdge,
   NodeProps,
+  MarkerType,
 } from "reactflow";
 
 interface FlowContextType {
@@ -105,9 +106,20 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
           ),
         };
       case DispatchType.HANDLE_CONNECT:
+        const edge = {
+          ...action.payload,
+          style: {
+            strokeWidth: 2,
+          },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            width: 20,
+            height: 20,
+          },
+        };
         return {
           ...state,
-          [action.stateName]: addEdge(action.payload, state[action.stateName]),
+          [action.stateName]: addEdge(edge, state[action.stateName]),
         };
       case DispatchType.UPDATE_NODES:
         return {
