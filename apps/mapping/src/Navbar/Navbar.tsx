@@ -4,6 +4,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import "./Navbar.scss";
+import { DispatchType, useFlow } from "../contexts/FlowContext";
 
 const MENU_ITEMS = [
   "New Mapping",
@@ -19,16 +20,28 @@ const BREADCRUMBS_NAME_MAP: { [key: string]: string } = {
 };
 
 export const Navbar = () => {
+  const { dispatch } = useFlow();
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClick = (menuName: string) => {
+    if (menuName === "New Mapping" || menuName === "Delete All Mappings") {
+      dispatch({
+        type: DispatchType.RESET_MAPPING,
+      });
+    }
+    handleClose();
+  };
+
   return (
     <div className="navbar">
       <div className="menu">
@@ -37,7 +50,7 @@ export const Navbar = () => {
         </IconButton>
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
           {MENU_ITEMS.map((item) => (
-            <MenuItem key={item} onClick={handleClose}>
+            <MenuItem key={item} onClick={() => handleMenuClick(item)}>
               {item}
             </MenuItem>
           ))}
