@@ -1,3 +1,5 @@
+@import '../../theme/variables.scss';
+
 .link-tables__column {
   display: flex;
   flex-direction: column;
@@ -38,6 +40,7 @@
         width: 70%;
         .MuiButtonBase-root {
           margin-top: 1em;
+          background-color: $primary-color;
         }
       }
     }
