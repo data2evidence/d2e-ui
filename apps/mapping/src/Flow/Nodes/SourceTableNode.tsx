@@ -69,7 +69,11 @@ const SourceTableNode = (props: NodeProps) => {
               >
                 Load New Report
               </Button>
-              <Button variant="contained" fullWidth onClick={scanData}>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={openScanDataDialog}
+              >
                 Scan Data
               </Button>
               <Button variant="contained" fullWidth>
@@ -79,7 +83,12 @@ const SourceTableNode = (props: NodeProps) => {
           </div>
         )}
       </div>
-      <ScanDataDialog open={isDialogOpen} onClose={closeScanDataDialog} />
+      <ScanDataDialog
+        open={isDialogOpen}
+        onClose={closeScanDataDialog}
+        nodeId={props.id}
+        dispatch={dispatch}
+      />
     </div>
   );
 };

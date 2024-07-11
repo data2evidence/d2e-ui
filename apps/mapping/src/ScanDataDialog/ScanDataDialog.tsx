@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState, ChangeEvent } from "react";
+import React, { FC, useCallback, useState } from "react";
 import {
   Button,
   Dialog,
@@ -7,6 +7,7 @@ import {
   InputLabel,
   ListItemText,
 } from "@mui/material";
+import sourceTableData from "../../dummyData/create_source_schema_scan.json";
 import Divider from "@mui/material/Divider";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,27 +16,35 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
-// import { CloseDialogType } from "../../../../types";
-// import { api } from "../../../../axios/api";
+import { DispatchType, NodeType } from "../contexts/FlowContext";
+import { Position, useUpdateNodeInternals } from "reactflow";
 import "./ScanDataDialog.scss";
-// import { useTranslation } from "../../../../contexts";
 
+// TODO: Clean up and create separate files for all interfaces and types
 type CloseDialogType = "success" | "cancelled";
 interface ScanDataDialogProps {
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
+  nodeId: string;
+  dispatch: React.Dispatch<any>;
 }
 
-const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose }) => {
-  // const { getText, i18nKeys } = useTranslation();
+const ScanDataDialog: FC<ScanDataDialogProps> = ({
+  open,
+  onClose,
+  nodeId,
+  dispatch,
+}) => {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [availableFiles, setAvailableFiles] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [delimiter, setDelimiter] = useState(",");
+  const updateNodeInternals = useUpdateNodeInternals();
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
       setSelectedFiles([]);
+      setAvailableFiles([]);
       setDelimiter(",");
       typeof onClose === "function" && onClose(type);
     },
@@ -45,9 +54,9 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose }) => {
   const handleApply = useCallback(async () => {
     try {
       setLoading(true);
-      // TODO: Uncomment and replace with actual data scanning logic
-
+      // TODO: Replace with actual data scanning logic
       // await api.data.scanData(selectedFiles, delimiter);
+      scanData();
       handleClose("success");
     } catch (err: any) {
       console.error("err", err);
@@ -57,7 +66,8 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose }) => {
   }, [selectedFiles, delimiter, handleClose]);
 
   const handleFileChange = useCallback((event: SelectChangeEvent<string[]>) => {
-    setSelectedFiles(event.target.value as string[]);
+    // setSelectedFiles(event.target.value as string[]);
+    setAvailableFiles(event.target.value as string[]);
   }, []);
 
   const handleFileUpload = (event: any) => {
@@ -71,6 +81,27 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose }) => {
     },
     []
   );
+
+  const scanData = () => {
+    // Populate Source Table with table-name
+    const data = sourceTableData;
+    const table_name = data.source_tables[0].table_name;
+    const sourceTableNode = [
+      {
+        id: `C.0`,
+        type: "mappingNode",
+        position: { x: 0, y: 0 },
+        data: { label: table_name, type: "input" },
+        sourcePosition: Position.Right,
+      },
+    ];
+    dispatch({
+      type: DispatchType.SET_MAPPING_NODES,
+      payload: sourceTableNode,
+      stateName: NodeType.TABLE_SOURCE_STATE,
+    });
+    updateNodeInternals(nodeId);
+  };
 
   return (
     <Dialog
@@ -207,7 +238,12 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose }) => {
         >
           Cancel
         </Button>
-        <Button onClick={handleApply} disabled={selectedFiles.length === 0}>
+        <Button
+          onClick={handleApply}
+          variant="contained"
+          disabled={selectedFiles.length === 0}
+          style={{ marginLeft: "20px" }}
+        >
           Apply
         </Button>
       </div>
