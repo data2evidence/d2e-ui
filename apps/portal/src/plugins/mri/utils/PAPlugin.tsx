@@ -48,7 +48,6 @@ const PAPlugin: FC<PAPluginProps> = ({ studyId, releaseId, getToken }) => {
         });
       })
       .then(() => {
-        setIsLoading(false);
         setTimeout(dispatchPluginEvent, 1000);
       });
 
