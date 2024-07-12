@@ -72,7 +72,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
       {
         id: "table_target_menu",
         type: "targetTable",
-        position: { x: 900, y: 0 },
+        position: { x: 700, y: 0 },
         style: {
           width: "30vw",
           height: "100vh",
@@ -97,7 +97,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({
       {
         id: "field_target_menu",
         type: "placeholderNode",
-        position: { x: 900, y: 0 },
+        position: { x: 700, y: 0 },
         style: {
           width: "30vw",
           height: "100vh",
