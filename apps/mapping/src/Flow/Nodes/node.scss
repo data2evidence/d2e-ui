@@ -55,6 +55,11 @@
       gap: 1.5em;
     }
 
+    .node-container-source {
+      direction: rtl;
+      text-align: left;
+    }
+
     .node-container:hover,
     .node-container:focus {
       overflow-y: auto;
