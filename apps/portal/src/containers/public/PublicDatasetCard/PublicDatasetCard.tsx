@@ -114,9 +114,9 @@ export const PublicDatasetCard: FC<PublicDatasetCardProps> = ({ dataset, path, h
           <PadlockEmptyIcon className={"public-dataset-card__permission-icon"} />
           <HighlightText text={dataset.studyDetail?.name || "Untitled"} searchText={highlightText} />
         </div>
-        <div className="public-dataset-card__description">
+        <div className="public-dataset-card__summary">
           <HighlightText
-            text={dataset.studyDetail?.description || getText(i18nKeys.PUBLIC_DATASET_CARD__NO_DATASET_SUMMARY)}
+            text={dataset.studyDetail?.summary || getText(i18nKeys.PUBLIC_DATASET_CARD__NO_DATASET_SUMMARY)}
             searchText={highlightText}
           />
         </div>

@@ -217,7 +217,7 @@ export const Information: FC = () => {
           {tabValue === DatasetInfoTab.DatasetInfo && (
             <div className="dataset__info">
               <ReactMarkdown>
-                {dataset?.studyDetail?.description || getText(i18nKeys.STUDY_CARD__NO_DATASET_SUMMARY)}
+                {dataset?.studyDetail?.description || getText(i18nKeys.INFORMATION__NO_DATASET_DESCRIPTION)}
               </ReactMarkdown>
               <div className="metadata_tags_files__container">
                 {(tags.length > 0 || attributes.length > 0) && (
