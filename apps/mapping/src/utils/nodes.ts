@@ -1,6 +1,6 @@
 import { Edge } from "reactflow";
 import cdmData from "../../dummyData/5.4Version.json";
-import inputData from "../../dummyData/create_source_schema_scan.json";
+import inputData from "../../dummyData/healthcare_and_concept.json";
 
 export const buildFieldNodes = (edge: Edge) => {
   const { sourceHandle, targetHandle } = edge;

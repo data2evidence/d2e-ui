@@ -1,17 +1,16 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useMemo, useRef, useState } from "react";
 import {
   Button,
   Dialog,
-  TableCell,
-  TableRow,
   InputLabel,
-  ListItemText,
+  DialogTitle,
+  TextField,
+  FormGroup,
+  FormControlLabel,
 } from "@mui/material";
 import sourceTableData from "../../dummyData/create_source_schema_scan.json";
+import twoSourceTableData from "../../dummyData/healthcare_and_concept.json";
 import Divider from "@mui/material/Divider";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableHead from "@mui/material/TableHead";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -35,18 +34,18 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
   nodeId,
   dispatch,
 }) => {
-  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]); // used for test connection, consider removing if test connection is not used
-  const [availableFiles, setAvailableFiles] = useState<string[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+  const [_availableFiles, setAvailableFiles] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [dataType, setDataType] = useState("");
   const [loading, setLoading] = useState(false);
   const [delimiter, setDelimiter] = useState(",");
   const updateNodeInternals = useUpdateNodeInternals();
+  const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
-      setSelectedFiles([]);
-      setAvailableFiles([]);
-      setDelimiter(",");
+      handleClear();
       typeof onClose === "function" && onClose(type);
     },
     [onClose]
@@ -66,14 +65,21 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
     }
   }, [selectedFiles, delimiter, handleClose]);
 
-  const handleFileChange = useCallback((event: SelectChangeEvent<string[]>) => {
-    setAvailableFiles(event.target.value as string[]);
+  const handleDataTypeChange = useCallback(
+    (event: SelectChangeEvent<string>) => {
+      setDataType(event.target.value);
+    },
+    []
+  );
+
+  const handleSelectFile = useCallback((_event: any) => {
+    hiddenFileInput.current && hiddenFileInput.current.click();
   }, []);
 
-  const handleFileUpload = (event: any) => {
+  const handleFileUpload = useCallback((event: any) => {
     const files = Array.from(event.target.files).map((file: any) => file.name);
     setUploadedFiles(files);
-  };
+  }, []);
 
   const handleDelimiterChange = useCallback(
     (event: SelectChangeEvent<string>) => {
@@ -86,19 +92,68 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
     setAvailableFiles(uploadedFiles);
   }, [uploadedFiles]);
 
+  const handleClear = useCallback(() => {
+    setDataType("");
+    setSelectedFiles([]);
+    setAvailableFiles([]);
+    setUploadedFiles([]);
+    setDelimiter(",");
+  }, []);
+
+  const handleSelectedFile = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>, file: string) => {
+      if (event.target.checked) {
+        setSelectedFiles((prev) => [...prev, file]);
+      } else {
+        setSelectedFiles((prev) => prev.filter((f) => f !== file));
+      }
+    },
+    []
+  );
+
+  const handleSelectedFileAll = useCallback(
+    (select: boolean) => {
+      if (select) {
+        setSelectedFiles(uploadedFiles);
+      } else {
+        setSelectedFiles([]);
+      }
+    },
+    [uploadedFiles]
+  );
+
+  const checkSelectedFile = useCallback(
+    (file: string): boolean | undefined =>
+      selectedFiles.some((selectedFile) => selectedFile === file),
+    [selectedFiles]
+  );
+
   const scanData = () => {
     // Populate Source Table with table-name
-    const data = sourceTableData;
-    const table_name = data.source_tables[0].table_name;
-    const sourceTableNode = [
-      {
-        id: `C.0`,
+    let sourceTableNode;
+    if (selectedFiles.length === 1) {
+      const data = sourceTableData;
+      const table_name = data.source_tables[0].table_name;
+      sourceTableNode = [
+        {
+          id: `C.0`,
+          type: "mappingNode",
+          position: { x: 0, y: 0 },
+          data: { label: table_name, type: "input" },
+          sourcePosition: Position.Right,
+        },
+      ];
+    } else {
+      const data = twoSourceTableData;
+      sourceTableNode = data.source_tables.map((table, index) => ({
+        id: `C.${index + 1}`,
         type: "mappingNode",
         position: { x: 0, y: 0 },
-        data: { label: table_name, type: "input" },
-        sourcePosition: Position.Right,
-      },
-    ];
+        data: { label: table.table_name, type: "input" },
+        tsourcePosition: Position.Right,
+      }));
+    }
+
     dispatch({
       type: DispatchType.SET_MAPPING_NODES,
       payload: sourceTableNode,
@@ -107,6 +162,8 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
     updateNodeInternals(nodeId);
   };
 
+  const fileNames = useMemo(() => uploadedFiles.join(", "), [uploadedFiles]);
+
   return (
     <Dialog
       className="scan-data-dialog"
@@ -114,120 +171,118 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
       open={open}
       onClose={() => handleClose("cancelled")}
       maxWidth="md"
+      fullWidth
     >
+      <DialogTitle>Scan Data</DialogTitle>
       <Divider />
       <div className="scan-data-dialog__content">
-        <div className="scan-data-dialog__section">
-          <h3>Scan Data</h3>
-          {/* <FormControl
-            fullWidth
-            variant="outlined"
-            className="scan-data-dialog__form-control"
-          >
-            <Select label="Data Type" value="CSV files" disabled>
-              <MenuItem value="CSV files">CSV files</MenuItem>
-            </Select>
-          </FormControl> */}
-          <FormControl
-            fullWidth
-            variant="outlined"
-            className="scan-data-dialog__form-control"
-          >
-            <InputLabel>CSV files</InputLabel>
-            <Select
-              multiple
-              label="Select Files"
-              value={uploadedFiles}
-              onChange={handleFileChange}
-              renderValue={(selected) => (selected as string[]).join(", ")}
-            >
-              {uploadedFiles.map((file) => (
-                <MenuItem key={file} value={file}>
-                  <Checkbox checked={selectedFiles.indexOf(file) > -1} />
-                  <ListItemText primary={file} />
-                </MenuItem>
-              ))}
-              <MenuItem>
-                <input
-                  type="file"
-                  accept=".csv"
-                  onChange={handleFileUpload}
-                  style={{ display: "none" }}
-                  id="upload-csv"
-                  multiple
-                />
-                <label htmlFor="upload-csv">
-                  <Button variant="contained" component="span">
-                    Upload CSV
-                  </Button>
-                </label>
-              </MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl
-            fullWidth
-            variant="outlined"
-            className="scan-data-dialog__form-control"
-          >
-            <InputLabel>Delimeter</InputLabel>
-            <Select
-              label="Delimeter"
-              value={delimiter}
-              onChange={handleDelimiterChange}
-            >
-              <MenuItem value=",">,</MenuItem>
-            </Select>
-          </FormControl>
-          <Button onClick={handleTestConnection} variant="outlined">
-            Test Conncetion
-          </Button>
-        </div>
-        <div className="scan-data-dialog__section">
-          <h3>Table to Scan</h3>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Checkbox
-                    indeterminate={
-                      selectedFiles.length > 0 && selectedFiles.length < 3
-                    }
-                    checked={selectedFiles.length === availableFiles.length}
-                    onChange={() =>
-                      setSelectedFiles(
-                        selectedFiles.length === availableFiles.length
-                          ? []
-                          : availableFiles
-                      )
-                    }
-                  />
-                </TableCell>
-                <TableCell>File Name</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {availableFiles.map((file) => (
-                <TableRow key={file}>
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedFiles.indexOf(file) > -1}
-                      onChange={() => {
-                        const currentIndex = selectedFiles.indexOf(file);
-                        const newChecked = [...selectedFiles];
-                        if (currentIndex === -1) {
-                          newChecked.push(file);
-                        } else {
-                          newChecked.splice(currentIndex, 1);
-                        }
-                        setSelectedFiles(newChecked);
+        <div className="scan-data-dialog__container">
+          <div className="container-header">Select Data Location</div>
+          <div className="container-content-data">
+            <div className="form-container">
+              <FormControl
+                fullWidth
+                variant="standard"
+                className="scan-data-dialog__form-control"
+              >
+                <InputLabel>Data type</InputLabel>
+                <Select
+                  value={dataType}
+                  label="Data type"
+                  onChange={handleDataTypeChange}
+                >
+                  <MenuItem value="csv">CSV files</MenuItem>
+                </Select>
+              </FormControl>
+              {dataType && (
+                <>
+                  <FormControl
+                    fullWidth
+                    className="scan-data-dialog__form-control"
+                  >
+                    <InputLabel>Upload file</InputLabel>
+                    <TextField
+                      fullWidth
+                      variant="standard"
+                      InputProps={{
+                        readOnly: true,
                       }}
+                      onClick={handleSelectFile}
+                      value={fileNames}
                     />
-                  </TableCell>
-                  <TableCell>{file}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                    <input
+                      ref={hiddenFileInput}
+                      type="file"
+                      accept=".csv"
+                      onChange={handleFileUpload}
+                      style={{ display: "none" }}
+                      id="upload-csv"
+                      multiple
+                    />
+                  </FormControl>
+
+                  <FormControl
+                    fullWidth
+                    variant="standard"
+                    className="scan-data-dialog__form-control"
+                  >
+                    <InputLabel>Delimeter</InputLabel>
+                    <Select
+                      label="Delimeter"
+                      value={delimiter}
+                      onChange={handleDelimiterChange}
+                    >
+                      <MenuItem value=",">,</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <Button onClick={handleClear}>Clear all</Button>
+                </>
+              )}
+            </div>
+
+            <div className="button-container">
+              <Button
+                onClick={handleTestConnection}
+                variant="outlined"
+                disabled={uploadedFiles.length === 0}
+              >
+                Test Connection
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="scan-data-dialog__container">
+          <div className="container-header">Table to Scan</div>
+          <div className="container-content-scan">
+            {uploadedFiles.length ? (
+              <>
+                <div className="button-container">
+                  <Button onClick={() => handleSelectedFileAll(true)}>
+                    Select all
+                  </Button>
+                  <Button onClick={() => handleSelectedFileAll(false)}>
+                    Deselect all
+                  </Button>
+                </div>
+                <FormGroup>
+                  {uploadedFiles.map((file) => (
+                    <FormControlLabel
+                      key={file}
+                      control={
+                        <Checkbox
+                          checked={checkSelectedFile(file)}
+                          onChange={(event) => handleSelectedFile(event, file)}
+                        />
+                      }
+                      label={file}
+                    />
+                  ))}
+                </FormGroup>
+              </>
+            ) : (
+              <>No files to scan</>
+            )}
+          </div>
         </div>
       </div>
       <Divider />
