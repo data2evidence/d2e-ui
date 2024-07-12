@@ -643,6 +643,7 @@ export default {
           this.openSaveOrDiscardDialog()
         } else {
           this.loadBookmark()
+          this.$emit('hideEv')
         }
       }
     },
