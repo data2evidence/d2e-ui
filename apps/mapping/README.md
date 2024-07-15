@@ -1,3 +1,17 @@
+# Data Mapping
+## Development setup
+- `yarn` to install dependencies
+- `yarn dev` to start development server
+
+## CSV Upload
+- CSV upload does not work as of now. Only dummy data is used to simulate CSV upload
+- Sample CSV's can be found in `sampleCSV` folder
+- Please use `concept_mappings.csv` for single CSV upload
+- Use `concept_mappings.csv` & `healthcare_dataset.csv` for multiple CSV uploads
+
+
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -24,8 +38,6 @@ export default {
   },
 }
 ```
-
-test test
 
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
