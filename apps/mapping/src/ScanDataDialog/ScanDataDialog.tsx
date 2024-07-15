@@ -200,7 +200,6 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
                     fullWidth
                     className="scan-data-dialog__form-control"
                   >
-                    <InputLabel>Upload file</InputLabel>
                     <TextField
                       fullWidth
                       variant="standard"
@@ -209,6 +208,7 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
                       }}
                       onClick={handleSelectFile}
                       value={fileNames}
+                      label="Upload file"
                     />
                     <input
                       ref={hiddenFileInput}
