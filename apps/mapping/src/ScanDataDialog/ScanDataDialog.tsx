@@ -35,7 +35,7 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
   dispatch,
 }) => {
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
-  const [_availableFiles, setAvailableFiles] = useState<string[]>([]);
+  const [availableFiles, setAvailableFiles] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [dataType, setDataType] = useState("");
   const [loading, setLoading] = useState(false);
@@ -254,7 +254,7 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
         <div className="scan-data-dialog__container">
           <div className="container-header">Table to Scan</div>
           <div className="container-content-scan">
-            {uploadedFiles.length ? (
+            {availableFiles.length ? (
               <>
                 <div className="button-container">
                   <Button onClick={() => handleSelectedFileAll(true)}>
@@ -265,7 +265,7 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
                   </Button>
                 </div>
                 <FormGroup>
-                  {uploadedFiles.map((file) => (
+                  {availableFiles.map((file) => (
                     <FormControlLabel
                       key={file}
                       control={
