@@ -18,13 +18,20 @@ export class DbCredentialProcessor {
   async encryptDbCredential(cred: IDbCredential): Promise<IDbCredential> {
     const salt = this.createSalt();
     const { password, serviceScope } = cred;
-    const encrypted = await this.encrypt(password, serviceScope, salt);
 
-    return {
-      ...cred,
-      salt,
-      password: encrypted,
-    };
+    try {
+      const encrypted = await this.encrypt(password, serviceScope, salt);
+
+      return {
+        ...cred,
+        salt,
+        password: encrypted,
+      };
+    } catch (error) {
+      const errorMsg = "Error encrypting DB credentials";
+      console.error(errorMsg, error);
+      throw new Error(errorMsg);
+    }
   }
 
   private createSalt() {
@@ -39,20 +46,25 @@ export class DbCredentialProcessor {
       throw new Error(errorMessage);
     }
 
-    const publicKey = await crypto.subtle.importKey(
-      "spki",
-      this.convertPEMtoBinary(pub),
-      { ...this.algo, hash: "SHA-256" },
-      true,
-      ["encrypt"]
-    );
+    try {
+      const publicKey = await crypto.subtle.importKey(
+        "spki",
+        this.convertPEMtoBinary(pub),
+        { ...this.algo, hash: "SHA-256" },
+        true,
+        ["encrypt"]
+      );
 
-    const dataText = this.setupData(data, salt);
-    const enc = new TextEncoder();
-    const encoded = enc.encode(dataText);
-
-    const buffer = await window.crypto.subtle.encrypt(this.algo, publicKey, encoded);
-    return this.convertBufferToBase64(buffer);
+      const dataText = this.setupData(data, salt);
+      const enc = new TextEncoder();
+      const encoded = enc.encode(dataText);
+      const buffer = await window.crypto.subtle.encrypt(this.algo, publicKey, encoded);
+      return this.convertBufferToBase64(buffer);
+    } catch (error) {
+      const errorMsg = "Error while encrypting data";
+      console.error(errorMsg, error);
+      throw new Error(errorMsg);
+    }
   }
 
   private convertBufferToBase64(buffer: ArrayBuffer) {
