@@ -498,6 +498,17 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       visibilityStatus,
     } = formData;
 
+    let fhirProjectId;
+
+    if (createFhirProject) {
+      const fhirProjectInput: NewFhirProjectInput = {
+        name: name,
+        description: description,
+      };
+      const { id } = await api.gateway.createFhirStaging(fhirProjectInput);
+      fhirProjectId = id;
+    }
+
     const input: NewStudyInput = {
       tenantId: tenant?.id || "",
       detail: {
@@ -517,6 +528,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       databaseCode,
       dialect,
       paConfigId,
+      fhirProjectId,
       visibilityStatus,
       attributes: studyMetadata.filter((info) => info.attributeId !== ""),
       tags: studyTagsData?.map((tagName) => tagName),
@@ -526,13 +538,6 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
     try {
       setLoading(true);
       await api.gateway.createDataset(input);
-      if (createFhirProject) {
-        const fhirProjectInput: NewFhirProjectInput = {
-          name: name,
-          description: description,
-        };
-        await api.gateway.createFhirStaging(fhirProjectInput);
-      }
       handleClose("success");
     } catch (err: any) {
       setFeedback({
