@@ -1,0 +1,21 @@
+@import "../theme/variables";
+
+.navbar {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid $border-color;
+
+  .breadcrumbs {
+    margin-left: 1em;
+    span {
+      color: $primary-light-color;
+    }
+    .MuiLink-root {
+      text-decoration: none;
+      color: $primary-color;
+    }
+    .MuiLink-root:hover {
+        text-decoration: underline;
+    }
+  }
+}

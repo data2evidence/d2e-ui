@@ -1,0 +1,110 @@
+{
+    "etl_mapping": {
+        "cdm_version": null,
+        "id": 11,
+        "scan_report_id": 17,
+        "scan_report_name": "scan-report.xlsx",
+        "source_schema_name": "scan-report",
+        "username": "perseus"
+    },
+    "source_tables": [
+        {
+            "column_list": [
+                {
+                    "column_name": "Source",
+                    "column_type": "INT"
+                },
+                {
+                    "column_name": "Name",
+                    "column_type": "INT"
+                },
+                {
+                    "column_name": "Frequency",
+                    "column_type": "INT"
+                },
+                {
+                    "column_name": "Description",
+                    "column_type": "INT"
+                },
+                {
+                    "column_name": "Concept Id",
+                    "column_type": "TEXT"
+                },
+                {
+                    "column_name": "Concept Name",
+                    "column_type": "TEXT"
+                },
+                {
+                    "column_name": "Domain",
+                    "column_type": "TEXT"
+                }
+            ],
+            "table_name": "concept_mappings"
+        },
+        {
+            "column_list": [
+                {
+                    "column_name": "Name",
+                    "column_type": "VARCHAR(28)"
+                },
+                {
+                    "column_name": "Age",
+                    "column_type": "INT"
+                },
+                {
+                    "column_name": "Gender",
+                    "column_type": "VARCHAR(6)"
+                },
+                {
+                    "column_name": "Blood Type",
+                    "column_type": "VARCHAR(3)"
+                },
+                {
+                    "column_name": "Medical Condition",
+                    "column_type": "VARCHAR(12)"
+                },
+                {
+                    "column_name": "Date of Admission",
+                    "column_type": "DATE"
+                },
+                {
+                    "column_name": "Doctor",
+                    "column_type": "VARCHAR(28)"
+                },
+                {
+                    "column_name": "Hospital",
+                    "column_type": "VARCHAR(35)"
+                },
+                {
+                    "column_name": "Insurance Provider",
+                    "column_type": "VARCHAR(16)"
+                },
+                {
+                    "column_name": "Billing Amount",
+                    "column_type": "REAL"
+                },
+                {
+                    "column_name": "Room Number",
+                    "column_type": "INT"
+                },
+                {
+                    "column_name": "Admission Type",
+                    "column_type": "VARCHAR(9)"
+                },
+                {
+                    "column_name": "Discharge Date",
+                    "column_type": "DATE"
+                },
+                {
+                    "column_name": "Medication",
+                    "column_type": "VARCHAR(11)"
+                },
+                {
+                    "column_name": "Test Results",
+                    "column_type": "VARCHAR(12)"
+                }
+            ],
+            "table_name": "healthcare_dataset"
+        }
+    ]
+}
