@@ -14,7 +14,7 @@ function CDMSummary({ data }: CDMSummaryProps) {
 
   if (data.length === 0) {
     return (
-      <ChartContainer title={title}>
+      <ChartContainer title={title} className="cdm-summary">
         <div className="no_data_text">{getText(i18nKeys.CDM_SUMMARY__NO_DATA)}</div>
       </ChartContainer>
     );
@@ -26,7 +26,7 @@ function CDMSummary({ data }: CDMSummaryProps) {
   ];
 
   return (
-    <ChartContainer title={title}>
+    <ChartContainer title={title} className="cdm-summary">
       <p>
         {getText(i18nKeys.CDM_SUMMARY__SOURCE_NAME)}: {sourceName}
       </p>
