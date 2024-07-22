@@ -14,14 +14,37 @@ interface FlowContextType {
   dispatch: React.Dispatch<any>;
 }
 
+interface TableSourceItemData {
+  label: string;
+  type: "input";
+}
+
+export interface TableTargetItemData {
+  label: string;
+  tableName: string;
+}
+
+interface FieldData {
+  type: "source" | "target";
+}
+
+export interface FieldItemData {
+  label: string;
+  tableName: string;
+  isField: boolean;
+  columnType: string;
+  isNullable: boolean;
+  type: "input" | "output";
+}
+
 interface FlowContextStateType {
-  tableSourceState: NodeProps[];
-  tableTargetState: NodeProps[];
+  tableSourceState: NodeProps<TableSourceItemData>[];
+  tableTargetState: NodeProps<TableTargetItemData>[];
   tableNodes: Node[];
   tableEdges: Edge[];
-  fieldSourceState: NodeProps[];
-  fieldTargetState: NodeProps[];
-  fieldNodes: Node[];
+  fieldSourceState: NodeProps<FieldItemData>[];
+  fieldTargetState: NodeProps<FieldItemData>[];
+  fieldNodes: Node<FieldData>[];
   fieldEdges: Edge[];
 }
 
