@@ -195,7 +195,6 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
                 key={role}
                 checked={newTenantRoles?.includes(role)}
                 checkbox-id={availableTenantRoles[role]}
-                disabled={role === Roles.TENANT_VIEWER}
                 label={availableTenantRoles[role]}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => handleRoleChange(event, role)}
               />
