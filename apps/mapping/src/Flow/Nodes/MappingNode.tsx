@@ -9,12 +9,12 @@ export const MappingNode = (props: Partial<NodeProps>) => {
   return (
     <div
       className={classNames(
-        "data-mapping-node",
-        { "data-mapping-node__input": isInput },
-        { "data-mapping-node__output": !isInput }
+        "mapping-node",
+        { "mapping-node__input": isInput },
+        { "mapping-node__output": !isInput }
       )}
     >
-      <div className="data-mapping-node__header">{label}</div>
+      <div className="mapping-node__header">{label}</div>
       <Handle
         id={isField ? `${tableName}-${label}` : label}
         type={isInput ? "source" : "target"}
