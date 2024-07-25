@@ -10,8 +10,9 @@
     "preview": "tsc -b && vite build && vite preview"
   },
   "dependencies": {
-    "@mui/icons-material": "^5.15.21",
-    "@mui/material": "^5.15.21",
+    "@mui/icons-material": "^5.8.3",
+    "@mui/material": "^5.8.3",
+    "@portal/components": "^1.0.0",
     "classnames": "^2.5.1",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
