@@ -29,7 +29,7 @@
     "pako": "1.0.11",
     "plotly.js": "^2.14.0",
     "process": "^0.11.10",
-    "split.js": "1.6.5",
+    "splitpanes": "^2.4.1",
     "stream-browserify": "^3.0.0",
     "underscore": "^1.12.1",
     "vue": "3.2.47",
@@ -76,7 +76,8 @@
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not ie <= 8"
+    "not ie <= 8",
+    "not op_mob >= 1"
   ],
   "jest": {
     "moduleFileExtensions": [
