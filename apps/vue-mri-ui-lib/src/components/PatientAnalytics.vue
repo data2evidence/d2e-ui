@@ -1,71 +1,74 @@
 <template>
-  <div :class="['pa-component-wrapper', { hideFilterCard: hideLeftPane }]">
-    <div class="fullHeight pa-splitter" v-split v-if="!showExpandedFilters">
-      <div id="pane-left" class="split">
-        <div class="panel-header filters-toolbar d-flex">
-          <div>
-            <button
-              type="button"
-              class="actionButton"
-              @click="toggleExpandedFilters(true)"
-              :title="getText('MRI_PA_TOOLTIP_ENTER_EXPANDED_FILTERS_VIEW')"
-            >
-              <icon icon="fullScreen" />
-            </button>
-          </div>
-          <div class="flex-grow-1 nav-container">
-            <ul class="nav nav-justified">
-              <li class="nav-item" @click="toggleCohorts(true)">
-                <a class="nav-link" :class="{ active: displayCohorts }" href="javascript:void(0)">{{
-                  getText('MRI_PA_VIEW_COHORT_TITLE')
-                }}</a>
-              </li>
-              <li class="nav-item" @click="toggleCohorts(false)" v-if="this.getActiveBookmark">
-                <a class="nav-link" :class="{ active: !displayCohorts }" href="javascript:void(0)">{{
-                  this.getActiveBookmarkName()
-                }}</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <sharedBookmarks
-          @unloadBookmarkEv="toggleSharedBookmark(false)"
-          v-if="displaySharedBookmarks"
-        ></sharedBookmarks>
-        <bookmarks
-          @unloadBookmarkEv="toggleCohorts(false)"
-          v-if="displayCohorts"
-          :init-bookmark-id="this.querystring.bmkId"
-        ></bookmarks>
+  <div :class="['pa-component-wrapper']">
+    <div class="fullHeight pa-splitter">
+      <splitpanes class="default-theme" @resize="this.paneSize = $event[0].size">
+        <pane :size="paneSize" min-size="20">
+          <div id="pane-left" class="split">
+            <div class="panel-header filters-toolbar d-flex">
+              <div>
+                <button
+                  type="button"
+                  class="actionButton"
+                  @click="this.toggleRightPanel()"
+                  :title="getText('MRI_PA_TOOLTIP_ENTER_EXPANDED_FILTERS_VIEW')"
+                >
+                  <icon icon="fullScreen" />
+                </button>
+              </div>
+              <div class="flex-grow-1 nav-container">
+                <ul class="nav nav-justified">
+                  <li class="nav-item" @click="toggleCohorts(true)">
+                    <a class="nav-link" :class="{ active: displayCohorts }" href="javascript:void(0)">{{
+                      getText('MRI_PA_VIEW_COHORT_TITLE')
+                    }}</a>
+                  </li>
+                  <li class="nav-item" @click="toggleCohorts(false)" v-if="this.getActiveBookmark">
+                    <a class="nav-link" :class="{ active: !displayCohorts }" href="javascript:void(0)">{{
+                      this.getActiveBookmarkName()
+                    }}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <sharedBookmarks
+              @unloadBookmarkEv="toggleSharedBookmark(false)"
+              v-if="displaySharedBookmarks"
+            ></sharedBookmarks>
+            <bookmarks
+              @unloadBookmarkEv="toggleCohorts(false)"
+              :init-bookmark-id="this.querystring.bmkId"
+              v-if="displayCohorts"
+            ></bookmarks>
 
-        <filters v-bind:class="{ hidden: displayCohorts || displaySharedBookmarks }"></filters>
-        <resizeObserver @notify="onSplitterResize" />
-      </div>
-      <div id="pane-right" ref="rightPanel" class="split">
-        <chartToolbar
-          :showUnHideFilters="hideLeftPane"
-          @expandEv="toggleExpandedFilters"
-          @unhideEv="toggleLeftPanel"
-          @drilldown="onDrilldown"
-          @open-filtersummary="toggleFilterCardSummary(...arguments)"
-        ></chartToolbar>
-        <div class="d-flex pane-right-content">
-          <chartController
-            :showLeftPane="!hideLeftPane"
-            @drilldown="onDrilldown"
-            :class="{ 'has-filtercard-summary': displayFilterCardSummary }"
-            :shouldRerenderChart="shouldRerenderChart"
-          ></chartController>
-          <filterCardSummary
-            @unloadFilterCardSummaryEv="toggleFilterCardSummary(false)"
-            v-if="displayFilterCardSummary"
-          >
-          </filterCardSummary>
-        </div>
-      </div>
-    </div>
-    <div class="fullHeight" v-if="showExpandedFilters">
-      <expandedFilters @hideEv="toggleExpandedFilters" @toggleChartAndListModal="toggleChartAndListModal" />
+            <filters v-bind:class="{ hidden: displayCohorts || displaySharedBookmarks }"></filters>
+          </div>
+        </pane>
+
+        <pane :size="100 - paneSize">
+          <div id="pane-right" class="split">
+            <chartToolbar
+              :showUnHideFilters="hideLeftPane"
+              @unhideEv="toggleLeftPanel"
+              @drilldown="onDrilldown"
+              @open-filtersummary="toggleFilterCardSummary(...arguments)"
+            ></chartToolbar>
+            <div class="d-flex pane-right-content">
+              <chartController
+                :showLeftPane="!hideLeftPane"
+                @drilldown="onDrilldown"
+                :class="{ 'has-filtercard-summary': displayFilterCardSummary }"
+                :shouldRerenderChart="shouldRerenderChart"
+              ></chartController>
+              <filterCardSummary
+                @unloadFilterCardSummaryEv="toggleFilterCardSummary(false)"
+                v-if="displayFilterCardSummary"
+              >
+              </filterCardSummary>
+            </div>
+            <resizeObserver @notify="onSplitterResize" />
+          </div>
+        </pane>
+      </splitpanes>
     </div>
     <div
       v-if="showChartAndListModal"
@@ -94,7 +97,6 @@
       >
         <chartToolbar
           :showUnHideFilters="hideLeftPane"
-          @expandEv="toggleExpandedFilters"
           @unhideEv="toggleLeftPanel"
           @open-filtersummary="toggleFilterCardSummary(...arguments)"
           @toggleChartAndListModal="toggleChartAndListModal"
@@ -145,15 +147,12 @@ const myWindow: any = window
 
 import { mapActions, mapGetters } from 'vuex'
 import icon from '../lib/ui/app-icon.vue'
-import resize from '../directives/resize'
-import split, { splitInstance } from '../directives/split'
 import appButton from '../lib/ui/app-button.vue'
 import appIcon from '../lib/ui/app-icon.vue'
 import appLink from '../lib/ui/app-link.vue'
 import Bookmarks from './Bookmarks.vue'
 import ChartController from './ChartController.vue'
 import ChartToolbar from './ChartToolbar.vue'
-import expandedFilters from './ExpandedFilters.vue'
 import FilterCardSummary from './FilterCardSummary.vue'
 import filters from './Filters.vue'
 import MessageBox from './MessageBox.vue'
@@ -163,13 +162,19 @@ import SharedChartDialog from './SharedChartDialog.vue'
 import SplashScreen from './SplashScreen.vue'
 import ResizeObserver from './ResizeObserver.vue'
 import { getPortalAPI } from '../utils/PortalUtils'
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
+
+const PANE_SIZE = {
+  FULL: 100,
+  HIDDEN: 0,
+  OPEN: 30,
+}
 
 export default {
   name: 'patientanalytics',
   data() {
     return {
-      hideLeftPane: false,
-      showExpandedFilters: false,
       displayCohorts: true,
       displaySharedBookmarks: false,
       displayFilterCardSummary: false,
@@ -184,6 +189,7 @@ export default {
       portalSidebarWidth: document.querySelector('.information__studies')?.clientWidth || 0,
       shouldRerenderChart: false,
       showChartAndListModal: false,
+      paneSize: PANE_SIZE.FULL,
     }
   },
   created() {
@@ -243,22 +249,21 @@ export default {
         }
       }, 100)
     },
+    getMriFrontendConfig(val) {
+      if (val) this.initializeBookmarks()
+    },
   },
   mounted() {
     this.$nextTick(() => {
       window.addEventListener('studyMenuEvent', (e: CustomEvent) => {
         this.isStudyMenuOpen = e.detail.isStudyMenuOpen
       })
-      window.addEventListener('menuClicked', (e: CustomEvent) => {
-        const { event } = e.detail
-        this.menuClicked(event)
-    })
     })
     this.isLocal = 'isLocal' in getPortalAPI()
   },
   beforeDestroy() {
     window.removeEventListener('menuClicked', (e: CustomEvent) => {
-        return
+      return
     })
   },
   computed: {
@@ -275,30 +280,26 @@ export default {
       'getActiveBookmark',
       'getBookmarkById',
     ]),
-    initBookmarkId: {
-      get() {
-        const url = window.location.href
-        let bookmarkId = ''
-        if (url.split('?').length > 1) {
-          const queryString = url.split('?')[1]
-          const queryParams = queryString.split('&')
-          if (queryParams.length > 0) {
-            for (let i = 0; i < queryParams.length; i++) {
-              const param = queryParams[i].split('=')
-              if (param[0] === 'bmkId') {
-                bookmarkId = param[1]
-                break
-              }
+    initBookmarkId() {
+      const url = window.location.href
+      let bookmarkId = ''
+      if (url.split('?').length > 1) {
+        const queryString = url.split('?')[1]
+        const queryParams = queryString.split('&')
+        if (queryParams.length > 0) {
+          for (let i = 0; i < queryParams.length; i++) {
+            const param = queryParams[i].split('=')
+            if (param[0] === 'bmkId') {
+              bookmarkId = param[1]
+              break
             }
           }
         }
-        return bookmarkId
-      },
-    },
-    displayCohorts() {
-      if (this.displayCohorts) {
-        return this.loadAllBookmark().then(() => (this.querystring.bmkId = this.initBookmarkId))
       }
+      return bookmarkId
+    },
+    hideLeftPane() {
+      return this.paneSize === PANE_SIZE.HIDDEN
     }
   },
   methods: {
@@ -315,7 +316,7 @@ export default {
       'changePage',
       'setActiveChart',
       'loadbookmarkToState',
-      'setAddNewCohort'
+      'setAddNewCohort',
     ]),
     loadDefaultFilters() {
       this.setIFRState({ ifr: this.getMriFrontendConfig.getInitialIFR() })
@@ -326,6 +327,9 @@ export default {
         cmd: 'loadAll',
       }
       return this.fireBookmarkQuery({ params, method: 'get' })
+    },
+    initializeBookmarks() {
+      return this.loadAllBookmark().then(() => (this.querystring.bmkId = this.initBookmarkId))
     },
     loadAllSharedBookmark() {
       const chartConfig = this.getAllChartConfigs
@@ -338,12 +342,9 @@ export default {
     },
     toggleCohorts(isDisplayCohort) {
       if (isDisplayCohort) {
-        this.loadAllBookmark().then(() => {
-          this.querystring.bmkId = this.initBookmarkId
-        })
+        this.initializeBookmarks()
       } else {
-        // unloadBookmark
-        // this.$emit("unloadBookmarkEv");
+        if (this.paneSize === PANE_SIZE.FULL) this.toggleRightPanel()
       }
       this.displayCohorts = isDisplayCohort
     },
@@ -356,31 +357,24 @@ export default {
     toggleFilterCardSummary(displayFilterCardSummary) {
       this.displayFilterCardSummary = displayFilterCardSummary
     },
-    toggleLeftPanel(toggle) {
-      this.hideLeftPane = toggle
-      if (toggle) {
-        document.getElementById('pane-left').style.width = '0%'
-        document.getElementById('pane-right').style.width = '100%'
+    toggleLeftPanel() {
+      if (this.paneSize > 0) {
+        this.paneSize = PANE_SIZE.HIDDEN
       } else {
-        splitInstance.setSizes(splitInstance.getSizes())
+        this.paneSize = PANE_SIZE.OPEN
       }
-      this.rerenderStackBarChart()
     },
-    toggleExpandedFilters(toggle) {
-      this.showExpandedFilters = toggle
-      if (!toggle) {
-        if (this.getActiveBookmarkName()) {
-          this.toggleCohorts(false)
-        }
-        const activeBmkData = this.getBookmarkById(this.getActiveBookmark.bmkId)
-        this.loadbookmarkToState({ bmkId: this.getActiveBookmark.bmkId, chartType: activeBmkData.chartType })
+    toggleRightPanel() {
+      if (this.paneSize === PANE_SIZE.FULL) {
+        this.paneSize = PANE_SIZE.OPEN
+      } else {
+        this.paneSize = PANE_SIZE.FULL
       }
     },
     toggleChartAndListModal(toggle) {
       this.showChartAndListModal = toggle
     },
-    onSplitterResize({ height, width }) {
-      this.setSplitterSize({ height, width })
+    onSplitterResize() {
       this.rerenderStackBarChart()
     },
     onDrilldown() {
@@ -443,18 +437,6 @@ export default {
     closeChartListModal() {
       this.toggleChartAndListModal(false)
     },
-    menuClicked(menu: string) {
-      if (menu === "cohortsOverview") {
-        this.toggleExpandedFilters(true)
-      }
-      if (menu === "createCohort") {
-        this.setAddNewCohort( {addNewCohort: true})
-      }
-    },
-  },
-  directives: {
-    resize,
-    split,
   },
   components: {
     icon,
@@ -463,7 +445,6 @@ export default {
     Bookmarks,
     ChartToolbar,
     ChartController,
-    expandedFilters,
     filters,
     FilterCardSummary,
     MessageBox,
@@ -473,6 +454,8 @@ export default {
     SplashScreen,
     ResizeObserver,
     appIcon,
+    Splitpanes,
+    Pane,
   },
 }
 </script>
