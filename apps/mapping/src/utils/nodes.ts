@@ -1,26 +1,34 @@
-import { Edge } from "reactflow";
+import { Edge, Position } from "reactflow";
 import cdmData from "../../dummyData/5.4Version.json";
 import inputData from "../../dummyData/healthcare_and_concept.json";
+import { FieldHandleData } from "../contexts";
 
-export const buildFieldNodes = (edge: Edge) => {
+export const buildFieldHandles = (edge: Edge) => {
   const { sourceHandle, targetHandle } = edge;
 
-  const sourceFieldNodes = buildFieldNode(
+  if (!sourceHandle || !targetHandle) {
+    console.error(
+      `Source (${sourceHandle}) or target (${targetHandle}) handles are empty`
+    );
+    return;
+  }
+
+  const sourceHandles = buildFieldHandle(
     getColumnData(sourceHandle),
     sourceHandle,
     true
   );
-  const targetFieldNodes = buildFieldNode(
+  const targetHandles = buildFieldHandle(
     getColumnData(targetHandle, true),
     targetHandle
   );
 
-  return { sourceFieldNodes, targetFieldNodes };
+  return { sourceHandles, targetHandles };
 };
 
-const buildFieldNode = (
+const buildFieldHandle = (
   columnList: any[],
-  tableName: string | null | undefined,
+  tableName: string,
   isSource?: boolean
 ) =>
   columnList.map((column, index) => ({
@@ -32,8 +40,8 @@ const buildFieldNode = (
       columnType: column.column_type,
       isNullable: column.is_column_nullable,
       type: isSource ? "input" : "output",
-    },
-    targetPosition: isSource ? "right" : "left",
+    } as FieldHandleData,
+    targetPosition: isSource ? Position.Right : Position.Left,
   }));
 
 const getColumnData = (

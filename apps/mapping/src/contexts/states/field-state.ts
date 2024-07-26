@@ -16,7 +16,7 @@ export interface FieldHandleData {
 export type SourceFieldHandle = FieldHandleData;
 
 export interface TargetFieldHandleData extends FieldHandleData {
-  constantValue: string | number | undefined;
+  constantValue?: string | number;
 }
 
 export interface FieldState {

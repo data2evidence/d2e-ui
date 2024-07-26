@@ -1,46 +1,33 @@
 import { useCallback } from "react";
 import ReactFlow, { Controls, Edge } from "reactflow";
-import "./Flow.scss";
-import "reactflow/dist/style.css";
+import { useNavigate } from "react-router-dom";
 import SourceTableNode from "./Nodes/SourceTableNode";
 import TargetTableNode from "./Nodes/TargetTableNode";
-import {
-  DispatchType,
-  EdgeType,
-  NodeType,
-  useFlow,
-} from "../contexts/FlowContext";
-import { MappingNode } from "./Nodes/MappingNode";
-import { buildFieldNodes } from "../utils/nodes";
-import { useNavigate } from "react-router-dom";
 import { PlaceholderNode } from "./Nodes/PlaceholderNode";
+import { buildFieldHandles } from "../utils/nodes";
+import { useField, useTable } from "../contexts";
+import "./Flow.scss";
+import "reactflow/dist/style.css";
 
 export const nodeTypes = {
   sourceTable: SourceTableNode,
   targetTable: TargetTableNode,
-  mappingNode: MappingNode,
   placeholderNode: PlaceholderNode,
 };
 
 const Flow = () => {
-  const { state, dispatch } = useFlow();
-  const { tableNodes, tableEdges } = state;
+  const { nodes, edges, setTableNodes, setTableEdges, addTableConnection } =
+    useTable();
+  const { setFieldSourceHandles, setFieldTargetHandles } = useField();
   const navigate = useNavigate();
 
   const handleEdgeClick = useCallback((_event: any, edge: Edge) => {
-    const { sourceFieldNodes, targetFieldNodes } = buildFieldNodes(edge);
+    const handles = buildFieldHandles(edge);
+    if (!handles) return;
 
-    dispatch({
-      type: DispatchType.SET_MAPPING_NODES,
-      payload: sourceFieldNodes,
-      stateName: NodeType.FIELD_SOURCE_STATE,
-    });
-
-    dispatch({
-      type: DispatchType.SET_MAPPING_NODES,
-      payload: targetFieldNodes,
-      stateName: NodeType.FIELD_TARGET_STATE,
-    });
+    const { sourceHandles, targetHandles } = handles;
+    setFieldSourceHandles(sourceHandles);
+    setFieldTargetHandles(targetHandles);
 
     navigate("/link-fields");
   }, []);
@@ -49,30 +36,12 @@ const Flow = () => {
     <div className="flow-container">
       <div className="react-flow-container">
         <ReactFlow
-          nodes={tableNodes}
-          edges={tableEdges}
+          nodes={nodes}
+          edges={edges}
           nodeTypes={nodeTypes}
-          onNodesChange={(changes) =>
-            dispatch({
-              type: DispatchType.HANDLE_NODES_CHANGE,
-              payload: changes,
-              stateName: NodeType.TABLE_NODES,
-            })
-          }
-          onEdgesChange={(changes) =>
-            dispatch({
-              type: DispatchType.HANDLE_EDGES_CHANGE,
-              payload: changes,
-              stateName: EdgeType.TABLE_EDGES,
-            })
-          }
-          onConnect={(changes) =>
-            dispatch({
-              type: DispatchType.HANDLE_CONNECT,
-              payload: changes,
-              stateName: EdgeType.TABLE_EDGES,
-            })
-          }
+          onNodesChange={(changes) => setTableNodes(changes)}
+          onEdgesChange={(changes) => setTableEdges(changes)}
+          onConnect={(changes) => addTableConnection(changes)}
           zoomOnDoubleClick={false}
           zoomOnScroll={false}
           panOnScroll={false} // change default scroll

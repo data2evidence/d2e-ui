@@ -27,7 +27,7 @@ export const useTable = () => {
   }, []);
 
   const setTableSourceHandles = useCallback(
-    (mapNodes: NodeProps<TableSourceHandleData>[]) => {
+    (mapNodes: Partial<NodeProps<TableSourceHandleData>>[]) => {
       dispatch({
         type: ACTION_TYPES.SET_TABLE_SOURCE_HANDLES,
         payload: mapNodes,
@@ -37,7 +37,7 @@ export const useTable = () => {
   );
 
   const setTableTargetHandles = useCallback(
-    (mapNodes: NodeProps<TableTargetHandleData>[]) => {
+    (mapNodes: Partial<NodeProps<TableTargetHandleData>>[]) => {
       dispatch({
         type: ACTION_TYPES.SET_TABLE_TARGET_HANDLES,
         payload: mapNodes,

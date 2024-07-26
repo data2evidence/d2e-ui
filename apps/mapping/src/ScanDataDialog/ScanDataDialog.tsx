@@ -15,8 +15,8 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
-import { DispatchType, NodeType } from "../contexts/FlowContext";
-import { Position, useUpdateNodeInternals } from "reactflow";
+import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
+import { TableSourceHandleData, useTable } from "../contexts";
 import "./ScanDataDialog.scss";
 
 // TODO: Clean up and create separate files for all interfaces and types
@@ -25,15 +25,9 @@ interface ScanDataDialogProps {
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
   nodeId: string;
-  dispatch: React.Dispatch<any>;
 }
 
-const ScanDataDialog: FC<ScanDataDialogProps> = ({
-  open,
-  onClose,
-  nodeId,
-  dispatch,
-}) => {
+const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, nodeId }) => {
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
   const [availableFiles, setAvailableFiles] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
@@ -42,6 +36,7 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
   const [delimiter, setDelimiter] = useState(",");
   const updateNodeInternals = useUpdateNodeInternals();
   const hiddenFileInput = useRef<HTMLInputElement>(null);
+  const { setTableSourceHandles } = useTable();
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
@@ -130,35 +125,28 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({
 
   const scanData = () => {
     // Populate Source Table with table-name
-    let sourceTableNode;
+    let sourceHandles: Partial<NodeProps<TableSourceHandleData>>[];
     if (selectedFiles.length === 1) {
       const data = sourceTableData;
       const table_name = data.source_tables[0].table_name;
-      sourceTableNode = [
+      sourceHandles = [
         {
           id: `C.0`,
-          type: "mappingNode",
-          position: { x: 0, y: 0 },
           data: { label: table_name, type: "input" },
           sourcePosition: Position.Right,
         },
       ];
     } else {
       const data = twoSourceTableData;
-      sourceTableNode = data.source_tables.map((table, index) => ({
+      sourceHandles = data.source_tables.map((table, index) => ({
         id: `C.${index + 1}`,
-        type: "mappingNode",
-        position: { x: 0, y: 0 },
         data: { label: table.table_name, type: "input" },
-        tsourcePosition: Position.Right,
+        sourcePosition: Position.Right,
       }));
     }
 
-    dispatch({
-      type: DispatchType.SET_MAPPING_NODES,
-      payload: sourceTableNode,
-      stateName: NodeType.TABLE_SOURCE_STATE,
-    });
+    setTableSourceHandles(sourceHandles);
+
     updateNodeInternals(nodeId);
   };
 

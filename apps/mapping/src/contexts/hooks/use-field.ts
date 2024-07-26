@@ -23,7 +23,7 @@ export const useField = () => {
   }, []);
 
   const setFieldSourceHandles = useCallback(
-    (mapNodes: NodeProps<FieldHandleData>[]) => {
+    (mapNodes: Partial<NodeProps<FieldHandleData>>[]) => {
       dispatch({
         type: ACTION_TYPES.SET_FIELD_SOURCE_HANDLES,
         payload: mapNodes,
@@ -33,7 +33,7 @@ export const useField = () => {
   );
 
   const setFieldTargetHandles = useCallback(
-    (mapNodes: NodeProps<TargetFieldHandleData>[]) => {
+    (mapNodes: Partial<NodeProps<TargetFieldHandleData>>[]) => {
       dispatch({
         type: ACTION_TYPES.SET_FIELD_TARGET_HANDLES,
         payload: mapNodes,

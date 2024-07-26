@@ -1,17 +1,16 @@
 import { useState } from "react";
-import { useFlow } from "../../contexts/FlowContext";
 import { NodeProps } from "reactflow";
-import ScanDataDialog from "../../ScanDataDialog/ScanDataDialog";
 import { Button } from "@mui/material";
+import ScanDataDialog from "../../ScanDataDialog/ScanDataDialog";
+import { useTable } from "../../contexts";
 import { MappingNode } from "./MappingNode";
 import "./node.scss";
 
 const SourceTableNode = (props: NodeProps) => {
-  const { state, dispatch } = useFlow();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { sourceHandles } = useTable();
 
   const openScanDataDialog = () => {
-    console.log("Open Scan Data");
     setIsDialogOpen(true);
   };
 
@@ -21,9 +20,9 @@ const SourceTableNode = (props: NodeProps) => {
   return (
     <div className="link-tables__column nodrag">
       <div className="content-container">
-        {state.tableSourceState.length ? (
+        {sourceHandles.length ? (
           <div className="node-container">
-            {state.tableSourceState.map((node) => (
+            {sourceHandles.map((node) => (
               <MappingNode {...node} key={node.id} />
             ))}
           </div>
@@ -58,7 +57,6 @@ const SourceTableNode = (props: NodeProps) => {
         open={isDialogOpen}
         onClose={closeScanDataDialog}
         nodeId={props.id}
-        dispatch={dispatch}
       />
     </div>
   );
