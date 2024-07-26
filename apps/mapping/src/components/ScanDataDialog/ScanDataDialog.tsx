@@ -8,15 +8,15 @@ import {
   FormGroup,
   FormControlLabel,
 } from "@mui/material";
-import sourceTableData from "../../dummyData/create_source_schema_scan.json";
-import twoSourceTableData from "../../dummyData/healthcare_and_concept.json";
+import sourceTableData from "../../../dummyData/create_source_schema_scan.json";
+import twoSourceTableData from "../../../dummyData/healthcare_and_concept.json";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
-import { TableSourceHandleData, useTable } from "../contexts";
+import { TableSourceHandleData, useTable } from "../../contexts";
 import "./ScanDataDialog.scss";
 
 // TODO: Clean up and create separate files for all interfaces and types
@@ -27,7 +27,11 @@ interface ScanDataDialogProps {
   nodeId: string;
 }
 
-const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, nodeId }) => {
+export const ScanDataDialog: FC<ScanDataDialogProps> = ({
+  open,
+  onClose,
+  nodeId,
+}) => {
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
   const [availableFiles, setAvailableFiles] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
@@ -294,5 +298,3 @@ const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, nodeId }) => {
     </Dialog>
   );
 };
-
-export default ScanDataDialog;

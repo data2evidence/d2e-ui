@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NodeProps } from "reactflow";
 import { Button } from "@mui/material";
-import ScanDataDialog from "../ScanDataDialog/ScanDataDialog";
+import { ScanDataDialog } from "../components/ScanDataDialog/ScanDataDialog";
 import { useTable } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
 import "./node.scss";
