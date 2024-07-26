@@ -22,7 +22,7 @@
                       getText('MRI_PA_VIEW_COHORT_TITLE')
                     }}</a>
                   </li>
-                  <li class="nav-item" @click="toggleCohorts(false)" v-if="this.getActiveBookmark">
+                  <li class="nav-item" @click="toggleCohorts(false)" v-show="hasActiveBookmark">
                     <a class="nav-link" :class="{ active: !displayCohorts }" href="javascript:void(0)">{{
                       this.getActiveBookmarkName()
                     }}</a>
@@ -225,6 +225,7 @@ export default {
         this.completeInitialLoad()
         this.loadAllSharedBookmark()
         this.loadDefaultFilters()
+        this.initializeBookmarks()
       }
     },
     isStudyMenuOpen() {
@@ -248,9 +249,6 @@ export default {
           previousWidth = currentWidthOfStudyMenu
         }
       }, 100)
-    },
-    getMriFrontendConfig(val) {
-      if (val) this.initializeBookmarks()
     },
   },
   mounted() {
@@ -300,7 +298,10 @@ export default {
     },
     hideLeftPane() {
       return this.paneSize === PANE_SIZE.HIDDEN
-    }
+    },
+    hasActiveBookmark() {
+      return !!this.getActiveBookmark
+    },
   },
   methods: {
     ...mapActions([
@@ -383,8 +384,11 @@ export default {
       this.drilldown({ aSelectedData })
     },
     getActiveBookmarkName() {
-      const activeBookmark = this.getActiveBookmark
-      return activeBookmark.bookmarkname
+      if (this.getActiveBookmark) {
+        return this.getActiveBookmark.bookmarkname
+      } else {
+        return ""
+      }
     },
     getTranslationList() {
       return this.getMriFrontendConfig
