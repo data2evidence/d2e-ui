@@ -1,4 +1,4 @@
-@import "../theme/variables";
+@import "../../theme/variables";
 
 .scan-data-dialog {
   .MuiDialogTitle-root {
@@ -53,14 +53,13 @@
         margin-bottom: 2em;
       }
     }
- 
   }
 
   .scan-data-dialog__form-control {
     margin-bottom: 24px;
 
-    .MuiInputBase-input{
-      cursor:pointer;
+    .MuiInputBase-input {
+      cursor: pointer;
     }
   }
 

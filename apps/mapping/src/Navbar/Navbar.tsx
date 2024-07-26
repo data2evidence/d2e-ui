@@ -1,10 +1,10 @@
-import { Breadcrumbs, IconButton, Link, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Breadcrumbs, IconButton, Link, Menu, MenuItem } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { useApp } from "../contexts";
 import "./Navbar.scss";
-import { DispatchType, useFlow } from "../contexts/FlowContext";
 
 const MENU_ITEMS = [
   "New Mapping",
@@ -20,9 +20,9 @@ const BREADCRUMBS_NAME_MAP: { [key: string]: string } = {
 };
 
 export const Navbar = () => {
-  const { dispatch } = useFlow();
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+  const { reset, clearHandles } = useApp();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -35,14 +35,10 @@ export const Navbar = () => {
 
   const handleMenuClick = (menuName: string) => {
     if (menuName === "New Mapping") {
-      dispatch({
-        type: DispatchType.RESET_MAPPING,
-      });
+      reset();
     }
     if (menuName === "Delete All Mappings") {
-      dispatch({
-        type: DispatchType.CLEAR_MAPPINGS,
-      });
+      clearHandles();
     }
     handleClose();
   };

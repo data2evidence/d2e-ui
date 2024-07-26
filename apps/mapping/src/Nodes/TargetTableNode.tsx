@@ -1,33 +1,29 @@
-import { Button } from "@mui/material";
 import { useCallback } from "react";
-import targetSourceData from "../../../dummyData/5.4Version.json";
-import "./node.scss";
-import { DispatchType, NodeType, useFlow } from "../../contexts/FlowContext";
-import { NodeProps, useUpdateNodeInternals } from "reactflow";
-import { MappingNode } from "./MappingNode";
+import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
+import { Button } from "@mui/material";
+import { TableTargetHandleData, useTable } from "../contexts";
+import { MappingHandle } from "./MappingHandle";
+import targetSourceData from "../../dummyData/5.4Version.json";
+import "./node.scss";
 
-const TargetTableNode = (props: NodeProps) => {
-  const { state, dispatch } = useFlow();
+export const TargetTableNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
+  const { targetHandles, setTableTargetHandles } = useTable();
 
   // Populate version 5.4
   const populateCDMVersion = useCallback(() => {
     // TODO: Create other version of CDM selection
     const data = targetSourceData;
-    const targetTableNodes = data.map((table, index) => ({
-      id: `C.${index + 1}`,
-      type: "mappingNode",
-      position: { x: 900, y: 0 + index * 50 },
-      data: { label: table.table_name, tableName: table.table_name },
-      targetPosition: "left",
-    }));
+    const targetHandles: Partial<NodeProps<TableTargetHandleData>>[] = data.map(
+      (table, index) => ({
+        id: `C.${index + 1}`,
+        data: { label: table.table_name, tableName: table.table_name },
+        targetPosition: Position.Left,
+      })
+    );
 
-    dispatch({
-      type: DispatchType.SET_MAPPING_NODES,
-      payload: targetTableNodes,
-      stateName: NodeType.TABLE_TARGET_STATE,
-    });
+    setTableTargetHandles(targetHandles);
 
     updateNodeInternals(props.id);
   }, []);
@@ -44,10 +40,10 @@ const TargetTableNode = (props: NodeProps) => {
       }}
     >
       <div className="content-container">
-        {state.tableTargetState.length ? (
-          <div className="node-container">
-            {state.tableTargetState.map((node) => (
-              <MappingNode {...node} key={node.id} />
+        {targetHandles.length ? (
+          <div className="handle-container">
+            {targetHandles.map((node) => (
+              <MappingHandle {...node} key={node.id} />
             ))}
           </div>
         ) : (
@@ -76,5 +72,3 @@ const TargetTableNode = (props: NodeProps) => {
     </div>
   );
 };
-
-export default TargetTableNode;

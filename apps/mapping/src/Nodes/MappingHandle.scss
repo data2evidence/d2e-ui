@@ -1,6 +1,6 @@
-@import '../../theme/variables.scss';
+@import "../theme/variables.scss";
 
-.mapping-node {
+.mapping-handle {
   display: flex;
   justify-content: center;
   cursor: default;
@@ -12,14 +12,12 @@
   border-radius: 0.25em;
   border: 1px solid $border-color;
   background-color: #fff;
-  box-shadow:
-    0 1px 2px -2px rgba(122,122,122,.09),
-    0 3px 6px 0 rgba(122,122,122,.09),
-    0 5px 12px 4px rgba(122,122,122,.09);
+  box-shadow: 0 1px 2px -2px rgba(122, 122, 122, 0.09),
+    0 3px 6px 0 rgba(122, 122, 122, 0.09),
+    0 5px 12px 4px rgba(122, 122, 122, 0.09);
 
   &__input {
     background-color: $primary-extra-lightest-color;
-
   }
 
   &__output {

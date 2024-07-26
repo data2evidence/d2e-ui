@@ -1,19 +1,17 @@
 import { FC } from "react";
-import { MappingNode } from "../Flow/Nodes/MappingNode";
 import { Chip } from "@mui/material";
+import { MappingHandle } from "../Nodes";
+import "./TableToTable.scss";
 
-interface LinkFieldsHeaderProps {
+interface TableToTableProps {
   source: string;
   target: string;
 }
-export const LinkFieldsHeader: FC<LinkFieldsHeaderProps> = ({
-  source,
-  target,
-}) => {
+export const TableToTable: FC<TableToTableProps> = ({ source, target }) => {
   return (
-    <div className="table-header">
-      <Chip variant="outlined" label="Tables" id="table-chip" />
-      <MappingNode data={{ label: source, type: "input" }} />
+    <div className="table-to-table">
+      <Chip variant="outlined" label="Table" id="table-chip" />
+      <MappingHandle data={{ label: source, type: "input" }} />
       <svg height="40" width="80">
         <defs>
           <marker
@@ -37,7 +35,7 @@ export const LinkFieldsHeader: FC<LinkFieldsHeaderProps> = ({
           markerEnd="url(#arrow)"
         />
       </svg>
-      <MappingNode data={{ label: target }} />
+      <MappingHandle data={{ label: target }} />
       <Chip variant="outlined" label="Fields" id="field-chip" />
     </div>
   );
