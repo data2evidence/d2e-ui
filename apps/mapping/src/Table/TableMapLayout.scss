@@ -8,14 +8,14 @@
     flex: 1;
   }
 
-  // .footer {
-  //   padding: 1em;
-  //   display: flex;
-  //   justify-content: space-between;
-  //   .button-group {
-  //     .MuiButtonBase-root {
-  //       margin: 0 1em 0 1em;
-  //     }
-  //   }
-  // }
+  .footer {
+    padding: 1em;
+    display: flex;
+    justify-content: space-between;
+    .button-group {
+      .MuiButtonBase-root {
+        margin: 0 1em 0 1em;
+      }
+    }
+  }
 }
