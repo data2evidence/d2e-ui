@@ -27,20 +27,20 @@ export const useTable = () => {
   }, []);
 
   const setTableSourceHandles = useCallback(
-    (mapNodes: Partial<NodeProps<TableSourceHandleData>>[]) => {
+    (handles: Partial<NodeProps<TableSourceHandleData>>[]) => {
       dispatch({
         type: ACTION_TYPES.SET_TABLE_SOURCE_HANDLES,
-        payload: mapNodes,
+        payload: handles,
       });
     },
     []
   );
 
   const setTableTargetHandles = useCallback(
-    (mapNodes: Partial<NodeProps<TableTargetHandleData>>[]) => {
+    (handles: Partial<NodeProps<TableTargetHandleData>>[]) => {
       dispatch({
         type: ACTION_TYPES.SET_TABLE_TARGET_HANDLES,
-        payload: mapNodes,
+        payload: handles,
       });
     },
     []
