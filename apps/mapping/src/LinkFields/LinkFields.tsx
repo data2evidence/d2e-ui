@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import ReactFlow, { Controls } from "reactflow";
 import { useNavigate } from "react-router-dom";
-import { nodeTypes } from "../Flow/Flow";
+import { nodeTypes } from "../Nodes";
 import { useField } from "../contexts";
 import { LinkFieldsHeader } from "./LinkFieldsHeader";
 

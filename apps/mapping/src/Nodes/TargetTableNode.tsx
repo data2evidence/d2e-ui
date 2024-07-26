@@ -2,12 +2,12 @@ import { useCallback } from "react";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
 import { Button } from "@mui/material";
-import { TableTargetHandleData, useTable } from "../../contexts";
+import { TableTargetHandleData, useTable } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
-import targetSourceData from "../../../dummyData/5.4Version.json";
+import targetSourceData from "../../dummyData/5.4Version.json";
 import "./node.scss";
 
-const TargetTableNode = (props: NodeProps) => {
+export const TargetTableNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const { targetHandles, setTableTargetHandles } = useTable();
 
@@ -72,5 +72,3 @@ const TargetTableNode = (props: NodeProps) => {
     </div>
   );
 };
-
-export default TargetTableNode;

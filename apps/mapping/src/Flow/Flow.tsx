@@ -1,19 +1,11 @@
 import { useCallback } from "react";
 import ReactFlow, { Controls, Edge } from "reactflow";
 import { useNavigate } from "react-router-dom";
-import SourceTableNode from "./Nodes/SourceTableNode";
-import TargetTableNode from "./Nodes/TargetTableNode";
-import { PlaceholderNode } from "./Nodes/PlaceholderNode";
+import { nodeTypes } from "../Nodes";
 import { buildFieldHandles } from "../utils/nodes";
 import { useField, useTable } from "../contexts";
 import "./Flow.scss";
 import "reactflow/dist/style.css";
-
-export const nodeTypes = {
-  sourceTable: SourceTableNode,
-  targetTable: TargetTableNode,
-  placeholderNode: PlaceholderNode,
-};
 
 const Flow = () => {
   const { nodes, edges, setTableNodes, setTableEdges, addTableConnection } =

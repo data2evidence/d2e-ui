@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { MappingHandle } from "../Flow/Nodes/MappingHandle";
+import { MappingHandle } from "../Nodes";
 import { Chip } from "@mui/material";
 
 interface LinkFieldsHeaderProps {

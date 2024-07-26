@@ -1,6 +1,6 @@
 import { NodeProps, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
-import { useField } from "../../contexts";
+import { useField } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
 import "./node.scss";
 
