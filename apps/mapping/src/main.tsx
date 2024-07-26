@@ -1,10 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { LinkFields } from "./LinkFields/LinkFields.tsx";
-import Flow from "./Flow/Flow.tsx";
+import App from "./App.tsx";
+import { FieldMapLayout } from "./Field/FieldMapLayout.tsx";
+import { TableMapLayout } from "./Table/TableMapLayout.tsx";
+import "./index.css";
 
 const router = createBrowserRouter([
   {
@@ -12,11 +12,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Flow />,
+        element: <TableMapLayout />,
       },
       {
         path: "link-fields",
-        element: <LinkFields />,
+        element: <FieldMapLayout />,
       },
     ],
   },

@@ -3,9 +3,10 @@ import ReactFlow, { Controls } from "reactflow";
 import { useNavigate } from "react-router-dom";
 import { nodeTypes } from "../Nodes";
 import { useField } from "../contexts";
-import { LinkFieldsHeader } from "./LinkFieldsHeader";
+import { TableToTable } from "./TableToTable";
+import "./FieldMapLayout.scss";
 
-export const LinkFields = () => {
+export const FieldMapLayout = () => {
   const {
     nodes,
     edges,
@@ -31,8 +32,8 @@ export const LinkFields = () => {
     : "";
 
   return (
-    <div className="flow-container">
-      <LinkFieldsHeader source={sourceTableName} target={targetTableName} />
+    <div className="field-map-layout">
+      <TableToTable source={sourceTableName} target={targetTableName} />
       <div className="react-flow-container">
         <ReactFlow
           nodes={nodes}

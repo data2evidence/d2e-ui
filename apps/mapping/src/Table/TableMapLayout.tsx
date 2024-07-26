@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { nodeTypes } from "../Nodes";
 import { buildFieldHandles } from "../utils/nodes";
 import { useField, useTable } from "../contexts";
-import "./Flow.scss";
+import "./TableMapLayout.scss";
 import "reactflow/dist/style.css";
 
-const Flow = () => {
+export const TableMapLayout = () => {
   const { nodes, edges, setTableNodes, setTableEdges, addTableConnection } =
     useTable();
   const { setFieldSourceHandles, setFieldTargetHandles } = useField();
@@ -25,7 +25,7 @@ const Flow = () => {
   }, []);
 
   return (
-    <div className="flow-container">
+    <div className="table-map-layout">
       <div className="react-flow-container">
         <ReactFlow
           nodes={nodes}
@@ -63,5 +63,3 @@ const Flow = () => {
     </div>
   );
 };
-
-export default Flow;
