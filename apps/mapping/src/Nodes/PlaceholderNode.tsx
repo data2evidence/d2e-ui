@@ -1,16 +1,14 @@
-import { useFlow } from "../../contexts/FlowContext";
 import { NodeProps, useUpdateNodeInternals } from "reactflow";
-import { MappingNode } from "./MappingNode";
-import "./node.scss";
 import { debounce } from "lodash";
+import { useField } from "../contexts";
+import { MappingHandle } from "./MappingHandle";
+import "./node.scss";
 
 export const PlaceholderNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
-  const { state } = useFlow();
-  const { fieldTargetState, fieldSourceState } = state;
-
+  const { sourceHandles, targetHandles } = useField();
   const isSource = props.data.type === "source";
-  const data = isSource ? fieldSourceState : fieldTargetState;
+  const data = isSource ? sourceHandles : targetHandles;
 
   const handleWheel = debounce(() => {
     updateNodeInternals(props.id);
@@ -24,11 +22,13 @@ export const PlaceholderNode = (props: NodeProps) => {
       <div className="content-container">
         <div
           className={
-            isSource ? "node-container node-container-source" : "node-container"
+            isSource
+              ? "handle-container handle-container-source"
+              : "handle-container"
           }
         >
           {data.map((node) => (
-            <MappingNode {...node} key={node.id} />
+            <MappingHandle {...node} key={node.id} />
           ))}
         </div>
       </div>

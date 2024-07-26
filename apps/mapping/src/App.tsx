@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { ReactFlowProvider } from "reactflow";
 import { ThemeProvider } from "@mui/material";
-import { FlowProvider } from "./contexts/FlowContext";
+import { AppProvider } from "./contexts/AppContext";
 import { Navbar } from "./Navbar/Navbar";
 import { theme } from "./theme/theme";
 import "./App.css";
@@ -11,12 +11,12 @@ function App() {
     <>
       <ReactFlowProvider>
         <ThemeProvider theme={theme}>
-          <FlowProvider>
+          <AppProvider>
             <Navbar />
             <div className="content-container">
               <Outlet />
             </div>
-          </FlowProvider>
+          </AppProvider>
         </ThemeProvider>
       </ReactFlowProvider>
     </>
