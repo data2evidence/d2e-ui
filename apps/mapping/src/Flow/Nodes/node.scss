@@ -1,4 +1,4 @@
-@import '../../theme/variables.scss';
+@import "../../theme/variables.scss";
 
 .link-tables__column {
   display: flex;
@@ -45,7 +45,7 @@
       }
     }
 
-    .node-container {
+    .handle-container {
       overflow: hidden;
       height: 100%;
       width: 100%;
@@ -55,13 +55,13 @@
       gap: 1.5em;
     }
 
-    .node-container-source {
+    .handle-container-source {
       direction: rtl;
       text-align: left;
     }
 
-    .node-container:hover,
-    .node-container:focus {
+    .handle-container:hover,
+    .handle-container:focus {
       overflow-y: auto;
     }
   }

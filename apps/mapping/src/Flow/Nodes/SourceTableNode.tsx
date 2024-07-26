@@ -3,7 +3,7 @@ import { NodeProps } from "reactflow";
 import { Button } from "@mui/material";
 import ScanDataDialog from "../../ScanDataDialog/ScanDataDialog";
 import { useTable } from "../../contexts";
-import { MappingNode } from "./MappingNode";
+import { MappingHandle } from "./MappingHandle";
 import "./node.scss";
 
 const SourceTableNode = (props: NodeProps) => {
@@ -21,9 +21,9 @@ const SourceTableNode = (props: NodeProps) => {
     <div className="link-tables__column nodrag">
       <div className="content-container">
         {sourceHandles.length ? (
-          <div className="node-container">
+          <div className="handle-container">
             {sourceHandles.map((node) => (
-              <MappingNode {...node} key={node.id} />
+              <MappingHandle {...node} key={node.id} />
             ))}
           </div>
         ) : (

@@ -8,9 +8,9 @@
     display: flex;
     justify-content: center;
     padding: 2em;
-    margin:2em 0 1em 0;
+    margin: 2em 0 1em 0;
     border-top: 1px solid #b1b1b7; /* Example border top style */
-    border-bottom: 1px solid #b1b1b7; 
+    border-bottom: 1px solid #b1b1b7;
 
     #table-chip {
       position: absolute;
@@ -29,7 +29,7 @@
       min-width: 5em;
     }
 
-    .mapping-node {
+    .mapping-handle {
       width: 15%;
     }
   }
@@ -48,5 +48,3 @@
     }
   }
 }
-
-

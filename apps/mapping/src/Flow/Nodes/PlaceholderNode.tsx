@@ -1,7 +1,7 @@
 import { NodeProps, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
 import { useField } from "../../contexts";
-import { MappingNode } from "./MappingNode";
+import { MappingHandle } from "./MappingHandle";
 import "./node.scss";
 
 export const PlaceholderNode = (props: NodeProps) => {
@@ -22,11 +22,13 @@ export const PlaceholderNode = (props: NodeProps) => {
       <div className="content-container">
         <div
           className={
-            isSource ? "node-container node-container-source" : "node-container"
+            isSource
+              ? "handle-container handle-container-source"
+              : "handle-container"
           }
         >
           {data.map((node) => (
-            <MappingNode {...node} key={node.id} />
+            <MappingHandle {...node} key={node.id} />
           ))}
         </div>
       </div>

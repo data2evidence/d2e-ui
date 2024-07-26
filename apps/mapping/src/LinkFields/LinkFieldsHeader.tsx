@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { MappingNode } from "../Flow/Nodes/MappingNode";
+import { MappingHandle } from "../Flow/Nodes/MappingHandle";
 import { Chip } from "@mui/material";
 
 interface LinkFieldsHeaderProps {
@@ -13,7 +13,7 @@ export const LinkFieldsHeader: FC<LinkFieldsHeaderProps> = ({
   return (
     <div className="table-header">
       <Chip variant="outlined" label="Tables" id="table-chip" />
-      <MappingNode data={{ label: source, type: "input" }} />
+      <MappingHandle data={{ label: source, type: "input" }} />
       <svg height="40" width="80">
         <defs>
           <marker
@@ -37,7 +37,7 @@ export const LinkFieldsHeader: FC<LinkFieldsHeaderProps> = ({
           markerEnd="url(#arrow)"
         />
       </svg>
-      <MappingNode data={{ label: target }} />
+      <MappingHandle data={{ label: target }} />
       <Chip variant="outlined" label="Fields" id="field-chip" />
     </div>
   );

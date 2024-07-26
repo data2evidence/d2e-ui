@@ -3,7 +3,7 @@ import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
 import { Button } from "@mui/material";
 import { TableTargetHandleData, useTable } from "../../contexts";
-import { MappingNode } from "./MappingNode";
+import { MappingHandle } from "./MappingHandle";
 import targetSourceData from "../../../dummyData/5.4Version.json";
 import "./node.scss";
 
@@ -41,9 +41,9 @@ const TargetTableNode = (props: NodeProps) => {
     >
       <div className="content-container">
         {targetHandles.length ? (
-          <div className="node-container">
+          <div className="handle-container">
             {targetHandles.map((node) => (
-              <MappingNode {...node} key={node.id} />
+              <MappingHandle {...node} key={node.id} />
             ))}
           </div>
         ) : (
