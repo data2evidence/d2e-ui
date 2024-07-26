@@ -9,7 +9,7 @@
                 <button
                   type="button"
                   class="actionButton"
-                  @click="this.toggleRightPanel()"
+                  @click="togglePanel(PANEL.RIGHT)"
                   :title="getText('MRI_PA_TOOLTIP_ENTER_EXPANDED_FILTERS_VIEW')"
                 >
                   <icon icon="fullScreen" />
@@ -44,11 +44,11 @@
           </div>
         </pane>
 
-        <pane :size="100 - paneSize">
+        <pane :size="PANE_SIZE.FULL - paneSize">
           <div id="pane-right" class="split">
             <chartToolbar
               :showUnHideFilters="hideLeftPane"
-              @unhideEv="toggleLeftPanel"
+              @unhideEv="togglePanel(PANEL.LEFT)"
               @drilldown="onDrilldown"
               @open-filtersummary="toggleFilterCardSummary(...arguments)"
             ></chartToolbar>
@@ -97,7 +97,7 @@
       >
         <chartToolbar
           :showUnHideFilters="hideLeftPane"
-          @unhideEv="toggleLeftPanel"
+          @unhideEv="togglePanel(PANEL.LEFT)"
           @open-filtersummary="toggleFilterCardSummary(...arguments)"
           @toggleChartAndListModal="toggleChartAndListModal"
         >
@@ -170,6 +170,10 @@ const PANE_SIZE = {
   HIDDEN: 0,
   OPEN: 30,
 }
+const PANEL = {
+  RIGHT: 'right',
+  LEFT: 'left',
+}
 
 export default {
   name: 'patientanalytics',
@@ -190,6 +194,8 @@ export default {
       shouldRerenderChart: false,
       showChartAndListModal: false,
       paneSize: PANE_SIZE.FULL,
+      PANE_SIZE,
+      PANEL
     }
   },
   created() {
@@ -345,7 +351,7 @@ export default {
       if (isDisplayCohort) {
         this.initializeBookmarks()
       } else {
-        if (this.paneSize === PANE_SIZE.FULL) this.toggleRightPanel()
+        if (this.paneSize === PANE_SIZE.FULL) this.togglePanel('right')
       }
       this.displayCohorts = isDisplayCohort
     },
@@ -358,18 +364,11 @@ export default {
     toggleFilterCardSummary(displayFilterCardSummary) {
       this.displayFilterCardSummary = displayFilterCardSummary
     },
-    toggleLeftPanel() {
-      if (this.paneSize > 0) {
-        this.paneSize = PANE_SIZE.HIDDEN
-      } else {
-        this.paneSize = PANE_SIZE.OPEN
-      }
-    },
-    toggleRightPanel() {
-      if (this.paneSize === PANE_SIZE.FULL) {
-        this.paneSize = PANE_SIZE.OPEN
-      } else {
-        this.paneSize = PANE_SIZE.FULL
+    togglePanel(panel) {
+      if (panel === PANEL.LEFT) {
+        this.paneSize = this.paneSize > 0 ? PANE_SIZE.HIDDEN : PANE_SIZE.OPEN
+      } else if (panel === PANEL.RIGHT) {
+        this.paneSize = this.paneSize === PANE_SIZE.FULL ? PANE_SIZE.OPEN : PANE_SIZE.FULL
       }
     },
     toggleChartAndListModal(toggle) {
@@ -387,7 +386,7 @@ export default {
       if (this.getActiveBookmark) {
         return this.getActiveBookmark.bookmarkname
       } else {
-        return ""
+        return ''
       }
     },
     getTranslationList() {
