@@ -248,16 +248,6 @@
                           <CohortIcon />
                         </button>
                       </td>
-                      <td v-if="enableAddToCohort">
-                        <button
-                          v-on:click.stop="addCohort(bookmark)"
-                          :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
-                          class="bookmark-button"
-                        >
-                          <!-- <span class="icon" style="font-family: app-icons"> </span> -->
-                          <AddPatientsIcon />
-                        </button>
-                      </td>
                       <td v-if="!bookmark.disableUpdate">
                         <button
                           v-on:click.stop="renameBookmark(bookmark)"
@@ -313,14 +303,6 @@
     >
     </cohortListDialog>
 
-    <addCohort
-      :openAddDialog="showAddCohortDialog"
-      :bookmarkId="this.selectedBookmark.id"
-      :bookmarkName="this.selectedBookmark.name"
-      @closeEv="showAddCohortDialog = false"
-    >
-    </addCohort>
-
     <messageBox
       dim="true"
       messageType="error"
@@ -353,7 +335,6 @@ import appLink from '../lib/ui/app-link.vue'
 import Constants from '../utils/Constants'
 import cohortComparisonDialog from './CohortComparisonDialog.vue'
 import messageBox from './MessageBox.vue'
-import addCohort from './AddCohort.vue'
 import cohortListDialog from './CohortListDialog.vue'
 import { getPortalAPI } from '../utils/PortalUtils'
 import formatBookmarkDisplay from '../utils/BookmarkUtils'
@@ -381,9 +362,7 @@ export default {
       initBookmarkId: this.initBookmarkId,
       showCohortCompareDialog: false,
       showCohortListDialog: false,
-      showAddCohortDialog: false,
       showIncompatibleMessage: false,
-      enableAddToCohort: false,
       cohortName: 'New cohort',
       isInvalidName: false,
       showSaveOrDiscardDialog: false,
@@ -393,7 +372,6 @@ export default {
     }
   },
   created() {
-    this.enableAddToCohort = this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts
     this.unwatch = this.$store.watch(
       (state, getters) => getters.getAddNewCohort,
       (newValue, oldValue) => {
@@ -695,10 +673,6 @@ export default {
         this.closeRenameBookmark()
       })
     },
-    addCohort(bookmark) {
-      this.selectedBookmark = bookmark
-      this.showAddCohortDialog = true
-    },
     closeDeleteBookmark() {
       this.showDeleteDialog = false
     },
@@ -802,7 +776,6 @@ export default {
     icon,
     appLink,
     cohortComparisonDialog,
-    addCohort,
     cohortListDialog,
     CohortIcon,
     AddPatientsIcon,
