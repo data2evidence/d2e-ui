@@ -38,6 +38,15 @@
           :init-bookmark-id="this.querystring.bmkId"
         ></bookmarks>
 
+        <addCohort
+          v-if="getActiveBookmark"
+          :openAddDialog="showAddCohortDialog"
+          :bookmarkId="getActiveBookmarkId()"
+          :bookmarkName="getActiveBookmarkName()"
+          @closeEv="showAddCohortDialog = false"
+        >
+        </addCohort>
+
         <filters v-bind:class="{ hidden: displayCohorts || displaySharedBookmarks }"></filters>
         <resizeObserver @notify="onSplitterResize" />
       </div>
@@ -48,6 +57,7 @@
           @unhideEv="toggleLeftPanel"
           @drilldown="onDrilldown"
           @open-filtersummary="toggleFilterCardSummary(...arguments)"
+          @openAddCohort="showAddCohortDialog = true"
         ></chartToolbar>
         <div class="d-flex pane-right-content">
           <chartController
@@ -162,6 +172,7 @@ import SharedBookmarks from './SharedBookmarks.vue'
 import SharedChartDialog from './SharedChartDialog.vue'
 import SplashScreen from './SplashScreen.vue'
 import ResizeObserver from './ResizeObserver.vue'
+import addCohort from './AddCohort.vue'
 import { getPortalAPI } from '../utils/PortalUtils'
 
 export default {
@@ -184,6 +195,8 @@ export default {
       portalSidebarWidth: document.querySelector('.information__studies')?.clientWidth || 0,
       shouldRerenderChart: false,
       showChartAndListModal: false,
+      showAddCohortDialog: false,
+      enableAddToCohort: false,
     }
   },
   created() {
@@ -201,6 +214,7 @@ export default {
       // Firefox, Chrome, Safari
       this.supportedBrowser = false
     }
+    this.enableAddToCohort = this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts
   },
   watch: {
     getBookmarkFromIFR(bm) {
@@ -252,13 +266,13 @@ export default {
       window.addEventListener('menuClicked', (e: CustomEvent) => {
         const { event } = e.detail
         this.menuClicked(event)
-    })
+      })
     })
     this.isLocal = 'isLocal' in getPortalAPI()
   },
   beforeDestroy() {
     window.removeEventListener('menuClicked', (e: CustomEvent) => {
-        return
+      return
     })
   },
   computed: {
@@ -299,7 +313,7 @@ export default {
       if (this.displayCohorts) {
         return this.loadAllBookmark().then(() => (this.querystring.bmkId = this.initBookmarkId))
       }
-    }
+    },
   },
   methods: {
     ...mapActions([
@@ -315,7 +329,7 @@ export default {
       'changePage',
       'setActiveChart',
       'loadbookmarkToState',
-      'setAddNewCohort'
+      'setAddNewCohort',
     ]),
     loadDefaultFilters() {
       this.setIFRState({ ifr: this.getMriFrontendConfig.getInitialIFR() })
@@ -392,6 +406,9 @@ export default {
       const activeBookmark = this.getActiveBookmark
       return activeBookmark.bookmarkname
     },
+    getActiveBookmarkId() {
+      return this.getActiveBookmark.id
+    },
     getTranslationList() {
       return this.getMriFrontendConfig
         .getAttributeList()
@@ -444,11 +461,11 @@ export default {
       this.toggleChartAndListModal(false)
     },
     menuClicked(menu: string) {
-      if (menu === "cohortsOverview") {
+      if (menu === 'cohortsOverview') {
         this.toggleExpandedFilters(true)
       }
-      if (menu === "createCohort") {
-        this.setAddNewCohort( {addNewCohort: true})
+      if (menu === 'createCohort') {
+        this.setAddNewCohort({ addNewCohort: true })
       }
     },
   },
@@ -473,6 +490,7 @@ export default {
     SplashScreen,
     ResizeObserver,
     appIcon,
+    addCohort,
   },
 }
 </script>
