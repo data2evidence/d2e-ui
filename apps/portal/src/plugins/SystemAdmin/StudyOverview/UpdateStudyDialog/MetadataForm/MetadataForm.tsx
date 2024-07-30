@@ -70,8 +70,12 @@ const MetadataForm: FC<MetadataFormProps> = ({
 
   useEffect(() => {
     if (attributeId && attributeConfigs) {
-      const { dataType } = attributeConfigs.filter((attribute) => attribute.id === attributeId)[0];
-      setDataType(dataType as FormType);
+      const attributeConfig = attributeConfigs.find((attribute) => attribute.id === attributeId);
+      if (attributeConfig) {
+        setDataType(attributeConfig.dataType as FormType);
+      } else {
+        setDataType("");
+      }
     }
   }, [attributeId, attributeConfigs, filterType]);
 
