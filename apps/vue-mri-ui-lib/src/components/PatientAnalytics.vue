@@ -116,14 +116,14 @@
         </div>
       </div>
     </div>
-    <messageBox v-if="!supportedBrowser && !clearBrowserMessage" messageType="warning" dim="true" dialogWidth="300px">
+    <!-- <messageBox v-if="!supportedBrowser && !clearBrowserMessage" messageType="warning" dim="true" dialogWidth="300px">
       <template v-slot:header>{{ getText('MRI_PA_NOTIFICATION_ERROR') }}</template>
       <template v-slot:body>
         <div>
           <div style="padding: 24px; max-width: 400px">
             {{ getText('MRI_PA_BROWSER_UNSUPPORTED') }}
             <appLink
-              href="https://help.sap.com/viewer/6277ccd6bd38468f97641fbadd3bf194/3.0.0/en-US/4adabe5eec0f4b2fb3bd88100f6f7ee5.html"
+              href=""
               :target="_blank"
               :text="getText('MRI_PA_ADMIN_GUIDE_LINK')"
               :title="getText('MRI_PA_ADMIN_GUIDE_LINK')"
@@ -135,7 +135,7 @@
         <div class="flex-spacer"></div>
         <appButton :click="dismissBrowserMessage" :text="getText('MRI_PA_BUTTON_OK')" v-focus></appButton>
       </template>
-    </messageBox>
+    </messageBox> -->
     <sharedChartDialog v-if="displaySharedBookmarks" />
     <messageToast />
   </div>
@@ -199,20 +199,20 @@ export default {
     }
   },
   created() {
-    const userAgent = navigator.userAgent || navigator.vendor || myWindow.opera
-    if (sap && sap.ui && sap.ui.Device && sap.ui.Device.system && sap.ui.Device.system.phone) {
-      this.supportedBrowser = false
-    }
-    if (/Webkit/i.test(userAgent) && /iPad|iPhone|iPod/i.test(userAgent)) {
-      this.supportedBrowser = false
-    }
-    if (
-      !(!!myWindow.MSInputMethodContext && !!(document as any).documentMode) && // IE11
-      !/Firefox|Chrome|Safari/i.test(userAgent)
-    ) {
-      // Firefox, Chrome, Safari
-      this.supportedBrowser = false
-    }
+    // const userAgent = navigator.userAgent || navigator.vendor || myWindow.opera
+    // if (sap && sap.ui && sap.ui.Device && sap.ui.Device.system && sap.ui.Device.system.phone) {
+    //   this.supportedBrowser = false
+    // }
+    // if (/Webkit/i.test(userAgent) && /iPad|iPhone|iPod/i.test(userAgent)) {
+    //   this.supportedBrowser = false
+    // }
+    // if (
+    //   !(!!myWindow.MSInputMethodContext && !!(document as any).documentMode) && // IE11
+    //   !/Firefox|Chrome|Safari/i.test(userAgent)
+    // ) {
+    //   // Firefox, Chrome, Safari
+    //   this.supportedBrowser = false
+    // }
   },
   watch: {
     getBookmarkFromIFR(bm) {
