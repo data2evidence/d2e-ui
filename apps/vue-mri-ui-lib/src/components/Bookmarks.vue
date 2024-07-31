@@ -694,24 +694,27 @@ export default {
         this.showDeleteDialog = true
       }
     },
-    confirmDeleteBookmark() {
+    async confirmDeleteBookmark() {
       const activeBookmark = this.getActiveBookmark
       const bookmark = this.selectedBookmark
       const params = {
         cmd: 'delete',
       }
-
-      this.fireBookmarkQuery({
-        params,
-        method: 'delete',
-        bookmarkId: bookmark.id,
-      }).then(() => {
-        this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
-        this.closeDeleteBookmark()
+      try {
+        await this.fireBookmarkQuery({
+          params,
+          method: 'delete',
+          bookmarkId: bookmark.id,
+        });
+        await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } });
+        this.closeDeleteBookmark();
         if (activeBookmark && activeBookmark.bookmarkname === bookmark.name) {
-          this[types.SET_ACTIVE_BOOKMARK](null)
+          this[types.SET_ACTIVE_BOOKMARK](null);
+          this.reset();
         }
-      })
+      } catch (error) {
+        console.error('Error deleting bookmark:', error);
+      }
     },
     closeIncompatibleMessage() {
       this.showIncompatibleMessage = false
@@ -771,6 +774,8 @@ export default {
       return uniqueName
     },
     reset() {
+      console.log('reset');
+      
       this[types.CONFIG_SET_HAS_ASSIGNED](false)
       this.$nextTick(() => {
         this.resetChartProperties()
