@@ -234,41 +234,9 @@ export default {
         this.initializeBookmarks()
       }
     },
-    isStudyMenuOpen() {
-      // The sidebar in the portal resides outside this vue project. It has a resizing animation.
-      // Here we wait for the resize to start, then check when the resize is done, before setting the
-      // final width of the vue component.
-      let stateOfStudyMenuResizing: 'WAITING' | 'STARTED' = 'WAITING'
-      let previousWidth = this.portalSidebarWidth
-      const studyMenuCheck = setInterval(() => {
-        const currentWidthOfStudyMenu = document.querySelector('.information__studies')?.clientWidth
-        // When resizing starts, we update the state.
-        if (stateOfStudyMenuResizing === 'WAITING' && previousWidth !== currentWidthOfStudyMenu) {
-          stateOfStudyMenuResizing = 'STARTED'
-        }
-        if (stateOfStudyMenuResizing === 'STARTED') {
-          if (previousWidth === currentWidthOfStudyMenu) {
-            this.portalSidebarWidth = currentWidthOfStudyMenu
-            clearInterval(studyMenuCheck)
-            this.rerenderStackBarChart()
-          }
-          previousWidth = currentWidthOfStudyMenu
-        }
-      }, 100)
-    },
   },
   mounted() {
-    this.$nextTick(() => {
-      window.addEventListener('studyMenuEvent', (e: CustomEvent) => {
-        this.isStudyMenuOpen = e.detail.isStudyMenuOpen
-      })
-    })
     this.isLocal = 'isLocal' in getPortalAPI()
-  },
-  beforeDestroy() {
-    window.removeEventListener('menuClicked', (e: CustomEvent) => {
-      return
-    })
   },
   computed: {
     ...mapGetters([
