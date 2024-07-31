@@ -406,8 +406,8 @@ export default {
       const activeBookmark = this.getActiveBookmark
       return activeBookmark.bookmarkname
     },
-    getActiveBookmarkId() {
-      return this.getActiveBookmark.id
+    getActiveBookmarkId() {      
+      return this.getActiveBookmark.bmkId
     },
     getTranslationList() {
       return this.getMriFrontendConfig

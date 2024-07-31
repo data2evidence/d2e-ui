@@ -199,6 +199,7 @@ export default {
       'getCurrentBookmarkHasChanges',
       'getBookmark',
       'getBookmarkByNameAndUsername',
+      'getSaveBookmarkExt'
     ]),
     hasChanges() {
       return this.getActiveBookmark.isNew || this.getCurrentBookmarkHasChanges
@@ -229,9 +230,22 @@ export default {
       },
       immediate: true,
     },
+    // async getSaveBookmarkExt(val) {
+    //   if (val) {
+    //   try {
+    //     await this.saveBookmark(); // Handle async properly
+    //     console.log('saved bmk');
+        
+    //   } catch (error) {
+    //     console.error('Failed to save bookmark:', error);
+    //   } finally {
+    //     this.setSaveBookmarkExt(false);
+    //   }
+    //   }
+    // }
   },
   methods: {
-    ...mapActions(['fireBookmarkQuery', 'resetChartProperties', 'loadbookmarkToState']),
+    ...mapActions(['fireBookmarkQuery', 'resetChartProperties', 'loadbookmarkToState','setSaveBookmarkExt', 'setActiveBookmark', 'loadAllBookmarks']),
     ...mapMutations([types.CONFIG_SET_HAS_ASSIGNED, types.SET_ACTIVE_BOOKMARK]),
     onAddFilterCardMenuItemSelected(configPath, isExclusion = false) {
       this.$emit('add', {
@@ -254,6 +268,9 @@ export default {
     },
     async saveBookmark() {
       if (this.hasChanges) {
+
+        console.log(this.isBookmarkNameExists());
+        
         await this.fireBookmarkQuery({
           params: { cmd: 'loadAll' },
           method: 'get',
@@ -268,7 +285,7 @@ export default {
             this.isInvalidName = true
             return
           }
-        }
+        }        
 
         const bookmarkName = this.cohortName ? this.cohortName : activeBookmark.bookmarkname
 
@@ -279,7 +296,7 @@ export default {
             shareBookmark: this.shareBookmark,
             bookmark: JSON.stringify(bookmark),
           }
-          await this.fireBookmarkQuery({ params, method: 'post' })
+          const test = await this.fireBookmarkQuery({ params, method: 'post' })          
         } else {
           const request = {
             cmd: 'update',
@@ -294,7 +311,7 @@ export default {
         }
         await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
         const savedBookmark = this.getBookmarkByNameAndUsername(bookmarkName, username)
-        this[types.SET_ACTIVE_BOOKMARK](savedBookmark)
+        this.setActiveBookmark(savedBookmark)
         this.cohortName = ''
         this.closeSaveBookmark()
       }
@@ -307,6 +324,11 @@ export default {
         this.closeResetDialog()
       })
     },
+    isBookmarkNameExists() {
+      this.loadAllBookmarks()
+      console.log('hello');
+      
+    },
     getRefreshUnicodeCharacter() {
       const charSpan = document.createElement('textarea')
       charSpan.innerHTML = '&#8634;'
@@ -317,7 +339,7 @@ export default {
     },
     showPatientList() {
       this.$emit('showPatientList')
-    },
+    }
   },
   components: {
     appButton,
