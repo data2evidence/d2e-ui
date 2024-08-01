@@ -2,7 +2,7 @@ import { useCallback, useContext } from "react";
 import { Connection, EdgeChange, NodeChange, NodeProps } from "reactflow";
 import { AppContext, AppDispatchContext } from "../AppContext";
 import { ACTION_TYPES } from "../reducers/reducer";
-import { FieldHandleData, TargetFieldHandleData } from "../states/field-state";
+import { FieldHandleData, FieldTargetHandleData } from "../states/field-state";
 
 export const useField = () => {
   const {
@@ -33,7 +33,7 @@ export const useField = () => {
   );
 
   const setFieldTargetHandles = useCallback(
-    (handles: Partial<NodeProps<TargetFieldHandleData>>[]) => {
+    (handles: Partial<NodeProps<FieldTargetHandleData>>[]) => {
       dispatch({
         type: ACTION_TYPES.SET_FIELD_TARGET_HANDLES,
         payload: handles,
