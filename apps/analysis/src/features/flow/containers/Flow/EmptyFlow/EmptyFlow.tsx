@@ -21,8 +21,8 @@ export const EmptyFlow: FC = () => {
 
   return (
     <div className="empty-flow">
-      <div className="empty-flow__title">There is no dataflow to show</div>
-      <Button text="Create your first dataflow" onClick={handleOpen} />
+      <div className="empty-flow__title">There is no flow to show</div>
+      <Button text="Create your first strategus flow" onClick={handleOpen} />
       <SaveFlowDialog open={saveFlowDialog.visible} onClose={handleClose} />
     </div>
   );
