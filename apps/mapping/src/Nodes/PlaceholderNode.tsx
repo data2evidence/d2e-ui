@@ -1,7 +1,9 @@
+import React from "react";
 import { NodeProps, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
 import { useField } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
+import { FieldTargetHandle } from "./FieldTargetHandle";
 import "./node.scss";
 
 export const PlaceholderNode = (props: NodeProps) => {
@@ -28,7 +30,13 @@ export const PlaceholderNode = (props: NodeProps) => {
           }
         >
           {data.map((node) => (
-            <MappingHandle {...node} key={node.id} />
+            <React.Fragment key={node.id}>
+              {node.data.isField && node.data.type === "output" ? (
+                <FieldTargetHandle {...node} />
+              ) : (
+                <MappingHandle {...node} />
+              )}
+            </React.Fragment>
           ))}
         </div>
       </div>
