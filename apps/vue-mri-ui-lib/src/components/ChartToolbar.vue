@@ -4,7 +4,7 @@
       <button
         v-if="!showUnHideFilters"
         class="actionButton"
-        @click="hideLeftPanel"
+        @click="toggleLeftPanel"
         :title="getText('MRI_PA_TOOLTIP_COLLAPSE_FILTER_BAR')"
       >
         <span class="icon" style="font-family: app-icons">{{ hideIcon }}</span>
@@ -12,7 +12,7 @@
       <button
         v-if="showUnHideFilters"
         class="actionButton"
-        @click="unHideClicked"
+        @click="toggleLeftPanel"
         :title="getText('MRI_PA_TOOLTIP_EXPAND_FILTER_BAR')"
       >
         <span class="icon" style="font-family: app-icons">{{ unHideIcon }}</span>
@@ -268,9 +268,6 @@ export default {
       this.toggleFilterCardSummary = !this.toggleFilterCardSummary
       this.$emit('open-filtersummary', this.toggleFilterCardSummary)
     },
-    showExpandedFilters() {
-      this.$emit('expandEv', true)
-    },
     getHideIconToolTip() {
       if (this.hideIconToolTip === '') {
         this.hideIconToolTip = this.getText('MRI_PA_TOOLTIP_COLLAPSE_FILTER_BAR')
@@ -281,11 +278,8 @@ export default {
       const eventBus = sap.ui.getCore().getEventBus()
       eventBus.publish('EVENT_VB_SEARCH_CLICK', {})
     },
-    unHideClicked() {
-      this.$emit('unhideEv', false)
-    },
-    hideLeftPanel() {
-      this.$emit('unhideEv', true)
+    toggleLeftPanel() {
+      this.$emit('unhideEv')
     },
     drillDownClicked() {
       this.$emit('drilldown')

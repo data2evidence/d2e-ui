@@ -15,7 +15,7 @@
     />
     <!-- <ui5adaptor /> -->
     <splashScreen v-if="getInitialLoad" />
-    <patientanalytics />
+    <patientanalytics v-show="!getInitialLoad"/>
   </div>
 </template>
 
