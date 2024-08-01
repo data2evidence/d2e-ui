@@ -4,7 +4,7 @@ resources/*
 !resources/starboard-jupyter
 !resources/authenticate.js
 !resources/msal-browser.min.js
-
+!resources/docs
 
 !.vscode/settings.json
 node_modules
