@@ -375,7 +375,7 @@ export default {
       viewName: '',
       showRenameDialog: false,
       showDeleteDialog: false,
-      showSharedBookmarks: false,
+      showSharedBookmarks: true,
       showCopyExtensionDialog: false,
       aSelBookmarkList: [],
       initBookmarkId: this.initBookmarkId,
