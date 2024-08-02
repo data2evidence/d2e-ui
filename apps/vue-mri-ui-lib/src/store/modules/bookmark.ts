@@ -15,7 +15,6 @@ const state = {
   schemaName: '',
   activeBookmark: null,
   addNewCohort: false,
-  saveBookmarkExt: false,
 }
 
 const bookmarkURL = '/analytics-svc/api/services/bookmark'
@@ -124,7 +123,6 @@ const getters = {
     const currentBookmarksData = JSON.parse(modulestate.activeBookmark?.bookmark)?.filter
     return !isEqual(newBookmarksData, currentBookmarksData)
   },
-  getSaveBookmarkExt: modulestate => modulestate.saveBookmarkExt,
 }
 
 const actions = {
@@ -285,21 +283,6 @@ const actions = {
         })
     })
   },
-  setSaveBookmarkExt({ commit }, state) {
-    commit(types.SET_SAVE_BOOKMARK_EXT, state)
-  },
-  setActiveBookmark({ commit }, bookmark) {
-    commit(types.SET_ACTIVE_BOOKMARK, bookmark)
-  },
-  async saveNewBookmark({}, { params }) {
-    await this.fireBookmarkQuery({ params, method: 'post' })
-  },
-  async updateBookmark({ getters }, { params }) {
-    await this.fireBookmarkQuery({ params, method: 'put', bookmarkId: getters.getActiveBookmark })
-  },
-  async loadAllBookmarks() {
-    await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
-  },
 }
 
 // mutations
@@ -318,9 +301,6 @@ const mutations = {
   },
   [types.SET_ADD_NEW_COHORT](modulestate, { addNewCohort }) {
     modulestate.addNewCohort = addNewCohort
-  },
-  [types.SET_SAVE_BOOKMARK_EXT](modulestate, state) {
-    modulestate.saveBookmarkExt = state
   },
 }
 

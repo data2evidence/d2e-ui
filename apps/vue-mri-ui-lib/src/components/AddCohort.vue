@@ -105,12 +105,7 @@ export default {
       'getSelectedDataset',
       'getJwtTokenValue',
       'getCurrentPatientCount',
-      'getActiveBookmark',
-      'getCurrentBookmarkHasChanges',
     ]),
-    bookmarkHasChanges() {
-      return this.getActiveBookmark.isNew || this.getCurrentBookmarkHasChanges
-    },
     patientCount() {
       return this.getCurrentPatientCount
     },
@@ -150,15 +145,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['onAddCohortOkButtonPress', 'loadOldCollections', 'fireQuery', 'getPLRequest', 'setSaveBookmarkExt']),
+    ...mapActions(['onAddCohortOkButtonPress', 'loadOldCollections', 'fireQuery', 'getPLRequest']),
     ...mapMutations([types.SET_COHORT_TYPE, types.SET_COLLECTION_TYPE, types.COLLECTIONS_SET_HASEXISTINGCOLLECTION]),
     openAddCohortDialog() {
       this.showAddCohortDialog = true
     },
     onOkButtonPress() {
-      // this.setSaveBookmarkExt(true)
-      console.log('aft save');
-      
       const portalAPI = getPortalAPI()
       const syntax = JSON.stringify({
         datasetId: this.getSelectedDataset.id,
@@ -172,32 +164,30 @@ export default {
         owner: portalAPI.username,
         syntax: syntax,
       }
-      console.log(params.mriquery, this.bookmarkId);
-      
-      // this.resetMessageStrip()
-      // this.cohortBusy = true
-      // this.onAddCohortOkButtonPress({
-      //   params,
-      //   url: '/analytics-svc/api/services/cohort',
-      // })
-      //   .then(() => {
-      //     setTimeout(() => this.closeWindow(), 1500)
-      //     this.cohortBusy = false
-      //     this.messageStrip = {
-      //       show: true,
-      //       message: this.getText('MRI_PA_COLL_SUCCESS_ADD_PATIENT'),
-      //       messageType: 'success',
-      //     }
-      //   })
-      //   .catch(err => {
-      //     this.cohortBusy = false
-      //     this.messageStrip = {
-      //       show: true,
-      //       message: err,
-      //       messageType: 'error',
-      //     }
-      //     return err
-      //   })
+      this.resetMessageStrip()
+      this.cohortBusy = true
+      this.onAddCohortOkButtonPress({
+        params,
+        url: '/analytics-svc/api/services/cohort',
+      })
+        .then(() => {
+          setTimeout(() => this.closeWindow(), 1500)
+          this.cohortBusy = false
+          this.messageStrip = {
+            show: true,
+            message: this.getText('MRI_PA_COLL_SUCCESS_ADD_PATIENT'),
+            messageType: 'success',
+          }
+        })
+        .catch(err => {
+          this.cohortBusy = false
+          this.messageStrip = {
+            show: true,
+            message: err,
+            messageType: 'error',
+          }
+          return err
+        })
     },
     closeWindow() {
       this.resetMessageStrip()
