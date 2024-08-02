@@ -94,6 +94,7 @@
             :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TEXT')"
             :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TITLE')"
             :labelClass="'font-color-blue'"
+            :checked="showSharedBookmarks ? 'checked' : ''"
           ></appCheckbox>
         </div>
         <div class="bookmark-list-content">
