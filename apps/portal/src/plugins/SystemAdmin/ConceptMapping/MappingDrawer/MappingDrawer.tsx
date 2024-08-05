@@ -36,6 +36,7 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
             initialInput: selectedData[sourceName],
             mode: "CONCEPT_MAPPING",
             selectedDatasetId,
+            defaultFilters: [{ id: "concept", value: ["Standard"] }],
           },
         },
       });
