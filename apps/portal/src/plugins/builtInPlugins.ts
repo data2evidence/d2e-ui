@@ -20,6 +20,7 @@ const moduleNames = [
   "SystemAdmin/Terminology",
   "SystemAdmin/Athena",
   "SystemAdmin/FlowOverview",
+  "SystemAdmin/ConceptMapping",
   "Starboard",
   "Cohort",
   "Admin/Permissions",
@@ -29,7 +30,6 @@ const moduleNames = [
   "Setup/Metadata",
   "Setup/Feature",
   "Setup/Db",
-  "Setup/ConceptMapping",
   "Setup/HybridSearch",
   "Setup/OverviewDescription",
 ];
