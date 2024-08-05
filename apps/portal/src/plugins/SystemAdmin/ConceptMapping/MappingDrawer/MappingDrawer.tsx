@@ -7,7 +7,7 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
   const conceptMappingState = useContext(ConceptMappingContext);
   const selectedData = conceptMappingState.selectedData;
-  const { sourceName } = conceptMappingState.columnMapping;
+  const { sourceName, domainId } = conceptMappingState.columnMapping;
 
   // get data from terminology
   // passes data to reducer to update list
@@ -26,6 +26,17 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
     [dispatch]
   );
 
+  const getDefaultFilters = useCallback(() => {
+    if (domainId) {
+      return [
+        { id: "concept", value: ["Standard"] },
+        { id: "domainId", value: [selectedData[domainId]] },
+      ];
+    } else {
+      return [{ id: "concept", value: ["Standard"] }];
+    }
+  }, [domainId, selectedData]);
+
   useEffect(() => {
     if (Object.keys(selectedData).length > 0) {
       const event = new CustomEvent<{ props: TerminologyProps }>("alp-terminology-open", {
@@ -36,7 +47,7 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
             initialInput: selectedData[sourceName],
             mode: "CONCEPT_MAPPING",
             selectedDatasetId,
-            defaultFilters: [{ id: "concept", value: ["Standard"] }],
+            defaultFilters: getDefaultFilters(),
           },
         },
       });

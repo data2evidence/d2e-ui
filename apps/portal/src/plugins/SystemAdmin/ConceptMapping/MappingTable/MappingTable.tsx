@@ -8,9 +8,9 @@ const MappingTable: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
-  const { sourceCode, sourceName, sourceFrequency, description, domain } = conceptMappingState.columnMapping;
+  const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;
   const csvData = conceptMappingState.csvData.data;
-  const domainKey = domain || "domainId";
+  
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
       {
@@ -57,12 +57,12 @@ const MappingTable: FC = () => {
       },
       {
         id: "7",
-        accessorKey: domainKey,
+        accessorKey: "domainId",
         header: getText(i18nKeys.MAPPING_TABLE__DOMAIN_ID),
         size: 150,
       },
     ],
-    [sourceCode, sourceName, sourceFrequency, description, getText, domainKey]
+    [sourceCode, sourceName, sourceFrequency, description, getText]
   );
 
   const TableBodyRowProps = ({ row }: { row: any }) => ({

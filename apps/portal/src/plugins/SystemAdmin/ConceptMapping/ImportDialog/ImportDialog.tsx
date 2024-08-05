@@ -34,7 +34,7 @@ interface ColumnMappingState {
   sourceName: string;
   sourceFrequency: string;
   description: string;
-  domain?: string;
+  domainId?: string;
 }
 
 const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoading }) => {
@@ -88,9 +88,9 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
     (checked: boolean) => {
       setShowDomainMapping(checked);
       if (checked) {
-        setColumnMappingState({ ...columnMappingState, domain: "" });
+        setColumnMappingState({ ...columnMappingState, domainId: "" });
       } else {
-        const { domain, ...newColumnMappingState } = columnMappingState;
+        const { domainId, ...newColumnMappingState } = columnMappingState;
         setColumnMappingState(newColumnMappingState);
       }
     },
@@ -249,8 +249,8 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
               <FormControl component="fieldset" className="import-dialog__selector">
                 <Typography minWidth={200}>{getText(i18nKeys.IMPORT_DIALOG__SOURCE_DOMAIN_COLUMN)}</Typography>
                 <Select
-                  value={columnMappingState.domain}
-                  onChange={(e) => handleColumnMappingChange(e, "domain")}
+                  value={columnMappingState.domainId}
+                  onChange={(e) => handleColumnMappingChange(e, "domainId")}
                   fullWidth
                 >
                   {conceptMappingState.importData.columns.map((d: any) => (
