@@ -559,6 +559,8 @@ export const i18nDefault = {
     IMPORT_DIALOG__SOURCE_CODE_COLUMN: "Source code colum",
     IMPORT_DIALOG__SOURCE_CODE_NAME: "Source name column",
     IMPORT_DIALOG__SOURCE_FREQUENCY_COLUMN: "Source frequency column",
+    IMPORT_DIALOG__SHOW_SOURCE_DOMAIN_COLUMN: "Show source domain column selection",
+    IMPORT_DIALOG__SOURCE_DOMAIN_COLUMN: "Source domain column",
     INFORMATION___DOWNLOAD_CDM_DATA: "Download CDM Data",
     INFORMATION__DATABASE_NAME_UNDEFINED: "Error: Schema Name or Database Name is undefined ",
     INFORMATION__DATASET: "Dataset",

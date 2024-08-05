@@ -509,6 +509,8 @@
   "IMPORT_DIALOG__SOURCE_CODE_COLUMN": "Quellcode-Spalte",
   "IMPORT_DIALOG__SOURCE_CODE_NAME": "Spalte „Quellenname“.",
   "IMPORT_DIALOG__SOURCE_FREQUENCY_COLUMN": "Spalte „Quellfrequenz“.",
+  "IMPORT_DIALOG__SHOW_SOURCE_DOMAIN_COLUMN": "Quelle-Domain-Spaltenauswahl anzeigen",
+  "IMPORT_DIALOG__SOURCE_DOMAIN_COLUMN": "Quell-Domänenspalte",
   "INFORMATION___DOWNLOAD_CDM_DATA": "Laden Sie CDM-Daten herunter",
   "INFORMATION__DATABASE_NAME_UNDEFINED": "Fehler: Schemaname oder Datenbankname ist nicht definiert",
   "INFORMATION__DATASET": "Datensatz",
