@@ -13,15 +13,19 @@ export interface FieldHandleData {
   type: "input" | "output";
 }
 
-export type SourceFieldHandle = FieldHandleData;
+export type FieldSourceHandleData = FieldHandleData;
 
-export interface TargetFieldHandleData extends FieldHandleData {
+export interface FieldTargetHandleData extends FieldHandleData {
   constantValue?: string | number;
+  comment?: string;
 }
+
+export type FieldSourceState = NodeProps<FieldSourceHandleData>;
+export type FieldTargetState = NodeProps<FieldTargetHandleData>;
 
 export interface FieldState {
   nodes: Node<FieldNodeData>[];
   edges: Edge[];
-  sourceHandles: NodeProps<SourceFieldHandle>[];
-  targetHandles: NodeProps<TargetFieldHandleData>[];
+  sourceHandles: FieldSourceState[];
+  targetHandles: FieldTargetState[];
 }

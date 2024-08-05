@@ -1,0 +1,12 @@
+.field-target-handle {
+  &__content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 1em;
+  }
+
+  &__label {
+    flex: 1;
+  }
+}

@@ -46,6 +46,8 @@
   #pane-right {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    position: relative;
 
     .pane-right-content {
       position: inherit;
