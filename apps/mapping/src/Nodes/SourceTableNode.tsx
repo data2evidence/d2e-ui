@@ -2,8 +2,10 @@ import { useState } from "react";
 import { NodeProps } from "reactflow";
 import { Button } from "@mui/material";
 import { ScanDataDialog } from "../components/ScanDataDialog/ScanDataDialog";
+import { ScanProgressDialog } from "../components/ScanProgressDialog/ScanProgressDialog";
 import { useTable } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
+import { CloseDialogType } from "../components/ScanDataDialog/ScanDataDialog";
 import "./node.scss";
 
 export const SourceTableNode = (props: NodeProps) => {
@@ -17,6 +19,29 @@ export const SourceTableNode = (props: NodeProps) => {
   const closeScanDataDialog = () => {
     setIsDialogOpen(false);
   };
+
+  const [isScanProgressDialogOpen, setScanProgressDialogOpen] = useState(false);
+
+  const handleScanDataDialogClose = (type: CloseDialogType) => {
+    setIsDialogOpen(false);
+    if (type === "success") {
+      setScanProgressDialogOpen(true);
+    }
+  };
+
+  const handleBack = () => {
+    setScanProgressDialogOpen(false);
+    setIsDialogOpen(true);
+  };
+
+  const openProgressDataDialog = () => {
+    setScanProgressDialogOpen(true);
+  };
+
+  const handleScanProgressDialogClose = (type: CloseDialogType) => {
+    setScanProgressDialogOpen(false);
+  };
+
   return (
     <div className="link-tables__column nodrag">
       <div className="content-container">
@@ -46,7 +71,11 @@ export const SourceTableNode = (props: NodeProps) => {
               >
                 Scan Data
               </Button>
-              <Button variant="contained" fullWidth>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={openProgressDataDialog}
+              >
                 Open Mapping
               </Button>
             </div>
@@ -55,7 +84,13 @@ export const SourceTableNode = (props: NodeProps) => {
       </div>
       <ScanDataDialog
         open={isDialogOpen}
-        onClose={closeScanDataDialog}
+        onClose={handleScanDataDialogClose}
+        nodeId={props.id}
+      />
+      <ScanProgressDialog
+        open={isScanProgressDialogOpen}
+        onBack={handleBack}
+        onClose={handleScanProgressDialogClose}
         nodeId={props.id}
       />
     </div>

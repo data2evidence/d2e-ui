@@ -20,7 +20,7 @@ import { TableSourceHandleData, useTable } from "../../contexts";
 import "./ScanDataDialog.scss";
 
 // TODO: Clean up and create separate files for all interfaces and types
-type CloseDialogType = "success" | "cancelled";
+export type CloseDialogType = "success" | "cancelled";
 interface ScanDataDialogProps {
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
@@ -54,6 +54,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
     try {
       setLoading(true);
       // TODO: Replace with actual data scanning logic
+      // TODO: Open scan data in-progress dialog
       // await api.data.scanData(selectedFiles, delimiter);
       scanData();
       handleClose("success");
@@ -127,26 +128,33 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
     [selectedFiles]
   );
 
+  // TODO: Convert hardcoded scan table logic to call white-rabbit
   const scanData = () => {
     // Populate Source Table with table-name
-    let sourceHandles: Partial<NodeProps<TableSourceHandleData>>[];
-    if (selectedFiles.length === 1) {
-      const data = sourceTableData;
-      const table_name = data.source_tables[0].table_name;
-      sourceHandles = [
-        {
-          id: `C.0`,
-          data: { label: table_name, type: "input" },
-          sourcePosition: Position.Right,
-        },
-      ];
-    } else {
-      const data = twoSourceTableData;
-      sourceHandles = data.source_tables.map((table, index) => ({
-        id: `C.${index + 1}`,
-        data: { label: table.table_name, type: "input" },
-        sourcePosition: Position.Right,
-      }));
+    let sourceHandles: Partial<NodeProps<TableSourceHandleData>>[] = [];
+    // if (selectedFiles.length === 1) {
+    //   const data = sourceTableData;
+    //   const table_name = data.source_tables[0].table_name;
+    //   sourceHandles = [
+    //     {
+    //       id: `C.0`,
+    //       data: { label: table_name, type: "input" },
+    //       sourcePosition: Position.Right,
+    //     },
+    //   ];
+    // } else {
+    //   const data = twoSourceTableData;
+    //   sourceHandles = data.source_tables.map((table, index) => ({
+    //     id: `C.${index + 1}`,
+    //     data: { label: table.table_name, type: "input" },
+    //     sourcePosition: Position.Right,
+    //   }));
+    // }
+    // TODO: Call POST /white-rabbit/api/scan-report/files
+    try {
+      setLoading(true);
+    } catch {
+      setLoading(false);
     }
 
     setTableSourceHandles(sourceHandles);
