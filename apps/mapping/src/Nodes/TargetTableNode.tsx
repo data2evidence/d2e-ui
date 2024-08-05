@@ -1,9 +1,10 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
 import { Button } from "@mui/material";
 import { TableTargetHandleData, useTable } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
+import { api } from "../axios/api";
 import targetSourceData from "../../dummyData/5.4Version.json";
 import "./node.scss";
 
@@ -32,6 +33,13 @@ export const TargetTableNode = (props: NodeProps) => {
     updateNodeInternals(props.id);
   }, 100);
 
+  const getCdmVersions = useCallback(async () => {
+    return await api.whiterabbit.getCDMVersions();
+  }, []);
+
+  useEffect(() => {
+    console.log(getCdmVersions());
+  }, []);
   return (
     <div
       className="link-tables__column nodrag nowheel"
