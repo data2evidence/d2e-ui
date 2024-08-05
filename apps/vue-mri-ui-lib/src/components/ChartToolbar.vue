@@ -19,7 +19,7 @@
       </button>
     </div>
     <div class="d-flex align-items-stretch">
-      <template v-if="getActiveBookmark">
+      <template v-if="displayAddToCohort">
         <button class="actionButton" @click="openAddCohort" :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')">
           <AddPatientsIcon />
         </button>
@@ -95,7 +95,7 @@ import AddPatientsIcon from './icons/AddPatientsIcon.vue'
 
 export default {
   name: 'chartToolbar',
-  props: ['hideEv', 'config', 'collectionEv', 'showUnHideFilters'],
+  props: ['hideEv', 'config', 'collectionEv', 'showUnHideFilters', 'showAddCohortDialog'],
   data() {
     return {
       chartConfig: [],
@@ -106,6 +106,7 @@ export default {
       hideIcon: '',
       hideIconToolTip: '',
       toggleFilterCardSummary: false,
+      enableAddToCohort: false
     }
   },
   watch: {
@@ -135,6 +136,7 @@ export default {
       searchQuery: '',
       attributeType: 'conceptSet',
     })
+    this.enableAddToCohort = this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts    
   },
   beforeDestroy() {
     window.removeEventListener('click', this.closeSubMenu)
@@ -145,7 +147,6 @@ export default {
       'getChartSelection',
       'getHasAssignedConfig',
       'getAllChartConfigs',
-      'getMriFrontendConfig',
       'getText',
       'getSelectedDataset',
       'getMriFrontendConfig',
@@ -166,6 +167,9 @@ export default {
     },
     getSelectedDatasetText() {
       return this.getSelectedDataset.name == '' ? 'Untitled' : this.getSelectedDataset.name
+    },
+    displayAddToCohort() {      
+      return this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts && this.getActiveBookmark
     },
   },
   methods: {

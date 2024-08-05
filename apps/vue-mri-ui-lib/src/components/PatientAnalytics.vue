@@ -60,6 +60,7 @@
               @unhideEv="togglePanel(PANEL.LEFT)"
               @drilldown="onDrilldown"
               @open-filtersummary="toggleFilterCardSummary(...arguments)"
+              @openAddCohort="showAddCohortDialog = true"
             ></chartToolbar>
             <div class="d-flex pane-right-content">
               <chartController
@@ -206,6 +207,7 @@ export default {
       paneSize: PANE_SIZE.FULL,
       PANE_SIZE,
       PANEL,
+      showAddCohortDialog: false
     }
   },
   created() {

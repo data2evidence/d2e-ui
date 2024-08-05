@@ -368,9 +368,6 @@ export default {
       selectedChartType: '',
     }
   },
-  created() {
-    this.enableAddToCohort = this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts
-  },
   watch: {
     initBookmarkId() {
       if (this.initBookmarkId !== '') {
@@ -746,8 +743,6 @@ export default {
       return uniqueName
     },
     reset() {
-      console.log('reset')
-
       this[types.CONFIG_SET_HAS_ASSIGNED](false)
       this.$nextTick(() => {
         this.resetChartProperties()
