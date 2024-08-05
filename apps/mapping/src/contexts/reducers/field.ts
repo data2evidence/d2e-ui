@@ -9,7 +9,7 @@ import {
   NodeProps,
 } from "reactflow";
 import { AppState } from "../states";
-import { FieldHandleData, TargetFieldHandleData } from "../states/field-state";
+import { FieldHandleData, FieldTargetHandleData } from "../states/field-state";
 
 export const setFieldNodes = (
   state: AppState,
@@ -71,7 +71,7 @@ export const setFieldSourceHandles = (
 
 export const setFieldTargetHandles = (
   state: AppState,
-  payload: NodeProps<TargetFieldHandleData>[]
+  payload: NodeProps<FieldTargetHandleData>[]
 ): AppState => ({
   ...state,
   field: {

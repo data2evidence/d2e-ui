@@ -10,9 +10,12 @@ export interface TableTargetHandleData {
   tableName: string;
 }
 
+export type TableSourceState = NodeProps<TableSourceHandleData>;
+export type TableTargetState = NodeProps<TableTargetHandleData>;
+
 export interface TableState {
   nodes: Node[];
   edges: Edge[];
-  sourceHandles: NodeProps<TableSourceHandleData>[];
-  targetHandles: NodeProps<TableTargetHandleData>[];
+  sourceHandles: TableSourceState[];
+  targetHandles: TableTargetState[];
 }

@@ -1,6 +1,8 @@
-import { useEffect } from "react";
-import ReactFlow, { Controls } from "reactflow";
+import { useEffect, useCallback } from "react";
+import ReactFlow, { Controls, EdgeChange } from "reactflow";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
+import { ManageSearch } from "@mui/icons-material";
 import { nodeTypes } from "../Nodes";
 import { useField } from "../contexts";
 import { TableToTable } from "./TableToTable";
@@ -31,6 +33,14 @@ export const FieldMapLayout = () => {
     ? targetHandles[0].data.tableName
     : "";
 
+  const deleteLinks = useCallback(() => {
+    const edgeChanges: EdgeChange[] = edges.map((edge) => ({
+      id: edge.id,
+      type: "remove",
+    }));
+    setFieldEdges(edgeChanges);
+  }, [setFieldEdges, edges]);
+
   return (
     <div className="field-map-layout">
       <TableToTable source={sourceTableName} target={targetTableName} />
@@ -50,6 +60,22 @@ export const FieldMapLayout = () => {
         >
           <Controls />
         </ReactFlow>
+      </div>
+
+      <div className="footer">
+        <Button aria-label="managesearch">
+          <ManageSearch />
+          Vocabulary
+        </Button>
+        <div className="button-group">
+          <Button variant="outlined" color="error" onClick={deleteLinks}>
+            Delete links
+          </Button>
+          <Button variant="outlined">Preview</Button>
+          <Button variant="outlined">Generate Fake Data</Button>
+          <Button variant="outlined">Report</Button>
+          <Button variant="contained">Convert to CDM</Button>
+        </div>
       </div>
     </div>
   );

@@ -46,20 +46,7 @@ const PAPlugin: FC<PAPluginProps> = ({ studyId, releaseId, getToken }) => {
           hideLogoutButton();
           callbacks = [...scriptCallbacks, ...styleSheetCallbacks];
         });
-      })
-      .then(() => {
-        setTimeout(dispatchPluginEvent, 1000);
       });
-
-    const dispatchPluginEvent = () => {
-      const pluginEvent = new CustomEvent("menuClicked", {
-        detail: {
-          event: "cohortsOverview",
-        },
-      });
-      window.dispatchEvent(pluginEvent);
-    };
-
     //Remove scripts and links upon component unmounting
     return () => {
       callbacks.forEach((callback) => callback());

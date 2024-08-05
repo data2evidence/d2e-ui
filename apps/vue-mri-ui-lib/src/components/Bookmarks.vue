@@ -365,7 +365,7 @@ import AddPatientsIcon from './icons/AddPatientsIcon.vue'
 
 export default {
   name: 'bookmark',
-  props: ['unloadBookmarkEv', 'initBookmarkId', 'hideEv'],
+  props: ['unloadBookmarkEv', 'initBookmarkId'],
   data() {
     return {
       maxLength: 40,
@@ -394,19 +394,6 @@ export default {
   },
   created() {
     this.enableAddToCohort = this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts
-    this.unwatch = this.$store.watch(
-      (state, getters) => getters.getAddNewCohort,
-      (newValue, oldValue) => {
-        if (newValue) {
-          this.openAddNewCohort()
-          this.setAddNewCohort({ addNewCohort: false })
-        }
-      },
-      { immediate: true }
-    )
-  },
-  beforeDestroy() {
-    this.unwatch()
   },
   watch: {
     initBookmarkId() {
@@ -643,7 +630,6 @@ export default {
           this.openSaveOrDiscardDialog()
         } else {
           this.loadBookmark()
-          this.$emit('hideEv')
         }
       }
     },
@@ -708,24 +694,27 @@ export default {
         this.showDeleteDialog = true
       }
     },
-    confirmDeleteBookmark() {
+    async confirmDeleteBookmark() {
       const activeBookmark = this.getActiveBookmark
       const bookmark = this.selectedBookmark
       const params = {
         cmd: 'delete',
       }
-
-      this.fireBookmarkQuery({
-        params,
-        method: 'delete',
-        bookmarkId: bookmark.id,
-      }).then(() => {
-        this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
-        this.closeDeleteBookmark()
+      try {
+        await this.fireBookmarkQuery({
+          params,
+          method: 'delete',
+          bookmarkId: bookmark.id,
+        });
+        await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } });
+        this.closeDeleteBookmark();
         if (activeBookmark && activeBookmark.bookmarkname === bookmark.name) {
-          this[types.SET_ACTIVE_BOOKMARK](null)
+          this[types.SET_ACTIVE_BOOKMARK](null);
+          this.reset();
         }
-      })
+      } catch (error) {
+        console.error('Error deleting bookmark:', error);
+      }
     },
     closeIncompatibleMessage() {
       this.showIncompatibleMessage = false
@@ -769,12 +758,10 @@ export default {
     },
     addNewCohort() {
       this.cohortName = this.checkCohortName(this.cohortName)
-
       this[types.SET_ACTIVE_BOOKMARK]({ bookmarkname: this.cohortName, isNew: true })
       this.closeAddNewCohort()
       this.$emit('unloadBookmarkEv')
       this.reset()
-      this.$emit('hideEv')
     },
     checkCohortName(bookmarkName, suffix = '') {
       const username = getPortalAPI().username
@@ -787,6 +774,8 @@ export default {
       return uniqueName
     },
     reset() {
+      console.log('reset');
+      
       this[types.CONFIG_SET_HAS_ASSIGNED](false)
       this.$nextTick(() => {
         this.resetChartProperties()
