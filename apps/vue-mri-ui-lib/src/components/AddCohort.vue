@@ -1,8 +1,9 @@
 <template>
   <messageBox v-if="showAddCohortDialog" dim="true" :busy="cohortBusy" messageType="custom" @close="closeWindow">
     <template v-slot:header>{{
-      getText('MRI_PA_COLL_ADD_PATIENTS_TO_COLLECTION') + ` (${this.bookmarkName})`
-    }}</template>
+      getText('MRI_PA_COLL_ADD_PATIENTS_TO_COLLECTION') + ` (${this.isSaveAsBookmark ? this.getUniqueName : this.bookmarkName})`
+    }}
+  </template>
     <template v-slot:body>
       <div class="cohort-dialog">
         <appMessageStrip
@@ -116,10 +117,13 @@ export default {
       return generateUniqueName(this.getBookmarks)
     },
     isNewBookmark() {
-      return this.getActiveBookmark.isNew || (this.isNotUserSharedBookmark && this.getCurrentBookmarkHasChanges)
+      return this.getActiveBookmark.isNew || this.isSaveAsBookmark
     },
     isNotUserSharedBookmark() {
       return this.getActiveBookmark.shared && this.username !== this.getActiveBookmark.user_id
+    },
+    isSaveAsBookmark() {
+      return this.isNotUserSharedBookmark && this.getCurrentBookmarkHasChanges
     },
     username() {
       return getPortalAPI().username
@@ -171,7 +175,7 @@ export default {
       'saveNewBookmark',
       'setActiveBookmark',
       'loadAllBookmarks',
-      'loadbookmarkToState'
+      'loadbookmarkToState',
     ]),
     ...mapMutations([types.SET_COHORT_TYPE, types.SET_COLLECTION_TYPE, types.COLLECTIONS_SET_HASEXISTINGCOLLECTION]),
     openAddCohortDialog() {
@@ -221,8 +225,8 @@ export default {
     async setNewActiveBookmark(bookmarkName) {
       await this.loadAllBookmarks()
       const savedBookmark = this.getBookmarkByNameAndUsername(bookmarkName, this.username)
-      this.setActiveBookmark(savedBookmark)      
-      this.loadbookmarkToState({ bmkId: this.getActiveBookmark.bmkId, chartType: this.getActiveBookmark.chartType })      
+      this.setActiveBookmark(savedBookmark)
+      this.loadbookmarkToState({ bmkId: this.getActiveBookmark.bmkId, chartType: this.getActiveBookmark.chartType })
     },
     async checkBookmark() {
       if (this.isNewBookmark) {
