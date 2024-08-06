@@ -1,43 +1,48 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactECharts from "echarts-for-react";
-import classNames from "classnames";
-import { Card, CalendarIcon, DatabaseIcon, DocPlayIcon, PadlockEmptyIcon, UsersIcon } from "@portal/components";
+import {
+  Card,
+  CalendarIcon,
+  DatabaseIcon,
+  DocPlayIcon,
+  PadlockEmptyUnlockIcon,
+  UsersIcon,
+  PadlockEmptyIcon,
+} from "@portal/components";
+import { HighlightText } from "../../../components";
 import { Study } from "../../../types";
-import { useUserInfo } from "../../../contexts/UserContext";
 import { DatasetAttribute } from "../../../constant";
-import { useActiveDataset, useTranslation } from "../../../contexts";
+import { useActiveDataset, useTranslation, useUser } from "../../../contexts";
 import "./DatasetCard.scss";
 
 interface DatasetCardProps {
   dataset: Study;
   path: string;
+  highlightText?: string;
 }
 
 const colorPalette = [
-  "#FFEDD5",
-  "#FFD4C0",
-  "#F3A77B",
-  "#F05416",
-  "#630707",
-  "#C8AEBF",
-  "#CE7AEB",
-  "#9D56B5",
-  "#ABABE9",
-  "#6464C6",
-  "#000080",
-  "#BDD4F0",
+  "#FDA2A2",
+  "#000E7E",
+  "#A2FDCD",
+  "#FF5E59",
+  "#CCDEF1",
+  "#2599A7",
+  "#FFC4AD",
+  "#999FCB",
   "#EBF0C8",
-  "#D3DFCC",
-  "#BBCAB3",
-  "#ABEEF6",
+  "#CE7AEB",
   "#69BBF6",
-  "#07609F",
+  "#FDEEA2",
+  "#9215BC",
+  "#9FC5E8",
+  "#FFD9A5",
 ];
 
-export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
+export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path, highlightText }) => {
   const navigate = useNavigate();
-  const { user } = useUserInfo();
+  const { user } = useUser();
   const { getText, i18nKeys } = useTranslation();
   const { setActiveDatasetId } = useActiveDataset();
 
@@ -89,7 +94,9 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
   const entityCounts = getAttributeValue(DatasetAttribute.ENTITY_COUNT_DISTRIBUTION);
   const chartData = useMemo(() => {
     try {
-      return JSON.parse(entityCounts || "{}");
+      const data = JSON.parse(entityCounts || "{}");
+      const filteredData = Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== "0"));
+      return filteredData;
     } catch {
       return {};
     }
@@ -113,15 +120,18 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path }) => {
       <div className="dataset-card__content">
         <div className="dataset-card__title">
           {dataset.visibilityStatus}
-          <PadlockEmptyIcon
-            className={classNames("dataset-card__permission-icon", {
-              "dataset-card__permission-icon--accessible": user.isDatasetResearcher(dataset.id),
-            })}
-          />
-          {dataset.studyDetail?.name || "Untitled"}
+          {user.isDatasetResearcher[dataset.id] ? (
+            <PadlockEmptyUnlockIcon className="dataset-card__permission-icon" />
+          ) : (
+            <PadlockEmptyIcon className="dataset-card__permission-icon dataset-card__permission-icon--inaccessible" />
+          )}
+          <HighlightText text={dataset.studyDetail?.name || "Untitled"} searchText={highlightText} />
         </div>
-        <div className="dataset-card__description">
-          {dataset.studyDetail?.description || getText(i18nKeys.DATASET_CARD__NO_DATASET_SUMMARY)}
+        <div className="dataset-card__summary">
+          <HighlightText
+            text={dataset.studyDetail?.summary || getText(i18nKeys.DATASET_CARD__NO_DATASET_SUMMARY)}
+            searchText={highlightText}
+          />
         </div>
         <div className="dataset-card__attributes">
           <div className="dataset-card__attribute">

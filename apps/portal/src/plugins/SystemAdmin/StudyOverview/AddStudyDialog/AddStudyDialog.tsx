@@ -29,6 +29,7 @@ import {
   IDatabase,
   NewStudyMetadataInput,
   DatasetDashboard,
+  NewFhirProjectInput,
 } from "../../../../types";
 import SimpleMDE from "react-simplemde-editor";
 import {
@@ -56,6 +57,7 @@ interface AddStudyDialogProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   studies: Study[];
   databases: IDatabase[];
+  allDashboards: DatasetDashboard[];
 }
 
 const mdeOptions = {
@@ -73,6 +75,7 @@ interface FormData {
   name: string;
   summary: string;
   showRequestAccess: boolean;
+  createFhirProject: boolean;
   cleansedSchemaOption: boolean;
   description: string;
   dataModel: string;
@@ -135,6 +138,7 @@ const EMPTY_FORM_DATA: FormData = {
   name: "",
   summary: "",
   showRequestAccess: false,
+  createFhirProject: false,
   cleansedSchemaOption: false,
   description: "",
   dataModel: "", //Optional
@@ -191,7 +195,15 @@ const styles: SxProps = {
  * @param param0 AddStudyDialogProps
  * @returns The dialog object
  */
-const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLoading, studies, databases }) => {
+const AddStudyDialog: FC<AddStudyDialogProps> = ({
+  open,
+  onClose,
+  loading,
+  setLoading,
+  studies,
+  databases,
+  allDashboards,
+}) => {
   const { getText, i18nKeys } = useTranslation();
   const [tenant] = useTenant();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
@@ -438,11 +450,19 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
     dashboards.forEach((dashboard, index) => {
       formError[index] = EMPTY_DASHBOARD_FORM_ERROR;
       if (!dashboard.name && dashboard.url) {
-        formError[index] = { ...formError[index], name: { required: true } };
+        formError[index] = { ...formError[index], name: { required: true, invalid: false, duplicate: false } };
         hasError = true;
       }
       if (!dashboard.url && dashboard.name) {
         formError[index] = { ...formError[index], url: { required: true } };
+        hasError = true;
+      }
+      if (dashboard.name.includes("-")) {
+        formError[index] = { ...formError[index], name: { required: false, invalid: true, duplicate: false } };
+        hasError = true;
+      }
+      if (allDashboards.some((dash) => dash.name === dashboard.name)) {
+        formError[index] = { ...formError[index], name: { required: false, invalid: false, duplicate: true } };
         hasError = true;
       }
     });
@@ -466,6 +486,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
       cdmSchemaValue,
       vocabSchemaValue,
       cleansedSchemaOption,
+      createFhirProject,
       name,
       summary,
       showRequestAccess,
@@ -476,6 +497,17 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
       paConfigId,
       visibilityStatus,
     } = formData;
+
+    let fhirProjectId;
+
+    if (createFhirProject) {
+      const fhirProjectInput: NewFhirProjectInput = {
+        name: name,
+        description: description,
+      };
+      const { id } = await api.gateway.createFhirStaging(fhirProjectInput);
+      fhirProjectId = id;
+    }
 
     const input: NewStudyInput = {
       tenantId: tenant?.id || "",
@@ -496,6 +528,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
       databaseCode,
       dialect,
       paConfigId,
+      fhirProjectId,
       visibilityStatus,
       attributes: studyMetadata.filter((info) => info.attributeId !== ""),
       tags: studyTagsData?.map((tagName) => tagName),
@@ -573,6 +606,16 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
             label={getText(i18nKeys.ADD_STUDY_DIALOG__SHOW_REQUEST_ACCESS)}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               handleFormDataChange({ showRequestAccess: event.target.checked });
+            }}
+          />
+        </div>
+        <div>
+          <Checkbox
+            checked={formData.createFhirProject}
+            checkbox-id="create-fhir-server"
+            label={getText(i18nKeys.ADD_STUDY_DIALOG__CREATE_FHIR)}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              handleFormDataChange({ createFhirProject: event.target.checked });
             }}
           />
         </div>

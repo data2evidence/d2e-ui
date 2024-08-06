@@ -2,31 +2,31 @@
 import { LogInfo } from '@/types'
 import { getLogsByTaskRunId } from '@/api'
 import { ref, watchEffect } from 'vue'
-import Logs from '../components/Logs.vue'
-import { useParamsStore } from '@/stores'
+import LogScroller from '../components/LogScroller.vue'
+import { useRoute, useRouter } from 'vue-router'
 
 type TabName = 'LOGS' | 'TASK_RUNS' | 'DETAILS' | 'PARAMETERS'
+const route = useRoute()
+const router = useRouter()
 
 const logs = ref<LogInfo[]>([])
 const selected = ref<TabName>('LOGS')
-const paramsStore = useParamsStore()
 
 const onClickTab = (tabName: TabName) => {
   selected.value = tabName
 }
 
-const onClickBackToJobs = () => {
-  paramsStore.updateParams({ flowRunId: undefined, taskRunId: undefined, mode: undefined })
-  location.reload()
+const onClickBackToFlowRun = () => {
+  const taskRunId = route.params.taskRunId
+  router.push(`${router.currentRoute.value.path.replace(`/taskrun/${taskRunId}`, '')}`)
 }
 
 watchEffect(() => {
-  if (paramsStore.taskRunId) {
+  const taskRunId = route.params.taskRunId as string
+  if (taskRunId) {
     const asyncFn = async () => {
-      if (paramsStore.taskRunId) {
-        const data = await getLogsByTaskRunId(paramsStore.taskRunId)
-        logs.value = data
-      }
+      const data = await getLogsByTaskRunId(taskRunId)
+      logs.value = data
     }
     asyncFn()
   }
@@ -35,17 +35,13 @@ watchEffect(() => {
 
 <template>
   <div
-    style="
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0px 20px;
-    "
+    class="top-bar-container"
   >
-    <div style="color: white; cursor: pointer" @click="onClickBackToJobs">< back to Jobs list</div>
+    <div style="cursor: pointer" @click="onClickBackToFlowRun">
+      &#60; back to Flow run
+    </div>
     <div style="font-size: small">
-      <div style="color: white">Task Run ID: {{ paramsStore.taskRunId }}</div>
+      <div>Task Run ID: {{ route.params.taskRunId }}</div>
     </div>
   </div>
   <div
@@ -64,13 +60,23 @@ watchEffect(() => {
     </div>
   </div>
 
-  <Logs v-if="selected === 'LOGS'" :logs="logs" />
+  <LogScroller v-if="selected === 'LOGS'" :logs="logs" />
 </template>
 
 <style scoped>
 .run-graph {
   height: 300px;
   width: 100%;
+}
+
+.top-bar-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 20px;
+  height: 30px;
+  color: var(--color-primary);
 }
 
 .tabs {
@@ -86,13 +92,17 @@ watchEffect(() => {
   display: flex;
   align-items: center;
   cursor: pointer;
-  @apply text-gray-400;
+  color: var(--color-primary);
 }
 .tab:hover {
-  color: white;
+  color: var(--color-primary-light);
 }
 .selected {
-  color: white;
-  border-bottom: solid grey 5px;
+  font-weight: 500;
+  border-bottom: solid var(--color-primary) 5px;
+}
+.virtual-scroller {
+  @apply overflow-auto
+  max-h-[calc(100vh-80px-56px-30px)];
 }
 </style>

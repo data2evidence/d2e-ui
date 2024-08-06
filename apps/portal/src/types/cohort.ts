@@ -4,8 +4,9 @@ export interface CohortMapping {
   name: string;
   description: string;
   creationTimestamp: Date;
-  modificationTimestamp: Date;
+  modificationTimestamp: Date | string;
   owner: string;
+  syntax: string;
 }
 export interface CohortDefinitionList {
   cohortDefinitionCount: number;

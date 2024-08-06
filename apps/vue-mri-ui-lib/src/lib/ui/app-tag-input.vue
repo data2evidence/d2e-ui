@@ -141,7 +141,6 @@ export default {
       }
       const regex = new RegExp(escapeStringRegExp(this.searchQuery), 'gi')
       const list = [...this.myDomainValues.values, ...this.newTags]
-
       const updatedList = []
       if (this.isLoading) {
         this.tagPlaceHolder = this.getText('MRI_PA_LOADING_SUGGESTIONS')
@@ -246,18 +245,15 @@ export default {
       if (this.model.props.type === 'conceptSet') {
         return
       }
-      const tags = newTag.split(' ')
-      tags.forEach(tag => {
-        if (tag.length > 0) {
-          const addThis = {
-            text: tag,
-            value: tag,
-            hidden: true,
-          }
-          this.newTags.push(addThis)
-          this.updateValue([...this.model.props.value, addThis])
+      if (newTag.length > 0) {
+        const addThis = {
+          text: newTag,
+          value: newTag,
+          hidden: true,
         }
-      })
+        this.newTags.push(addThis)
+        this.updateValue([...this.model.props.value, addThis])
+        }
     },
     updateValue(value) {
       const payload = {
@@ -277,7 +273,7 @@ export default {
         clearInterval(this.selectedValuesTimeout)
       }
       this.isLoading = true
-      const INPUT_WAIT_TIME_MS = 200
+      const INPUT_WAIT_TIME_MS = 600
       this.selectedValuesTimeout = setTimeout(() => {
         this.loadValuesForAttributePath({
           attributePathUid: this.attributePathUid,
@@ -303,14 +299,18 @@ export default {
       this.placeHolder = this.getText('MRI_PA_INPUT_PLACEHOLDER_ALL')
     },
     handleConceptSet(values?: { value?: string }) {
+      const { domainFilter, standardConceptCodeFilter } = this.model.props
       const conceptSetId = values?.value
+      const defaultFilters = [
+        { id: 'domainId', value: domainFilter ? [domainFilter] : [] },
+        { id: 'concept', value: standardConceptCodeFilter ? [standardConceptCodeFilter] : [] },
+      ]
       const event = new CustomEvent<{ props: TerminologyProps }>('alp-terminology-open', {
         detail: {
           props: {
             selectedDatasetId: this.getSelectedDataset.id,
             selectedConceptSetId: conceptSetId,
             mode: 'CONCEPT_SET',
-            isConceptSet: true,
             onClose: onCloseValues => {
               // No action to do if no concept set is being created
               if (!onCloseValues?.currentConceptSet) {
@@ -334,6 +334,7 @@ export default {
               this.newTags.push(addThis)
               this.updateValue([...this.model.props.value, addThis])
             },
+            defaultFilters,
           },
         },
       })

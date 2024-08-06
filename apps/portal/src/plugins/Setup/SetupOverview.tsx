@@ -9,6 +9,7 @@ import { IPluginItem, LocationState } from "../../types";
 import { SetupPluginRenderer } from "../core/SetupPluginRenderer";
 import "./SetupOverview.scss";
 import { useTranslation } from "../../contexts";
+import { PluginMenuItem } from "./PluginMenuItem/PluginMenuItem";
 
 const plugins = loadPlugins();
 
@@ -67,6 +68,7 @@ export const SetupOverview: FC = () => {
                   />
                 );
               })}
+              <PluginMenuItem key={"default-plugin"} />
             </div>
           </>
         )}

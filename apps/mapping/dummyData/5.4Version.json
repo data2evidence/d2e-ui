@@ -1,0 +1,2357 @@
+[
+    {
+        "column_list": [
+            {
+                "column_name": "care_site_name",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "place_of_service_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "location_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "care_site_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "place_of_service_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "care_site_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "care_site"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "source_description",
+                "column_type": "varchar(MAX)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "source_documentation_reference",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "cdm_etl_reference",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "cdm_version",
+                "column_type": "varchar(10)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "cdm_source_name",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "cdm_source_abbreviation",
+                "column_type": "varchar(25)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "cdm_holder",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "source_release_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "cdm_release_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "cdm_version_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "vocabulary_version",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "cdm_source"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "cohort_definition_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "subject_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "cohort_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "cohort_end_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "cohort"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "cohort_definition_description",
+                "column_type": "varchar(MAX)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "cohort_definition_syntax",
+                "column_type": "varchar(MAX)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "cohort_initiation_date",
+                "column_type": "date",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "cohort_definition_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "cohort_definition_name",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "definition_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "subject_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "cohort_definition"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "standard_concept",
+                "column_type": "varchar(1)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "invalid_reason",
+                "column_type": "varchar(1)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "concept_name",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "domain_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "vocabulary_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "concept_class_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "concept_code",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "valid_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "valid_end_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "concept"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "ancestor_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "descendant_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "min_levels_of_separation",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "max_levels_of_separation",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "concept_ancestor"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "concept_class_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "concept_class_name",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "concept_class_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "concept_class"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "invalid_reason",
+                "column_type": "varchar(1)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "concept_id_1",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "concept_id_2",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "relationship_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "valid_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "valid_end_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "concept_relationship"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "concept_synonym_name",
+                "column_type": "varchar(1000)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "language_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "concept_synonym"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "condition_occurrence_count",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "condition_era_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "condition_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "condition_era_start_date",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "condition_era_end_date",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "condition_era"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "condition_start_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "condition_end_date",
+                "column_type": "date",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "condition_end_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "condition_status_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "stop_reason",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "condition_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "condition_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "condition_status_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "condition_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "condition_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "condition_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "condition_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "condition_occurrence"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "currency_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "total_charge",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "total_cost",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "total_paid",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "paid_by_payer",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "paid_by_patient",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "paid_patient_copay",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "paid_patient_coinsurance",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "paid_patient_deductible",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "paid_by_primary",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "paid_ingredient_cost",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "paid_dispensing_fee",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "payer_plan_period_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "amount_allowed",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "revenue_code_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "revenue_code_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "drg_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "drg_source_value",
+                "column_type": "varchar(3)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "cost_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "cost_event_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "cost_domain_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "cost_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "cost"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "death_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "death_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "cause_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "cause_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "cause_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "death_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "death"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "device_exposure_start_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "device_exposure_end_date",
+                "column_type": "date",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "device_exposure_end_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unique_device_id",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "production_id",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "quantity",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "device_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "device_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unit_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unit_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unit_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "device_exposure_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "device_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "device_exposure_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "device_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "device_exposure"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "domain_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "domain_name",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "domain_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "domain"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "dose_era_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "drug_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "unit_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "dose_value",
+                "column_type": "float",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "dose_era_start_date",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "dose_era_end_date",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "dose_era"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "drug_exposure_count",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "gap_days",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "drug_era_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "drug_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "drug_era_start_date",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "drug_era_end_date",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "drug_era"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "drug_exposure_start_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "drug_exposure_end_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "verbatim_end_date",
+                "column_type": "date",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "stop_reason",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "refills",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "quantity",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "days_supply",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "sig",
+                "column_type": "varchar(MAX)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "route_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "lot_number",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "drug_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "drug_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "route_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "dose_unit_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "drug_exposure_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "drug_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "drug_exposure_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "drug_exposure_end_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "drug_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "drug_exposure"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "amount_value",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "amount_unit_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "numerator_value",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "numerator_unit_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "denominator_value",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "denominator_unit_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "box_size",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "invalid_reason",
+                "column_type": "varchar(1)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "drug_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "ingredient_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "valid_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "valid_end_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "drug_strength"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "episode_start_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "episode_end_date",
+                "column_type": "date",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "episode_end_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "episode_parent_id",
+                "column_type": "bigint",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "episode_number",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "episode_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "episode_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "episode_id",
+                "column_type": "bigint",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "bigint",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "episode_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "episode_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "episode_object_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "episode_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "episode"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "episode_id",
+                "column_type": "bigint",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "event_id",
+                "column_type": "bigint",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "episode_event_field_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "episode_event"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "domain_concept_id_1",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "fact_id_1",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "domain_concept_id_2",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "fact_id_2",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "relationship_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "fact_relationship"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "address_1",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "address_2",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "city",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "state",
+                "column_type": "varchar(2)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "zip",
+                "column_type": "varchar(9)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "county",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "location_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "country_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "country_source_value",
+                "column_type": "varchar(80)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "latitude",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "longitude",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "location_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "location"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "measurement_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "measurement_time",
+                "column_type": "varchar(10)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "operator_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "value_as_number",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "value_as_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unit_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "range_low",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "range_high",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "measurement_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "measurement_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unit_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unit_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "value_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "measurement_event_id",
+                "column_type": "bigint",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "meas_event_field_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "measurement_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "measurement_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "measurement_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "measurement_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "measurement"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "value_as_string",
+                "column_type": "varchar(250)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "value_as_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "value_as_number",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "metadata_date",
+                "column_type": "date",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "metadata_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "metadata_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "metadata_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "metadata_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "name",
+                "column_type": "varchar(250)",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "metadata"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "note_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "note_title",
+                "column_type": "varchar(250)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "note_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "note_event_id",
+                "column_type": "bigint",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "note_event_field_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "note_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "note_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "note_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "note_class_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "note_text",
+                "column_type": "varchar(MAX)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "encoding_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "language_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "note"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "section_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "snippet",
+                "column_type": "varchar(250)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "\"offset\"",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "note_nlp_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "note_nlp_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "nlp_system",
+                "column_type": "varchar(250)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "nlp_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "term_exists",
+                "column_type": "varchar(1)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "term_temporal",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "term_modifiers",
+                "column_type": "varchar(2000)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "note_nlp_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "note_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "lexical_variant",
+                "column_type": "varchar(250)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "nlp_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "note_nlp"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "observation_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "value_as_number",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "value_as_string",
+                "column_type": "varchar(60)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "value_as_concept_id",
+                "column_type": "Integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "qualifier_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unit_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "observation_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "observation_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unit_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "qualifier_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "value_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "observation_event_id",
+                "column_type": "bigint",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "obs_event_field_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "observation_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "observation_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "observation_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "observation_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "observation"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "observation_period_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "observation_period_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "observation_period_end_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "period_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "observation_period"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "payer_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "payer_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "payer_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "plan_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "plan_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "plan_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "sponsor_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "sponsor_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "sponsor_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "family_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "stop_reason_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "stop_reason_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "stop_reason_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "payer_plan_period_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "payer_plan_period_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "payer_plan_period_end_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "payer_plan_period"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "month_of_birth",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "day_of_birth",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "birth_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "location_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "care_site_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "person_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "gender_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "gender_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "race_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "race_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "ethnicity_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "ethnicity_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "gender_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "year_of_birth",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "race_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "ethnicity_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "person"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "procedure_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "procedure_end_date",
+                "column_type": "date",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "procedure_end_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "modifier_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "quantity",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "procedure_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "procedure_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "modifier_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "procedure_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "procedure_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "procedure_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "procedure_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "procedure_occurrence"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "provider_name",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "npi",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "dea",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "specialty_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "care_site_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "year_of_birth",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "gender_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "specialty_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "specialty_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "gender_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "gender_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "provider"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "relationship_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "relationship_name",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "is_hierarchical",
+                "column_type": "varchar(1)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "defines_ancestry",
+                "column_type": "varchar(1)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "reverse_relationship_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "relationship_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "relationship"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "source_code_description",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "invalid_reason",
+                "column_type": "varchar(1)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "source_code",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "source_vocabulary_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "target_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "target_vocabulary_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "valid_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "valid_end_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "source_to_concept_map"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "specimen_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "quantity",
+                "column_type": "float",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unit_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "anatomic_site_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "disease_status_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "specimen_source_id",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "specimen_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "unit_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "anatomic_site_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "disease_status_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "specimen_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "specimen_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "specimen_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "specimen_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "specimen"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "visit_detail_start_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_end_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "care_site_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_source_concept_id",
+                "column_type": "Integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "admitted_from_concept_id",
+                "column_type": "Integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "admitted_from_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "discharged_to_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "discharged_to_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "preceding_visit_detail_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "parent_visit_detail_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_detail_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "visit_detail_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "visit_detail_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "visit_detail_end_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "visit_detail_type_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "visit_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "visit_detail"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "visit_start_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_end_datetime",
+                "column_type": "TIMESTAMP",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "provider_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "care_site_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_source_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "admitted_from_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "admitted_from_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "discharged_to_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "discharged_to_source_value",
+                "column_type": "varchar(50)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "preceding_visit_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "visit_occurrence_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "person_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "visit_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "visit_start_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "visit_end_date",
+                "column_type": "date",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "visit_type_concept_id",
+                "column_type": "Integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "visit_occurrence"
+    },
+    {
+        "column_list": [
+            {
+                "column_name": "vocabulary_reference",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "vocabulary_version",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "Yes"
+            },
+            {
+                "column_name": "vocabulary_id",
+                "column_type": "varchar(20)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "vocabulary_name",
+                "column_type": "varchar(255)",
+                "is_column_nullable": "No"
+            },
+            {
+                "column_name": "vocabulary_concept_id",
+                "column_type": "integer",
+                "is_column_nullable": "No"
+            }
+        ],
+        "table_name": "vocabulary"
+    }
+]

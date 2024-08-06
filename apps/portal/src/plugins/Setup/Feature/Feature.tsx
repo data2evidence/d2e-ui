@@ -26,6 +26,9 @@ export const Feature: FC = () => {
       datasetFilter: {
         name: getText(i18nKeys.FEATURE__DATASET_FILTER),
       },
+      datasetSearch: {
+        name: getText(i18nKeys.FEATURE__DATASET_SEARCH),
+      },
       terminology: {
         name: getText(i18nKeys.FEATURE__TERMINOLOGY),
       },
@@ -43,6 +46,12 @@ export const Feature: FC = () => {
       },
       dataflow: {
         name: getText(i18nKeys.FEATURE__DATAFLOW),
+      },
+      cohorts: {
+        name: "Cohorts",
+      },
+      kaplanMeier: {
+        name: "Kaplan-Meier",
       },
     }),
     [getText]

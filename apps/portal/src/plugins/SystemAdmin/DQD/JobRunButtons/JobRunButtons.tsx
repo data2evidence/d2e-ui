@@ -40,8 +40,8 @@ const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGen
 
   const isButtonDisabled = useCallback(
     (type?: string) => {
-      if (type === JobRunTypes.DQD && studyName) {
-        return !flowMetadata.some((flow) => flow.type === JobRunTypes.DQD.toLowerCase());
+      if (type && studyName) {
+        return !flowMetadata.some((flow) => flow.type === type);
       }
       return !studyName;
     },
@@ -74,7 +74,7 @@ const JobRunButtons: FC<JobRunButtonsProps> = ({ datasetId, studyName, handleGen
         <Button
           onClick={handleRunDataCharacterizationClick}
           text={getText(i18nKeys.JOB_RUN_BUTTONS__RUN_DATA_CHARACTERIZATION)}
-          disabled={isButtonDisabled()}
+          disabled={isButtonDisabled(JobRunTypes.DataCharacterization)}
         />
       </div>
       {jobRunType && (

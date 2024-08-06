@@ -95,7 +95,7 @@ export default {
           }
           this.setupPlotly()
           this.$emit('busyEv', false)
-
+          
           if (this.chartData.hasOwnProperty('noDataReason')) {
             this.setCurrentPatientCount({
               currentPatientCount: '--',
@@ -105,7 +105,7 @@ export default {
             })
             return
           }
-          // Render chart only if there is data
+
           this.renderChart()
         }
 

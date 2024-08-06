@@ -11,6 +11,7 @@ export * from "./system";
 export * from "./paConfig";
 export * from "./flow";
 export * from "./dbCredentials";
+export * from "./config";
 
 export interface NavLink {
   id: string;
@@ -62,6 +63,7 @@ export interface IPluginItem {
   iframeUrlEnv?: string;
   description?: string;
   notes?: string;
+  children?: IPluginItem[];
 }
 
 export interface IPlugin {

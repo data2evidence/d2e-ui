@@ -9,6 +9,7 @@ const moduleNames = [
   "mri/PatientSummaryConfig",
   "mri/Search",
   "Researcher/ConceptSets",
+  "Researcher/KaplanMeier",
   "SystemAdmin/Nifi",
   "SystemAdmin/StudyOverview",
   "SystemAdmin/UserOverview",
@@ -30,6 +31,7 @@ const moduleNames = [
   "Setup/Db",
   "Setup/ConceptMapping",
   "Setup/HybridSearch",
+  "Setup/OverviewDescription",
 ];
 
 const modulePaths = moduleNames.reduce(

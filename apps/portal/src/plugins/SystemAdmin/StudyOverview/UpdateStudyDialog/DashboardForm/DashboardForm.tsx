@@ -15,6 +15,8 @@ interface DashboardFormProps {
 export interface DashboardFormError {
   name: {
     required: boolean;
+    invalid: boolean;
+    duplicate: boolean;
   };
   url: {
     required: boolean;
@@ -25,7 +27,7 @@ export interface DashboardFormError {
 }
 
 export const EMPTY_DASHBOARD_FORM_ERROR: DashboardFormError = {
-  name: { required: false },
+  name: { required: false, invalid: false, duplicate: false },
   url: { required: false },
   basePath: { required: false },
 };
@@ -50,11 +52,17 @@ export const DashboardForm: FC<DashboardFormProps> = ({ index, dashboard, onRemo
           variant="standard"
           {...(index === 0 ? { label: "Name" } : { placeholder: "Name" })}
           value={dashboard?.name}
-          error={error?.name.required}
+          error={error?.name.required || error?.name.invalid || error?.name.duplicate}
           onChange={(event: ChangeEvent<HTMLInputElement>) => handleChange({ name: event.target.value })}
         />
         {error?.name.required && (
           <FormHelperText className="form-error">{getText(i18nKeys.DASHBOARD_FORM__REQUIRED)}</FormHelperText>
+        )}
+        {error?.name.invalid && (
+          <FormHelperText className="form-error">{getText(i18nKeys.DASHBOARD_FORM__INVALID)}</FormHelperText>
+        )}
+        {error?.name.duplicate && (
+          <FormHelperText className="form-error">{getText(i18nKeys.DASHBOARD_FORM__DUPLICATE)}</FormHelperText>
         )}
       </Box>
       <Box flex="1" sx={{ height: index === 0 ? "70px" : "60px" }}>

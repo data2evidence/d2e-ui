@@ -16,10 +16,10 @@ class DataSource(_AuthApi):
 
     # Get list of table from a given schema
     def get_table_names(self, schemaName: str):
-        response = self._get("api/services/customDBs/{}".format(schemaName), {})
+        response = self._get("/analytics-svc/api/services/customDBs/{}".format(schemaName), {})
         return json.loads(response.text)
 
     # Get table data from schema and table name
     def get_table_data(self, schemaName: str, tableName: str):
-        response = self._get("api/services/customDBs/{}/{}".format(schemaName, tableName), {})
+        response = self._get("/analytics-svc/api/services/customDBs/{}/{}".format(schemaName, tableName), {})
         return json.loads(response.text)

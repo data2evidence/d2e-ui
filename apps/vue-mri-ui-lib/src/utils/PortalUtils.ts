@@ -3,7 +3,7 @@ export const getPortalAPI = (): {
   qeSvcUrl?: string
   studyId?: string
   releaseId?: string
-  userId?: string
+  username?: string
 } => {
   if (document.getElementsByClassName('plugin-container').length === 1) {
     return (document.getElementsByClassName('plugin-container')[0] as any).portalAPI

@@ -16,27 +16,26 @@ import {
 } from "@portal/components";
 import { Tabs, Tab } from "@mui/material";
 import { api } from "../../../axios/api";
-import { useUserInfo } from "../../../contexts/UserContext";
 import Terminology from "../../Researcher/Terminology/Terminology";
 import { ConceptSetWithConceptDetails } from "../../Researcher/Terminology/utils/types";
 import { TerminologyProps } from "../../Researcher/Terminology/Terminology";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
-import { useFeedback, useTranslation } from "../../../contexts";
+import { useActiveDataset, useFeedback, useTranslation, useUser } from "../../../contexts";
 import "./ConceptSets.scss";
-import { useDatasets } from "../../../hooks";
 
 enum ConceptSetTab {
   ConceptSearch = "ConceptSearch",
   ConceptSets = "ConceptSets",
 }
 
-interface ConceptSetsProps extends PageProps<ResearcherStudyMetadata> {}
+interface ConceptSetsProps extends PageProps<ResearcherStudyMetadata> { }
 
 export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
   const { getText, i18nKeys } = useTranslation();
-  const { user } = useUserInfo();
-  const [datasets] = useDatasets("researcher");
+  const { user, userId } = useUser();
+  const { activeDataset } = useActiveDataset();
+  const activeDatasetId = activeDataset.id;
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
   const [page, setPage] = useState(0);
@@ -44,19 +43,6 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
   const { setFeedback } = useFeedback();
   const [data, setData] = useState<ConceptSetWithConceptDetails[]>([]);
   const [tabValue, setTabValue] = useState(ConceptSetTab.ConceptSearch);
-  const [datasetId, setDatasetId] = useState<string | undefined>();
-  const userId = useUserInfo().user?.userId;
-
-  useEffect(() => {
-    if (metadata?.studyId) {
-      setDatasetId(metadata.studyId);
-      return;
-    }
-    if (datasets?.[0]?.id) {
-      setDatasetId(datasets[0].id);
-      return;
-    }
-  }, [metadata?.studyId, datasets]);
 
   const handleTabSelectionChange = async (event: React.SyntheticEvent, value: ConceptSetTab) => {
     setTabValue(value);
@@ -114,7 +100,7 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
 
   const handleAddAndEditConceptSet = useCallback(
     (conceptSetId?: string) => {
-      if (!datasetId) {
+      if (!activeDatasetId) {
         return;
       }
       const event = new CustomEvent<{ props: TerminologyProps }>("alp-terminology-open", {
@@ -125,14 +111,13 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
               fetchData();
             },
             mode: "CONCEPT_SET",
-            isConceptSet: true,
-            selectedDatasetId: datasetId,
+            selectedDatasetId: activeDatasetId,
           },
         },
       });
       window.dispatchEvent(event);
     },
-    [fetchData, datasetId]
+    [fetchData, activeDatasetId]
   );
 
   const handleRowsPerPageChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -144,10 +129,10 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
     setPage(page);
   }, []);
 
-  const filteredData = data.filter((row) => row.name.toLowerCase().includes(searchText));
+  const filteredData = data.filter((row) => row.name.toLowerCase().includes(searchText.toLowerCase()));
   const pageData = filteredData.slice(rowsPerPage * page, rowsPerPage * (page + 1));
 
-  if (isLoading || !datasetId) return <Loader />;
+  if (isLoading || !activeDatasetId) return <Loader />;
 
   if (!userId) {
     return null;
@@ -210,7 +195,7 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
                           </TableCell>
                           <TableCell>{row.createdDate}</TableCell>
                           <TableCell>{row.modifiedDate}</TableCell>
-                          <TableCell>{row.createdBy}</TableCell>
+                          <TableCell>{row.userName}</TableCell>
                           <TableCell>
                             <IconButton
                               startIcon={row.createdBy === user.idpUserId ? <EditIcon /> : <VisibilityOnIcon />}

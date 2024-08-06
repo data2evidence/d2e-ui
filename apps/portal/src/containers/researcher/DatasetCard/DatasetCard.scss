@@ -32,7 +32,7 @@
     color: #e32900;
   }
 
-  &__description {
+  &__summary {
     margin-top: 24px;
     font-size: 16px;
     height: 150px;
@@ -62,13 +62,9 @@
   &__permission-icon {
     margin-right: 8px;
 
-    path[fill="navy"] {
-      fill: #d53939;
-    }
-
-    &--accessible {
+    &--inaccessible {
       path[fill="navy"] {
-        fill: navy;
+        fill: #d53939;
       }
     }
   }

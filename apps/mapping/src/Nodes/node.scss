@@ -1,0 +1,63 @@
+@import "../theme/variables.scss";
+
+.link-tables__column {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  &__content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+
+    .link-tables__column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin: 0 1.5em;
+    }
+  }
+
+  .content-container {
+    height: 100%;
+    width: 100%;
+    border-radius: 0.3em;
+    // border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .action-container {
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .button-group {
+        width: 70%;
+        .MuiButtonBase-root {
+          margin-top: 1em;
+          background-color: $primary-color;
+        }
+      }
+    }
+
+    .handle-container {
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .handle-container:hover,
+    .handle-container:focus {
+      overflow-y: auto;
+    }
+  }
+}

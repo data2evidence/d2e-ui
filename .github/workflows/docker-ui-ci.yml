@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: alp-data-node/alp-local-ui-file-server
+          - name: alp-data-node/alp-caddy
             directory: .
             context: .
             fileName: Dockerfile

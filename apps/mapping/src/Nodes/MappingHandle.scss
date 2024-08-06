@@ -1,0 +1,40 @@
+@import "../theme/variables.scss";
+
+.mapping-handle {
+  display: flex;
+  justify-content: center;
+  cursor: default;
+  width: 100%;
+  font-size: 1em;
+  position: relative;
+  color: $primary-color;
+  border-radius: 8px;
+  background-color: #fff;
+
+  &__input {
+    background-color: $primary-extra-lightest-color;
+  }
+
+  &__output {
+    background-color: $secondary-lightest-color;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: 0.5em 1em;
+    flex: 1;
+    height: 24px;
+  }
+
+  .react-flow__handle {
+    background: transparent;
+    height: 100%;
+    width: 20px;
+    border-radius: 0;
+    border: 0;
+    &.connectionindicator {
+      cursor: pointer;
+    }
+  }
+}

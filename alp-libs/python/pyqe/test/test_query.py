@@ -333,7 +333,7 @@ def test_select_study_from_user_input(setup, monkeypatch):
     assert query._study_name == 'first.study.name'
     assert query._study_config_id == 'first.pa.config.id'
     assert query._study_config_version == 'B'
-    assert query._study_config_assigned_name == 'first.assignment.name'
+    assert query._study_config_assigned_name == 'OMOP_GDM_PA_CONF'
 
     # Teardown to reset env
     query._clear_selected_study()
@@ -1253,8 +1253,6 @@ def _get_mock_my_config(setup, selected_study_id):
             }
         }, 
         'meta': {
-            'assignmentId': '3D00794D4078407C9B6F67675E62A26D',
-            'assignmentName': 'first.assignment.name',
             'configId': 'first.pa.config.id',
             'configVersion': 'B',
             'configStatus': '',
@@ -1350,10 +1348,45 @@ def _get_mock_omop_frontend_config():
 def _get_mock_study_list(study):
     return [
         {
+            'databaseName': 'alpdev_pg',
             'id': '9f0c44f1-8de9-4d4c-80c0-abcde134799b',
-            'name': 'first.study.name'
+            'dialect': 'postgres', 
+            'vocabSchemaName': 'cdmvocab',
+            'dashboards': [],
+            'tags': [],
+            'attributes': [],
+            'tenant': {
+                'id': 'e0348e4d-2e17-43f2-a3c6-efd752d17c23',
+                'name': 'Tenant',
+                'system': 'Research System'
+            }, 
+            'tokenStudyCode': 'first.study.name', 
+            'studyDetail': {
+                'name': 'first.study.name', 
+                'description': '', 
+                'summary': '', 
+                'showRequestAccess': False
+            }
         },
-        {'id': '7eb1fc8d-5091-4b88-be49-bb1ba014cc99',
-            'name': 'second.study.name'
-         }
+        {
+            'databaseName': 'alpdev_pg',
+            'id': '7eb1fc8d-5091-4b88-be49-bb1ba014cc99',
+            'dialect': 'postgres', 
+            'vocabSchemaName': 'cdmvocab',
+            'dashboards': [],
+            'tags': [],
+            'attributes': [],
+            'tenant': {
+                'id': 'e0348e4d-2e17-43f2-a3c6-efd752d17c23',
+                'name': 'Tenant',
+                'system': 'Research System'
+            }, 
+            'tokenStudyCode': 'second.study.name', 
+            'studyDetail': {
+                'name': 'second.study.name', 
+                'description': '', 
+                'summary': '', 
+                'showRequestAccess': False
+            }
+        }
     ]

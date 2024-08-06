@@ -78,6 +78,8 @@ export type FlowRun = {
   }
 }
 
+export type TaskRun = FlowRun
+
 export type Mode = 'flowRun' | 'taskRun'
 
 export type Params = {
@@ -87,3 +89,31 @@ export type Params = {
 }
 
 export type FlowRunTabName = 'LOGS' | 'TASK_RUNS' | 'DETAILS' | 'PARAMETERS'
+
+export type GetRunsForFlowRunResponse = {
+  start_time: string
+  end_time: string
+  root_node_ids: string[]
+  nodes: readonly [
+    id: string,
+    node: {
+      kind: 'flow-run' | 'task-run'
+      id: string
+      label: string
+      state_type:
+        | 'COMPLETED'
+        | 'RUNNING'
+        | 'SCHEDULED'
+        | 'PENDING'
+        | 'FAILED'
+        | 'CANCELLED'
+        | 'CANCELLING'
+        | 'CRASHED'
+        | 'PAUSED'
+      start_time: string
+      end_time: string
+      parents: never[]
+      children: never[]
+    }
+  ][]
+}

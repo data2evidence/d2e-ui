@@ -8,13 +8,11 @@ from test.mock_object import MockResponse
 @pytest.fixture
 def setup(monkeypatch):
     monkeypatch.setenv('PYQE_URL', 'http://pyqe.url')
-    monkeypatch.setenv('PYQE_AUTH_TYPE', '0')
     monkeypatch.setenv('PYQE_TLS_CLIENT_CA_CERT_PATH', 'empty')
-    monkeypatch.setenv('B2C_ID', '1234567890')
     monkeypatch.setattr(_Api, '_delete', _delete_cohort)
     monkeypatch.setattr(_Api, '_get', _get_all_cohorts)
     monkeypatch.setattr(_Api, '_post', _create_cohort)
-
+    monkeypatch.setattr(Cohort, 'get_id', _get_id)
 
 def test_init_cohort(setup, monkeypatch):
     # when
@@ -45,7 +43,6 @@ def test_delete_cohort(setup):
 
 
 def test_create_cohort(setup):
-
     # when
     cohort = Cohort(STUDY_ID)
 
@@ -55,17 +52,17 @@ def test_create_cohort(setup):
         "description": "hello",
         "syntax": {"ConceptSets": [], "CensorWindow": {}, "InclusionRules": [{"name": "Age", "expression": {"Type": "ALL", "Groups": [], "CriteriaList": [], "DemographicCriteriaList": [{"Age": {"Op": "gt", "Value": 18}}]}}], "QualifiedLimit": {"Type": "First"}, "ExpressionLimit": {"Type": "All"}, "PrimaryCriteria": {"CriteriaList": [{"VisitOccurrence": {"VisitTypeExclude": "false"}}], "ObservationWindow": {"PostDays": 0, "PriorDays": 0}, "PrimaryCriteriaLimit": {"Type": "All"}}, "cdmVersionRange": ">=5.0.0", "CollapseSettings": {"EraPad": 0, "CollapseType": "ERA"}, "CensoringCriteria": []}
     }
-
+    
     response = cohort.create_cohort(cohort_definition)
 
     assert response == json.dumps("cohort created")
 
 
-GET_ALL_COHORTS_PATH = "api/services/cohort"
+GET_ALL_COHORTS_PATH = "/analytics-svc/api/services/cohort"
 
-DELETE_COHORT_PATH = "api/services/cohort?cohortId=1&studyId=studyId"
+DELETE_COHORT_PATH = "/analytics-svc/api/services/cohort?cohortId=1&studyId=studyId"
 
-CREATE_COHORT_PATH = "api/services/cohort"
+CREATE_COHORT_PATH = "/analytics-svc/api/services/cohort"
 
 STUDY_ID = "studyId"
 
@@ -105,7 +102,7 @@ COHORT_DEFINITION = {'mriquery': 'eJxTSs7PyC8qCUotLE0tLlECAC2ABb0=',
                      '"PrimaryCriteriaLimit": {"Type": "All"}}, "cdmVersionRange": '
                      '">=5.0.0", "CollapseSettings": {"EraPad": 0, "CollapseType": '
                                 '"ERA"}, "CensoringCriteria": []}',
-                     'owner': '1234567890'}
+                     'owner': 'hs2gl1yng81j'}
 
 
 def _get_all_cohorts(auth_api, path, params):
@@ -128,8 +125,10 @@ def _delete_cohort(auth_api, path):
 def _create_cohort(auth_api, path, json, data):
 
     if path == CREATE_COHORT_PATH:
-
         assert json == COHORT_DEFINITION
         return MockResponse(200, 'cohort created')
 
     return MockResponse(404, None)
+
+def _get_id(setup):
+    return 'hs2gl1yng81j'

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
@@ -7,7 +7,6 @@ import {
   Loader,
   TableCell,
   TableRow,
-  Title,
   Text,
   VisibilityPublicIcon,
   VisibilityOnIcon,
@@ -15,7 +14,8 @@ import {
   Button,
 } from "@portal/components";
 import { CloseDialogType, Study, StudyAttribute } from "../../../types";
-import { useDialogHelper, useDatasets, useDatabases } from "../../../hooks";
+import { useDialogHelper, useDatasets, useDatabases, useDashboards } from "../../../hooks";
+import { useTranslation } from "../../../contexts";
 import AddStudyDialog from "./AddStudyDialog/AddStudyDialog";
 import UpdateStudyDialog from "./UpdateStudyDialog/UpdateStudyDialog";
 import DatasetResourcesDialog from "./DatasetResourcesDialog/DatasetResourcesDialog";
@@ -26,7 +26,8 @@ import PermissionsDialog from "./PermissionsDialog/PermissionsDialog";
 import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
 import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
 import "./StudyOverview.scss";
-import { useTranslation } from "../../../contexts";
+import { api } from "../../../axios/api";
+import { FlowRunJobStateTypes } from "../Jobs/types";
 
 const enum StudyAttributeConfigIds {
   LATEST_SCHEMA_VERSION = "latest_schema_version",
@@ -37,8 +38,11 @@ const MISSING_ATTRIBUTE_ERROR = "Not Available";
 const StudyOverview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
-  const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, refetch);
+  const [fetchUpdatesLoading, setFetchUpdatesLoading] = useState(false);
+  const [fetchUpdatesFlowIds, setFetchUpdatesFlowIds] = useState<string[]>([]);
+  const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, undefined, refetch);
   const [databases] = useDatabases();
+  const [dashboards] = useDashboards();
 
   const getDbDialect = useCallback(
     (dbName: string) => {
@@ -59,6 +63,43 @@ const StudyOverview: FC = () => {
 
   const [activeStudy, setActiveStudy] = useState<Study>();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchFlowRunState = async () => {
+      const completedJobStatuses = [
+        FlowRunJobStateTypes.COMPLETED as string,
+        FlowRunJobStateTypes.CANCELLED as string,
+        FlowRunJobStateTypes.FAILED as string,
+        FlowRunJobStateTypes.CRASHED as string,
+      ];
+
+      if (fetchUpdatesFlowIds && fetchUpdatesFlowIds.length > 0) {
+        try {
+          const flowRunStatePromises = fetchUpdatesFlowIds.map((flowId) => api.dataflow.getFlowRunState(flowId));
+          const flowRunStates = await Promise.all(flowRunStatePromises);
+          flowRunStates.forEach((flowRunState) => {
+            if (completedJobStatuses.includes(flowRunState.state_name)) {
+              setFetchUpdatesFlowIds((prevFlowIds) => prevFlowIds.filter((id) => id !== flowRunState.id));
+            }
+          });
+        } catch (error) {
+          console.error("Error fetching flow run states:", error);
+        }
+      }
+    };
+
+    const interval = setInterval(() => {
+      fetchFlowRunState();
+    }, 30000);
+
+    if (fetchUpdatesFlowIds.length === 0) {
+      clearInterval(interval);
+      setFetchUpdatesLoading(false);
+      setRefetch((refetch) => refetch + 1);
+    }
+
+    return () => clearInterval(interval);
+  }, [fetchUpdatesFlowIds]);
 
   const handleUpdateStudy = useCallback(
     (study: Study) => {
@@ -178,6 +219,57 @@ const StudyOverview: FC = () => {
     [closeDeleteStudyDialog]
   );
 
+  const fetchDatamodelUpdates = useCallback(async () => {
+    const flowMetadata = await api.dataflow.getFlowMetadata();
+
+    function getFlowId(flowName: string) {
+      const foundFlow = flowMetadata.find((flow: Record<string, any>) => flow.name === flowName);
+      return foundFlow.flowId;
+    }
+
+    const datasetsByFlow: Record<string, Study[]> = {};
+    const apiRequests = [];
+
+    datasets.forEach((item: Study) => {
+      const regex = /\[([^[\]]*)\]/;
+      const match = item.dataModel.match(regex);
+      const dataModelValue = match ? match[1].trim() : "";
+
+      if (!datasetsByFlow[dataModelValue]) {
+        datasetsByFlow[dataModelValue] = [];
+      }
+
+      datasetsByFlow[dataModelValue].push(item);
+    });
+
+    for (const flow in datasetsByFlow) {
+      apiRequests.push(
+        api.dataflow.createFlowRunByMetadata({
+          type: "datamodel",
+          flowRunName: `${flow}-get_version_info`,
+          options: {
+            options: {
+              flow_action_type: "get_version_info",
+              token: "",
+              database_code: "",
+              data_model: "",
+              datasets: datasetsByFlow[flow],
+            },
+          },
+          flowId: getFlowId(flow),
+        })
+      );
+    }
+
+    try {
+      const res: string[] = await Promise.all(apiRequests);
+      setFetchUpdatesLoading(true);
+      setFetchUpdatesFlowIds(res);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [setFetchUpdatesLoading, setFetchUpdatesFlowIds, datasets]);
+
   const getAttributeValue = (
     studyAttributes: StudyAttribute[] | undefined,
     attributeConfigId: StudyAttributeConfigIds
@@ -216,7 +308,14 @@ const StudyOverview: FC = () => {
       <div className="studyoverview">
         <div className="studyoverview__actions">
           <h3 className="studyoverview__actions-title">{getText(i18nKeys.STUDY_OVERVIEW__DATASETS)}</h3>
-          <Button text="Add dataset" onClick={openAddStudyDialog} />
+          <div className="studyoverview__actions-btn-container">
+            <Button
+              text={getText(i18nKeys.STUDY_OVERVIEW__CHECK_DATAMODEL_UPDATES)}
+              onClick={fetchDatamodelUpdates}
+              loading={fetchUpdatesLoading}
+            />
+            <Button text={getText(i18nKeys.STUDY_OVERVIEW__ADD_DATASET)} onClick={openAddStudyDialog} />
+          </div>
           <AddStudyDialog
             open={showAddStudyDialog}
             onClose={handleCloseAddStudyDialog}
@@ -224,6 +323,7 @@ const StudyOverview: FC = () => {
             setLoading={setLoading}
             studies={datasets}
             databases={databases}
+            allDashboards={dashboards}
           />
         </div>
 
@@ -243,7 +343,7 @@ const StudyOverview: FC = () => {
               <TableHead>
                 <TableRow>
                   <TableCell></TableCell>
-                  <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__STUDY_ID)}</TableCell>
+                  <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__DATASET_ID)}</TableCell>
                   <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__NAME)}</TableCell>
                   <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__SCHEMA_NAME)}</TableCell>
                   <TableCell>{getText(i18nKeys.STUDY_OVERVIEW__SCHEMA_VERSION)}</TableCell>
@@ -317,6 +417,7 @@ const StudyOverview: FC = () => {
           {activeStudy && (
             <UpdateStudyDialog
               dataset={activeStudy}
+              allDashboards={dashboards}
               open={showUpdateStudyDialog}
               onClose={handleCloseUpdateStudyDialog}
             />

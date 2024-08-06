@@ -1,9 +1,17 @@
+import { FlowRunJobStateTypes } from "../plugins/SystemAdmin/Jobs/types";
+
 export interface Flow {
   id: string;
   created: string;
   updated: string;
   name: string;
-  tages: string[];
+  tags: string[];
+}
+
+export interface Deployment {
+  id: string;
+  name: string;
+  tags: string[];
 }
 
 export interface MetaData {
@@ -38,6 +46,7 @@ export interface ExecuteFlowRunByDeployment {
   flowName: string;
   deploymentName: string;
   params: object;
+  schedule: string | null;
 }
 
 export interface CreateFlowRunByMetadata {
@@ -46,4 +55,12 @@ export interface CreateFlowRunByMetadata {
   datamodels?: string[];
   flowId?: string;
   options?: object;
+}
+
+export interface FlowRunFilters {
+  startDate?: Date | null;
+  endDate?: Date | null;
+  states?: FlowRunJobStateTypes[];
+  flowIds?: string[];
+  tags?: string[];
 }

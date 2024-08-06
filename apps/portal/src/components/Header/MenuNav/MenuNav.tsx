@@ -5,10 +5,9 @@ import MenuItem from "@mui/material/MenuItem";
 import { ChevronDownIcon } from "@portal/components";
 import { Roles, config } from "../../../config";
 import { Plugins } from "../../../types";
-import { useDatasets, useEnabledFeatures, useMenuAnchor } from "../../../hooks";
-import { useUserInfo } from "../../../contexts/UserContext";
+import { useEnabledFeatures, useMenuAnchor } from "../../../hooks";
 import { getPluginChildPath } from "../../../utils";
-import { useActiveDataset, useTranslation } from "../../../contexts";
+import { useActiveDataset, useTranslation, useUser } from "../../../contexts";
 import "../Header.scss";
 
 export enum MenuType {
@@ -33,10 +32,8 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
   const [anchorEl, openMenu, closeMenu] = useMenuAnchor();
 
   const { activeDataset } = useActiveDataset();
-  const [datasets] = useDatasets("researcher");
-  const dataset = useMemo(() => datasets.find((d) => d.id === activeDataset.id), [datasets, activeDataset.id]);
 
-  const { user } = useUserInfo();
+  const { user } = useUser();
   const featureFlags = useEnabledFeatures();
   const requiredRoles = useMemo(() => plugin?.requiredRoles || [], [plugin?.requiredRoles]);
   const featureFlag = useMemo(() => plugin?.featureFlag || "", [plugin?.featureFlag]);
@@ -47,7 +44,7 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
     if (!allowed && requiredRoles) {
       for (const role of requiredRoles) {
         if (role === Roles.STUDY_RESEARCHER) {
-          allowed = allowed || user.isDatasetResearcher(activeDataset.id);
+          allowed = allowed || user.isDatasetResearcher[activeDataset.id];
         }
       }
     }

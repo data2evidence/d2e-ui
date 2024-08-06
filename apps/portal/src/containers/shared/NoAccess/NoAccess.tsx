@@ -1,30 +1,27 @@
 import React, { FC, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUserInfo, useUserGroups } from "../../../contexts/UserContext";
 import { Button, Loader } from "@portal/components";
 import { config } from "../../../config";
+import { useTranslation, useUser } from "../../../contexts";
 import "./NoAccess.scss";
-import { useTranslation } from "../../../contexts";
 
 const NoAccess: FC = () => {
   const { getText, i18nKeys } = useTranslation();
-  const { getUserId, user } = useUserInfo();
-  const { userGroups } = useUserGroups();
-  const isAuthorized = user?.canAccessResearcherPortal || user?.canAccessSystemAdminPortal;
+  const { user, userId } = useUser();
+  const isAuthorized = user.canAccessResearcherPortal || user.canAccessSystemAdminPortal;
   const navigate = useNavigate();
-  const userId = getUserId();
 
   useEffect(() => {
     if (isAuthorized && userId) {
       navigate("/");
     }
-  }, [navigate, isAuthorized, userId, userGroups]);
+  }, [navigate, isAuthorized, userId]);
 
   const handleLogout = useCallback(() => {
     navigate(config.ROUTES.logout);
   }, [navigate]);
 
-  if (userId === undefined || !userGroups) return <Loader />;
+  if (userId == null || user == null) return <Loader />;
 
   return (
     <div className="no-access">

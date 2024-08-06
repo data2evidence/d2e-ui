@@ -46,9 +46,7 @@ const PAPlugin: FC<PAPluginProps> = ({ studyId, releaseId, getToken }) => {
           hideLogoutButton();
           callbacks = [...scriptCallbacks, ...styleSheetCallbacks];
         });
-      })
-      .then(() => setIsLoading(false));
-
+      });
     //Remove scripts and links upon component unmounting
     return () => {
       callbacks.forEach((callback) => callback());

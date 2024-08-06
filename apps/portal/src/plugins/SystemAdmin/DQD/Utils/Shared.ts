@@ -12,7 +12,7 @@ export const mapTime = (history: HistoryJob[]) => {
     const { createdAt, completedAt, ...rest } = obj;
     return {
       ...rest,
-      createdAt: dayjs.utc(createdAt).format("YYYY-MM-DD HH:mm:ss"),
+      createdAt: !createdAt ? "-" : dayjs.utc(createdAt).format("YYYY-MM-DD HH:mm:ss"),
       completedAt: completedAt === null ? "-" : dayjs.utc(completedAt).format("YYYY-MM-DD HH:mm:ss"),
     };
   });

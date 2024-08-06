@@ -593,6 +593,11 @@ sap.ui.define([
 		oModel.setProperty(sPath + "/relationExpressionFilter/value", "");
 	};
 
+	AttributeController.prototype._resetConceptFilter = function (sPath, oModel) {
+		oModel.setProperty(sPath + "/domainFilter/value", "");
+		oModel.setProperty(sPath + "/standardConceptCodeFilter/value", "");
+	};
+
 	AttributeController.prototype._resetRelationalPatientDefaultFilter = function (sPath, oModel) {
 		oModel.setProperty(sPath + "/relationExpressionPatientKey/value", "");
 		oModel.setProperty(sPath + "/relationExpressionPatientFilter/value", "");

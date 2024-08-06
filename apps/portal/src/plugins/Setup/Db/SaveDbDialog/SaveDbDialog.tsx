@@ -143,7 +143,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
       } else {
         setVocabSchemaOptions(["cdmvocab"]);
       }
-      handleFormDataChange({ dialect });
+      handleFormDataChange({ dialect, vocabSchemas: [] });
     },
     [handleFormDataChange]
   );
@@ -162,26 +162,34 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
       const dataPlatformExtra = formData.extra.find((ext) => ext.serviceScope === SERVICE_SCOPE_TYPES.DATA_PLATFORM);
 
       const newExtra: { [key: string]: object } = {};
-      if (internalExtra?.value) {
-        if (!isValidJson(internalExtra.value)) {
-          setFeedback({
-            type: "error",
-            message: getText(i18nKeys.SAVE_DB_DIALOG__ENTER_VALID_JSON_INTERNAL),
-          });
-          return;
+      if (internalExtra) {
+        if (internalExtra.value) {
+          if (!isValidJson(internalExtra.value)) {
+            setFeedback({
+              type: "error",
+              message: getText(i18nKeys.SAVE_DB_DIALOG__ENTER_VALID_JSON_INTERNAL),
+            });
+            return;
+          }
+          newExtra["Internal"] = JSON.parse(internalExtra.value);
+        } else {
+          newExtra["Internal"] = {};
         }
-        newExtra["Internal"] = JSON.parse(internalExtra.value);
       }
 
-      if (dataPlatformExtra?.value) {
-        if (!isValidJson(dataPlatformExtra.value)) {
-          setFeedback({
-            type: "error",
-            message: getText(i18nKeys.SAVE_DB_DIALOG__ENTER_VALID_JSON_DATA_PLATFORM),
-          });
-          return;
+      if (dataPlatformExtra) {
+        if (dataPlatformExtra.value) {
+          if (!isValidJson(dataPlatformExtra.value)) {
+            setFeedback({
+              type: "error",
+              message: getText(i18nKeys.SAVE_DB_DIALOG__ENTER_VALID_JSON_DATA_PLATFORM),
+            });
+            return;
+          }
+          newExtra["DataPlatform"] = JSON.parse(dataPlatformExtra.value);
+        } else {
+          newExtra["DataPlatform"] = {};
         }
-        newExtra["DataPlatform"] = JSON.parse(dataPlatformExtra.value);
       }
 
       const encrypted: INewDatabase = { ...formData, extra: newExtra, credentials };
@@ -197,7 +205,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
 
       handleClose("success");
     } catch (err: any) {
-      const message = err?.data?.message || err?.data?.error_description;
+      const message = err?.data?.message || err?.data?.error_description || err.message;
       if (message) {
         setFeedback({ type: "error", message });
       } else {
@@ -279,7 +287,6 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         <Box mb={4}>
           <Autocomplete
             multiple
-            freeSolo
             options={vocabSchemaOptions}
             sx={styles}
             id="autocomplete-vocab-schemas"

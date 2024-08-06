@@ -161,7 +161,7 @@ export default {
         mriquery: JSON.stringify(this.getPLRequest({ bmkId: this.bookmarkId })),
         name: this.cohortName,
         description: this.cohortDescription,
-        owner: portalAPI.userId,
+        owner: portalAPI.username,
         syntax: syntax,
       }
       this.resetMessageStrip()

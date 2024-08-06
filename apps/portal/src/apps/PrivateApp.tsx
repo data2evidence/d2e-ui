@@ -1,7 +1,5 @@
-import React, { FC, useContext, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useUserInfo, UserProvider } from "../contexts/UserContext";
-import { PostLoginRedirectUrlContext } from "../contexts/PostLoginRedirectUrlContext";
 import { Researcher } from "../containers/researcher/Researcher";
 import SystemAdmin from "../containers/systemadmin/SystemAdmin";
 import NoAccess from "../containers/shared/NoAccess/NoAccess";
@@ -9,20 +7,22 @@ import { Logout } from "../containers/auth/Logout";
 import { LoginSilent } from "../containers/auth/LoginSilent";
 import { Dashboard } from "../containers/dashboard/Dashboard";
 import { config } from "../config";
+import { usePostLoginRedirectUri, useUser } from "../contexts";
 import { TerminologyWithEventListener } from "../plugins/Researcher/Terminology/TerminologyWithEventListener";
 import { ResultsDialogWithEventLister } from "../plugins/SystemAdmin/DQD/ResultsDialog/ResultsDialogWithEventListener";
 
-const PrivateAppInternal: FC = () => {
-  const redirectUrl = useContext(PostLoginRedirectUrlContext);
-  const { user } = useUserInfo();
+export const PrivateApp: FC = () => {
+  const { popPostLoginRedirectUri } = usePostLoginRedirectUri();
+  const { user } = useUser();
 
   const defaultRoute = useMemo(() => {
     let defaultRoute = config.ROUTES.researcher;
+    const postLoginRedirectUri = popPostLoginRedirectUri();
 
     if (!user) {
       defaultRoute = config.ROUTES.login;
-    } else if (redirectUrl) {
-      defaultRoute = redirectUrl;
+    } else if (postLoginRedirectUri) {
+      defaultRoute = postLoginRedirectUri;
     } else if (user.canAccessSystemAdminPortal && !user.isResearcher) {
       defaultRoute = config.ROUTES.systemadmin;
     } else if (!user.canAccessResearcherPortal && !user.canAccessSystemAdminPortal) {
@@ -30,7 +30,7 @@ const PrivateAppInternal: FC = () => {
     }
 
     return defaultRoute;
-  }, [user, redirectUrl]);
+  }, [user, popPostLoginRedirectUri]);
 
   return (
     <div className="App">
@@ -52,13 +52,5 @@ const PrivateAppInternal: FC = () => {
         </Route>
       </Routes>
     </div>
-  );
-};
-
-export const PrivateApp: FC = () => {
-  return (
-    <UserProvider>
-      <PrivateAppInternal />
-    </UserProvider>
   );
 };

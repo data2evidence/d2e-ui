@@ -1,15 +1,14 @@
-<script setup lang="ts">
-import Router from './Router.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="router">
-    <Router />
+    <RouterView />
   </div>
 </template>
 
 <style scoped>
 .router {
-  @apply bg-gray-800 h-[calc(100vh-72px)];
+  @apply h-[calc(100vh-80px)];
+  background-color: var(--color-neutral-lightest);
 }
 </style>

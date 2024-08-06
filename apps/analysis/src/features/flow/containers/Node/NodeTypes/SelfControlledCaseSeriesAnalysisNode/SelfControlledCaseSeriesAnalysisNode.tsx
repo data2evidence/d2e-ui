@@ -23,6 +23,7 @@ interface SccsIntervalDataArgs {
 }
 
 interface FitSccsModelArgs {
+  control: boolean;
   cvType: string;
   selectorType: string;
   startingVariance: number;
@@ -33,6 +34,7 @@ interface FitSccsModelArgs {
 
 export interface SelfControlledCaseSeriesAnalysisNodeData
   extends NodeDataState {
+  analysisId: number;
   dbSccsDataArgs: DbSccsDataArgs;
   sccsIntervalDataArgs: SccsIntervalDataArgs;
   fitSccsModelArgs: FitSccsModelArgs;

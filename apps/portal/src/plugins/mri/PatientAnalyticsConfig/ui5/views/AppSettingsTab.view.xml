@@ -29,6 +29,12 @@
 					type: 'sap.ui.model.type.Integer'}"
 			type="Number"/>
 
+		<Label text="{i18n>MRI_PA_CFG_MAX_FILTERCARD_TEXT_ATTRIBUTE_LABEL}"/>
+		<Input placeholder="{i18n>MRI_PA_CFG_MAX_FILTERCARD_TEXT_ATTRIBUTE_LABEL}" 
+			value="{ path:'analyticsModel>config/panelOptions/maxFiltercardCount', 
+					type: 'sap.ui.model.type.Integer'}"
+			type="Number"/>
+
 		<Label text="{i18n>MRI_PA_CFG_EXTENSION_EXPORT_LABEL}"/>
 		<Switch state="{analyticsModel>config/panelOptions/externalAccessPoints}" 
 			tooltip="{i18n>MRI_PA_CFG_EXTENSION_EXPORT_TOOLTIP}"

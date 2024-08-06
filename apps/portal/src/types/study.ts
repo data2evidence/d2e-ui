@@ -33,6 +33,7 @@ export interface NewStudyInput {
   databaseCode: string;
   dialect: string;
   paConfigId: string;
+  fhirProjectId: string | undefined;
   visibilityStatus: string;
   detail: DatasetDetail;
   dashboards: DatasetDashboard[];
@@ -47,7 +48,13 @@ export interface CopyStudyInput {
   newStudyName: string;
   sourceStudyId: string;
   snapshotLocation: string;
+  dataModel: string;
   snapshotCopyConfig?: SnapshotCopyConfig;
+}
+
+export interface NewFhirProjectInput {
+  name: string;
+  description: string;
 }
 
 export interface CopyStudyTableMetadata {
@@ -166,6 +173,7 @@ export interface DatasetDashboard {
   name: string;
   url: string;
   basePath: string;
+  id?: string;
 }
 
 export interface TokenMapping {

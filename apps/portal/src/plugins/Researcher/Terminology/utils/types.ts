@@ -39,6 +39,7 @@ export type ConceptSet = {
   createdDate?: string;
   modifiedBy?: string;
   modifiedDate?: string;
+  userName?: string;
 };
 
 export type ConceptSetWithConceptDetails = ConceptSet & {
@@ -68,6 +69,29 @@ export type FilterOptions = {
   validity: {
     [key: string]: number;
   };
+};
+
+export type ConceptHierarchyLink = {
+  source: number;
+  target: number;
+};
+
+export type ConceptHierarchyNode = {
+  conceptId: number;
+  display: string;
+  level: number;
+};
+
+export type ConceptHierarchyNodeCounts = {
+  [level: number]: {
+    count: number;
+    nodes: ConceptHierarchyNode[];
+  };
+};
+
+export type ConceptHierarchyResponse = {
+  edges: ConceptHierarchyLink[];
+  nodes: ConceptHierarchyNode[];
 };
 
 export interface FhirConceptMap {

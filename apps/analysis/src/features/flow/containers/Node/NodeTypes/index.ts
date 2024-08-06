@@ -1,7 +1,7 @@
 import { ComponentType } from "react";
 import { Node, NodeProps } from "reactflow";
 import { NodeDataState } from "../../../types";
-import { RNode } from "./RNode/RNode";
+import { PlainNode } from "./PlainNode/PlainNode";
 import { CohortGeneratorNode } from "./CohortGeneratorNode/CohortGeneratorNode";
 import { CohortDiagnosticsNode } from "./CohortDiagnosticsNode/CohortDiagnosticsNode";
 import { NegatveControlOutcomeNode } from "./NegativeControlOutcomeNode/NegativeControlOutcomeNode";
@@ -18,6 +18,11 @@ import { CohortMethodAnalysisNode } from "./CohortMethodAnalysisNode/CohortMetho
 import { StudyPopulationSettingsNode } from "./StudyPopulationSettingsNode/StudyPopulationSettingsNode";
 import { SelfControlledCaseSeriesAnalysisNode } from "./SelfControlledCaseSeriesAnalysisNode/SelfControlledCaseSeriesAnalysisNode";
 import { CohortIncidentTargetCohortNode } from "./CohortIncidentTargetCohortNode/CohortIncidentTargetCohortNode";
+import { NCOCohortSetNode } from "./NCOCohortSetNode/NCOCohortSetNode";
+import { DefaultCovariateSettingsNode } from "./DefaultCovariateSettingsNode/DefaultCovariateSettingsNode";
+import { OutcomesNode } from "./OutcomesNode/OutcomesNode";
+import { CohortDefinitionSetNode } from "./CohortDefinitionSetNode/CohortDefinitionSetNode";
+import { ExposureNode } from "./ExposureNode/ExposureNode";
 import { NodeChoiceAttr, NodeType, NodeTypeChoice, NodeTag } from "./type";
 
 export const NODE_TYPES: {
@@ -29,7 +34,7 @@ export const NODE_TYPES: {
   cohort_incidence_node: CohortIncidentNode,
   cohort_incidence_target_cohorts_node: CohortIncidentTargetCohortNode,
   time_at_risk_node: TimeAtRiskNode,
-  covariate_settings_node: RNode,
+  default_covariate_settings_node: DefaultCovariateSettingsNode,
   characterization_node: CharacterizationNode,
   target_comparator_outcomes_node: TargetComparatorOutcomesNode,
   cohort_method_analysis_node: CohortMethodAnalysisNode,
@@ -40,21 +45,26 @@ export const NODE_TYPES: {
   self_controlled_case_series_analysis_node:
     SelfControlledCaseSeriesAnalysisNode,
   self_controlled_case_series_node: SelfControlledCaseSeriesNode,
-  patient_level_prediction_node: RNode,
+  patient_level_prediction_node: PlainNode,
   study_population_settings_node: StudyPopulationSettingsNode,
+  nco_cohort_set_node: NCOCohortSetNode,
+  outcomes_node: OutcomesNode,
+  cohort_definition_set_node: CohortDefinitionSetNode,
+  exposure_node: ExposureNode,
+  strategus_node: PlainNode,
 };
 
 export const NODE_COLORS: {
   [key in NodeType]: string;
 } = {
-  cohort_generator_node: "lightgrey",
+  cohort_generator_node: "grey",
   cohort_diagnostic_node: "grey",
   negative_control_outcome_cohort_node: "lime",
   cohort_incidence_node: "cyan",
   cohort_incidence_target_cohorts_node: "aquamarine",
   time_at_risk_node: "wheat",
-  covariate_settings_node: "darkgreen",
-  characterization_node: "darkgreen",
+  default_covariate_settings_node: "darkgreen",
+  characterization_node: "orange",
   target_comparator_outcomes_node: "indigo",
   cohort_method_analysis_node: "lavender",
   cohort_method_node: "mediumpurple",
@@ -65,13 +75,18 @@ export const NODE_COLORS: {
   self_controlled_case_series_node: "darkred",
   patient_level_prediction_node: "magenta",
   study_population_settings_node: "lightpink",
+  nco_cohort_set_node: "blue",
+  outcomes_node: "green",
+  cohort_definition_set_node: "grey",
+  exposure_node: "lightgrey",
+  strategus_node: "black",
 };
 
 export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
   cohort_generator_node: {
     title: "Cohort Generator Module Specifications",
     description: "Run cohort generator code.",
-    tag: NodeTag.Lightgrey,
+    tag: NodeTag.Grey,
     defaultData: {
       incremental: true,
       generateStats: true,
@@ -108,8 +123,16 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run cohort incidence code.",
     tag: NodeTag.Cyan,
     defaultData: {
-      byYear: true,
-      byGender: true,
+      strataSettings: {
+        byYear: true,
+        byGender: true,
+      },
+      cohortRefs: [],
+      incidenceAnalysis: {
+        targets: [],
+        outcomes: [],
+        tars: [],
+      },
     },
   },
   cohort_incidence_target_cohorts_node: {
@@ -126,6 +149,33 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run time at risk code.",
     tag: NodeTag.Wheat,
     defaultData: {
+      timeAtRiskId: undefined,
+      startWith: "start",
+      endWith: "end",
+    },
+  },
+  default_covariate_settings_node: {
+    title: "Covariate Settings",
+    description: "Run covariate settings code.",
+    tag: NodeTag.Darkgreen,
+    defaultData: {
+      excludedCovariateConceptIds: [],
+      includedCovariateConceptIds: [],
+      addDescendantsToExclude: false,
+      addDescendantsToInclude: false,
+      includedCovariateIds: [],
+    },
+  },
+  characterization_node: {
+    title: "Characterization",
+    description: "JSON analysis specification for executing HADES modules",
+    tag: NodeTag.Orange,
+    defaultData: {
+      dechallengeStopInterval: 0,
+      dechallengeEvaluationWindow: 0,
+      minPriorObservation: 0,
+      targetIds: ["1", "2"],
+      outcomeIds: ["3", "2"],
       timeAtRiskConfigs: [
         {
           riskWindowStart: 1,
@@ -134,24 +184,6 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
           endAnchor: "cohort end",
         },
       ],
-    },
-  },
-  covariate_settings_node: {
-    title: "Covariate Settings",
-    description: "Run covariate settings code.",
-    tag: NodeTag.Darkgreen,
-    defaultData: {},
-  },
-  characterization_node: {
-    title: "Characterization",
-    description: "JSON analysis specification for executing HADES modules",
-    tag: NodeTag.Darkgreen,
-    defaultData: {
-      dechallengeStopInterval: 0,
-      dechallengeEvaluationWindow: 0,
-      minPriorObservation: 0,
-      targetIds: ["1", "2"],
-      outcomeIds: ["3", "2"],
     },
   },
   target_comparator_outcomes_node: {
@@ -172,19 +204,21 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Run cohort method analysis code",
     tag: NodeTag.Lavender,
     defaultData: {
-      covariant: {
-        addDescendantsToExclude: true,
-      },
+      analysisId: undefined,
       dbCohortMethodDataArgs: {
         washoutPeriod: 183,
         firstExposureOnly: true,
         removeDuplicateSubjects: "remove all",
         maxCohortSize: 100000,
       },
-      modelType: "cox",
-      stopOnError: false,
-      control: "Cyclops::createControl(cvRepetitions = 1",
-      covariateFilter: "FeatureExtraction::getDefaultTable1Specifications()",
+      fitOutcomeModelArgs: {
+        modelType: "cox",
+      },
+      psArgs: {
+        stopOnError: false,
+        control: false,
+        cvRepetition: 1,
+      },
     },
   },
   cohort_method_node: {
@@ -242,6 +276,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     tag: NodeTag.Red,
     defaultData: {
       description: "SCCS age 18-",
+      analysisId: undefined,
       dbSccsDataArgs: {
         studyStartDate: "",
         studyEndDate: "",
@@ -254,6 +289,7 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
         minCasesForTimeCovariates: 100000,
       },
       fitSccsModelArgs: {
+        control: false,
         cvType: "auto",
         selectorType: "byPid",
         startingVariance: 0.1,
@@ -283,21 +319,63 @@ export const NodeChoiceMap: { [key in NodeTypeChoice]: NodeChoiceAttr } = {
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     tag: NodeTag.Lightpink,
     defaultData: {
-      startAnchor: ["cohort start", "cohort start"],
-      riskWindowStart: 1,
-      endAnchor: ["cohort end", "cohort end"],
-      riskWindowEnd: 365,
-      minTimeAtRisk: 1,
-      studyPopulationArgs: {
+      cohortMethodArgs: {
         minDaysAtRisk: 1,
         riskWindowStart: 0,
-        startAnchor: ["cohort start", "cohort start"],
+        startAnchor: "cohort start",
         riskWindowEnd: 30,
-        endAnchor: ["cohort end", "cohort end"],
+        endAnchor: "cohort end",
+      },
+      sccsArgs: {
         minAge: 18,
         naivePeriod: 365,
       },
+      patientLevelPredictionArgs: {
+        startAnchor: "cohort start",
+        endAnchor: "cohort end",
+        riskWindowStart: 1,
+        riskWindowEnd: 365,
+        minTimeAtRisk: 1,
+      },
     },
+  },
+  nco_cohort_set_node: {
+    title: "NCO Cohort Set",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    tag: NodeTag.Blue,
+    defaultData: {},
+  },
+  outcomes_node: {
+    title: "Outcomes",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    tag: NodeTag.Green,
+    defaultData: {
+      ncoCohortSetIds: [],
+      outcomeOfInterest: false,
+      trueEffectSize: 1,
+      priorOutcomeLookback: 30,
+    },
+  },
+  cohort_definition_set_node: {
+    title: "Cohort Definition Set",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    tag: NodeTag.Olive,
+    defaultData: {},
+  },
+  exposure_node: {
+    title: "Exposures",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    tag: NodeTag.Lightgrey,
+    defaultData: {
+      outcomeOfInterestIds: [],
+      exposureOfInterestIds: [],
+    },
+  },
+  strategus_node: {
+    title: "Strategus",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    tag: NodeTag.Black,
+    defaultData: {},
   },
 };
 

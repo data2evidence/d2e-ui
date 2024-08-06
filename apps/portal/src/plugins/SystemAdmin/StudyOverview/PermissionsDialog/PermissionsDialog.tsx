@@ -9,8 +9,7 @@ import RequestPanel from "./Panels/RequestPanel";
 import AccessPanel from "./Panels/AccessPanel";
 import { api } from "../../../../axios/api";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { useUserGroups, useUserInfo } from "../../../../contexts/UserContext";
-import { useTranslation } from "../../../../contexts";
+import { useTranslation, useUser } from "../../../../contexts";
 
 interface PermissionsDialogProps {
   study?: Study;
@@ -53,8 +52,7 @@ const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose })
   //Access request states
   const [accessRequests, setAccessRequests] = useState<StudyAccessRequest[]>([]);
 
-  const { user: ctxUser } = useUserInfo();
-  const { setUserGroups } = useUserGroups();
+  const { user, setUserGroup } = useUser();
 
   const clearOnSave = useCallback(() => {
     setApprovedReqs([]);
@@ -147,15 +145,15 @@ const PermissionsDialog: FC<PermissionsDialogProps> = ({ study, open, onClose })
       try {
         await api.userMgmt.handleStudyAccessRequest("approve", request.id, request.userId, request.groupId);
 
-        if (request.userId === ctxUser.userId && ctxUser.idpUserId) {
-          const userGroups = await api.userMgmt.getUserGroupList(ctxUser.idpUserId);
-          setUserGroups(userGroups);
+        if (request.userId === user.userId && user.idpUserId) {
+          const userGroups = await api.userMgmt.getUserGroupList(user.idpUserId);
+          setUserGroup(user.idpUserId, userGroups);
         }
       } catch (e) {
         throw new Error("Error approving request");
       }
     },
-    [ctxUser, setUserGroups]
+    [user, setUserGroup]
   );
 
   const handleRegisterRoles = useCallback(async (roleEditReq: RoleEdit) => {

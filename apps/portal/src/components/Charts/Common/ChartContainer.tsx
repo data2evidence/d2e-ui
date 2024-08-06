@@ -1,16 +1,19 @@
-import React, { ReactNode } from "react";
+import React, { HTMLAttributes, ReactNode } from "react";
+import classNames from "classnames";
 import { Card } from "@portal/components";
 
 import "./ChartContainer.scss";
 
-interface ChartContainerProps {
+interface ChartContainerProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   children: ReactNode;
 }
 
-function ChartContainer({ title, children }: ChartContainerProps) {
+function ChartContainer({ title, children, className, ...props }: ChartContainerProps) {
+  const classes = classNames("chart__container", className);
+
   return (
-    <div className="chart__container">
+    <div className={classes} {...props}>
       <Card title={title} className="chart__card" borderRadius={7}>
         {children}
       </Card>

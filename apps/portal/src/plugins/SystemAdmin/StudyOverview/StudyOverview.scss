@@ -28,6 +28,7 @@
       border-bottom: none;
       color: #000080;
       padding-left: 23px;
+      word-wrap: break-word;
     }
     .MuiButton-text {
       padding: 7px 8px;
@@ -52,15 +53,23 @@
   &__actions {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     .studyoverview__actions-title {
-      flex: 1;
       font-size: 20px;
       font-weight: 500;
     }
 
-    .alp-button {
-      min-width: 180px;
+    .studyoverview__actions-btn-container {
+      display: flex;
+      justify-content: space-between;
+      .alp-button__container:first-child {
+        margin-right: 0.5rem;
+      }
+
+      .alp-button {
+        min-width: 180px;
+      }
     }
   }
 

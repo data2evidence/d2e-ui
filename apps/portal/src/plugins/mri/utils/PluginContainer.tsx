@@ -1,5 +1,6 @@
 import React, { FC, ReactNode, useEffect } from "react";
-import { useUserInfo } from "../../../contexts/UserContext";
+import { useToken } from "../../../contexts";
+import env from "../../../env";
 
 interface PluginContainerProps {
   getToken?: () => Promise<string>;
@@ -9,8 +10,10 @@ interface PluginContainerProps {
   children?: ReactNode;
 }
 
+const nameProp = env.REACT_APP_IDP_NAME_PROP;
+
 const PluginContainer: FC<PluginContainerProps> = ({ children, getToken, qeSvcUrl, studyId, releaseId }) => {
-  const { user } = useUserInfo();
+  const { idTokenClaims } = useToken();
 
   useEffect(() => {
     const pluginEvent = new CustomEvent("dataset");
@@ -27,7 +30,7 @@ const PluginContainer: FC<PluginContainerProps> = ({ children, getToken, qeSvcUr
             qeSvcUrl,
             studyId,
             releaseId,
-            userId: user.userId,
+            username: idTokenClaims[nameProp],
           };
         }
       }}

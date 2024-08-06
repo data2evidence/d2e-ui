@@ -11,11 +11,10 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
-import { useUserInfo, useUserGroups } from "../../../../../contexts/UserContext";
+import { useTranslation, useUser } from "../../../../../contexts";
 import RolesSelect from "./RolesSelect";
 import { RoleEdit, StudyAccessRequest } from "../PermissionsDialog";
 import "./PanelTables.scss";
-import { useTranslation } from "../../../../../contexts";
 
 interface AcessPanelProps {
   studyId: string;
@@ -50,8 +49,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
   const [allowedUsers, setAllowedUsers] = useState<UserWithRoles[]>([]);
   const [tenantUsers, setTenantUsers] = useState<UserWithRoles[]>([]);
 
-  const { user: ctxUser } = useUserInfo();
-  const { setUserGroups } = useUserGroups();
+  const { setUserGroup, user: ctxUser } = useUser();
 
   const fetchUserOverview = useCallback(
     async (tenantId: string) => {
@@ -137,7 +135,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
 
         if (user.userId === ctxUser.userId && ctxUser.idpUserId) {
           const userGroups = await api.userMgmt.getUserGroupList(ctxUser.idpUserId);
-          setUserGroups(userGroups);
+          setUserGroup(ctxUser.idpUserId, userGroups);
         }
 
         setFeedback({
@@ -152,7 +150,7 @@ const AcessPanel: FC<AcessPanelProps> = ({
         setLoading(false);
       }
     },
-    [fetchStudyUsers, ctxUser, setFeedback, setLoading, setUserGroups, studyId, tenantId, getText]
+    [fetchStudyUsers, ctxUser, setFeedback, setLoading, setUserGroup, studyId, tenantId, getText]
   );
 
   return (

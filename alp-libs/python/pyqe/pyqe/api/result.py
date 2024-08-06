@@ -26,7 +26,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
             'mriquery': self._encode_query_string(filter)
         }
 
-        response = self._get('api/services/population/json/patientcount', params)
+        response = self._get('/analytics-svc/api/services/population/json/patientcount', params)
         patient_count = response.json()['data'][0]['patient.attributes.pcount']
         logger.debug(
             f'Total number of patients based on the filter: {patient_count}')
@@ -50,7 +50,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
         params = {
             'mriquery': self._encode_query_string(cohort)
         }
-        response = self._get('api/services/patient', params)
+        response = self._get('/analytics-svc/api/services/patient', params)
         return response.json()
 
     def download_stream(self, cohort: dict):
@@ -64,7 +64,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
             'mriquery': self._encode_query_string(cohort)
         }
 
-        return self._get_stream('api/services/datastream/patient', params)
+        return self._get_stream('/analytics-svc/api/services/datastream/patient', params)
 
     def download_dataframe(self, cohort: dict, filename: str = "__temp.csv", cohortid: int = None, limit: int or bool = False, offset: int = 0):
         """Download dataframe from MRI which fit the cohort request provided
@@ -186,7 +186,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
                 'returnOnlyPatientCount': getOnlyPatientCount
             }
 
-        return self._get_stream('api/services/datastream/patient', params)
+        return self._get_stream('/analytics-svc/api/services/datastream/patient', params)
 
     def get_recontact_info(self, cohort: dict, filename: str):
         """Download encrypted data from MRI which fit the cohort request provided
@@ -199,7 +199,7 @@ class Result(_EncodeQueryStringMixin, _AuthApi):
             'mriquery': self._encode_query_string(cohort)
         }
 
-        response = self._get('api/services/recontact/patient', params)
+        response = self._get('/analytics-svc/api/services/recontact/patient', params)
         g = open(f"{filename}.enc", "wb")
         g.write(bytes.fromhex(response.text))
         g.close()

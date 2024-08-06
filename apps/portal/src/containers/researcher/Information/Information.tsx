@@ -19,11 +19,9 @@ import {
   DownloadIcon,
   Title,
 } from "@portal/components";
-import { useUserInfo } from "../../../contexts/UserContext";
 import { StudyAttribute, StudyTag, DatasetResource } from "../../../types";
-import { useActiveDataset, useFeedback, useTranslation } from "../../../contexts";
+import { useActiveDataset, useFeedback, useTranslation, useUser } from "../../../contexts";
 import { useDatasetResources, useDataset, useDatasetDashboards, useDatasetReleases } from "../../../hooks";
-import webComponentWrapper from "../../../webcomponents/webComponentWrapper";
 import { DQDJobResults } from "../../../plugins/SystemAdmin/DQD/DQDJobResults/DQDJobResults";
 import DataQualityHistory from "./DataQualityHistory/DataQualityHistory";
 import { DatasetDashboards } from "./DatasetDashboards/DatasetDashboards";
@@ -31,6 +29,7 @@ import { Roles } from "../../../config";
 import { saveBlobAs } from "../../../utils";
 import { api } from "../../../axios/api";
 import { DQD_TABLE_TYPES } from "../../../plugins/SystemAdmin/DQD/types";
+import { i18nKeys } from "../../../contexts/app-context/states";
 import "./Information.scss";
 
 enum Access {
@@ -55,11 +54,11 @@ interface StudyAccessRequest {
 }
 
 export const Information: FC = () => {
-  const { getText, i18nKeys } = useTranslation();
+  const { getText } = useTranslation();
   const { setFeedback } = useFeedback();
   const [requestLoading, setRequestLoading] = useState(false);
 
-  const { user } = useUserInfo();
+  const { user } = useUser();
 
   const { activeDataset } = useActiveDataset();
   const activeDatasetId = activeDataset.id;
@@ -108,36 +107,32 @@ export const Information: FC = () => {
     [activeDatasetId]
   );
 
-  const requestAccessRef = webComponentWrapper({
-    handleClick: async (event: Event) => {
-      event.preventDefault();
+  const handleRequestAccess = useCallback(async () => {
+    if (activeDatasetId && user?.userId) {
+      try {
+        setRequestLoading(true);
+        await api.userMgmt.addStudyAccessRequest(user.userId, activeDatasetId, Roles.STUDY_RESEARCHER);
+        loadAccessRequests();
 
-      if (activeDatasetId && user?.userId) {
-        try {
-          setRequestLoading(true);
-          await api.userMgmt.addStudyAccessRequest(user.userId, activeDatasetId, Roles.STUDY_RESEARCHER);
-          loadAccessRequests();
-
-          setFeedback({
-            type: "success",
-            message: getText(i18nKeys.INFORMATION__FEEDBACK_MESSAGE),
-            autoClose: 6000,
-          });
-        } catch (e) {
-          setFeedback({
-            type: "error",
-            message: getText(i18nKeys.INFORMATION__FEEDBACK_ERROR_MESSAGE),
-            description: getText(i18nKeys.INFORMATION__FEEDBACK_ERROR_DESCRIPTION),
-          });
-        } finally {
-          setRequestLoading(false);
-        }
+        setFeedback({
+          type: "success",
+          message: getText(i18nKeys.INFORMATION__FEEDBACK_MESSAGE),
+          autoClose: 6000,
+        });
+      } catch (e) {
+        setFeedback({
+          type: "error",
+          message: getText(i18nKeys.INFORMATION__FEEDBACK_ERROR_MESSAGE),
+          description: getText(i18nKeys.INFORMATION__FEEDBACK_ERROR_DESCRIPTION),
+        });
+      } finally {
+        setRequestLoading(false);
       }
-    },
-  });
+    }
+  }, [activeDatasetId, user, getText, loadAccessRequests, setFeedback]);
 
   const getAccess = useCallback(() => {
-    if (user.isDatasetResearcher(activeDatasetId)) {
+    if (user.isDatasetResearcher[activeDatasetId]) {
       return Access.Approved;
     } else if (accessRequests?.some((req) => req.role === Roles.STUDY_RESEARCHER && req.studyId === activeDatasetId)) {
       return Access.Pending;
@@ -222,7 +217,7 @@ export const Information: FC = () => {
           {tabValue === DatasetInfoTab.DatasetInfo && (
             <div className="dataset__info">
               <ReactMarkdown>
-                {dataset?.studyDetail?.description || getText(i18nKeys.STUDY_CARD__NO_DATASET_SUMMARY)}
+                {dataset?.studyDetail?.description || getText(i18nKeys.INFORMATION__NO_DATASET_DESCRIPTION)}
               </ReactMarkdown>
               <div className="metadata_tags_files__container">
                 {(tags.length > 0 || attributes.length > 0) && (
@@ -258,7 +253,7 @@ export const Information: FC = () => {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {attributes.map((studyAttribute: StudyAttribute, index) => (
+                                {attributes.map((studyAttribute: StudyAttribute) => (
                                   <TableRow key={studyAttribute.attributeId}>
                                     <TableCell>{studyAttribute.attributeConfig.name}</TableCell>
                                     <TableCell>{studyAttribute.value}</TableCell>
@@ -324,11 +319,10 @@ export const Information: FC = () => {
                   <div className="tab__content__subtitle">{getText(i18nKeys.INFORMATION__REQUEST_ACCESS)}</div>
                   {getAccess() === Access.None && (
                     <Button
-                      // @ts-ignore
-                      ref={requestAccessRef}
                       text={getText(i18nKeys.INFORMATION__REQUEST_ACCESS)}
                       className="button__request"
                       loading={requestLoading}
+                      onClick={handleRequestAccess}
                     />
                   )}
                   {getAccess() === Access.Pending && (

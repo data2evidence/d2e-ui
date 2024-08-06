@@ -13,8 +13,7 @@ import {
   JobRunTypes,
 } from "../../../SystemAdmin/DQD/types";
 import { useDialogHelper } from "../../../../hooks";
-import { useFeedback, useTranslation } from "../../../../contexts";
-import { useUserInfo } from "../../../../contexts/UserContext";
+import { useFeedback, useTranslation, useUser } from "../../../../contexts";
 
 import "./DataQualityDialog.scss";
 
@@ -36,7 +35,7 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
   const [showJobDialog, openJobDialog, closeJobDialog] = useDialogHelper(false);
   const { getFeedback } = useFeedback();
   const feedback = getFeedback();
-  const { user: userInfo } = useUserInfo();
+  const { user } = useUser();
 
   useEffect(() => {
     if (!latestFlowRun) {
@@ -98,10 +97,11 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
           <Button
             onClick={openJobDialog}
             text={getText(i18nKeys.DATA_QUALITY_DIALOG__RUN_DATA_QUALITY)}
-            disabled={FlowRunInProgressJobStateTypes.includes(latestFlowRun?.state?.type) || !userInfo.isSystemAdmin}
+            disabled={FlowRunInProgressJobStateTypes.includes(latestFlowRun?.state?.type) || !user.isSystemAdmin}
           />
         </div>
-        <div>
+
+        <div className="results-dialog__table">
           {loadingLatestFlowRun ? (
             <Loader text={getText(i18nKeys.DATA_QUALITY_DIALOG__LOAD_LATEST_RUN)} />
           ) : errorLatestFlowRun ? (
@@ -112,15 +112,16 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
             <SubTitle>{getText(i18nKeys.DATA_QUALITY_DIALOG__NO_JOB_FOUND)}</SubTitle>
           )}
         </div>
-        <JobDialog
-          jobRunType={JobRunTypes.DQD}
-          datasetId={datasetId}
-          cohortDefinitionId={cohort.id.toString()}
-          handleGenerateJob={handleGenerateJob}
-          open={showJobDialog}
-          onClose={closeJobDialog}
-        />
       </div>
+
+      <JobDialog
+        jobRunType={JobRunTypes.DQD}
+        datasetId={datasetId}
+        cohortDefinitionId={cohort.id.toString()}
+        handleGenerateJob={handleGenerateJob}
+        open={showJobDialog}
+        onClose={closeJobDialog}
+      />
     </Dialog>
   );
 };

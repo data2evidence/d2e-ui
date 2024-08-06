@@ -15,6 +15,7 @@ import {
   DatasetTagConfig,
   DatasetAttributeConfig,
   FeatureInput,
+  Config,
 } from "../types";
 
 const SYSTEM_PORTAL_URL = `${env.REACT_APP_DN_BASE_URL}system-portal/`;
@@ -53,8 +54,9 @@ export class SystemPortal {
     });
   }
 
-  public getDatasets(role: DatasetQueryRole, params: URLSearchParams) {
+  public getDatasets(role: DatasetQueryRole, searchText: string | undefined, params: URLSearchParams) {
     params.set("role", role);
+    if (searchText) params.set("searchText", searchText);
 
     return request<Study[]>({
       baseURL: SYSTEM_PORTAL_URL,
@@ -152,11 +154,15 @@ export class SystemPortal {
     });
   }
 
-  public getPublicDatasets() {
+  public getPublicDatasets(searchText: string | undefined) {
+    const params = new URLSearchParams();
+    if (searchText) params.set("searchText", searchText);
+
     return request<Study[]>({
       baseURL: SYSTEM_PORTAL_URL,
       url: "dataset/public/list",
       method: "GET",
+      params,
     });
   }
 
@@ -244,11 +250,44 @@ export class SystemPortal {
     });
   }
 
-  public getDashboardById(id: string) {
+  public getDashboardByName(name: string) {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/dashboard/${id}`,
+      url: `dataset/dashboard/${name}`,
       method: "GET",
+    });
+  }
+
+  public getDashboards() {
+    return request({
+      baseURL: SYSTEM_PORTAL_URL,
+      url: `dataset/dashboards/list`,
+      method: "GET",
+    });
+  }
+
+  public getPublicOverviewDescription() {
+    return request({
+      baseURL: SYSTEM_PORTAL_URL,
+      url: "config/public/overview-description",
+      method: "GET",
+    });
+  }
+
+  public getOverviewDescription() {
+    return request({
+      baseURL: SYSTEM_PORTAL_URL,
+      url: "config/overview-description",
+      method: "GET",
+    });
+  }
+
+  public updateConfig(config: Config) {
+    return request({
+      baseURL: SYSTEM_PORTAL_URL,
+      url: `config`,
+      method: "PUT",
+      data: config,
     });
   }
 }

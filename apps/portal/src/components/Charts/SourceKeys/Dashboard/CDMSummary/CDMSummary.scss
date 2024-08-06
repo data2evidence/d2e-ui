@@ -1,7 +1,10 @@
-.chart__container {
-  /* override base style */
-  .alp-card__content {
-    color: #00000099;
+.cdm-summary {
+  &.chart__container {
+    /* override base style */
+    .alp-card__content {
+      color: #00000099;
+      word-break: break-word;
+    }
+    /* end of override base style */
   }
-  /* end of override base style */
 }

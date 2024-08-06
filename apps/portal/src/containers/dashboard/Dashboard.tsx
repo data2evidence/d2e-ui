@@ -1,19 +1,14 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { Box } from "@portal/components";
 import { useDashboard } from "../../hooks";
-import { useUserInfo } from "../../contexts/UserContext";
-import { useTranslation } from "../../contexts";
+import { useTranslation, useUser } from "../../contexts";
 
 export const Dashboard: FC = () => {
   const { getText, i18nKeys } = useTranslation();
-  const { id } = useParams();
-  const [dashboard] = useDashboard(id || "");
-  const { user } = useUserInfo();
-
-  useEffect(() => {
-    localStorage.removeItem("redirectUrl");
-  }, []);
+  const { name } = useParams();
+  const [dashboard] = useDashboard(name || "");
+  const { user } = useUser();
 
   return (
     <Box height="100%" display="flex" flexDirection="column" justifyContent="center">

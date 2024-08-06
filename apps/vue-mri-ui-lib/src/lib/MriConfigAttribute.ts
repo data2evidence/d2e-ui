@@ -125,6 +125,14 @@ MriConfigAttribute.prototype.getAnnotations = function () {
   return this.oInternalConfigAttribute.annotations
 }
 
+MriConfigAttribute.prototype.getDomainFilter = function () {
+  return this.oInternalConfigAttribute.domainFilter
+}
+
+MriConfigAttribute.prototype.getStandardConceptCodeFilter = function () {
+  return this.oInternalConfigAttribute.standardConceptCodeFilter
+}
+
 /**
  * Returns true if the attribute is configured to be used as catalog attribute in MRI
  * @returns {boolean} True if cataloge attribute
