@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
 import { Button } from "@mui/material";
@@ -11,6 +11,7 @@ import "./node.scss";
 export const TargetTableNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const { targetHandles, setTableTargetHandles } = useTable();
+  const [cdmVersions, setCdmVersions] = useState<[]>([]);
 
   // Populate version 5.4
   const populateCDMVersion = useCallback(() => {
@@ -33,13 +34,22 @@ export const TargetTableNode = (props: NodeProps) => {
     updateNodeInternals(props.id);
   }, 100);
 
-  const getCdmVersions = useCallback(async () => {
-    return await api.whiterabbit.getCDMVersions();
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await api.backend.getCDMVersions();
+      const cdmVersions = response.sort((a: string, b: string) =>
+        a > b ? -1 : 1
+      );
+      setCdmVersions(cdmVersions);
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
 
   useEffect(() => {
-    console.log(getCdmVersions());
-  }, []);
+    fetchData();
+  }, [fetchData]);
+
   return (
     <div
       className="link-tables__column nodrag nowheel"
@@ -60,16 +70,18 @@ export const TargetTableNode = (props: NodeProps) => {
               Please select CDM version to see Target tables
             </div>
             <div className="button-group">
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={populateCDMVersion}
-              >
-                Version 5.4
-              </Button>
-              <Button variant="contained" fullWidth>
-                Version 5.3.1
-              </Button>
+              {cdmVersions.slice(0, 2).map((cdmVersion) => {
+                return (
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    onClick={cdmVersion == 5.4 ? populateCDMVersion : undefined}
+                  >
+                    Version {cdmVersion}
+                  </Button>
+                );
+              })}
+
               <Button variant="contained" fullWidth>
                 Select Other Version
               </Button>
