@@ -11,11 +11,7 @@ export class Backend {
     });
   }
 
-  public createSourceSchemaByScanReport(
-    id: number,
-    fileName: string,
-    cdmVersion: string
-  ) {
+  public createSourceSchemaByScanReport(id: number, fileName: string) {
     return request({
       baseURL: BACKEND_BASE_URL,
       url: `create_source_schema_by_scan_report`,
@@ -23,7 +19,9 @@ export class Backend {
       data: {
         dataId: id,
         fileName,
-        cdmVersion,
+      },
+      headers: {
+        "Content-Type": "application/json",
       },
     });
   }

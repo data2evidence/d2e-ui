@@ -10,14 +10,11 @@ import "./node.scss";
 
 export const SourceTableNode = (props: NodeProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [scanId, setScanId] = useState<number>(-1);
   const { sourceHandles } = useTable();
 
   const openScanDataDialog = () => {
     setIsDialogOpen(true);
-  };
-
-  const closeScanDataDialog = () => {
-    setIsDialogOpen(false);
   };
 
   const [isScanProgressDialogOpen, setScanProgressDialogOpen] = useState(false);
@@ -34,11 +31,7 @@ export const SourceTableNode = (props: NodeProps) => {
     setIsDialogOpen(true);
   };
 
-  const openProgressDataDialog = () => {
-    setScanProgressDialogOpen(true);
-  };
-
-  const handleScanProgressDialogClose = (type: CloseDialogType) => {
+  const handleScanProgressDialogClose = () => {
     setScanProgressDialogOpen(false);
   };
 
@@ -71,11 +64,7 @@ export const SourceTableNode = (props: NodeProps) => {
               >
                 Scan Data
               </Button>
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={openProgressDataDialog}
-              >
+              <Button variant="contained" fullWidth>
                 Open Mapping
               </Button>
             </div>
@@ -85,13 +74,14 @@ export const SourceTableNode = (props: NodeProps) => {
       <ScanDataDialog
         open={isDialogOpen}
         onClose={handleScanDataDialogClose}
-        nodeId={props.id}
+        setScanId={setScanId}
       />
       <ScanProgressDialog
         open={isScanProgressDialogOpen}
         onBack={handleBack}
         onClose={handleScanProgressDialogClose}
         nodeId={props.id}
+        scanId={scanId}
       />
     </div>
   );

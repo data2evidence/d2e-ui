@@ -3,25 +3,35 @@ import request from "./request";
 const WHITE_RABBIT_BASE_URL = "http://localhost:41180/white-rabbit/api/";
 
 export class WhiteRabbit {
-  public createScanReport(file: File) {
+  public createScanReport(files: File[]) {
+    const formData = new FormData();
+
+    const settings = {
+      fileType: "CSV files",
+      delimiter: ",",
+      scanDataParams: {
+        sampleSize: 100000,
+        scanValues: true,
+        minCellCount: 5,
+        maxValues: 1000,
+        calculateNumericStats: false,
+        numericStatsSamplerSize: 100000,
+      },
+    };
+    formData.append("settings", JSON.stringify(settings));
+
+    // Append each file to the FormData object
+    files.forEach((file) => {
+      formData.append("files", file, file.name);
+    });
+
     return request({
       baseURL: WHITE_RABBIT_BASE_URL,
       url: `scan-report/files`,
       method: "POST",
-      data: {
-        settings: {
-          fileType: "CSV files",
-          delimiter: ",",
-          scanDataParams: {
-            sampleSize: 100000,
-            scanValues: true,
-            minCellCount: 5,
-            maxValue: 1000,
-            calculateNumbericStats: false,
-            numericStatsSamplerSize: 100000,
-          },
-        },
-        files: file,
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
       },
     });
   }
@@ -37,7 +47,7 @@ export class WhiteRabbit {
   public getScanReport(id: number) {
     return request({
       baseURL: WHITE_RABBIT_BASE_URL,
-      url: `scan-report/result-as-source/${id}`,
+      url: `scan-report/result-as-resource/${id}`,
       method: "GET",
     });
   }

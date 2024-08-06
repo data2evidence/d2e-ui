@@ -1,9 +1,11 @@
-import React, { FC, useEffect, useState, useCallback } from "react";
+import React, { FC, useEffect, useState, useCallback, useRef } from "react";
 import { Button, Dialog, DialogTitle, LinearProgress } from "@mui/material";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import sourceTableData from "../../../dummyData/create_source_schema_scan.json";
 import { TableSourceHandleData, useTable } from "../../contexts";
 import { CloseDialogType } from "../ScanDataDialog/ScanDataDialog";
+import { api } from "../../axios/api";
+import { saveBlobAs } from "../../utils/utils";
 import "./ScanProgressDialog.scss";
 
 interface ScanProgressDialogProps {
@@ -11,6 +13,14 @@ interface ScanProgressDialogProps {
   onBack: () => void;
   onClose?: (type: CloseDialogType) => void;
   nodeId: string;
+  scanId: number;
+}
+
+interface ScanDataProgressLogs {
+  message: string;
+  statusCode: number;
+  statusName: string;
+  percent: number;
 }
 
 export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
@@ -18,70 +28,110 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
   onBack,
   onClose,
   nodeId,
+  scanId,
 }) => {
   const [progress, setProgress] = useState(0);
+  const [scanCompleted, setScanCompleted] = useState(false);
   const [log, setLog] = useState<string[]>([]);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const updateNodeInternals = useUpdateNodeInternals();
   const { setTableSourceHandles } = useTable();
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
+      handleClear();
       typeof onClose === "function" && onClose(type);
     },
     [onClose]
   );
 
-  const handleSaveReport = () => {
-    // Handle saving report
-    console.log("Report saved");
-  };
+  // TODO: Check report file type
+  const handleSaveReport = useCallback(async () => {
+    try {
+      const response = await api.whiteRabbit.getScanReport(scanId);
+      if (response.data instanceof Blob) {
+        saveBlobAs(response, "report.xlsx");
+        console.log("Report saved");
+      } else {
+        console.error("Response is not a Blob", response);
+      }
+    } catch (error) {
+      console.error("Failed to save report", error);
+    }
+  }, [scanId]);
 
-  const handleLinkTables = () => {
-    // TODO: Replace with white-rabbit
-    console.log("Tables linked");
-    let sourceHandles: Partial<NodeProps<TableSourceHandleData>>[];
-    const data = sourceTableData;
-    const table_name = data.source_tables[0].table_name;
-    sourceHandles = [
-      {
-        id: `C.0`,
-        data: { label: table_name, type: "input" },
-        sourcePosition: Position.Right,
-      },
-    ];
+  const handleLinkTables = useCallback(async () => {
+    try {
+      const response = await api.whiteRabbit.getScanResult(scanId);
+      const fileName = response.fileName;
+      const scannedResult = await api.backend.createSourceSchemaByScanReport(
+        scanId,
+        fileName
+      );
+      console.log(`Source schema created: ${scannedResult}`);
+    } catch (error) {
+      console.log(`Error creating source schema`);
+    }
+    // console.log("Tables linked");
+    // let sourceHandles: Partial<NodeProps<TableSourceHandleData>>[];
+    // const data = sourceTableData;
+    // const table_name = data.source_tables[0].table_name;
+    // sourceHandles = [
+    //   {
+    //     id: `C.0`,
+    //     data: { label: table_name, type: "input" },
+    //     sourcePosition: Position.Right,
+    //   },
+    // ];
 
-    setTableSourceHandles(sourceHandles);
-    updateNodeInternals(nodeId);
+    // setTableSourceHandles(sourceHandles);
+    // updateNodeInternals(nodeId);
     handleClose("success");
-  };
+  }, [scanId]);
+
+  const fetchScanProgress = useCallback(async () => {
+    try {
+      const response = await api.whiteRabbit.getScanReportProgress(scanId);
+      setLog(response.logs.map((log: ScanDataProgressLogs) => log.message));
+      setProgress(response.logs[response.logs.length - 1].percent);
+      if (response.statusName === "COMPLETED") {
+        setScanCompleted(true);
+      }
+    } catch (e) {
+      console.error("Failed to fetch scan progress", e);
+    }
+  }, [scanId]);
+
+  const handleBack = useCallback(() => {
+    onBack();
+    handleClear();
+  }, []);
+
+  const handleClear = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    setLog([]);
+    setProgress(0);
+    setScanCompleted(false);
+  }, []);
 
   useEffect(() => {
-    if (open) {
-      // Simulate scan progress
-      // TODO: Replace to poll GET /white-rabbit/api/scan-report/conversion/:id
-      const interval = setInterval(() => {
-        setProgress((prev) => {
-          const newProgress = prev + 10;
-          if (newProgress >= 100) {
-            clearInterval(interval);
-            setLog((prevLog) => [
-              ...prevLog,
-              "Generating scan report...",
-              "Scan report generated!",
-              "Scan report file successfully saved",
-            ]);
-          }
-          return newProgress;
-        });
-      }, 500);
-
-      setLog([
-        "Started new scan of 1 tables...",
-        "Scanning file concept_mappings.csv",
-        "Scanned file concept_mappings.csv",
-      ]);
+    if (open && scanId !== -1 && !scanCompleted) {
+      intervalRef.current = setInterval(() => {
+        fetchScanProgress();
+        if (scanCompleted) {
+          clearInterval(intervalRef.current!);
+        }
+      }, 1000);
+      // Clear the interval when unmount
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      };
     }
-  }, [open]);
+  }, [open, scanId, scanCompleted, fetchScanProgress]);
 
   return (
     <Dialog
@@ -104,7 +154,11 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
         </div>
       </div>
       <div className="scan-progress-dialog__actions">
-        <Button onClick={onBack} variant="outlined">
+        <Button
+          onClick={handleBack}
+          variant="outlined"
+          disabled={!scanCompleted}
+        >
           Back
         </Button>
         <Button onClick={handleSaveReport} variant="contained" color="primary">
