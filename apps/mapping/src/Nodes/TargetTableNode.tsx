@@ -11,7 +11,7 @@ import "./node.scss";
 export const TargetTableNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const { targetHandles, setTableTargetHandles } = useTable();
-  const [cdmVersions, setCdmVersions] = useState<[]>([]);
+  const [cdmVersions, setCdmVersions] = useState<string[]>([]);
 
   // Populate version 5.4
   const populateCDMVersion = useCallback(() => {
@@ -75,7 +75,9 @@ export const TargetTableNode = (props: NodeProps) => {
                   <Button
                     variant="contained"
                     fullWidth
-                    onClick={cdmVersion == 5.4 ? populateCDMVersion : undefined}
+                    onClick={
+                      cdmVersion === "5.4" ? populateCDMVersion : undefined
+                    }
                   >
                     Version {cdmVersion}
                   </Button>
