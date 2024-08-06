@@ -1,5 +1,5 @@
-import { WhiteRabbit } from "./white-rabbit";
+import { Backend } from "./backend";
 
 export const api = {
-  whiterabbit: new WhiteRabbit(),
+  backend: new Backend(),
 };
