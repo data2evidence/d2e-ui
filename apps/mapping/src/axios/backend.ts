@@ -1,6 +1,7 @@
 import request from "./request";
+import env from "../env";
 
-const PERSEUS_BACKEND_BASE_URL = "http://localhost:41180/backend/api/";
+const PERSEUS_BACKEND_BASE_URL = `${env.VITE_PERSEUS_BASE_URL}backend/api/`;
 
 export class Backend {
   public getCDMVersions() {
