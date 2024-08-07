@@ -5,13 +5,11 @@ const client = axios.create();
 client.interceptors.request.use(
   async (config) => {
     // TODO: retrieve bearer token from portal
+    // use token from perseus
     const token = "";
     if (token && config.headers) {
       config.headers.Authorization = token;
     }
-    console.log("here");
-    console.log(config);
-
     return config;
   },
   (error) => {
