@@ -123,11 +123,10 @@ jobs:
           echo . private-clean2.yml syntax check
           cat private-clean2.yml | yq >/dev/null
 
-          echo . "private-clean[12].yml syntax check"
-          yq '.' private-clean1.yml private-clean2.yml >/dev/null
-          yq -N '.[].digest' private-clean1.yml private-clean2.yml
+          echo . "extract digests"
+          yq -N '.[].digest' private-clean1.yml private-clean2.yml | tee private-digests.txt
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
             echo . ACTION: digests to delete
-            yq -N '.[].digest' private-clean1.yml private-clean2.yml | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
+            cat private-digests.txt | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
           fi
