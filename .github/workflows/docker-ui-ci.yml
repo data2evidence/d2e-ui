@@ -129,5 +129,5 @@ jobs:
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
             echo . ACTION: digests to delete
-            cat private-clean1.yml private-clean2.yml | yq '.[].digest' | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
+            yq -N '.[].digest' private-clean1.yml private-clean2.yml | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
           fi
