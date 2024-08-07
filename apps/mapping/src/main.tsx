@@ -1,29 +1,27 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import App from "./App.tsx";
-import { FieldMapLayout } from "./Field/FieldMapLayout.tsx";
-import { TableMapLayout } from "./Table/TableMapLayout.tsx";
+import { BrowserRouter } from "react-router-dom";
+import { SystemAdminPageMetadata } from "@portal/plugin";
+import { App, AppMetadataParams, AppProps } from "./App.tsx";
 import "./index.css";
 
-const router = createBrowserRouter([
-  {
-    element: <App />,
-    children: [
-      {
-        index: true,
-        element: <TableMapLayout />,
-      },
-      {
-        path: "link-fields",
-        element: <FieldMapLayout />,
-      },
-    ],
+const mockMetadata: SystemAdminPageMetadata<AppMetadataParams> = {
+  system: "Local1",
+  userId: "Mock user",
+  getToken: () => Promise.resolve("MockToken"),
+  data: {
+    dnBaseUrl: "https://localhost:41100/",
   },
-]);
+};
+
+const pageProps: AppProps = {
+  metadata: mockMetadata,
+};
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <BrowserRouter>
+      <App {...pageProps} />
+    </BrowserRouter>
   </React.StrictMode>
 );

@@ -82,6 +82,13 @@ RUN --mount=type=cache,target=build \
     npx nx build analysis_flow
 RUN ls -l /usr/src/services/app/alp-ui/resources/
 
+FROM portal-base-build AS mapping-ui-build
+
+RUN --mount=type=cache,target=build \
+    --mount=type=cache,target=dist \
+    npx nx build mapping
+RUN ls -l /usr/src/services/app/alp-ui/resources/
+
 FROM base-build AS ui5-build
 
 RUN yarn ui5 build -a --clean-dest --dest ./resources/ui5
@@ -136,6 +143,7 @@ COPY --from=mri-portal-build /usr/src/services/app/alp-ui/resources/mri-ui5 serv
 COPY --from=superadmin-ui-build /usr/src/services/app/alp-ui/resources/superadmin services/app/alp-ui/resources/superadmin
 COPY --from=flow-ui-build /usr/src/services/app/alp-ui/resources/flow services/app/alp-ui/resources/flow
 COPY --from=analysis-ui-build /usr/src/services/app/alp-ui/resources/analysis services/app/alp-ui/resources/analysis
+COPY --from=mapping-ui-build /usr/src/services/app/alp-ui/resources/mapping services/app/alp-ui/resources/mapping
 COPY --from=ui5-build /usr/src/services/app/alp-ui/resources/ui5 services/app/alp-ui/resources/ui5
 COPY --from=starboard-build /usr/src/services/app/alp-ui/resources/starboard-notebook-base services/app/alp-ui/resources/starboard-notebook-base
 COPY --from=pyqe-build /usr/src/services/app/alp-ui/resources/pyodidepyqe-0.0.2-py3-none-any.whl services/app/alp-ui/resources/starboard-notebook-base
@@ -161,9 +169,8 @@ ENV GIT_COMMIT=$GIT_COMMIT_ARG
 COPY --from=final-build /usr/src/services/app/alp-ui/resources/ ui-files/
 
 # Ignore check if its run for http tests
-RUN for NAME in mri mri-ui5 ui5 portal superadmin flow starboard-jupyter starboard-notebook-base; do \
+RUN for NAME in mri mri-ui5 ui5 portal superadmin flow analysis mapping starboard-jupyter starboard-notebook-base; do \
     DIR=ui-files/${NAME}; \
     echo TEST $DIR created ...; \
     ls -d "${DIR}" || exit 1; \
     done
-    
