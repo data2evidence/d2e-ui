@@ -16,7 +16,6 @@ import Checkbox from "@mui/material/Checkbox";
 import { api } from "../../axios/api";
 import "./ScanDataDialog.scss";
 
-// TODO: Clean up and create separate files for all interfaces and types
 export type CloseDialogType = "success" | "cancelled";
 interface ScanDataDialogProps {
   open: boolean;
@@ -39,7 +38,6 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
-      // handleClear();
       typeof onClose === "function" && onClose(type);
     },
     [onClose]
@@ -48,9 +46,6 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
   const handleApply = useCallback(async () => {
     try {
       setLoading(true);
-      // TODO: Replace with actual data scanning logic
-      // TODO: Open scan data in-progress dialog
-      // await api.data.scanData(selectedFiles, delimiter);
       scanData();
       handleClose("success");
     } catch (err: any) {
@@ -84,9 +79,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
   );
 
   const handleTestConnection = useCallback(() => {
-    console.log(uploadedFiles);
     setAvailableFiles(uploadedFiles.map((file) => file.name));
-    console.log(`available files: ${uploadedFiles.map((file) => file.name)}`);
   }, [uploadedFiles]);
 
   const handleClear = useCallback(() => {

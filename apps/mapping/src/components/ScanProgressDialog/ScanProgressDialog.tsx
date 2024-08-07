@@ -41,16 +41,21 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
     [onClose]
   );
 
-  // TODO: Check report file type
   const handleSaveReport = useCallback(async () => {
     try {
-      const response = await api.whiteRabbit.getScanReport(scanId);
-      if (response.data instanceof Blob) {
-        saveBlobAs(response, "report.xlsx");
-        console.log("Report saved");
-      } else {
-        console.error("Response is not a Blob", response);
+      const binaryString = await api.whiteRabbit.getScanReport(scanId);
+      const binaryLength = binaryString.length;
+      const bytes = new Uint8Array(binaryLength);
+
+      for (let i = 0; i < binaryLength; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
       }
+
+      // Create a Blob from Uint8Array
+      const blob = new Blob([bytes], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      saveBlobAs(blob, "report.xlsx");
     } catch (error) {
       console.error("Failed to save report", error);
     }
