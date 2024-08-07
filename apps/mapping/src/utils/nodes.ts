@@ -3,6 +3,7 @@ import cdmData from "../../dummyData/5.4Version.json";
 import inputData from "../../dummyData/healthcare_and_concept.json";
 import { FieldHandleData } from "../contexts";
 
+// TODO: Replace the dummy data from reading from endpoint
 export const buildFieldHandles = (edge: Edge) => {
   const { sourceHandle, targetHandle } = edge;
 
