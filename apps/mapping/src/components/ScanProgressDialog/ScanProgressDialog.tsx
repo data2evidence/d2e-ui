@@ -1,11 +1,14 @@
 import React, { FC, useEffect, useState, useCallback, useRef } from "react";
 import { Button, Dialog, DialogTitle, LinearProgress } from "@mui/material";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
-import sourceTableData from "../../../dummyData/create_source_schema_scan.json";
 import { TableSourceHandleData, useTable } from "../../contexts";
 import { CloseDialogType } from "../ScanDataDialog/ScanDataDialog";
 import { api } from "../../axios/api";
 import { saveBlobAs } from "../../utils/utils";
+import {
+  ScanDataProgressLogs,
+  ScanDataSourceTable,
+} from "../../types/scanDataDialog";
 import "./ScanProgressDialog.scss";
 
 interface ScanProgressDialogProps {
@@ -14,13 +17,6 @@ interface ScanProgressDialogProps {
   onClose?: (type: CloseDialogType) => void;
   nodeId: string;
   scanId: number;
-}
-
-interface ScanDataProgressLogs {
-  message: string;
-  statusCode: number;
-  statusName: string;
-  percent: number;
 }
 
 export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
@@ -68,26 +64,23 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
         scanId,
         fileName
       );
-      console.log(`Source schema created: ${scannedResult}`);
+
+      let sourceHandles: Partial<NodeProps<TableSourceHandleData>>[];
+      sourceHandles = scannedResult.source_tables.map(
+        (table: ScanDataSourceTable, index: number) => ({
+          id: `C.${index + 1}`,
+          data: { label: table.table_name, type: "input" },
+          sourcePosition: Position.Right,
+        })
+      );
+      setTableSourceHandles(sourceHandles);
+      updateNodeInternals(nodeId);
+      handleClose("success");
     } catch (error) {
       console.log(`Error creating source schema`);
     }
-    // console.log("Tables linked");
-    // let sourceHandles: Partial<NodeProps<TableSourceHandleData>>[];
-    // const data = sourceTableData;
-    // const table_name = data.source_tables[0].table_name;
-    // sourceHandles = [
-    //   {
-    //     id: `C.0`,
-    //     data: { label: table_name, type: "input" },
-    //     sourcePosition: Position.Right,
-    //   },
-    // ];
-
-    // setTableSourceHandles(sourceHandles);
-    // updateNodeInternals(nodeId);
-    handleClose("success");
-  }, [scanId]);
+    console.log("Tables linked");
+  }, [scanId, nodeId]);
 
   const fetchScanProgress = useCallback(async () => {
     try {
