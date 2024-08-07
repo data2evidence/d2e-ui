@@ -99,14 +99,14 @@ jobs:
           AZ_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
           AZ_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           AZ_TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
-          REPOSITORY: alp-data-node/alp-local-ui-file-server
+          AZ_REPOSITORY: ${{ vars.AZ_REPOSITORY }}
           NUMBER_OF_DAYS: 14
         run: |
           TODAY=$(date +%Y-%m-%d)
           TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
 
           echo ". INFO: calculate digests"
-          az acr manifest metadata list --name ${REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags)]" > private.json
+          az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags)]" > private.json
 
           # analyze
           cat private.json | yq -r 'map(.digest as $digest | (.tags|length) as $count | .tags[] as $tag | {"digest":$digest,"count":$count,"tag":$tag,"length":($tag|length)})' > private.yml
@@ -123,7 +123,7 @@ jobs:
           echo . private-clean2.yml syntax check
           cat private-clean2.yml | yq >/dev/null
 
-          echo . "extract digests"
+          echo . INFO: digests to delete
           yq -N '.[].digest' private-clean1.yml private-clean2.yml | tee private-digests.txt
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
