@@ -106,7 +106,7 @@ jobs:
           TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
 
           echo ". INFO: calculate digests"
-          az acr manifest metadata list --name ${REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags)]" | tee private.json
+          az acr manifest metadata list --name ${REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags)]" > private.json
 
           # analyze
           cat private.json | yq -r 'map(.digest as $digest | (.tags|length) as $count | .tags[] as $tag | {"digest":$digest,"count":$count,"tag":$tag,"length":($tag|length)})' > private.yaml
@@ -117,8 +117,11 @@ jobs:
           echo . "clean#2 - multi tag per manifest where not matching regex"
           cat private.yaml | yq 'map(select(.count!=1 and .length!=40 and (.tag|test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)))' | tee private-clean2.yaml | yq '.[].tag' | sort
 
+          echo . private-clean1.yaml syntax check
           cat private-clean1.yaml | yq >/dev/null
+          echo . private-clean2.yaml syntax check
           cat private-clean2.yaml | yq >/dev/null
+          echo . private-clean1&2.yaml syntax check
           cat private-clean1.yaml private-clean2.yaml | yq '.[].digest' >/dev/null
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
