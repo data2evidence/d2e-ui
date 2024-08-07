@@ -1,8 +1,15 @@
-import React, { FC, useContext, useMemo } from "react";
-import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
+import React, { FC, useCallback, useContext, useMemo } from "react";
+import {
+  MaterialReactTable,
+  MRT_ColumnDef,
+  MRT_RowData,
+  MRT_TableInstance,
+  useMaterialReactTable,
+} from "material-react-table";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
 import "./MappingTable.scss";
 import { useTranslation } from "../../../../contexts";
+import { Box, Button } from "@portal/components";
 
 const MappingTable: FC = () => {
   const { getText, i18nKeys } = useTranslation();
@@ -10,8 +17,8 @@ const MappingTable: FC = () => {
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
   const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;
   const csvData = conceptMappingState.csvData.data;
-  
-  const columns = useMemo<MRT_ColumnDef<any>[]>(
+
+  const columns = useMemo<MRT_ColumnDef<MRT_RowData, any>[]>(
     () => [
       {
         id: "0",
@@ -82,31 +89,44 @@ const MappingTable: FC = () => {
       boxShadow: row.original == conceptMappingState.selectedData ? "inset 0px 0px 0px 2px #3b438c" : "none",
     },
   });
-  return (
-    <MaterialReactTable
-      columns={columns}
-      data={csvData}
-      enableColumnResizing={true}
-      muiTableHeadCellProps={{
-        style: {
-          fontWeight: "bold",
-          fontSize: "16px",
-        },
-      }}
-      muiTableBodyCellProps={{
-        style: {
-          fontSize: "14px",
-          color: "#000080",
-        },
-      }}
-      muiTableBodyRowProps={TableBodyRowProps}
-      muiTableHeadRowProps={{
-        style: {
-          backgroundColor: "#ebf1f8",
-        },
-      }}
-    />
-  );
+
+  const populateConcepts = useCallback((table: MRT_TableInstance<MRT_RowData>) => {
+    const currentRows = table.getCenterRows();
+    const formattedRows = currentRows.map((row) => row.original);
+    console.log(formattedRows);
+    return;
+  }, []);
+
+  const tableInstance = useMaterialReactTable({
+    columns,
+    data: csvData,
+    enableColumnResizing: true,
+    muiTableHeadCellProps: {
+      style: {
+        fontWeight: "bold",
+        fontSize: "16px",
+      },
+    },
+    muiTableBodyCellProps: {
+      style: {
+        fontSize: "14px",
+        color: "#000080",
+      },
+    },
+    muiTableBodyRowProps: TableBodyRowProps,
+    muiTableHeadRowProps: {
+      style: {
+        backgroundColor: "#ebf1f8",
+      },
+    },
+    renderTopToolbarCustomActions: ({ table }) => (
+      <Box sx={{ display: "flex", gap: "1rem", p: "4px" }}>
+        <Button onClick={() => populateConcepts(table)} text="Populate all"></Button>
+      </Box>
+    ),
+  });
+
+  return <MaterialReactTable table={tableInstance} />;
 };
 
 export default MappingTable;
