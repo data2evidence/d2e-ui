@@ -125,7 +125,7 @@ jobs:
           cat private-clean2.yml | yq >/dev/null
 
           echo . INFO: digests to delete
-          yq -N '.[].digest' private-clean1.yml private-clean2.yml | tee private-digests.txt
+          yq -N '.[].digest' private-clean1.yml private-clean2.yml | sort -u | tee private-digests.txt
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
             echo . ACTION: digests to delete
