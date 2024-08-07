@@ -102,6 +102,7 @@ jobs:
           AZ_REPOSITORY: ${{ vars.AZ_REPOSITORY }}
           NUMBER_OF_DAYS: 14
         run: |
+          echo AZ_REPOSITORY=$AZ_REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
           TODAY=$(date +%Y-%m-%d)
           TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
 
@@ -128,6 +129,6 @@ jobs:
           yq -N '.[].digest' private-clean1.yml private-clean2.yml | sort -u | tee private-digests.txt
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
-            echo . ACTION: digests to delete
+            echo . ACTION: delete digests ...
             cat private-digests.txt | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
           fi
