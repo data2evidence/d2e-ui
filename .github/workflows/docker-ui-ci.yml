@@ -117,7 +117,11 @@ jobs:
           echo . "clean#2 - multi tag per manifest where not matching regex"
           cat private.yaml | yq 'map(select(.count!=1 and .length!=40 and (.tag|test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)))' | tee private-clean2.yaml | yq '.[].tag' | sort
 
+          cat private-clean1.yaml | yq >/dev/null
+          cat private-clean2.yaml | yq >/dev/null
+          cat private-clean1.yaml private-clean2.yaml | yq '.[].digest' >/dev/null
+
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
             echo . ACTION: digests to delete
-            cat private-clean1.yaml private-clean2.yaml | yq '.[].digest' | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
+            # cat private-clean1.yaml private-clean2.yaml | yq '.[].digest' | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
           fi
