@@ -9,7 +9,7 @@ on:
       - develop
 
 # Run only one job per branch
-concurrency: 
+concurrency:
   group: ${{ github.head_ref || github.ref_name }}-docker-ui-ci # per branch build
   cancel-in-progress: ${{ (github.head_ref || github.ref_name) != 'develop' }} # except for develop branch
 
@@ -31,93 +31,96 @@ jobs:
             platforms: linux/amd64
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    # - name: Get docker tag name
-    #   id: docker_tag
-    #   shell: bash
-    #   run: |
-    #       echo BRANCH_NAME=$BRANCH_NAME
-    #       if [ $BRANCH_NAME = "develop" ]; then
-    #         echo "is_push=true" >> $GITHUB_OUTPUT
-    #       elif [ $GITHUB_EVENT_NAME = "workflow_dispatch" ]; then
-    #         echo "is_push=true" >> $GITHUB_OUTPUT
-    #       else
-    #         echo "is_push=false" >> $GITHUB_OUTPUT
-    #       fi
+      # - name: Get docker tag name
+      #   id: docker_tag
+      #   shell: bash
+      #   run: |
+      #       echo BRANCH_NAME=$BRANCH_NAME
+      #       if [ $BRANCH_NAME = "develop" ]; then
+      #         echo "is_push=true" >> $GITHUB_OUTPUT
+      #       elif [ $GITHUB_EVENT_NAME = "workflow_dispatch" ]; then
+      #         echo "is_push=true" >> $GITHUB_OUTPUT
+      #       else
+      #         echo "is_push=false" >> $GITHUB_OUTPUT
+      #       fi
 
-    # - uses: webfactory/ssh-agent@v0.9.0
-    #   with:
-    #     ssh-private-key: |
-    #         ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
-    #         ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
+      # - uses: webfactory/ssh-agent@v0.9.0
+      #   with:
+      #     ssh-private-key: |
+      #         ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
+      #         ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
 
-    # - name: Login to ACR
-    #   uses: docker/login-action@v3.1.0
-    #   with:
-    #     registry: alpcr.azurecr.io
-    #     username: ${{ secrets.REGISTRY_USERNAME }}
-    #     password: ${{ secrets.REGISTRY_PASSWORD }}
+      # - name: Login to ACR
+      #   uses: docker/login-action@v3.1.0
+      #   with:
+      #     registry: alpcr.azurecr.io
+      #     username: ${{ secrets.AZ_REGISTRY_USERNAME }}
+      #     password: ${{ secrets.AZ_REGISTRY_PASSWORD }}
 
-    # - name: Collect Git and SSH config files in a directory that is part of the Docker build context
-    #   run: |
-    #     cp -r ~/.gitconfig  ~/.ssh .github/
-    #     cd .github/
-    #     sed 's|/home/runner|/root|g' -i.bak .ssh/config
+      # - name: Collect Git and SSH config files in a directory that is part of the Docker build context
+      #   run: |
+      #     cp -r ~/.gitconfig  ~/.ssh .github/
+      #     cd .github/
+      #     sed 's|/home/runner|/root|g' -i.bak .ssh/config
 
-    # - name: Set up Docker Buildx
-    #   uses: docker/setup-buildx-action@v3
-    #   id: builder
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
+      #   id: builder
 
-    # - name: Build and push
-    #   uses: docker/build-push-action@v5.3.0
-    #   id: build_push
-    #   continue-on-error: false
-    #   with:
-    #     builder: ${{ steps.builder.outputs.name }}
-    #     # cache-from: type=gha
-    #     # cache-to: type=gha,mode=max
-    #     ulimit: nofile=1048576:1048576
-    #     platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
-    #     context: ${{ matrix.context }}
-    #     file:  ${{ matrix.directory }}/${{ matrix.fileName }}
-    #     push: ${{ steps.docker_tag.outputs.is_push }}
-    #     tags: alpcr.azurecr.io/${{ matrix.name }}:${{ env.BRANCH_NAME }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
-    #     ssh: |
-    #       default=${{ env.SSH_AUTH_SOCK }}
-    #     build-args: |
-    #       docker_image_prefix=alpcr.azurecr.io
-    #       GIT_COMMIT_ARG=${{ github.sha }}
-    
-    - name: Delete images older than 14 days
-      id: delete_old_images
-      # if: false # ${{ github.event_name != 'workflow_dispatch' && github.ref_name == 'develop' }}
-      shell: bash
-      env:
-        REGISTRY_NAME: alpcr
-        REPOSITORY: alp-data-node/alp-local-ui-file-server
-        AZ_TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
-        REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-        REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-        AZ__ENABLE_DELETE: ${{ vars.AZ__ENABLE_DELETE }} # true|false - enable/disable as needed
-        NUMBER_OF_DAYS: 14
-      run: |
-        TODAY=$(date +%Y-%m-%d)
-        TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
-        
-        # az login --service-principal -u ${AZ_SP__CLIENT_ID} -p ${AZ_SP__CLIENT_SECRET} --tenant ${AZ_TENANT_NAME}
-        
-        echo ". INFO: calculate digests"
-        az acr manifest metadata list --name ${REPOSITORY} --registry ${REGISTRY_NAME} --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags) && !(length(tags[0])!=\`40\` || not_null(tags[1]) && length(tags[1])!=\`40\` || not_null(tags[2]) && length(tags[2])!=\`40\`)]" > private.json
+      # - name: Build and push
+      #   uses: docker/build-push-action@v5.3.0
+      #   id: build_push
+      #   continue-on-error: false
+      #   with:
+      #     builder: ${{ steps.builder.outputs.name }}
+      #     # cache-from: type=gha
+      #     # cache-to: type=gha,mode=max
+      #     ulimit: nofile=1048576:1048576
+      #     platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
+      #     context: ${{ matrix.context }}
+      #     file:  ${{ matrix.directory }}/${{ matrix.fileName }}
+      #     push: ${{ steps.docker_tag.outputs.is_push }}
+      #     tags: alpcr.azurecr.io/${{ matrix.name }}:${{ env.BRANCH_NAME }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
+      #     ssh: |
+      #       default=${{ env.SSH_AUTH_SOCK }}
+      #     build-args: |
+      #       docker_image_prefix=alpcr.azurecr.io
+      #       GIT_COMMIT_ARG=${{ github.sha }}
 
-        echo . INFO: tags to delete
-        cat private.json | yq '.[].tags'
-        
-        if [ "${AZ__ENABLE_DELETE}" = false ]; then
-          echo . INFO: images digests selected but not deleted
-          cat private.json | yq '.[].digest' | xargs -I% echo az acr repository delete -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} --name ${REGISTRY_NAME} --image $REPOSITORY@% --yes
-        else
-          echo . ACTION: digests to delete
-          cat private.json | yq '.[].digest' | xargs -I% echo az acr repository delete -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} --name ${REGISTRY_NAME} --image $REPOSITORY@% --yes  
-        fi
+      - name: Delete images older than 14 days
+        id: delete_old_images
+        # if: false # ${{ github.event_name != 'workflow_dispatch' && github.ref_name == 'develop' }}
+        shell: bash
+        env:
+          AZ_ENABLE_DELETE: ${{ vars.AZ_ENABLE_DELETE }} # true|false - enable/disable as needed
+          AZ_REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
+          AZ_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          AZ_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          AZ_TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
+          REPOSITORY: alp-data-node/alp-local-ui-file-server
+          NUMBER_OF_DAYS: 14
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
 
+          echo ". INFO: calculate digests"
+          az acr manifest metadata list --name ${REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags)]" | tee private.json
+
+          # analyze
+          cat private.json | yq -r 'map(.digest as $digest | (.tags|length) as $count | .tags[] as $tag | {"digest":$digest,"count":$count,"tag":$tag,"length":($tag|length)})' > private.yaml
+
+          echo . "clean#1 - single tag of 40 chars commit_id"
+          cat private.yaml | yq 'map(select(.count==1 and .length==40))' | tee private-clean1.yaml | yq '.[].tag'
+
+          echo . "clean#2 - multi tag where not matching regex"
+          cat private.yaml | yq 'map(select(.count!=1 and .length!=40 and (.tag|test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)))' | tee private-clean2.yaml | yq '.[].tag' | sort
+
+          echo . INFO: tags to delete
+          cat private-commit.json | yq '.[].tags'
+
+          if [ "${AZ_ENABLE_DELETE}" = true ]; then
+            echo . ACTION: digests to delete
+            cat private-clean1.yaml private-clean2.yaml | yq '.[].digest' | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
+          fi
