@@ -111,14 +111,11 @@ jobs:
           # analyze
           cat private.json | yq -r 'map(.digest as $digest | (.tags|length) as $count | .tags[] as $tag | {"digest":$digest,"count":$count,"tag":$tag,"length":($tag|length)})' > private.yaml
 
-          echo . "clean#1 - single tag of 40 chars commit_id"
+          echo . "clean#1 - single tag per manifest of 40 chars commit_id"
           cat private.yaml | yq 'map(select(.count==1 and .length==40))' | tee private-clean1.yaml | yq '.[].tag'
 
-          echo . "clean#2 - multi tag where not matching regex"
+          echo . "clean#2 - multi tag per manifest where not matching regex"
           cat private.yaml | yq 'map(select(.count!=1 and .length!=40 and (.tag|test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)))' | tee private-clean2.yaml | yq '.[].tag' | sort
-
-          echo . INFO: tags to delete
-          cat private-commit.json | yq '.[].tags'
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
             echo . ACTION: digests to delete
