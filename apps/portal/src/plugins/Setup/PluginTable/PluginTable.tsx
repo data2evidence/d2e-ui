@@ -100,8 +100,8 @@ export const PluginTable: FC = () => {
 
   return (
     <>
-      <Title className="table__title">Plugins</Title>
-      <TableContainer className="flows__list">
+      <Title className="plugin-table__table__title">Plugins</Title>
+      <TableContainer className="plugin-table__flows__list">
         <Table>
           <TableHead>
             <TableRow>
