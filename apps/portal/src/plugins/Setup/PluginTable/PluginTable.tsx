@@ -164,6 +164,7 @@ export const PluginTable: FC = () => {
             overflow: "visible",
             height: "52px",
             "& .MuiButtonBase-root:not(.Mui-disabled)": { color: "#000080" },
+            marginRight: "35px",
           }}
         />
       )}
