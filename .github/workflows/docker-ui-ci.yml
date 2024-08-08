@@ -89,35 +89,34 @@ jobs:
       #       docker_image_prefix=alpcr.azurecr.io
       #       GIT_COMMIT_ARG=${{ github.sha }}
 
-      - name: Delete images older than 14 days
-        id: delete_old_images
+      - name: Prune old images
         # if: false # ${{ github.event_name != 'workflow_dispatch' && github.ref_name == 'develop' }}
         shell: bash
         env:
-          AZ_ENABLE_DELETE: ${{ vars.AZ_ENABLE_DELETE }} # true|false - enable/disable as needed
-          AZ_REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
-          AZ_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-          AZ_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          AZ_TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
-          AZ_REPOSITORY: ${{ vars.AZ_REPOSITORY }}
-          NUMBER_OF_DAYS: ${{ vars.NUMBER_OF_DAYS }}
+          ENABLE_DELETE: ${{ vars.AZ_ENABLE_DELETE }} # true|false - enable/disable as needed
+          NUMBER_OF_DAYS: ${{ vars.AZ_REGISTRY_NUMBER_OF_DAYS }}
+          REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REPOSITORY: ${{ vars.AZ_REPOSITORY }}
+          TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
         run: |
-          echo AZ_REPOSITORY=$AZ_REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
+          echo REPOSITORY=$REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
           echo NUMBER_OF_DAYS=$NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
           TODAY=$(date +%Y-%m-%d)
           TIMESTAMP="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
           [ $NUMBER_OF_DAYS = 0 ] && TIMESTAMP=$(date -u -Is); echo TIMESTAMP=$TIMESTAMP
 
-          echo ". INFO: get manifest metadata" # ignore deprecated warning
-          az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TIMESTAMP}' && not_null(tags)]" > private.json
+          echo ". 1. - GET manifest metadata" # ignore deprecated warning
+          az acr manifest metadata list --name ${REPOSITORY} --registry ${REGISTRY_NAME} --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TIMESTAMP}' && not_null(tags)]" > private.json
 
-          echo ". 1 analyze each tag as deletable True/False"
+          echo ". 2 - ANALYZE each tag as deletable True/False"
           cat private.json | yq -rP 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"deletable":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private1-analysis.yml | yq '.[0:20]'
 
-          echo ". 2 select manifests containing no non-deletable tags"
+          echo ". 3 - SELECT manifests containing no non-deletable tags"
           cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not))' | tee private2-todelete.yml | yq '.[].tags' | awk '{ print length, $0 }' | sort -n | cut -d" " -f2- | head -100
 
-          if [ "${AZ_ENABLE_DELETE}" = true ]; then
-            echo ". 3 ACTION delete digests ..."
+          if [ "${ENABLE_DELETE}" = true ]; then
+            echo ". 4 - ACTION delete digests ..."
             yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes
           fi
