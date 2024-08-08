@@ -114,23 +114,14 @@ jobs:
           # cat private.json | yq -r 'map((.tags))'
           # cat private.json | yq -r 'map((.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)))'
 
-          echo . analyze
-          cat private.json | yq -r 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"delete":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private.yml
+          echo . "1 analyze each tag as deletable True/False"
+          cat private.json | yq -r 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"delete":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private1.yml
 
-          echo . "clean#1 - single tag per manifest of 40 chars commit_id"
-          cat private.yml | yq 'map(select(.count==1 and .lengths=="[40]"))' | tee private-clean1.yml | yq '.[].tags'
+          echo . "2 parse where manifest has no deletable false tags"
+          cat private1.yml | yq 'map(select(.delete|contains("false")|not))' | tee private-2.yml | yq '.[].tags'
 
-          echo . "clean#2 - where tag not matching regex" # exclisively True deletable tags Not matching regex
-          cat private.yml | yq 'map(select(.delete|contains("false")|not))' | tee private-clean2.yml | yq '.[].tags'
-
-          echo . private-clean1.yml syntax check
-          cat private-clean1.yml | yq >/dev/null
-
-          echo . private-clean2.yml syntax check
-          cat private-clean2.yml | yq >/dev/null
-
-          echo . INFO: combine digests to generate commands
-          yq -N '.[].digest' private-clean1.yml private-clean2.yml | sort -u | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes | tee private-cmd.sh
+          echo . "3 generate commands"
+          yq '.[].digest' private-2.yml | sort -u | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes | tee private-cmd.sh
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
             echo . ACTION: delete digests ...
