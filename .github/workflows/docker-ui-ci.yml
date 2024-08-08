@@ -69,25 +69,25 @@ jobs:
       uses: docker/setup-buildx-action@v3
       id: builder
 
-    - name: Build and push
-      uses: docker/build-push-action@v5.3.0
-      id: build_push
-      continue-on-error: false
-      with:
-        builder: ${{ steps.builder.outputs.name }}
-        # cache-from: type=gha
-        # cache-to: type=gha,mode=max
-        ulimit: nofile=1048576:1048576
-        platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
-        context: ${{ matrix.context }}
-        file:  ${{ matrix.directory }}/${{ matrix.fileName }}
-        push: ${{ steps.docker_tag.outputs.is_push }}
-        tags: alpcr.azurecr.io/${{ matrix.name }}:${{ env.BRANCH_NAME }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
-        ssh: |
-          default=${{ env.SSH_AUTH_SOCK }}
-        build-args: |
-          docker_image_prefix=alpcr.azurecr.io
-          GIT_COMMIT_ARG=${{ github.sha }}
+    # - name: Build and push
+    #   uses: docker/build-push-action@v5.3.0
+    #   id: build_push
+    #   continue-on-error: false
+    #   with:
+    #     builder: ${{ steps.builder.outputs.name }}
+    #     # cache-from: type=gha
+    #     # cache-to: type=gha,mode=max
+    #     ulimit: nofile=1048576:1048576
+    #     platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
+    #     context: ${{ matrix.context }}
+    #     file:  ${{ matrix.directory }}/${{ matrix.fileName }}
+    #     push: ${{ steps.docker_tag.outputs.is_push }}
+    #     tags: alpcr.azurecr.io/${{ matrix.name }}:${{ env.BRANCH_NAME }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
+    #     ssh: |
+    #       default=${{ env.SSH_AUTH_SOCK }}
+    #     build-args: |
+    #       docker_image_prefix=alpcr.azurecr.io
+    #       GIT_COMMIT_ARG=${{ github.sha }}
 
     - name: Prune old images
       if: ${{ github.event_name != 'workflow_dispatch' && github.ref_name == 'develop' }}
@@ -119,5 +119,7 @@ jobs:
 
         if [ "${ENABLE_DELETE}" = true ]; then
           echo ". 4 - ACTION delete digests ..."
-          yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes
+          yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes
+        else
+          echo ". 4 - SKIPPED delete digests ..."
         fi
