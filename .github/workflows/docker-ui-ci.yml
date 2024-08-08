@@ -101,8 +101,9 @@ jobs:
           REPOSITORY: ${{ vars.AZ_REPOSITORY }}
           TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
         run: |
-          echo REPOSITORY=$REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
+          echo ENABLE_DELETE=$ENABLE_DELETE | tee -a $GITHUB_STEP_SUMMARY
           echo NUMBER_OF_DAYS=$NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
+          echo REPOSITORY=$REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
           TODAY=$(date +%Y-%m-%d)
           TIMESTAMP="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
           [ $NUMBER_OF_DAYS = 0 ] && TIMESTAMP=$(date -u -Is); echo TIMESTAMP=$TIMESTAMP
@@ -118,5 +119,5 @@ jobs:
 
           if [ "${ENABLE_DELETE}" = true ]; then
             echo ". 4 - ACTION delete digests ..."
-            yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes
+            yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes
           fi
