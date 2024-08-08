@@ -106,24 +106,27 @@ jobs:
           TODAY=$(date +%Y-%m-%d)
           TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
 
-          echo ". INFO: calculate digests"
+          echo ". INFO: calculate digests" # ignore deprecated warning
           # az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags)]" > private.json
           az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?not_null(tags)]" > private.json
 
-          # debug
-          # cat private.json | yq -r 'map((.tags))'
-          # cat private.json | yq -r 'map((.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)))'
+          # 1 analyze each tag as deletable True/False
+          cat private.json | yq -r 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"deletable":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private1-analysis.yml
 
-          echo . "INFO 1 analyze each tag as deletable True/False"
-          cat private.json | yq -r 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"delete":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' > private1.yml
+          # 2 parse where manifest has no deletable false tags
+          cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not))' | tee private2-todelete.yml | yq '.[0:20]'
 
-          echo . "INFO 2 parse where manifest has no deletable false tags"
-          cat private1.yml | yq 'map(select(.delete|contains("false")|not))' | tee private-2.yml | yq '.[].tags'
+          # INFO deletable & not CommitIds
+          cat private2-todelete.yml | yq 'map(select(.count!=1 and .lengths!="[40]")).[].tags' | tee private2-deletable.txt
 
-          echo . "INFO 3 generate commands"
-          yq '.[].digest' private-2.yml | sort -u | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes | tee private-cmd.sh
+          # 3 generate commands
+          yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes | tee private-cmd.sh | head -10
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
             echo . "ACTION delete digests ..."
             source private-cmd.sh
+            if [ -s private2-deletable.txt ]; then
+              echo INFO removed manifests with tags | tee $GITHUB_STEP_SUMMARY
+              cat private2-deletable.txt | tee $GITHUB_STEP_SUMMARY
+            fi
           fi
