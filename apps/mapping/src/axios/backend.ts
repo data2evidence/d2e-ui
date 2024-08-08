@@ -11,4 +11,19 @@ export class Backend {
       method: "GET",
     });
   }
+
+  public createSourceSchemaByScanReport(id: number, fileName: string) {
+    return request({
+      baseURL: PERSEUS_BACKEND_BASE_URL,
+      url: `create_source_schema_by_scan_report`,
+      method: "POST",
+      data: {
+        dataId: id,
+        fileName,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
 }
