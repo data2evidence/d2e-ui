@@ -114,16 +114,16 @@ jobs:
           # cat private.json | yq -r 'map((.tags))'
           # cat private.json | yq -r 'map((.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)))'
 
-          echo . "1 analyze each tag as deletable True/False"
-          cat private.json | yq -r 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"delete":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private1.yml
+          echo . "INFO 1 analyze each tag as deletable True/False"
+          cat private.json | yq -r 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"delete":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' > private1.yml
 
-          echo . "2 parse where manifest has no deletable false tags"
+          echo . "INFO 2 parse where manifest has no deletable false tags"
           cat private1.yml | yq 'map(select(.delete|contains("false")|not))' | tee private-2.yml | yq '.[].tags'
 
-          echo . "3 generate commands"
+          echo . "INFO 3 generate commands"
           yq '.[].digest' private-2.yml | sort -u | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes | tee private-cmd.sh
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
-            echo . ACTION: delete digests ...
+            echo . "ACTION delete digests ..."
             source private-cmd.sh
           fi
