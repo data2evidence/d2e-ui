@@ -1,5 +1,7 @@
 import { useCallback } from "react";
 import ReactFlow, { Controls, Edge } from "reactflow";
+import { Button } from "@mui/material";
+import { ManageSearch } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { nodeTypes } from "../Nodes";
 import { buildFieldHandles } from "../utils/nodes";
@@ -20,8 +22,7 @@ export const TableMapLayout = () => {
     const { sourceHandles, targetHandles } = handles;
     setFieldSourceHandles(sourceHandles);
     setFieldTargetHandles(targetHandles);
-
-    navigate("/link-fields");
+    navigate("link-fields");
   }, []);
 
   return (
@@ -45,21 +46,18 @@ export const TableMapLayout = () => {
         </ReactFlow>
       </div>
 
-      {/* <div className="footer">
-        <IconButton>
+      <div className="footer">
+        <Button aria-label="managesearch">
           <ManageSearch />
-        </IconButton>
-        {tableNodes.length !== 0 && (
-          <div className="button-group">
-            <Button variant="contained" disabled>
-              Delete mapping
-            </Button>
-            <Button variant="contained" disabled>
-              Go to link fields
-            </Button>
-          </div>
-        )}
-      </div> */}
+          Vocabulary
+        </Button>
+        <div className="button-group">
+          <Button variant="outlined" color="error">
+            Delete Mapping
+          </Button>
+          <Button variant="contained">Go To Link Fields</Button>
+        </div>
+      </div>
     </div>
   );
 };

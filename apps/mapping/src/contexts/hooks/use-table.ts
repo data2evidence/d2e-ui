@@ -14,7 +14,6 @@ export const useTable = () => {
   const dispatch = useContext(AppDispatchContext);
 
   const setTableNodes = useCallback((nodes: NodeChange[]) => {
-    console.log("dispatch/set_table_nodes", nodes);
     dispatch({ type: ACTION_TYPES.SET_TABLE_NODES, payload: nodes });
   }, []);
 

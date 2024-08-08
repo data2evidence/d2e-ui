@@ -127,7 +127,7 @@ export const SaveFlowDialog: FC<SaveFlowDialogProps> = ({
   return (
     <Dialog
       className="save-flow-dialog"
-      title={isNew ? "New dataflow" : "Save dataflow"}
+      title={isNew ? "New strategus flow" : "Save strategus flow"}
       onClose={handleClose}
       {...props}
     >
