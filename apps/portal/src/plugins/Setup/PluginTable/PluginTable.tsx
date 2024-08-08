@@ -1,14 +1,26 @@
 import React, { FC, useState, useCallback, useEffect, ChangeEvent } from "react";
-import { Loader, TableCell, TableRow, TablePaginationActions, TrashIcon, IconButton, Button } from "@portal/components";
+import {
+  Loader,
+  TableCell,
+  TableRow,
+  TablePaginationActions,
+  TrashIcon,
+  IconButton,
+  Button,
+  Title,
+} from "@portal/components";
 import { Table, TableBody, TableHead, TableContainer, TablePagination } from "@mui/material";
 import { CloseDialogType, Flow, MetaData } from "../../../types";
 import { api } from "../../../axios/api";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import DeleteFlowDialog from "../../SystemAdmin/Jobs/DeleteFlowDialog/DeleteFlowDialog";
-import "./JobTable.scss";
+import "./PluginTable.scss";
 import { useTranslation } from "../../../contexts";
 
-const PluginTable: FC = () => {
+dayjs.extend(utc);
+
+export const PluginTable: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [flows, setFlows] = useState<Flow[]>([]);
@@ -88,6 +100,7 @@ const PluginTable: FC = () => {
 
   return (
     <>
+      <Title className="table__title">Plugins</Title>
       <TableContainer className="flows__list">
         <Table>
           <TableHead>
@@ -157,5 +170,3 @@ const PluginTable: FC = () => {
     </>
   );
 };
-
-export default PluginTable;
