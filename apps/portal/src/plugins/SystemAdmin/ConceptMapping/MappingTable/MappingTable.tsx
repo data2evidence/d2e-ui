@@ -15,7 +15,7 @@ const MappingTable: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
-  const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;
+  const { sourceCode, sourceName, sourceFrequency, description, domainId } = conceptMappingState.columnMapping;
   const csvData = conceptMappingState.csvData.data;
 
   const columns = useMemo<MRT_ColumnDef<MRT_RowData, any>[]>(
@@ -91,10 +91,36 @@ const MappingTable: FC = () => {
   });
 
   const populateConcepts = useCallback((table: MRT_TableInstance<MRT_RowData>) => {
+    let formattedRows;
     const currentRows = table.getCenterRows();
-    const formattedRows = currentRows.map((row) => row.original);
-    console.log(formattedRows);
-    return;
+    // row[domainId] => user selected domain value
+    if (domainId) {
+      formattedRows = currentRows.map((row) => {
+        return { row: row.original, searchText: row.original[sourceName], domainId: row.original[domainId] };
+      });
+    } else {
+      formattedRows = currentRows.map((row) => {
+        return { row: row.original, searchText: row.original[sourceName] };
+      });
+    }
+
+    // call api with new rows
+    // to receive list of concepts. requires conceptId, conceptName, domainId, and also given row data.
+
+    // loop through list.
+    // set active data row
+    // dispatch({ type: "ADD_SELECTED_DATA", data: row.original });
+
+    // update data row. this is dependant on above active row
+    // dispatch({
+    //   type: "UPDATE_CSV_DATA",
+    //   data: {
+    //     conceptId: conceptData.conceptId,
+    //     conceptName: conceptData.conceptName,
+    //     domainId: conceptData.domainId,
+    //   },
+    // });
+    // dispatch({ type: "CLEAR_SELECTED_DATA" });
   }, []);
 
   const tableInstance = useMaterialReactTable({
@@ -121,7 +147,7 @@ const MappingTable: FC = () => {
     },
     renderTopToolbarCustomActions: ({ table }) => (
       <Box sx={{ display: "flex", gap: "1rem", p: "4px" }}>
-        <Button onClick={() => populateConcepts(table)} text="Populate all"></Button>
+        <Button onClick={() => console.log(populateConcepts(table))} text="Populate all"></Button>
       </Box>
     ),
   });
