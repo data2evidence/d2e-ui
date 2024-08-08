@@ -108,16 +108,23 @@ jobs:
 
           echo ". INFO: calculate digests"
           # az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags)]" > private.json
-          az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?not_null(tags)]" > private.json
+          az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?not_null(tags)]" | tee private.json
+
+          # debug
+          cat private.json | yq -r 'map((.tags))'
+          cat private.json | yq -r 'map((.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)))'
 
           # analyze
-          cat private.json | yq -r 'map(.digest as $digest | (.tags|length) as $count | .tags[] as $tag | {"digest":$digest,"count":$count,"tag":$tag,"length":($tag|length)})' > private.yml
+          cat private.json | yq -r 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"delete":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private.yml
 
           echo . "clean#1 - single tag per manifest of 40 chars commit_id"
-          cat private.yml | yq 'map(select(.count==1 and .length==40))' | tee private-clean1.yml | yq '.[].tag'
+          cat private.yml | yq 'map(select(.count==1 and .lengths=="[40]"))' | tee private-clean1.yml | yq '.[].tags'
 
-          echo . "clean#2 - multi tag per manifest where not matching regex"
-          cat private.yml | yq 'map(select(.count!=1 and .length!=40 and (.tag|test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)))' | tee private-clean2.yml | yq '.[].tag' | sort
+          echo . "clean#2 - where tag not matching regex"
+          cat private.yml | yq 'map(select(.delete|contains("false")|not))' | tee private-clean1.yml
+
+          cat private.yml | yq 'map(select(.count!=1 and (.tags|@jsond|test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)))'
+           | tee private-clean2.yml | yq '.[].tag' | sort
 
           echo . private-clean1.yml syntax check
           cat private-clean1.yml | yq >/dev/null
