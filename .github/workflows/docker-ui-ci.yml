@@ -100,15 +100,16 @@ jobs:
           AZ_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           AZ_TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
           AZ_REPOSITORY: ${{ vars.AZ_REPOSITORY }}
-          NUMBER_OF_DAYS: 14
+          NUMBER_OF_DAYS: ${{ vars.NUMBER_OF_DAYS }}
         run: |
           echo AZ_REPOSITORY=$AZ_REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
+          echo NUMBER_OF_DAYS=$NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
           TODAY=$(date +%Y-%m-%d)
-          TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
+          TIMESTAMP="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
+          [ $NUMBER_OF_DAYS = 0 ] && TIMESTAMP=$(date -u -Is); echo TIMESTAMP=$TIMESTAMP
 
           echo ". INFO: get manifest metadata" # ignore deprecated warning
-          # az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && not_null(tags)]" > private.json
-          az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?not_null(tags)]" > private.json
+          az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TIMESTAMP}' && not_null(tags)]" > private.json
 
           echo ". 1 analyze each tag as deletable True/False"
           cat private.json | yq -rP 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"deletable":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private1-analysis.yml | yq '.[0:20]'
