@@ -90,6 +90,10 @@ jobs:
           docker_image_prefix=alpcr.azurecr.io
           GIT_COMMIT_ARG=${{ github.sha }}
 
+    - run: |
+        echo github.event_name=${{ github.event_name }}
+        echo github.ref_name=${{ github.ref_name }}
+
     - name: Prune old images
       if: ${{ github.event_name != 'workflow_dispatch' && github.ref_name == 'develop' }}
       shell: bash
