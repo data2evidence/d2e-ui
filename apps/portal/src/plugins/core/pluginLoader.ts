@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import * as ReactRouterDOM from "react-router-dom";
 import builtInPlugins from "../builtInPlugins";
 
 //@ts-ignore
@@ -13,6 +14,7 @@ function exposeToPlugin(name: string, component: any) {
 
 exposeToPlugin("react", React);
 exposeToPlugin("react-dom", ReactDOM);
+exposeToPlugin("react-router-dom", ReactRouterDOM);
 
 const moduleCache: { [key: string]: any } = {};
 
@@ -33,11 +35,13 @@ export const importPluginModule = (url: string): Promise<any> => {
 
     SystemJS.import(url)
       .then((pluginModule: any) => {
-        if (pluginModule.plugin) {
-          moduleCache[url] = pluginModule.plugin;
-          resolve(pluginModule.plugin);
+        const plugin = pluginModule.plugin || pluginModule.default.plugin;
+        if (plugin) {
+          moduleCache[url] = plugin;
+          resolve(plugin);
         } else {
           reject("Missing export: plugin");
+          console.log("pluginModule", pluginModule);
         }
       })
       .catch((err: any) => {
