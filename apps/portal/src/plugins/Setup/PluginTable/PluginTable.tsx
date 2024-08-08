@@ -105,10 +105,10 @@ export const PluginTable: FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>{getText(i18nKeys.JOB_TABLE__EXECUTION_ID)}</TableCell>
-              <TableCell>{getText(i18nKeys.JOB_TABLE__JOB_NAME)}</TableCell>
-              <TableCell>{getText(i18nKeys.JOB_TABLE__START_DATE)}</TableCell>
-              <TableCell>{getText(i18nKeys.JOB_TABLE__END_DATE)}</TableCell>
+              <TableCell>{getText(i18nKeys.PLUGIN_TABLE__EXECUTION_ID)}</TableCell>
+              <TableCell>{getText(i18nKeys.PLUGIN_TABLE__PLUGIN_NAME)}</TableCell>
+              <TableCell>{getText(i18nKeys.PLUGIN_TABLE__START_DATE)}</TableCell>
+              <TableCell>{getText(i18nKeys.PLUGIN_TABLE__END_DATE)}</TableCell>
               <TableCell />
               <TableCell />
             </TableRow>
@@ -117,7 +117,7 @@ export const PluginTable: FC = () => {
             {(!flows || flows.length === 0) && (
               <TableRow>
                 <TableCell colSpan={2} align="center">
-                  {getText(i18nKeys.JOB_TABLE__NO_DATA)}
+                  {getText(i18nKeys.PLUGIN_TABLE__NO_DATA)}
                 </TableCell>
               </TableRow>
             )}
@@ -130,14 +130,14 @@ export const PluginTable: FC = () => {
                 <TableCell>
                   <IconButton
                     startIcon={<TrashIcon />}
-                    title={getText(i18nKeys.JOB_TABLE__DELETE)}
+                    title={getText(i18nKeys.PLUGIN_TABLE__DELETE)}
                     onClick={() => handleDelete(flow)}
                   />
                 </TableCell>
                 <TableCell>
                   {isFlowDeployFromGit(flow, flowMetadata) && (
                     <Button
-                      text={getText(i18nKeys.JOB_TABLE__UPDATE_DEPLOYMENT)}
+                      text={getText(i18nKeys.PLUGIN_TABLE__UPDATE_DEPLOYMENT)}
                       onClick={() => handleUpdateDeployment(retrieveFlowUrl(flow, flowMetadata))}
                       disabled={deploying}
                     />
