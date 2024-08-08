@@ -31,12 +31,12 @@ jobs:
             platforms: linux/amd64
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Get docker tag name
-      id: docker_tag
-      shell: bash
-      run: |
+      - name: Get docker tag name
+        id: docker_tag
+        shell: bash
+        run: |
           echo BRANCH_NAME=$BRANCH_NAME
           if [ $BRANCH_NAME = "develop" ]; then
             echo "is_push=true" >> $GITHUB_OUTPUT
@@ -46,81 +46,82 @@ jobs:
             echo "is_push=false" >> $GITHUB_OUTPUT
           fi
 
-    - uses: webfactory/ssh-agent@v0.9.0
-      with:
-        ssh-private-key: |
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: |
             ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
             ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
 
-    - name: Login to ACR
-      uses: docker/login-action@v3.1.0
-      with:
-        registry: alpcr.azurecr.io
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Login to ACR
+        uses: docker/login-action@v3.1.0
+        with:
+          registry: alpcr.azurecr.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-    - name: Collect Git and SSH config files in a directory that is part of the Docker build context
-      run: |
-        cp -r ~/.gitconfig  ~/.ssh .github/
-        cd .github/
-        sed 's|/home/runner|/root|g' -i.bak .ssh/config
+      - name: Collect Git and SSH config files in a directory that is part of the Docker build context
+        run: |
+          cp -r ~/.gitconfig  ~/.ssh .github/
+          cd .github/
+          sed 's|/home/runner|/root|g' -i.bak .ssh/config
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-      id: builder
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        id: builder
 
-    - name: Build and push
-      uses: docker/build-push-action@v5.3.0
-      if: ${{ vars.SKIP_BUILD != 'true' }}
-      id: build_push
-      continue-on-error: false
-      with:
-        builder: ${{ steps.builder.outputs.name }}
-        # cache-from: type=gha
-        # cache-to: type=gha,mode=max
-        ulimit: nofile=1048576:1048576
-        platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
-        context: ${{ matrix.context }}
-        file:  ${{ matrix.directory }}/${{ matrix.fileName }}
-        push: ${{ steps.docker_tag.outputs.is_push }}
-        tags: alpcr.azurecr.io/${{ matrix.name }}:${{ env.BRANCH_NAME }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
-        ssh: |
-          default=${{ env.SSH_AUTH_SOCK }}
-        build-args: |
-          docker_image_prefix=alpcr.azurecr.io
-          GIT_COMMIT_ARG=${{ github.sha }}
+      - name: Build and push
+        uses: docker/build-push-action@v5.3.0
+        if: ${{ vars.SKIP_BUILD != 'true' }}
+        id: build_push
+        continue-on-error: false
+        with:
+          builder: ${{ steps.builder.outputs.name }}
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
+          ulimit: nofile=1048576:1048576
+          platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
+          context: ${{ matrix.context }}
+          file: ${{ matrix.directory }}/${{ matrix.fileName }}
+          push: ${{ steps.docker_tag.outputs.is_push }}
+          tags: alpcr.azurecr.io/${{ matrix.name }}:${{ env.BRANCH_NAME }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
+          ssh: |
+            default=${{ env.SSH_AUTH_SOCK }}
+          build-args: |
+            docker_image_prefix=alpcr.azurecr.io
+            GIT_COMMIT_ARG=${{ github.sha }}
 
-    - name: Prune old images
-      shell: bash
-      env:
-        ENABLE_DELETE: ${{ vars.AZ_ENABLE_DELETE }} # true|false - enable/disable as needed
-        NUMBER_OF_DAYS: ${{ vars.AZ_REGISTRY_NUMBER_OF_DAYS }}
-        REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
-        REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-        REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-        REPOSITORY: ${{ vars.AZ_REPOSITORY }}
-        TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
-      run: |
-        echo ENABLE_DELETE=$ENABLE_DELETE | tee -a $GITHUB_STEP_SUMMARY
-        echo NUMBER_OF_DAYS=$NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
-        echo REPOSITORY=$REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
+      - name: Prune old images
+        shell: bash
+        env:
+          ENABLE_DELETE: ${{ vars.AZ_ENABLE_DELETE }} # true|false - enable/disable as needed
+          NUMBER_OF_DAYS: ${{ vars.AZ_REGISTRY_NUMBER_OF_DAYS }}
+          REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REPOSITORY: ${{ vars.AZ_REPOSITORY }}
+          TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
+        run: |
+          echo ENABLE_DELETE=$ENABLE_DELETE | tee -a $GITHUB_STEP_SUMMARY
+          echo NUMBER_OF_DAYS=$NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
+          echo REPOSITORY=$REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
 
-        TODAY=$(date +%Y-%m-%d)
-        TIMESTAMP="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
-        [ $NUMBER_OF_DAYS = 0 ] && TIMESTAMP=$(date -u -Is); echo TIMESTAMP=$TIMESTAMP
+          TODAY=$(date +%Y-%m-%d)
+          TIMESTAMP="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
+          [ $NUMBER_OF_DAYS = 0 ] && TIMESTAMP=$(date -u -Is); echo TIMESTAMP=$TIMESTAMP
 
-        echo ". 1 - GET manifest metadata" # ignore deprecated warning
-        az acr manifest metadata list --name ${REPOSITORY} --registry ${REGISTRY_NAME} --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TIMESTAMP}' && not_null(tags)]" > private.json
+          echo ". 1 - GET manifest metadata" # ignore deprecated warning
+          az acr manifest metadata list --name ${REPOSITORY} --registry ${REGISTRY_NAME} --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TIMESTAMP}' && not_null(tags)]" > private.json
 
-        echo ". 2 - ANALYZE each tag as deletable True/False - display first 20"
-        cat private.json | yq -rP 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"deletable":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private1-analysis.yml | yq '.[0:20]'
+          echo ". 2 - ANALYZE each tag as deletable True/False - show first 20"
+          cat private.json | yq -rP 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"deletable":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private1-analysis.yml | yq '.[0:20]'
 
-        echo ". 3 - SELECT manifests except any deletable False tags"
-        cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not))' | tee private2-todelete.yml | yq '.[].tags' | awk '{ print length, $0 }' | sort -n | cut -d" " -f2- | head -100
+          echo ". 3 - SELECT manifests except any deletable False tags - show except CommitIds"
+          cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not))' > private2-todelete.yml
+          cat private2-todelete.yml | yq 'map(select(.count!=1 and .lengths="[40]")).[].tags'
 
-        if [ "${ENABLE_DELETE}" = true ]; then
-          echo ". 4 - ACTION delete digests ..."
-          yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} --name ${REGISTRY_NAME} --image ${REPOSITORY}@% --yes
-        else
-          echo ". 4 - SKIPPED delete digests ..."
-        fi
+          if [ "${ENABLE_DELETE}" = true ]; then
+            echo ". 4 - ACTION delete digests ..."
+            yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} --name ${REGISTRY_NAME} --image ${REPOSITORY}@% --yes
+          else
+            echo ". 4 - SKIPPED delete digests ..."
+          fi
