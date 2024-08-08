@@ -8,43 +8,36 @@ import {
   FormGroup,
   FormControlLabel,
 } from "@mui/material";
-import sourceTableData from "../../../dummyData/create_source_schema_scan.json";
-import twoSourceTableData from "../../../dummyData/healthcare_and_concept.json";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
-import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
-import { TableSourceHandleData, useTable } from "../../contexts";
+import { api } from "../../axios/api";
 import "./ScanDataDialog.scss";
 
-// TODO: Clean up and create separate files for all interfaces and types
-type CloseDialogType = "success" | "cancelled";
+export type CloseDialogType = "success" | "cancelled";
 interface ScanDataDialogProps {
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
-  nodeId: string;
+  setScanId: (id: number) => void;
 }
 
 export const ScanDataDialog: FC<ScanDataDialogProps> = ({
   open,
   onClose,
-  nodeId,
+  setScanId,
 }) => {
-  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [availableFiles, setAvailableFiles] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [dataType, setDataType] = useState("");
   const [loading, setLoading] = useState(false);
   const [delimiter, setDelimiter] = useState(",");
-  const updateNodeInternals = useUpdateNodeInternals();
   const hiddenFileInput = useRef<HTMLInputElement>(null);
-  const { setTableSourceHandles } = useTable();
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
-      handleClear();
       typeof onClose === "function" && onClose(type);
     },
     [onClose]
@@ -53,8 +46,6 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
   const handleApply = useCallback(async () => {
     try {
       setLoading(true);
-      // TODO: Replace with actual data scanning logic
-      // await api.data.scanData(selectedFiles, delimiter);
       scanData();
       handleClose("success");
     } catch (err: any) {
@@ -76,7 +67,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
   }, []);
 
   const handleFileUpload = useCallback((event: any) => {
-    const files = Array.from(event.target.files).map((file: any) => file.name);
+    const files = Array.from(event.target.files).map((file: any) => file);
     setUploadedFiles(files);
   }, []);
 
@@ -88,7 +79,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
   );
 
   const handleTestConnection = useCallback(() => {
-    setAvailableFiles(uploadedFiles);
+    setAvailableFiles(uploadedFiles.map((file) => file.name));
   }, [uploadedFiles]);
 
   const handleClear = useCallback(() => {
@@ -113,7 +104,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
   const handleSelectedFileAll = useCallback(
     (select: boolean) => {
       if (select) {
-        setSelectedFiles(uploadedFiles);
+        setSelectedFiles(uploadedFiles.map((file) => file.name));
       } else {
         setSelectedFiles([]);
       }
@@ -127,34 +118,24 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
     [selectedFiles]
   );
 
-  const scanData = () => {
-    // Populate Source Table with table-name
-    let sourceHandles: Partial<NodeProps<TableSourceHandleData>>[];
-    if (selectedFiles.length === 1) {
-      const data = sourceTableData;
-      const table_name = data.source_tables[0].table_name;
-      sourceHandles = [
-        {
-          id: `C.0`,
-          data: { label: table_name, type: "input" },
-          sourcePosition: Position.Right,
-        },
-      ];
-    } else {
-      const data = twoSourceTableData;
-      sourceHandles = data.source_tables.map((table, index) => ({
-        id: `C.${index + 1}`,
-        data: { label: table.table_name, type: "input" },
-        sourcePosition: Position.Right,
-      }));
+  const scanData = async () => {
+    try {
+      setLoading(true);
+      if (uploadedFiles) {
+        const response = await api.whiteRabbit.createScanReport(uploadedFiles);
+        setScanId(response.id);
+      } else {
+        console.error("No file was uploaded");
+      }
+    } catch {
+      setLoading(false);
     }
-
-    setTableSourceHandles(sourceHandles);
-
-    updateNodeInternals(nodeId);
   };
 
-  const fileNames = useMemo(() => uploadedFiles.join(", "), [uploadedFiles]);
+  const fileNames = useMemo(
+    () => uploadedFiles.map((file) => file.name).join(", "),
+    [uploadedFiles]
+  );
 
   return (
     <Dialog
@@ -292,7 +273,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
           disabled={selectedFiles.length === 0}
           style={{ marginLeft: "20px" }}
         >
-          Apply
+          {loading ? "Loading..." : "Apply"}
         </Button>
       </div>
     </Dialog>

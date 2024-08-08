@@ -22,7 +22,7 @@ export const TableMapLayout = () => {
     const { sourceHandles, targetHandles } = handles;
     setFieldSourceHandles(sourceHandles);
     setFieldTargetHandles(targetHandles);
-    navigate("/link-fields");
+    navigate("link-fields");
   }, []);
 
   return (

@@ -5,6 +5,6 @@ export const getPluginChildPath = (plugin: Plugins) => {
     const path = plugin.type.replace(/\s+/g, "-").toLowerCase();
     return `${path}/${plugin.route}`;
   } else {
-    return plugin.route;
+    return `${plugin.route}/*`;
   }
 };
