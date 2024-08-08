@@ -121,7 +121,7 @@ jobs:
           cat private.yml | yq 'map(select(.count==1 and .lengths=="[40]"))' | tee private-clean1.yml | yq '.[].tags'
 
           echo . "clean#2 - where tag not matching regex" # exclisively True deletable tags Not matching regex
-          cat private.yml | yq 'map(select(.delete|contains("false")|not))' | tee private-clean1.yml
+          cat private.yml | yq 'map(select(.delete|contains("false")|not))' | tee private-clean2.yml | yq '.[].tags'
 
           echo . private-clean1.yml syntax check
           cat private-clean1.yml | yq >/dev/null
