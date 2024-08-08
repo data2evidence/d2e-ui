@@ -289,8 +289,8 @@ const actions = {
   async saveNewBookmark({ dispatch }, params) {
     return await dispatch('fireBookmarkQuery', { params, method: 'post' })
   },
-  async updateBookmark({ dispatch, getters }, { params }) {
-    return await dispatch('fireBookmarkQuery', { params, method: 'method', bookmarkId: getters.getActiveBookmark })
+  async updateBookmark({ dispatch, getters }, params) {
+    return await dispatch('fireBookmarkQuery', { params, method: 'put', bookmarkId: getters.getActiveBookmark.bmkId })
   },
   async loadAllBookmarks({ dispatch }) {
     return await dispatch('fireBookmarkQuery', { params: { cmd: 'loadAll' }, method: 'get' })

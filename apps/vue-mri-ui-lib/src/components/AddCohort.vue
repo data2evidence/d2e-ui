@@ -1,9 +1,11 @@
 <template>
   <messageBox v-if="showAddCohortDialog" dim="true" :busy="cohortBusy" messageType="custom" @close="closeWindow">
-    <template v-slot:header>{{
-      getText('MRI_PA_COLL_ADD_PATIENTS_TO_COLLECTION') + ` (${this.isSaveAsBookmark ? this.getUniqueName : this.bookmarkName})`
-    }}
-  </template>
+    <template v-slot:header
+      >{{
+        getText('MRI_PA_COLL_ADD_PATIENTS_TO_COLLECTION') +
+        ` (${this.isSaveAsBookmark ? this.getUniqueName : this.bookmarkName})`
+      }}
+    </template>
     <template v-slot:body>
       <div class="cohort-dialog">
         <appMessageStrip
@@ -173,6 +175,7 @@ export default {
       'fireQuery',
       'getPLRequest',
       'saveNewBookmark',
+      'updateBookmark',
       'setActiveBookmark',
       'loadAllBookmarks',
       'loadbookmarkToState',
@@ -248,7 +251,11 @@ export default {
           return await this.setNewActiveBookmark(this.bookmarkName)
         }
       } else if (this.getCurrentBookmarkHasChanges) {
-        await this.updateBookmark({ params: { cmd: 'update', bookmark: JSON.stringify(this.getBookmarksData) } })
+        await this.updateBookmark({
+          cmd: 'update',
+          bookmark: JSON.stringify(this.getBookmarksData),
+          shareBookmark: this.getActiveBookmark.shared,
+        })
         return await this.setNewActiveBookmark(this.bookmarkName)
       }
     },
