@@ -125,10 +125,10 @@ jobs:
           echo . private-clean2.yml syntax check
           cat private-clean2.yml | yq >/dev/null
 
-          echo . INFO: combine digests to delete
-          yq -N '.[].digest' private-clean1.yml private-clean2.yml | sort -u | tee private-digests.txt
+          echo . INFO: combine digests to generate commands
+          yq -N '.[].digest' private-clean1.yml private-clean2.yml | sort -u | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes | tee private-cmd.sh
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
             echo . ACTION: delete digests ...
-            cat private-digests.txt | xargs -I% az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
+            source private-cmd.sh
           fi
