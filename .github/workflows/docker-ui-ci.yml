@@ -56,8 +56,8 @@ jobs:
       #   uses: docker/login-action@v3.1.0
       #   with:
       #     registry: alpcr.azurecr.io
-      #     username: ${{ secrets.AZ_REGISTRY_USERNAME }}
-      #     password: ${{ secrets.AZ_REGISTRY_PASSWORD }}
+      #     username: ${{ secrets.REGISTRY_USERNAME }}
+      #     password: ${{ secrets.REGISTRY_PASSWORD }}
 
       # - name: Collect Git and SSH config files in a directory that is part of the Docker build context
       #   run: |
@@ -125,10 +125,10 @@ jobs:
           echo . private-clean2.yml syntax check
           cat private-clean2.yml | yq >/dev/null
 
-          echo . INFO: digests to delete
+          echo . INFO: combine digests to delete
           yq -N '.[].digest' private-clean1.yml private-clean2.yml | sort -u | tee private-digests.txt
 
           if [ "${AZ_ENABLE_DELETE}" = true ]; then
             echo . ACTION: delete digests ...
-            cat private-digests.txt | xargs -I% echo az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
+            cat private-digests.txt | xargs -I% az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image $REPOSITORY@% --yes
           fi
