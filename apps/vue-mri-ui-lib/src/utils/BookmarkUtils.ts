@@ -26,21 +26,13 @@ export function generateUniqueName(bookmarks) {
   let uniqueName = baseName
   let suffix = 0
 
-  while (true) {
-    let isUnique = true
+  const userBookmarks = bookmarks.filter(bookmark => bookmark.user_id === username)
+  const nameExists = name => userBookmarks.some(bookmark => bookmark.bookmarkname === name)
 
-    for (const bookmark of bookmarks) {
-      if (username === bookmark.user_id && bookmark.bookmarkname === uniqueName) {
-        isUnique = false
-        break
-      }
-    }
-
-    if (isUnique) {
-      return uniqueName
-    } else {
-      suffix += 1
-      uniqueName = `${baseName} ${suffix}`
-    }
+  while (nameExists(uniqueName)) {
+    suffix += 1
+    uniqueName = `${baseName} ${suffix}`
   }
+
+  return uniqueName
 }
