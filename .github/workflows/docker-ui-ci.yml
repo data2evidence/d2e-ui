@@ -95,7 +95,6 @@ jobs:
         echo github.ref_name=${{ github.ref_name }}
 
     - name: Prune old images
-      if: ${{ github.event_name != 'workflow_dispatch' && github.ref_name == 'develop' }}
       shell: bash
       env:
         ENABLE_DELETE: ${{ vars.AZ_ENABLE_DELETE }} # true|false - enable/disable as needed
