@@ -120,7 +120,7 @@ jobs:
           echo ". 2 - ANALYZE each tag as deletable True/False - show first 20"
           cat private.json | yq -rP 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"deletable":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private1-analysis.yml | yq '.[0:20]'
 
-          echo ". 3 - SELECT manifests except any deletable False tags - show Branch tags only (not CommidIds)"
+          echo ". 3 - SELECT manifests excepting deletable False tags - show Branch tags only (not CommidIds)"
           cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not))' > private2-todelete.yml
           cat private2-todelete.yml | yq 'map(select(.lengths!="[40]")).[].tags'
 
