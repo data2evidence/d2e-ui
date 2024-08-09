@@ -113,7 +113,7 @@ jobs:
           fi
           echo TIMESTAMP=$TIMESTAMP | tee -a $GITHUB_STEP_SUMMARY
 
-          echo ". 1 - GET manifest metadata" # ignore deprecated warning
+          echo ". 1 - GET manifest metadata -  deprecated warning is not relevant"
           az acr manifest metadata list --name ${REPOSITORY} --registry ${REGISTRY_NAME} --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TIMESTAMP}' && not_null(tags)]" > private.json
           wc -l private.json
 
