@@ -122,7 +122,7 @@ jobs:
 
           echo ". 3 - SELECT manifests except any deletable False tags - show Branch tags only (not CommidIds)"
           cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not))' > private2-todelete.yml
-          cat private2-todelete.yml | yq 'map(select(.count!=1 and .lengths="[40]")).[].tags'
+          cat private2-todelete.yml | yq 'map(select(.lengths!="[40]")).[].tags'
 
           if [ "${ENABLE_DELETE}" = true ]; then
             echo ". 4 - ACTION delete digests ..."
