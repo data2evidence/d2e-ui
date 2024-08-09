@@ -104,10 +104,11 @@ jobs:
           echo ENABLE_DELETE=$ENABLE_DELETE | tee -a $GITHUB_STEP_SUMMARY
           echo REPOSITORY=$REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
           echo NUMBER_OF_DAYS=$NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
-          TODAY=$(date +%Y-%m-%d)
+
           if [ $NUMBER_OF_DAYS = 0 ]; then
             TIMESTAMP=$(date -u -Is)
           else
+            TODAY=$(date +%Y-%m-%d)
             TIMESTAMP="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
           fi
           echo TIMESTAMP=$TIMESTAMP | tee -a $GITHUB_STEP_SUMMARY
