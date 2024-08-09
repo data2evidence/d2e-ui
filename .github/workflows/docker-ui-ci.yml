@@ -98,7 +98,7 @@ jobs:
           REGISTRY_PASSWORD: ${{ secrets.AZ_REGISTRY_PASSWORD }}
           REGISTRY_USERNAME: ${{ secrets.AZ_REGISTRY_USERNAME }}
           REPOSITORY: ${{ vars.AZ_REPOSITORY }}
-          SKIP_REGISTRY_PRUNE: ${{ vars.AZ_SKIP_REGISTRY_PRUNE }} # true|false - enable/disable as needed
+          SKIP_REGISTRY_PRUNE: ${{ vars.SKIP_REGISTRY_PRUNE }} # true|false - enable/disable as needed
           TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
         run: |
           echo SKIP_REGISTRY_PRUNE=$SKIP_REGISTRY_PRUNE | tee -a $GITHUB_STEP_SUMMARY
