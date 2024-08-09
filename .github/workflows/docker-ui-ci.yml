@@ -105,11 +105,16 @@ jobs:
           echo REPOSITORY=$REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
           echo NUMBER_OF_DAYS=$NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
           TODAY=$(date +%Y-%m-%d)
-          TIMESTAMP="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
-          [ $NUMBER_OF_DAYS = 0 ] && TIMESTAMP=$(date -u -Is); echo TIMESTAMP=$TIMESTAMP
+          if [ $NUMBER_OF_DAYS = 0 ]; then
+            TIMESTAMP=$(date -u -Is)
+          else
+            TIMESTAMP="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
+          fi
+          echo TIMESTAMP=$TIMESTAMP | tee -a $GITHUB_STEP_SUMMARY
 
           echo ". 1 - GET manifest metadata" # ignore deprecated warning
           az acr manifest metadata list --name ${REPOSITORY} --registry ${REGISTRY_NAME} --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TIMESTAMP}' && not_null(tags)]" > private.json
+          wc -l private.json
 
           echo ". 2 - ANALYZE each tag as deletable True/False - show first 20"
           cat private.json | yq -rP 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"deletable":(.tags|map(test("^v|^rc|develop|-alpha$|-beta$|^airms-|-airms-")|not)|@json)})' | tee private1-analysis.yml | yq '.[0:20]'
