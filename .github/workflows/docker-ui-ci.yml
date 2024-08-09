@@ -111,6 +111,7 @@ jobs:
             TODAY=$(date +%Y-%m-%d)
             TIMESTAMP="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
           fi
+
           echo TIMESTAMP=$TIMESTAMP | tee -a $GITHUB_STEP_SUMMARY
 
           echo ". 1 - GET manifest metadata -  deprecated warning is not relevant"
