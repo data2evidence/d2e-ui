@@ -101,7 +101,6 @@ jobs:
           REPOSITORY: ${{ vars.AZ_REPOSITORY }}
           TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
         run: |
-
           echo ENABLE_DELETE=$ENABLE_DELETE | tee -a $GITHUB_STEP_SUMMARY
           echo REPOSITORY=$REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
           echo NUMBER_OF_DAYS=$NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
