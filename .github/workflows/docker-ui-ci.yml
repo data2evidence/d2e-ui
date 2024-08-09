@@ -93,15 +93,15 @@ jobs:
       - name: Prune old images
         shell: bash
         env:
-          ENABLE_DELETE: ${{ vars.AZ_ENABLE_DELETE }} # true|false - enable/disable as needed
           NUMBER_OF_DAYS: ${{ vars.AZ_REGISTRY_NUMBER_OF_DAYS }}
           REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
           REGISTRY_PASSWORD: ${{ secrets.AZ_REGISTRY_PASSWORD }}
           REGISTRY_USERNAME: ${{ secrets.AZ_REGISTRY_USERNAME }}
           REPOSITORY: ${{ vars.AZ_REPOSITORY }}
+          SKIP_REGISTRY_PRUNE: ${{ vars.AZ_SKIP_REGISTRY_PRUNE }} # true|false - enable/disable as needed
           TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
         run: |
-          echo ENABLE_DELETE=$ENABLE_DELETE | tee -a $GITHUB_STEP_SUMMARY
+          echo SKIP_REGISTRY_PRUNE=$SKIP_REGISTRY_PRUNE | tee -a $GITHUB_STEP_SUMMARY
           echo REPOSITORY=$REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
           echo NUMBER_OF_DAYS=$NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
 
@@ -124,7 +124,7 @@ jobs:
           cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not))' > private2-todelete.yml
           cat private2-todelete.yml | yq 'map(select(.lengths!="[40]")).[].tags'
 
-          if [ "${ENABLE_DELETE}" = true ]; then
+          if [ "${SKIP_REGISTRY_PRUNE}" = false ]; then
             echo ". 4 - ACTION delete digests ..."
             yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} --name ${REGISTRY_NAME} --image ${REPOSITORY}@% --yes
           else
