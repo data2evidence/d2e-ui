@@ -2,6 +2,7 @@ import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
+import basicSsl from "@vitejs/plugin-basic-ssl";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -16,7 +17,15 @@ export default defineConfig(({ command, mode }) => {
   return {
     mode,
     define: { "process.env.NODE_ENV": `"${mode}"` },
-    plugins: [cssInjectedByJsPlugin(), react()],
+    plugins: [
+      cssInjectedByJsPlugin(),
+      react(),
+      basicSsl({
+        name: "mapping-localhost",
+        domains: ["localhost"],
+        certDir: "./.devServer/cert",
+      }),
+    ],
     // optimizeDeps: {
     //   include: ["@portal/plugin", "@portal/components"],
     // },
