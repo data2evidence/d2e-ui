@@ -1,5 +1,5 @@
 import path from "path";
-import { defineConfig } from "vite";
+import { defineConfig, PluginOption } from "vite";
 import react from "@vitejs/plugin-react";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import basicSsl from "@vitejs/plugin-basic-ssl";
@@ -24,7 +24,7 @@ export default defineConfig(({ command, mode }) => {
         name: "mapping-localhost",
         domains: ["localhost"],
         certDir: "./.devServer/cert",
-      }),
+      }) as PluginOption,
     ],
     // optimizeDeps: {
     //   include: ["@portal/plugin", "@portal/components"],
