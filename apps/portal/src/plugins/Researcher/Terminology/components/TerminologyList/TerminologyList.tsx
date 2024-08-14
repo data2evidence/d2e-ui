@@ -317,9 +317,9 @@ const TerminologyList: FC<TerminologyListProps> = ({
   }>(() => {
     const basicColumnOrder = [
       "conceptId",
-      "code",
-      "display",
-      "system",
+      "conceptCode",
+      "conceptName",
+      "vocabularyId",
       "concept",
       "domainId",
       "conceptClassId",
@@ -333,13 +333,13 @@ const TerminologyList: FC<TerminologyListProps> = ({
         size: 100,
       },
       {
-        accessorKey: "code",
+        accessorKey: "conceptCode",
         header: getText(i18nKeys.TERMINOLOGY_LIST__CODE),
         grow: true,
         size: 180,
       },
       {
-        accessorKey: "display",
+        accessorKey: "conceptName",
         header: getText(i18nKeys.TERMINOLOGY_LIST__NAME),
         grow: true,
         size: isDrawer ? 250 : 350,
@@ -372,7 +372,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         size: 180,
       },
       {
-        accessorKey: "system",
+        accessorKey: "vocabularyId",
         header: getText(i18nKeys.TERMINOLOGY_LIST__VOCABULARY),
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.vocabularyId ? mapFilterOptions(filterOptions.vocabularyId) : [],
