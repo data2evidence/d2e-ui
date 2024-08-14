@@ -142,9 +142,9 @@ jobs:
           echo ". 3 - SELECT images to be deleted i.e. manifests excepting deletable False tags"
           cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not))' > private2-todelete.yml
           echo . INFO for deletion - BranchNames
-          cat private2-todelete.yml | yq 'map(select(.lengths!="[40]") | .tags | @jsond)'
+          cat private2-todelete.yml | yq -P 'map(select(.lengths!="[40]") | .tags | @jsond)'
           echo . INFO for deletion - single tag commitIds
-          cat private2-todelete.yml | yq 'map(select(.lengths=="[40]") | .tags | @jsond)'
+          cat private2-todelete.yml | yq -P 'map(select(.lengths=="[40]") | .tags | @jsond)'
 
           if [ "${ENABLE_REGISTRY_PRUNE}" = true ]; then
             echo ". 4 - ACTION delete digests ..."
