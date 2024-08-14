@@ -514,7 +514,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       },
     },
     muiTableContainerProps: {
-      sx: { overflowY: "auto", border: "1px solid #d4d4d4", height: "100%" },
+      sx: { overflowY: "auto", height: "100%" },
     },
     muiTableHeadCellProps: {
       sx: {
