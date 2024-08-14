@@ -317,12 +317,12 @@ const TerminologyList: FC<TerminologyListProps> = ({
   }>(() => {
     const basicColumnOrder = [
       "conceptId",
-      "conceptCode",
-      "conceptName",
-      "conceptClassId",
+      "code",
+      "display",
+      "system",
       "concept",
       "domainId",
-      "vocabularyId",
+      "conceptClassId",
       "validity",
     ];
     const basicColumns: MRT_ColumnDef<FhirValueSetExpansionContainsWithExt>[] = [
