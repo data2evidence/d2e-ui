@@ -40,6 +40,15 @@
               v-if="displayCohorts"
             ></bookmarks>
 
+            <addCohort
+              v-if="getActiveBookmark"
+              :openAddDialog="showAddCohortDialog"
+              :bookmarkId="getActiveBookmarkId()"
+              :bookmarkName="getActiveBookmarkName()"
+              @closeEv="showAddCohortDialog = false"
+            >
+            </addCohort>
+
             <filters v-bind:class="{ hidden: displayCohorts || displaySharedBookmarks }"></filters>
           </div>
         </pane>
@@ -51,6 +60,7 @@
               @unhideEv="togglePanel(PANEL.LEFT)"
               @drilldown="onDrilldown"
               @open-filtersummary="toggleFilterCardSummary(...arguments)"
+              @openAddCohort="showAddCohortDialog = true"
             ></chartToolbar>
             <div class="d-flex pane-right-content">
               <chartController
@@ -161,6 +171,7 @@ import SharedBookmarks from './SharedBookmarks.vue'
 import SharedChartDialog from './SharedChartDialog.vue'
 import SplashScreen from './SplashScreen.vue'
 import ResizeObserver from './ResizeObserver.vue'
+import addCohort from './AddCohort.vue'
 import { getPortalAPI } from '../utils/PortalUtils'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
@@ -195,7 +206,8 @@ export default {
       showChartAndListModal: false,
       paneSize: PANE_SIZE.FULL,
       PANE_SIZE,
-      PANEL
+      PANEL,
+      showAddCohortDialog: false
     }
   },
   created() {
@@ -357,6 +369,9 @@ export default {
         return ''
       }
     },
+    getActiveBookmarkId() {
+      return this.getActiveBookmark.bmkId
+    },
     getTranslationList() {
       return this.getMriFrontendConfig
         .getAttributeList()
@@ -425,6 +440,7 @@ export default {
     SplashScreen,
     ResizeObserver,
     appIcon,
+    addCohort,
     Splitpanes,
     Pane,
   },
