@@ -79,13 +79,13 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
     sx: {
       cursor: "pointer",
       "&:nth-of-type(even)": {
-        backgroundColor: "#f8f8f8",
+        backgroundColor: "#fafafa",
         "&.MuiTableRow-root:hover": {
           backgroundColor: "#ebf1f8",
           boxShadow: "inset 0px 0px 0px 2px #3b438c",
         },
       },
-      backgroundColor: row.original == conceptMappingState.selectedData ? "#ebf1f8" : "transparent",
+      backgroundColor: row.index % 2 === 0 ? "#f5f5f5" : "#ffffff",
       boxShadow: row.original == conceptMappingState.selectedData ? "inset 0px 0px 0px 2px #3b438c" : "none",
     },
   });
@@ -110,6 +110,11 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
     muiTableHeadRowProps: {
       style: {
         backgroundColor: "#ebf1f8",
+      },
+    },
+    muiTopToolbarProps: {
+      style: {
+        backgroundColor: "#fbfbfd",
       },
     },
     renderTopToolbarCustomActions: () => (
