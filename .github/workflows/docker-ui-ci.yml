@@ -124,16 +124,16 @@ jobs:
           echo AZ_REGISTRY_WHITELIST_REGEX=$AZ_REGISTRY_WHITELIST_REGEX | tee -a $GITHUB_STEP_SUMMARY
 
           if [ $AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS = 0 ]; then
-            TIMESTAMP=$(date -u -Is)
+            AZ_REGISTRY_PRUNE_TIMESTAMP=$(date -u -Is)
           else
             TODAY=$(date +%Y-%m-%d)
-            TIMESTAMP="$(date -d "$TODAY - ${AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS} days" +%Y-%m-%d)"
+            AZ_REGISTRY_PRUNE_TIMESTAMP="$(date -d "$TODAY - ${AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS} days" +%Y-%m-%d)"
           fi
 
-          echo TIMESTAMP=$TIMESTAMP | tee -a $GITHUB_STEP_SUMMARY
+          echo AZ_REGISTRY_PRUNE_TIMESTAMP=$AZ_REGISTRY_PRUNE_TIMESTAMP | tee -a $GITHUB_STEP_SUMMARY
 
           echo ". 1 - GET manifest metadata -  deprecated warning is not relevant"
-          az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${TIMESTAMP}' && not_null(tags)]" > private.json
+          az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REGISTRY_PRUNE_TIMESTAMP}' && not_null(tags)]" > private.json
           wc -l private.json
 
           echo ". 2 - ANALYZE each tag as deletable True/False - show first 20"
