@@ -111,7 +111,7 @@ jobs:
         env:
           ENABLE_REGISTRY_PRUNE: ${{ vars.ENABLE_REGISTRY_PRUNE }} # true|false - enable/disable as needed
           AZ_REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
-          AZ_REGISTRY_NUMBER_OF_DAYS: ${{ vars.AZ_REGISTRY_NUMBER_OF_DAYS }}
+          AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS: ${{ vars.AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS }}
           AZ_REGISTRY_PASSWORD: ${{ secrets.AZ_REGISTRY_PASSWORD }}
           AZ_REGISTRY_USERNAME: ${{ secrets.AZ_REGISTRY_USERNAME }}
           AZ_REGISTRY_WHITELIST_REGEX: ${{ vars.AZ_REGISTRY_WHITELIST_REGEX }}
@@ -120,14 +120,14 @@ jobs:
         run: |
           echo ENABLE_REGISTRY_PRUNE=$ENABLE_REGISTRY_PRUNE | tee -a $GITHUB_STEP_SUMMARY
           echo AZ_REPOSITORY=$AZ_REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
-          echo AZ_REGISTRY_NUMBER_OF_DAYS=$AZ_REGISTRY_NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
+          echo AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS=$AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
           echo AZ_REGISTRY_WHITELIST_REGEX=$AZ_REGISTRY_WHITELIST_REGEX | tee -a $GITHUB_STEP_SUMMARY
 
-          if [ $AZ_REGISTRY_NUMBER_OF_DAYS = 0 ]; then
+          if [ $AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS = 0 ]; then
             TIMESTAMP=$(date -u -Is)
           else
             TODAY=$(date +%Y-%m-%d)
-            TIMESTAMP="$(date -d "$TODAY - ${AZ_REGISTRY_NUMBER_OF_DAYS} days" +%Y-%m-%d)"
+            TIMESTAMP="$(date -d "$TODAY - ${AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS} days" +%Y-%m-%d)"
           fi
 
           echo TIMESTAMP=$TIMESTAMP | tee -a $GITHUB_STEP_SUMMARY
