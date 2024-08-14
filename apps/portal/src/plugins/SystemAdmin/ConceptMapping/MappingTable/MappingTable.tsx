@@ -1,22 +1,22 @@
-import React, { FC, useCallback, useContext, useMemo } from "react";
-import {
-  MaterialReactTable,
-  MRT_ColumnDef,
-  MRT_RowData,
-  MRT_TableInstance,
-  useMaterialReactTable,
-} from "material-react-table";
+import React, { FC, useCallback, useContext, useMemo, useState } from "react";
+import { MaterialReactTable, MRT_ColumnDef, MRT_RowData, useMaterialReactTable } from "material-react-table";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
 import "./MappingTable.scss";
 import { useTranslation } from "../../../../contexts";
 import { Box, Button } from "@portal/components";
+import { Terminology } from "../../../../axios/terminology";
 
-const MappingTable: FC = () => {
+interface MappingTableProps {
+  selectedDatasetId: string;
+}
+
+const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
   const { getText, i18nKeys } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
-  const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;
+  const { sourceCode, sourceName, sourceFrequency, description, domainId } = conceptMappingState.columnMapping;
   const csvData = conceptMappingState.csvData.data;
+  const [isLoading, setIsLoading] = useState(false);
 
   const columns = useMemo<MRT_ColumnDef<MRT_RowData, any>[]>(
     () => [
@@ -90,13 +90,6 @@ const MappingTable: FC = () => {
     },
   });
 
-  const populateConcepts = useCallback((table: MRT_TableInstance<MRT_RowData>) => {
-    const currentRows = table.getCenterRows();
-    const formattedRows = currentRows.map((row) => row.original);
-    console.log(formattedRows);
-    return;
-  }, []);
-
   const tableInstance = useMaterialReactTable({
     columns,
     data: csvData,
@@ -119,12 +112,43 @@ const MappingTable: FC = () => {
         backgroundColor: "#ebf1f8",
       },
     },
-    renderTopToolbarCustomActions: ({ table }) => (
+    renderTopToolbarCustomActions: () => (
       <Box sx={{ display: "flex", gap: "1rem", p: "4px" }}>
-        <Button onClick={() => populateConcepts(table)} text="Populate all"></Button>
+        <Button
+          onClick={() => populateConcepts()}
+          text="Populate concepts"
+          loading={isLoading}
+          disabled={getAvailableRows().length === 0}
+        />
       </Box>
     ),
   });
+
+  const getAvailableRows = useCallback(() => {
+    return tableInstance.getCenterRows().filter((row) => row.original.status !== "checked");
+  }, []);
+
+  const populateConcepts = useCallback(async () => {
+    let formattedRows;
+    const currentRows = getAvailableRows();
+
+    if (domainId) {
+      formattedRows = currentRows.map((row) => {
+        return { row: row.original, searchText: row.original[sourceName], domainId: row.original[domainId] };
+      });
+    } else {
+      formattedRows = currentRows.map((row) => {
+        return { row: row.original, searchText: row.original[sourceName] };
+      });
+    }
+
+    setIsLoading(true);
+    const api = new Terminology();
+    const result = await api.getFirstConcepts(formattedRows, selectedDatasetId);
+
+    dispatch({ type: "UPDATE_MULTIPLE_ROWS", data: result });
+    setIsLoading(false);
+  }, []);
 
   return <MaterialReactTable table={tableInstance} />;
 };

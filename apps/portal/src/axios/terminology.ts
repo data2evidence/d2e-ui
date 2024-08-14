@@ -9,7 +9,10 @@ import {
   HybridSearchConfig,
   Concept,
   ConceptHierarchyResponse,
+  FirstConcepts,
 } from "../plugins/Researcher/Terminology/utils/types";
+
+import { rowObject } from "../plugins/SystemAdmin/ConceptMapping/types";
 
 const TERMINOLOGY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}terminology`;
 
@@ -38,6 +41,15 @@ export class Terminology {
       baseURL: TERMINOLOGY_BASE_URL,
       url: `/fhir/4_0_0/valueset/$expand?${params}`,
       method: "GET",
+    });
+  }
+
+  public getFirstConcepts(data: rowObject[], datasetId: string): Promise<FirstConcepts[]> {
+    return request({
+      baseURL: TERMINOLOGY_BASE_URL,
+      url: `/fhir/4_0_0/concepts`,
+      method: "POST",
+      data: { data, datasetId },
     });
   }
 

@@ -177,3 +177,12 @@ export interface HybridSearchConfig {
   semanticRatio: number;
   model: string;
 }
+export interface FirstConcepts {
+  row: object;
+  result: {
+    conceptId: number;
+    conceptName: string;
+    domainId: string;
+  };
+}
+

@@ -1,5 +1,6 @@
 import React, { FC, createContext, useReducer } from "react";
 import { ConceptMappingProviderProps, ConceptMappingStateType, actionType } from "../types";
+import { FirstConcepts } from "../../../Researcher/Terminology/utils/types";
 export const ConceptMappingContext = createContext<any>(null);
 export const ConceptMappingDispatchContext = createContext<any>(null);
 
@@ -71,6 +72,64 @@ const csvDataReducer = (state: ConceptMappingStateType, action: actionType) => {
   }
 };
 
+const updateMultipleRows = (
+  state: ConceptMappingStateType,
+  action: {
+    type: string;
+    data: FirstConcepts[];
+  }
+) => {
+  switch (action.type) {
+    case "UPDATE_MULTIPLE_ROWS":
+      const updateMap = new Map<
+        string,
+        {
+          conceptId: number;
+          conceptName: string;
+          domainId: string;
+          status?: string;
+        }
+      >();
+
+      action.data.forEach((update) => {
+        const key = JSON.stringify(update.row);
+        updateMap.set(key, {
+          conceptId: update.result.conceptId,
+          conceptName: update.result.conceptName,
+          domainId: update.result.domainId,
+          status: "checked",
+        });
+      });
+
+      const updatedData = state.csvData.data.map((row) => {
+        const key = JSON.stringify(row);
+        const update = updateMap.get(key);
+
+        if (update) {
+          return {
+            ...row,
+            conceptId: update.conceptId,
+            conceptName: update.conceptName,
+            domainId: update.domainId,
+            status: update.status,
+          };
+        }
+        return row;
+      });
+
+      return {
+        ...state,
+        csvData: {
+          ...state.csvData,
+          data: updatedData,
+        },
+      };
+
+    default:
+      return state;
+  }
+};
+
 const selectedDataReducer = (state: ConceptMappingStateType, action: actionType) => {
   switch (action.type) {
     case "ADD_SELECTED_DATA":
@@ -115,7 +174,12 @@ const initialState: ConceptMappingStateType = {
 };
 
 export const ConceptMappingProvider: FC<ConceptMappingProviderProps> = ({ children }) => {
-  const combinedReducers = combineReducers(columnMappingReducer, csvDataReducer, selectedDataReducer);
+  const combinedReducers = combineReducers(
+    columnMappingReducer,
+    csvDataReducer,
+    selectedDataReducer,
+    updateMultipleRows
+  );
   const [state, dispatch] = useReducer(combinedReducers, initialState);
   return (
     <ConceptMappingContext.Provider value={state}>
