@@ -17,7 +17,7 @@
     "monaco-editor": "^0.37.1",
     "react-monaco-editor": "^0.52.0",
     "react-redux": "^8.0.5",
-    "reactflow": "^11.7.0",
+    "reactflow": "^11.11.4",
     "uuid": "^9.0.0"
   },
   "peerDependencies": {

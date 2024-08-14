@@ -32,6 +32,7 @@ const moduleNames = [
   "Setup/ConceptMapping",
   "Setup/HybridSearch",
   "Setup/OverviewDescription",
+  "Setup/PluginTable",
 ];
 
 const modulePaths = moduleNames.reduce(
