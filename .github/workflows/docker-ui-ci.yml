@@ -31,6 +31,22 @@ jobs:
             platforms: linux/amd64
 
     steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          docker-images: true
+          swap-storage: false
+
       - uses: actions/checkout@v4
 
       - name: Get docker tag name
@@ -70,15 +86,14 @@ jobs:
         id: builder
 
       - name: Build and push
-        uses: docker/build-push-action@v5.3.0
-        if: ${{ vars.SKIP_BUILD != 'true' }}
+        uses: docker/build-push-action@v6
         id: build_push
         continue-on-error: false
         with:
           builder: ${{ steps.builder.outputs.name }}
           # cache-from: type=gha
           # cache-to: type=gha,mode=max
-          ulimit: nofile=1048576:1048576
+          # ulimit: nofile=1048576:1048576
           platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
           context: ${{ matrix.context }}
           file: ${{ matrix.directory }}/${{ matrix.fileName }}
