@@ -38,13 +38,8 @@ export type conceptDataType = {
   domainId: string;
 };
 
-export type rowObject = {
+export type RowObject = {
   row: Object;
   searchText: string;
   domainId?: string;
-};
-
-export type populateConcepts = {
-  data: rowObject[];
-  datasetId: string;
 };
