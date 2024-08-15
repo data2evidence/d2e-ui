@@ -19,8 +19,6 @@ import { useApiConfig } from '@/compositions/useApiConfig'
 import { useCreateCan } from '@/compositions/useCreateCan'
 import { createPrefectApi } from '@/utils/api'
 import { canKey } from '@/utils/permissions'
-import Sidebar from '@/components/Sidebar.vue'
-
 const { config } = await useApiConfig()
 const { can } = useCreateCan()
 
