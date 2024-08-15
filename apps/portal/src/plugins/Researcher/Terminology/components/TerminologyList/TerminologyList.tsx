@@ -136,7 +136,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
               domainIdFilters,
               vocabularyIdFilters,
               standardConceptFilters
-            );            
+            );
             const combinedFilterOptions: FilterOptions = {
               conceptClassId: { ...allFilterOptionsZeroed.conceptClassId, ...filterOptions.conceptClassId },
               domainId: { ...allFilterOptionsZeroed.domainId, ...filterOptions.domainId },
@@ -146,8 +146,6 @@ const TerminologyList: FC<TerminologyListProps> = ({
               validity: { ...allFilterOptionsZeroed.validity, ...filterOptions.validity },
             };
             setFilterOptions(combinedFilterOptions);
-            console.log({ standardConceptFilters });
-            
             const fhirResponse = await terminologyAPI.getTerminologies(
               page,
               rowsPerPage,

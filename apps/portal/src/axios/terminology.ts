@@ -30,8 +30,6 @@ export class Terminology {
   ): Promise<FhirValueSet> {
     const offset = page * rowsPerPage;
 
-    console.log({ searchText });
-
     const params = new URLSearchParams();
     params.append("datasetId", String(datasetId));
     params.append("offset", String(offset));
@@ -102,24 +100,6 @@ export class Terminology {
     params.append("datasetId", datasetId);
     params.append("searchText", searchText);
     params.append("filter", JSON.stringify({ conceptClassId, domainId, vocabularyId, standardConcept }));
-
-    const { filterOptions } = await request<{ filterOptions: FilterOptions }>({
-      baseURL: TERMINOLOGY_BASE_URL,
-      url: `/concept/filter-options?${params}`,
-      method: "GET",
-    });
-    return filterOptions;
-  }
-
-  public async getDomainIdFilterOptions(
-    datasetId: string,
-    searchText: string,
-    domainId: string[]
-  ): Promise<FilterOptions> {
-    const params = new URLSearchParams();
-    params.append("datasetId", datasetId);
-    params.append("searchText", searchText);
-    params.append("filter", JSON.stringify({ domainId }));
 
     const { filterOptions } = await request<{ filterOptions: FilterOptions }>({
       baseURL: TERMINOLOGY_BASE_URL,
