@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LogInfo } from '../types'
+import { LogInfo } from '../types/types'
 import { PTag, PVirtualScroller } from '@prefecthq/prefect-design'
 import { format } from 'date-fns'
 

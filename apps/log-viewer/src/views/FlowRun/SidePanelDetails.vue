@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FlowRun, TaskRun } from '@/types'
+import { FlowRun, TaskRun } from '@/types/types'
 import { format } from 'date-fns'
 import StateLabel from '@/components/StateLabel.vue'
 import { useRouter } from 'vue-router'

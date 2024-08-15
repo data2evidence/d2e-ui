@@ -8,7 +8,7 @@ import {
   RunGraphStateEvent
 } from '@prefecthq/graphs'
 import { getFlowRunById, getRunsForFlowRun, getTaskRunById } from '@/api'
-import { FlowRun, GetRunsForFlowRunResponse, TaskRun } from '@/types'
+import { FlowRun, GetRunsForFlowRunResponse, TaskRun } from '@/types/types'
 import { computed, nextTick, ref, watchEffect } from 'vue'
 import SidePanelDetails from './SidePanelDetails.vue'
 import { stateTypeColors } from '@/const'

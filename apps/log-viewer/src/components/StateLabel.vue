@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TaskRun, FlowRun } from '@/types'
+import { TaskRun, FlowRun } from '@/types/types'
 import { stateTypeColors } from '@/const'
 import { StateType } from '@prefecthq/graphs'
 

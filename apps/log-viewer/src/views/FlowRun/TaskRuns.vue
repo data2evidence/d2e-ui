@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import StateLabel from '@/components/StateLabel.vue'
-import { FlowRun } from '@/types'
+import { FlowRun } from '@/types/types'
 import { format } from 'date-fns'
 import { useRouter } from 'vue-router'
 

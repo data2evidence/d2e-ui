@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FlowRun } from '@/types'
+import { FlowRun } from '@/types/types'
 import { PCodeHighlight } from '@prefecthq/prefect-design'
 
 defineProps<{ flowRun?: FlowRun }>()

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LogInfo } from '@/types'
+import { LogInfo } from '@/types/types'
 import { getLogsByTaskRunId } from '@/api'
 import { ref, watchEffect } from 'vue'
 import LogScroller from '../components/LogScroller.vue'
