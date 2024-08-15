@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { format } from 'date-fns'
-import { FlowRun } from '@/types'
+import { FlowRun } from '@/types/types'
 
 defineProps<{ flowRun?: FlowRun }>()
 </script>

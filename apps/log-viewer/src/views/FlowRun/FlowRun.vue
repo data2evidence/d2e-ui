@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FlowRun, FlowRunTabName, LogInfo } from '@/types'
+import { FlowRun, FlowRunTabName, LogInfo } from '@/types/types'
 import { getLogsByFlowRunId, getFlowRunById, getTaskRunsByFlowRunId } from '@/api'
 import { ref, watchEffect } from 'vue'
 import LogScroller from '../../components/LogScroller.vue'
