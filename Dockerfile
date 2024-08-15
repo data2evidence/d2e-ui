@@ -147,7 +147,6 @@ COPY --from=mapping-ui-build /usr/src/services/app/alp-ui/resources/mapping serv
 COPY --from=ui5-build /usr/src/services/app/alp-ui/resources/ui5 services/app/alp-ui/resources/ui5
 COPY --from=starboard-build /usr/src/services/app/alp-ui/resources/starboard-notebook-base services/app/alp-ui/resources/starboard-notebook-base
 COPY --from=pyqe-build /usr/src/services/app/alp-ui/resources/pyodidepyqe-0.0.2-py3-none-any.whl services/app/alp-ui/resources/starboard-notebook-base
-COPY --from=pyqe-build /usr/src/services/app/alp-ui/resources/starboard-jupyter services/app/alp-ui/resources/starboard-jupyter
 COPY --from=log-viewer-build /usr/src/services/app/alp-ui/resources/log-viewer services/app/alp-ui/resources/log-viewer
 COPY --from=pystrategus-build /usr/src/services/app/alp-ui/resources/pystrategus-0.0.1-py3-none-any.whl services/app/alp-ui/resources/starboard-notebook-base
 
@@ -169,7 +168,7 @@ ENV GIT_COMMIT=$GIT_COMMIT_ARG
 COPY --from=final-build /usr/src/services/app/alp-ui/resources/ ui-files/
 
 # Ignore check if its run for http tests
-RUN for NAME in mri mri-ui5 ui5 portal superadmin flow analysis mapping starboard-jupyter starboard-notebook-base; do \
+RUN for NAME in mri mri-ui5 ui5 portal superadmin flow analysis mapping starboard-notebook-base; do \
     DIR=ui-files/${NAME}; \
     echo TEST $DIR created ...; \
     ls -d "${DIR}" || exit 1; \
