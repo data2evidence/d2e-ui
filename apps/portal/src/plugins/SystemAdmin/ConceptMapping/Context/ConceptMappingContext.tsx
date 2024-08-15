@@ -87,7 +87,11 @@ const updateMultipleRows = (
           ...state.csvData,
           data: state.csvData.data.map((row, index) => {
             const updatedRow = action.data.find((item) => item.index === index);
-            return updatedRow ? { ...row, ...updatedRow } : row;
+            if (updatedRow) {
+              const { index: _, ...rest } = updatedRow;
+              return { ...row, ...rest, status: "checked" };
+            }
+            return row;
           }),
         },
       };
