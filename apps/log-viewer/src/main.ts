@@ -11,27 +11,10 @@ import { plugin as PrefectUILibrary } from '@prefecthq/prefect-ui-library'
 import { plugin as VueCompositionsDevtools } from '@prefecthq/vue-compositions'
 import App from './App.vue'
 import FlowRun from './views/FlowRun'
-import { createRouter, createWebHistory } from 'vue-router'
 import TaskRun from './views/TaskRun.vue'
-import Jobs from './views/Jobs'
-import AppRouterView from './views/AppRouterView.vue'
-import Sidebar from './components/Sidebar.vue'
+import router from '@/router'
 
 const mountLogViewer = () => {
-  const routes = [
-    {
-      name: 'root',
-      path: '/',
-      components: { default: AppRouterView, sidebar: Sidebar },
-      children: [{ path: 'jobs', component: Jobs }]
-    },
-    { path: '/flowrun/:flowRunId', component: FlowRun },
-    { path: '/flowrun/:flowRunId/taskrun/:taskRunId', component: TaskRun }
-  ]
-  const router = createRouter({
-    history: createWebHistory('/portal/systemadmin/jobs'),
-    routes
-  })
   try {
     const app = createApp(App)
     app.use(createPinia())
