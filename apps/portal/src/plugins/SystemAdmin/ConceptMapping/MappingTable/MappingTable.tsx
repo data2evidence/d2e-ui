@@ -122,7 +122,7 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
       <Box sx={{ display: "flex", gap: "1rem", p: "4px" }}>
         <Button
           onClick={() => populateConcepts()}
-          text="Populate concepts"
+          text={getText(i18nKeys.MAPPING_TABLE__POPULATE_CONCEPTS)}
           loading={isLoading}
           disabled={getAvailableRows().length === 0}
         />

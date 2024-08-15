@@ -590,6 +590,7 @@
   "MAPPING_TABLE__DOMAIN_ID": "Domain",
   "MAPPING_TABLE__FREQUENCY": "Frequenz",
   "MAPPING_TABLE__NAME": "Name",
+  "MAPPING_TABLE__POPULATE_CONCEPTS": "Konzepte ausfüllen",
   "MAPPING_TABLE__SOURCE": "Quelle",
   "MAPPING_TABLE__STATUS": "Status",
   "MENU_NAV__DATASET": "Datensatz",
