@@ -2,11 +2,13 @@ import { TableState } from "./table-state";
 import { FieldState } from "./field-state";
 
 export interface AppState {
+  saved: boolean;
   table: TableState;
   field: FieldState;
 }
 
 export const initialState: AppState = {
+  saved: true,
   table: {
     nodes: [
       {

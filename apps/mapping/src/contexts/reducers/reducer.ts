@@ -1,5 +1,5 @@
 import { AppState } from "../states";
-import { reset, clearHandles } from "./app";
+import { reset, clearHandles, markAsSaved, load } from "./app";
 import {
   setTableNodes,
   setTableEdges,
@@ -17,7 +17,9 @@ import {
 
 export enum ACTION_TYPES {
   RESET = "RESET",
+  LOAD = "LOAD",
   CLEAR_HANDLES = "CLEAR_HANDLES",
+  MARK_AS_SAVED = "MARK_AS_SAVED",
   SET_TABLE_NODES = "SET_TABLE_NODES",
   SET_TABLE_EDGES = "SET_TABLE_EDGES",
   ADD_TABLE_CONNECTION = "ADD_TABLE_CONNECTION",
@@ -35,7 +37,9 @@ type ActionFunction = (state: AppState, payload?: any) => AppState;
 
 const actionMap = new Map<ActionType, ActionFunction>([
   [ACTION_TYPES.RESET, reset],
+  [ACTION_TYPES.LOAD, load],
   [ACTION_TYPES.CLEAR_HANDLES, clearHandles],
+  [ACTION_TYPES.MARK_AS_SAVED, markAsSaved],
   [ACTION_TYPES.SET_TABLE_NODES, setTableNodes],
   [ACTION_TYPES.SET_TABLE_EDGES, setTableEdges],
   [ACTION_TYPES.ADD_TABLE_CONNECTION, addTableConnection],
