@@ -43,21 +43,6 @@ export class Terminology {
       method: "GET",
     });
   }
-  public getTerminologyByBatch(datasetId: string, searchText: string[], domainId: string[]): Promise<FhirValueSet> {
-    const standardConcept = ["S"];
-    const params = new URLSearchParams();
-    params.append("datasetId", String(datasetId));
-    params.append("offset", "0");
-    params.append("count", "1");
-    params.append("filter", JSON.stringify({ domainId, standardConcept }));
-    searchText.forEach((text) => params.append("code", String(text)));
-
-    return request({
-      baseURL: TERMINOLOGY_BASE_URL,
-      url: `/fhir/4_0_0/valueset/$expand?${params}`,
-      method: "GET",
-    });
-  }
 
   public getFirstConcepts(data: rowObject[], datasetId: string): Promise<FirstConcepts[]> {
     return request({
