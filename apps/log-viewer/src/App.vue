@@ -7,7 +7,10 @@
 </template>
 
 <script setup lang="ts">
+import { useColorTheme } from '@prefecthq/prefect-design';
 import AppRouterView from '@/views/AppRouterView.vue'
+
+useColorTheme()
 </script>
 
 <style scoped>

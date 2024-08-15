@@ -13,6 +13,9 @@ import App from './App.vue'
 import FlowRun from './views/FlowRun'
 import TaskRun from './views/TaskRun.vue'
 import router from '@/router'
+import { initColorMode } from './utils/colorMode'
+
+initColorMode()
 
 const mountLogViewer = () => {
   try {
