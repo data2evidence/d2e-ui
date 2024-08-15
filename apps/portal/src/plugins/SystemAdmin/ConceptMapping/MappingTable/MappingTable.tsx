@@ -5,6 +5,7 @@ import "./MappingTable.scss";
 import { useTranslation } from "../../../../contexts";
 import { Box, Button } from "@portal/components";
 import { Terminology } from "../../../../axios/terminology";
+import { RowObject } from "../types";
 
 interface MappingTableProps {
   selectedDatasetId: string;
@@ -134,18 +135,13 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
   }, []);
 
   const populateConcepts = useCallback(async () => {
-    let formattedRows;
-    const currentRows = getAvailableRows();
-
-    if (domainId) {
-      formattedRows = currentRows.map((row) => {
-        return { row: row.original, searchText: row.original[sourceName], domainId: row.original[domainId] };
-      });
-    } else {
-      formattedRows = currentRows.map((row) => {
-        return { row: row.original, searchText: row.original[sourceName] };
-      });
-    }
+    const formattedRows = getAvailableRows().map((row) => {
+      const formattedRow: RowObject = { index: row.index, searchText: row.original[sourceName] };
+      if (domainId) {
+        formattedRow["domainId"] = row.original[domainId];
+      }
+      return formattedRow;
+    });
 
     setIsLoading(true);
     const api = new Terminology();

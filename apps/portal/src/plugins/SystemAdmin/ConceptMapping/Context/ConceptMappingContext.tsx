@@ -81,47 +81,14 @@ const updateMultipleRows = (
 ) => {
   switch (action.type) {
     case "UPDATE_MULTIPLE_ROWS":
-      const updateMap = new Map<
-        string,
-        {
-          conceptId: number;
-          conceptName: string;
-          domainId: string;
-          status?: string;
-        }
-      >();
-
-      action.data.forEach((update) => {
-        const key = JSON.stringify(update.row);
-        updateMap.set(key, {
-          conceptId: update.result.conceptId,
-          conceptName: update.result.conceptName,
-          domainId: update.result.domainId,
-          status: "checked",
-        });
-      });
-
-      const updatedData = state.csvData.data.map((row) => {
-        const key = JSON.stringify(row);
-        const update = updateMap.get(key);
-
-        if (update) {
-          return {
-            ...row,
-            conceptId: update.conceptId,
-            conceptName: update.conceptName,
-            domainId: update.domainId,
-            status: update.status,
-          };
-        }
-        return row;
-      });
-
       return {
         ...state,
         csvData: {
           ...state.csvData,
-          data: updatedData,
+          data: state.csvData.data.map((row, index) => {
+            const updatedRow = action.data.find((item) => item.index === index);
+            return updatedRow ? { ...row, ...updatedRow } : row;
+          }),
         },
       };
 

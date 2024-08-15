@@ -178,11 +178,9 @@ export interface HybridSearchConfig {
   model: string;
 }
 export interface FirstConcepts {
-  row: object;
-  result: {
-    conceptId: number;
-    conceptName: string;
-    domainId: string;
-  };
+  index: number;
+  conceptId: number;
+  conceptName: string;
+  domainId: string;
 }
 
