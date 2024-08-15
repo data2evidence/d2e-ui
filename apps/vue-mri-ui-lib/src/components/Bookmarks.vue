@@ -98,190 +98,177 @@
         </div>
         <div class="bookmark-list-content">
           <template v-for="bookmark in bookmarksDisplay" :key="bookmark.name">
-              <div class="bookmark-item-container" ref="bookmarkItemContainer">
-                <table class="bookmark-item-table">
-                  <tr>
-                    <td>
-                      <div class="bookmark-item-header">
-                        <appCheckbox
-                          v-model="bookmark.selected"
-                          @checkEv="onSelectBookmark(bookmark)"
-                          :text="`${bookmark.name} ${bookmark.shared ? '(Shared)' : ''}`"
-                          :labelClass="'font-color-red'"
-                        ></appCheckbox>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="bookmark-item-content">
-                        <table>
-                          <tr class="bookmark-item-info">
-                            <td class="bookmark-filtercard">
-                              <div style="display: block">
-                                <span class="bookmark-headelement bookmark-element">By:</span>
-                                {{ bookmark.username }}
-                              </div>
-                              <div style="display: block margin-right: 16px">
-                                <span class="bookmark-headelement bookmark-element">Version:</span>
-                                {{ bookmark.version }}
-                              </div>
-                              <div style="display: block">
-                                <span class="bookmark-headelement bookmark-element">Date:</span>
-                                {{ bookmark.dateModified }}
-                              </div>
-                              <div style="display: block margin-right: 16px">
-                                <span class="bookmark-headelement bookmark-element">Time:</span>
-                                {{ bookmark.timeModified }}
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div
-                        class="bookmark-item-content"
-                        v-on:click="loadBookmarkCheck(bookmark.id, bookmark.chartType)"
-                      >
-                        <table class="bookmark-item-cards">
-                          <thead>
-                            <th style="width: 25px"></th>
-                            <th></th>
-                          </thead>
-                          <template
-                            v-for="container in getCardsFormatted(bookmark.filterCardData)"
-                            :key="container.content"
-                          >
-                            <tr>
-                              <td class="bookmark-item-cards-items" colspan="2">
-                                <div>
-                                  <template v-for="filterCard in container.content" :key="filterCard.name">
-                                    <div class="bookmark-filtercard">
-                                      <span class="bookmark-headelement bookmark-element">{{ filterCard.name }}</span>
-                                      <template v-for="attribute in filterCard.visibleAttributes" :key="attribute.name">
-                                        <span class="bookmark-element">{{ attribute.name }}</span>
-                                        <span
-                                          class="bookmark-element bookmark-constraint"
-                                          :key="constraint"
-                                          v-for="constraint in attribute.visibleConstraints"
-                                          >{{ getConstraint(constraint) }}</span
-                                        >
-                                        <span class="bookmark-element">;</span>
-                                      </template>
-                                    </div>
-                                  </template>
-                                </div>
-                              </td>
-                            </tr>
-                          </template>
+            <div class="bookmark-item-container" ref="bookmarkItemContainer">
+              <table class="bookmark-item-table">
+                <tr>
+                  <td>
+                    <div class="bookmark-item-header">
+                      <appCheckbox
+                        v-model="bookmark.selected"
+                        @checkEv="onSelectBookmark(bookmark)"
+                        :text="`${bookmark.name} ${bookmark.shared ? '(Shared)' : ''}`"
+                        :labelClass="'font-color-red'"
+                      ></appCheckbox>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="bookmark-item-content">
+                      <table>
+                        <tr class="bookmark-item-info">
+                          <td class="bookmark-filtercard">
+                            <div style="display: block">
+                              <span class="bookmark-headelement bookmark-element">By:</span>
+                              {{ bookmark.username }}
+                            </div>
+                            <div style="display: block margin-right: 16px">
+                              <span class="bookmark-headelement bookmark-element">Version:</span>
+                              {{ bookmark.version }}
+                            </div>
+                            <div style="display: block">
+                              <span class="bookmark-headelement bookmark-element">Date:</span>
+                              {{ bookmark.dateModified }}
+                            </div>
+                            <div style="display: block margin-right: 16px">
+                              <span class="bookmark-headelement bookmark-element">Time:</span>
+                              {{ bookmark.timeModified }}
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="bookmark-item-content" v-on:click="loadBookmarkCheck(bookmark.id, bookmark.chartType)">
+                      <table class="bookmark-item-cards">
+                        <thead>
+                          <th style="width: 25px"></th>
+                          <th></th>
+                        </thead>
+                        <template
+                          v-for="container in getCardsFormatted(bookmark.filterCardData)"
+                          :key="container.content"
+                        >
                           <tr>
-                            <td colspan="2">
-                              <div class="bookmark-row-separator"></div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <span
-                                class="icon"
-                                v-bind:style="'font-family:' + getChartInfo(bookmark.chartType, 'iconGroup')"
-                                >{{ getChartInfo(bookmark.chartType, 'icon') }}</span
-                              >
-                            </td>
-                            <td>
-                              <div>{{ getText(getChartInfo(bookmark.chartType, 'tooltip')) }}</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style="vertical-align: top">
-                              <span class="icon" style="font-family: app-icons"></span>
-                            </td>
-                            <td>
-                              <div class="bookmark-item-axes">
-                                <template
-                                  v-for="axis in getAxisFormatted(bookmark.axisInfo, bookmark.chartType)"
-                                  :key="axis.name"
-                                >
-                                  <div>
-                                    <label style="display: flex; align-items: top">
+                            <td class="bookmark-item-cards-items" colspan="2">
+                              <div>
+                                <template v-for="filterCard in container.content" :key="filterCard.name">
+                                  <div class="bookmark-filtercard">
+                                    <span class="bookmark-headelement bookmark-element">{{ filterCard.name }}</span>
+                                    <template v-for="attribute in filterCard.visibleAttributes" :key="attribute.name">
+                                      <span class="bookmark-element">{{ attribute.name }}</span>
                                       <span
-                                        v-if="bookmark.chartType !== 'list'"
-                                        class="icon"
-                                        :style="`font-family: ${axis.iconGroup}; margin-top: 0`"
-                                        >{{ axis.icon }}</span
+                                        class="bookmark-element bookmark-constraint"
+                                        :key="constraint"
+                                        v-for="constraint in attribute.visibleConstraints"
+                                        >{{ getConstraint(constraint) }}</span
                                       >
-                                      <span>{{ axis.name }}</span>
-                                    </label>
+                                      <span class="bookmark-element">;</span>
+                                    </template>
                                   </div>
                                 </template>
                               </div>
                             </td>
                           </tr>
-                          <tr>
-                            <td>
-                              <icon icon="puzzle"></icon>
-                            </td>
-                            <td>
-                              <div class="bookmark-extension-container">
-                                <div>{{ getText('MRI_PA_EXTENSION_EXPORT_HEADER') }}</div>
-                                <div></div>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
+                        </template>
+                        <tr>
+                          <td colspan="2">
+                            <div class="bookmark-row-separator"></div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span
+                              class="icon"
+                              v-bind:style="'font-family:' + getChartInfo(bookmark.chartType, 'iconGroup')"
+                              >{{ getChartInfo(bookmark.chartType, 'icon') }}</span
+                            >
+                          </td>
+                          <td>
+                            <div>{{ getText(getChartInfo(bookmark.chartType, 'tooltip')) }}</div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top">
+                            <span class="icon" style="font-family: app-icons"></span>
+                          </td>
+                          <td>
+                            <div class="bookmark-item-axes">
+                              <template
+                                v-for="axis in getAxisFormatted(bookmark.axisInfo, bookmark.chartType)"
+                                :key="axis.name"
+                              >
+                                <div>
+                                  <label style="display: flex; align-items: top">
+                                    <span
+                                      v-if="bookmark.chartType !== 'list'"
+                                      class="icon"
+                                      :style="`font-family: ${axis.iconGroup}; margin-top: 0`"
+                                      >{{ axis.icon }}</span
+                                    >
+                                    <span>{{ axis.name }}</span>
+                                  </label>
+                                </div>
+                              </template>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <icon icon="puzzle"></icon>
+                          </td>
+                          <td>
+                            <div class="bookmark-extension-container">
+                              <div>{{ getText('MRI_PA_EXTENSION_EXPORT_HEADER') }}</div>
+                              <div></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <div class="bookmark-item-footer">
+                <div class="bookmark-item-footer__break" />
+                <table class="bookmark-item-buttons">
+                  <tr>
+                    <td>
+                      <button
+                        :title="getText('MRI_PA_BUTTON_SHOW_COLLECTION')"
+                        class="bookmark-button"
+                        v-on:click.stop="this.openCohortListDialog(bookmark)"
+                      >
+                        <CohortIcon />
+                      </button>
+                    </td>
+                    <td v-if="!bookmark.disableUpdate">
+                      <button
+                        v-on:click.stop="renameBookmark(bookmark)"
+                        :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
+                        class="bookmark-button"
+                      >
+                        <EditIcon />
+                        <!-- <span class="icon"></span> -->
+                      </button>
+                    </td>
+                    <td v-if="!bookmark.disableUpdate">
+                      <button
+                        v-on:click.stop="deleteBookmark(bookmark)"
+                        :title="getText('MRI_PA_TOOLTIP_DELETE_BOOKMARK')"
+                        class="bookmark-button"
+                      >
+                        <TrashCanIcon />
+                        <!-- <span class="icon"></span> -->
+                      </button>
                     </td>
                   </tr>
                 </table>
-                <div class="bookmark-item-footer">
-                  <div class="bookmark-item-footer__break" />
-                  <table class="bookmark-item-buttons">
-                    <tr>
-                      <td>
-                        <button
-                          :title="getText('MRI_PA_BUTTON_SHOW_COLLECTION')"
-                          class="bookmark-button"
-                          v-on:click.stop="this.openCohortListDialog(bookmark)"
-                        >
-                          <CohortIcon />
-                        </button>
-                      </td>
-                      <td v-if="enableAddToCohort">
-                        <button
-                          v-on:click.stop="addCohort(bookmark)"
-                          :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
-                          class="bookmark-button"
-                        >
-                          <!-- <span class="icon" style="font-family: app-icons"> </span> -->
-                          <AddPatientsIcon />
-                        </button>
-                      </td>
-                      <td v-if="!bookmark.disableUpdate">
-                        <button
-                          v-on:click.stop="renameBookmark(bookmark)"
-                          :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
-                          class="bookmark-button"
-                        >
-                          <EditIcon />
-                          <!-- <span class="icon"></span> -->
-                        </button>
-                      </td>
-                      <td v-if="!bookmark.disableUpdate">
-                        <button
-                          v-on:click.stop="deleteBookmark(bookmark)"
-                          :title="getText('MRI_PA_TOOLTIP_DELETE_BOOKMARK')"
-                          class="bookmark-button"
-                        >
-                          <TrashCanIcon />
-                          <!-- <span class="icon"></span> -->
-                        </button>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
               </div>
+            </div>
           </template>
         </div>
       </div>
@@ -312,14 +299,6 @@
       @closeEv="showCohortListDialog = false"
     >
     </cohortListDialog>
-
-    <addCohort
-      :openAddDialog="showAddCohortDialog"
-      :bookmarkId="this.selectedBookmark.id"
-      :bookmarkName="this.selectedBookmark.name"
-      @closeEv="showAddCohortDialog = false"
-    >
-    </addCohort>
 
     <messageBox
       dim="true"
@@ -353,7 +332,6 @@ import appLink from '../lib/ui/app-link.vue'
 import Constants from '../utils/Constants'
 import cohortComparisonDialog from './CohortComparisonDialog.vue'
 import messageBox from './MessageBox.vue'
-import addCohort from './AddCohort.vue'
 import cohortListDialog from './CohortListDialog.vue'
 import { getPortalAPI } from '../utils/PortalUtils'
 import formatBookmarkDisplay from '../utils/BookmarkUtils'
@@ -381,9 +359,7 @@ export default {
       initBookmarkId: this.initBookmarkId,
       showCohortCompareDialog: false,
       showCohortListDialog: false,
-      showAddCohortDialog: false,
       showIncompatibleMessage: false,
-      enableAddToCohort: false,
       cohortName: 'New cohort',
       isInvalidName: false,
       showSaveOrDiscardDialog: false,
@@ -391,9 +367,6 @@ export default {
       selectedBmkId: '',
       selectedChartType: '',
     }
-  },
-  created() {
-    this.enableAddToCohort = this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts
   },
   watch: {
     initBookmarkId() {
@@ -681,10 +654,6 @@ export default {
         this.closeRenameBookmark()
       })
     },
-    addCohort(bookmark) {
-      this.selectedBookmark = bookmark
-      this.showAddCohortDialog = true
-    },
     closeDeleteBookmark() {
       this.showDeleteDialog = false
     },
@@ -705,15 +674,15 @@ export default {
           params,
           method: 'delete',
           bookmarkId: bookmark.id,
-        });
-        await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } });
-        this.closeDeleteBookmark();
+        })
+        await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
+        this.closeDeleteBookmark()
         if (activeBookmark && activeBookmark.bookmarkname === bookmark.name) {
-          this[types.SET_ACTIVE_BOOKMARK](null);
-          this.reset();
+          this[types.SET_ACTIVE_BOOKMARK](null)
+          this.reset()
         }
       } catch (error) {
-        console.error('Error deleting bookmark:', error);
+        console.error('Error deleting bookmark:', error)
       }
     },
     closeIncompatibleMessage() {
@@ -774,8 +743,6 @@ export default {
       return uniqueName
     },
     reset() {
-      console.log('reset');
-      
       this[types.CONFIG_SET_HAS_ASSIGNED](false)
       this.$nextTick(() => {
         this.resetChartProperties()
@@ -791,7 +758,6 @@ export default {
     icon,
     appLink,
     cohortComparisonDialog,
-    addCohort,
     cohortListDialog,
     CohortIcon,
     AddPatientsIcon,
