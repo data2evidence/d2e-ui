@@ -11,9 +11,27 @@
   </div>
 </template>
   
-  <script setup lang="ts">
+<script setup lang="ts">
+import { provide } from 'vue'
 import { RouterView } from 'vue-router'
+import { workspaceApiKey, canKey as designCanKey, createWorkspaceRoutes, workspaceRoutesKey } from '@prefecthq/prefect-ui-library'
+import { useApiConfig } from '@/compositions/useApiConfig'
+import { useCreateCan } from '@/compositions/useCreateCan'
+import { createPrefectApi } from '@/utils/api'
+import { canKey } from '@/utils/permissions'
 import Sidebar from '@/components/Sidebar.vue'
+
+const { config } = await useApiConfig()
+const { can } = useCreateCan()
+
+const api = createPrefectApi(config)
+const routes = createWorkspaceRoutes()
+
+provide(canKey, can)
+provide(designCanKey, can)
+provide(workspaceApiKey, api)
+provide(workspaceRoutesKey, routes)
+
 </script>
   
 <style scoped>
