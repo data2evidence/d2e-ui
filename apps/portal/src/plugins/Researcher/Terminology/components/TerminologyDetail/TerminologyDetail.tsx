@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useCallback } from "react";
+import React, { FC, useEffect, useState, useCallback, Dispatch, SetStateAction } from "react";
 import { Table, TableBody, TableHead } from "@mui/material";
 import { Tabs, Tab } from "@mui/material";
 import { TableRow, TableCell, Loader } from "@portal/components";
@@ -11,6 +11,7 @@ import "./TerminologyDetail.scss";
 
 interface TerminologyDetailProps {
   userId?: string;
+  setConceptId: Dispatch<SetStateAction<null | number>>;
   conceptId: number;
   datasetId?: string;
 }
@@ -20,7 +21,7 @@ enum TerminologyDetailsTab {
   RelatedConcepts = "Related Concepts",
 }
 
-const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, datasetId }) => {
+const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, setConceptId, conceptId, datasetId }) => {
   const { getText } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<TerminologyDetailsList | null>();
@@ -116,7 +117,16 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
                   {data &&
                     data?.connections.length > 0 &&
                     data.connections.map((conn, index) => (
-                      <TableRow key={conn.code + index}>
+                      <TableRow
+                        key={conn.code + index}
+                        onClick={() => setConceptId(conn.code)}
+                        sx={{
+                          cursor: "pointer",
+                          "&.MuiTableRow-root:hover": {
+                            backgroundColor: "#ccdef1",
+                          },
+                        }}
+                      >
                         <TableCell>{conn.equivalence}</TableCell>
                         <TableCell>{conn.display}</TableCell>
                         <TableCell>{conn.code}</TableCell>
@@ -145,29 +155,35 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__DOMAIN_ID)}</TableCell>
-                      <TableCell>{data?.details?.domainId ?? ""}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__CONCEPT_CLASS_ID)}</TableCell>
-                      <TableCell>{data?.details?.conceptClassId ?? ""}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__VOCABULARY_ID)}</TableCell>
-                      <TableCell>
-                        <div>{data?.details?.system ?? ""}</div>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__CONCEPT_ID)}</TableCell>
+                      <TableCell>{getText(i18nKeys.TERMINOLOGY_LIST__ID)}</TableCell>
                       <TableCell>{data?.details?.conceptId ?? ""}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__CONCEPT_CODE)}</TableCell>
+                      <TableCell>{getText(i18nKeys.TERMINOLOGY_LIST__CODE)}</TableCell>
                       <TableCell>{data?.details?.code ?? ""}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell width="40%">{getText(i18nKeys.TERMINOLOGY_DETAIL__VALIDITY)}</TableCell>
+                      <TableCell>{getText(i18nKeys.TERMINOLOGY_LIST__NAME)}</TableCell>
+                      <TableCell>{data?.details?.display ?? ""}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>{getText(i18nKeys.TERMINOLOGY_LIST__CLASS)}</TableCell>
+                      <TableCell>{data?.details?.conceptClassId ?? ""}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>{getText(i18nKeys.TERMINOLOGY_LIST__CONCEPT)}</TableCell>
+                      <TableCell>{data?.details?.concept ?? ""}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>{getText(i18nKeys.TERMINOLOGY_LIST__DOMAIN)}</TableCell>
+                      <TableCell>{data?.details?.domainId ?? ""}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>{getText(i18nKeys.TERMINOLOGY_LIST__VOCABULARY)}</TableCell>
+                      <TableCell>{data?.details?.system ?? ""}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>{getText(i18nKeys.TERMINOLOGY_LIST__VALIDITY)}</TableCell>
                       <TableCell>{data?.details?.validity ?? ""}</TableCell>
                     </TableRow>
                   </TableBody>
