@@ -6,6 +6,8 @@
 
     <FlowRunGraphs v-if="!isPending" :flow-run="flowRun" />
 
+    <p-button v-if="showResultButton" lg @click="displayResultsDialog"> View Results</p-button>
+
     <p-tabs v-model:selected="tab" :tabs="tabs">
       <template #details>
         <FlowRunDetails :flow-run="flowRun" />
@@ -16,10 +18,6 @@
       </template>
 
       <template #results>
-        <div>
-          {{ tags }}
-        </div>
-        
         <FlowRunResults v-if="flowRun" :flow-run="flowRun" />
       </template>
 
@@ -67,14 +65,33 @@ import { computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import FlowRunGraphs from '@/components/FlowRunGraphs.vue'
 import { routes } from '@/router'
+import { RUN_TYPES } from '@/types/types'
+import { mapFlowRunResults } from '@/utils/mapFlowRunResults'
 
 const router = useRouter()
 const flowRunId = useRouteParam('flowRunId')
 
 const { flowRun, subscription: flowRunSubscription } = useFlowRun(flowRunId, { interval: 5000 })
 
-// display result based on tags
-const tags = computed(() => stringify(flowRun.value?.tags ?? []))
+const tags = computed(() => flowRun.value?.tags ?? [])
+const showResultButton = computed(
+  () =>
+    (tags.value.includes(RUN_TYPES.DATA_QUALITY) ||
+      tags.value.includes(RUN_TYPES.DATA_CHARACTERIZATION)) &&
+    flowRun.value?.stateType === 'completed'
+)
+const displayResultsDialog = () => {
+  const job = mapFlowRunResults(flowRun.value)
+  const event = new CustomEvent('alp-results-dialog-open', {
+    detail: {
+      props: {
+        job: job
+      }
+    }
+  })
+  window.dispatchEvent(event)
+}
+
 const parameters = computed(() => stringify(flowRun.value?.parameters ?? {}))
 
 const isPending = computed(() => {
