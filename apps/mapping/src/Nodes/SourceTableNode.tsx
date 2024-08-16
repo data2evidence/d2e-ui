@@ -6,7 +6,8 @@ import { ScanProgressDialog } from "../components/ScanProgressDialog/ScanProgres
 import { useTable } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
 import { CloseDialogType } from "../components/ScanDataDialog/ScanDataDialog";
-import "./node.scss";
+import "./BaseNode.scss";
+import "./TableNode.scss";
 
 export const SourceTableNode = (props: NodeProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -36,10 +37,10 @@ export const SourceTableNode = (props: NodeProps) => {
   };
 
   return (
-    <div className="link-tables__column nodrag">
+    <div className="base-node table-node nodrag">
       <div className="content-container">
         {sourceHandles.length ? (
-          <div className="handle-container">
+          <div className="handle-container scroll-shadow">
             {sourceHandles.map((node) => (
               <MappingHandle {...node} key={node.id} />
             ))}

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import ReactFlow, { Controls, Edge } from "reactflow";
+import ReactFlow, { Controls, Edge, PanOnScrollMode } from "reactflow";
 import { Button } from "@mui/material";
 import { ManageSearch } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -37,12 +37,16 @@ export const TableMapLayout = () => {
           onConnect={(changes) => addTableConnection(changes)}
           zoomOnDoubleClick={false}
           zoomOnScroll={false}
-          panOnScroll={false} // change default scroll
-          zoomOnPinch={false} // diable mouse on pinch zoom
+          panOnScrollMode={PanOnScrollMode.Horizontal}
+          panOnScroll
+          panOnDrag={false}
+          zoomOnPinch={false}
           fitView
+          maxZoom={1}
+          minZoom={1}
           onEdgeDoubleClick={handleEdgeClick}
         >
-          <Controls />
+          <Controls showZoom={false} showInteractive={false} />
         </ReactFlow>
       </div>
 

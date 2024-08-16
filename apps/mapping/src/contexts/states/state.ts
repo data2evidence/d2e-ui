@@ -40,7 +40,7 @@ export const initialState: AppState = {
     nodes: [
       {
         id: "field_source_menu",
-        type: "placeholderNode",
+        type: "fieldNode",
         position: { x: 0, y: 0 },
         style: {
           width: "30vw",
@@ -50,7 +50,7 @@ export const initialState: AppState = {
       },
       {
         id: "field_target_menu",
-        type: "placeholderNode",
+        type: "fieldNode",
         position: { x: 700, y: 0 },
         style: {
           width: "30vw",
