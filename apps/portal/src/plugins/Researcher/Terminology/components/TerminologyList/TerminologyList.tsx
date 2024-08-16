@@ -319,10 +319,10 @@ const TerminologyList: FC<TerminologyListProps> = ({
       "conceptId",
       "conceptCode",
       "conceptName",
-      "conceptClassId",
+      "vocabularyId",
       "concept",
       "domainId",
-      "vocabularyId",
+      "conceptClassId",
       "validity",
     ];
     const basicColumns: MRT_ColumnDef<FhirValueSetExpansionContainsWithExt>[] = [
@@ -333,13 +333,13 @@ const TerminologyList: FC<TerminologyListProps> = ({
         size: 100,
       },
       {
-        accessorKey: "code",
+        accessorKey: "conceptCode",
         header: getText(i18nKeys.TERMINOLOGY_LIST__CODE),
         grow: true,
         size: 180,
       },
       {
-        accessorKey: "display",
+        accessorKey: "conceptName",
         header: getText(i18nKeys.TERMINOLOGY_LIST__NAME),
         grow: true,
         size: isDrawer ? 250 : 350,
@@ -372,7 +372,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
         size: 180,
       },
       {
-        accessorKey: "system",
+        accessorKey: "vocabularyId",
         header: getText(i18nKeys.TERMINOLOGY_LIST__VOCABULARY),
         filterVariant: "multi-select",
         filterSelectOptions: filterOptions?.vocabularyId ? mapFilterOptions(filterOptions.vocabularyId) : [],
@@ -514,7 +514,7 @@ const TerminologyList: FC<TerminologyListProps> = ({
       },
     },
     muiTableContainerProps: {
-      sx: { overflowY: "auto", border: "1px solid #d4d4d4", height: "100%" },
+      sx: { overflowY: "auto", height: "100%" },
     },
     muiTableHeadCellProps: {
       sx: {
