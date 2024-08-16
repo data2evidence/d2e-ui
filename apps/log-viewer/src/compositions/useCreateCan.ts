@@ -14,8 +14,7 @@ export function useCreateCan(): UseCreateCan {
 
   const permissions = computed<Permission[]>(() => [
     ...workspacePermissions,
-    ...(flagsSubscription.response ?? []),
-    'access:nestedTaskRunGraphs'
+    ...(flagsSubscription.response ?? [])
   ])
 
   const can = createCan(permissions)

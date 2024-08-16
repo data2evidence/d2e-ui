@@ -1,7 +1,7 @@
 export type LogInfo = {
   id: string
-  created: string
-  updated: string
+  created: number | Date
+  updated: number | Date
   name: string
   level: number
   message: string
@@ -12,8 +12,8 @@ export type LogInfo = {
 
 export type FlowRun = {
   id: string
-  created: string
-  updated: string
+  created: number | Date
+  updated: number | Date
   name: string
   flowId: string
   stateId: string
@@ -42,7 +42,7 @@ export type FlowRun = {
   runCount: number
   expectedStartTime: string
   nextScheduledStartTime: null
-  startTime: string
+  startTime: number | Date
   endTime: string
   totalRunTime: number
   estimatedRunTime: number

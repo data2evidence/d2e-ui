@@ -21,7 +21,7 @@ const generateLevelTag = (level: number) => {
       return { label: 'Custom', styleClass: 'tag-color-default' }
   }
 }
-const getLocaleTimestamp = (timestamp: string) => {
+const getLocaleTimestamp = (timestamp: number | Date) => {
   const getLang = () => {
     if (navigator.languages != undefined) return navigator.languages[0]
     return navigator.language
