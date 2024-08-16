@@ -5,6 +5,7 @@ import AppRouterView from '@/views/AppRouterView.vue'
 import Sidebar from '@/components/Sidebar.vue'
 
 const workspaceRoutes = createWorkspaceRouteRecords({
+  deployment: () => import('@/views/Deployment.vue'),
   flows: () => import('@/views/Jobs'),
   flow: () => import('@/views/Flow.vue'),
   flowRuns: () => import('@/views/FlowRuns.vue'),
