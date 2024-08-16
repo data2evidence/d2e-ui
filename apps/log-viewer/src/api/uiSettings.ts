@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { mapper } from '@/utils/mapper'
 import { SettingsResponse } from '@/types/settingsResponse'
+import { getPortalAPI } from '@/utils/portalApi'
 import { MODE, BASE_URL } from '@/env'
 import { FeatureFlag } from '@/utils/permissions'
 
@@ -10,12 +11,13 @@ export type Settings = {
   flags: FeatureFlag[]
 }
 
+const { baseUrl, getAuthToken } = getPortalAPI()
+
 export class UiSettings {
   public static settings: Settings | null = null
 
   private static promise: Promise<Settings> | null = null
-  //   private static readonly baseUrl = MODE() === 'development' ? 'http://127.0.0.1:4200' : BASE_URL()
-  private static readonly baseUrl = 'https://localhost:41100/prefect'
+  private static readonly baseUrl = `${baseUrl}prefect`
 
   public static async load(): Promise<Settings> {
     if (this.settings !== null) {
@@ -26,7 +28,11 @@ export class UiSettings {
       return this.promise
     }
 
-    const token = ''
+    const token = await getAuthToken()
+
+    if (!token) {
+      throw new Error('No auth token present')
+    }
 
     this.promise = new Promise((resolve) => {
       return axios
@@ -41,7 +47,6 @@ export class UiSettings {
     })
 
     const settings = await this.promise
-    console.log('here: ', settings)
     return (this.settings = settings)
   }
 
@@ -52,7 +57,6 @@ export class UiSettings {
     await this.load()
 
     const value = this.settings?.[setting]
-    console.log('here:', value)
 
     if (value === undefined) {
       if (defaultValue) {

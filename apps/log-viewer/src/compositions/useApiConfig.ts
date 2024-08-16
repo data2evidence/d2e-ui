@@ -1,18 +1,22 @@
 import { PrefectConfig } from '@prefecthq/prefect-ui-library'
-
+import { getPortalAPI } from '@/utils/portalApi'
 export type UseWorkspaceApiConfig = {
   config: PrefectConfig
 }
 export async function useApiConfig(): Promise<UseWorkspaceApiConfig> {
-  const baseUrl = 'https://localhost:41100/prefect/api'
-  const config: PrefectConfig = {
-    baseUrl,
-    token: ''
+  const { baseUrl, getAuthToken } = getPortalAPI()
+
+  const baseURL = `${baseUrl}prefect/api`
+  const token = await getAuthToken()
+
+  if (!token) {
+    throw new Error('No auth token present')
   }
 
-  //   if (baseUrl.startsWith('/') && MODE() === 'development') {
-  //     config.baseUrl = `http://127.0.0.1:4200${baseUrl}`
-  //   }
+  const config: PrefectConfig = {
+    baseUrl: baseURL,
+    token: token
+  }
 
   return { config }
 }
