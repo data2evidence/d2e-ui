@@ -1,7 +1,7 @@
 <template>
     <p-layout-default v-if="flowRun" :key="flowRun.id" class="flow-run">
       <template #header>
-        <PageHeadingFlowRun :flow-run-id="flowRun.id" @delete="goToRuns" />
+        <PageHeadingFlowRun :flow-run-id="flowRun.id" @delete="goToFlowRuns" />
       </template>
   
       <FlowRunGraphs v-if="!isPending" :flow-run="flowRun" />
@@ -32,12 +32,7 @@
             <p-code-highlight lang="json" :text="parameters" class="flow-run__parameters" />
           </CopyableWrapper>
         </template>
-  
-        <template #job-variables>
-          <CopyableWrapper :text-to-copy="jobVariables">
-            <p-code-highlight lang="json" :text="jobVariables" class="flow-run__job-variables" />
-          </CopyableWrapper>
-        </template>
+
       </p-tabs>
     </p-layout-default>
   </template>
@@ -75,9 +70,7 @@
     const isPending = computed(() => {
       return flowRun.value?.stateType ? isPendingStateType(flowRun.value.stateType) : true
     })
-  
-    const jobVariables = computed(() => stringify(flowRun.value?.jobVariables ?? {}))
-  
+    
     const computedTabs = computed(() => [
       { label: 'Logs' },
       { label: 'Task Runs', hidden: isPending.value },
@@ -97,8 +90,8 @@
       },
     })
   
-    function goToRuns(): void {
-      router.push(routes.runs())
+    function goToFlowRuns(): void {
+      router.push(routes.flowRuns())
     }
   
     const stateType = computed(() => flowRun.value?.stateType)
