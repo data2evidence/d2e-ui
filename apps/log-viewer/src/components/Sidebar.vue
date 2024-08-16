@@ -2,7 +2,7 @@
   <p-context-sidebar class="sidebar">
     <p-context-nav-item title="Dashboard" to="/" />
     <p-context-nav-item title="Jobs" to="/flows" />
-    <p-context-nav-item title="Flow Runs" to="/" />
+    <p-context-nav-item title="Flow Runs" to="/flow-runs" />
   </p-context-sidebar>
 </template>
   
