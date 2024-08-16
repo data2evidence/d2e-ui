@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useCallback, useRef, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { Breadcrumbs, IconButton, Link, Menu, MenuItem } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useApp } from "../contexts";
+import {
+  CloseDialogType,
+  SaveMappingDialog,
+} from "../components/SaveMappingDialog/SaveMappingDialog";
 import "./Navbar.scss";
 
 const MENU_ITEMS = [
@@ -22,26 +26,97 @@ const BREADCRUMBS_NAME_MAP: { [key: string]: string } = {
 export const Navbar = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
-  const { reset, clearHandles } = useApp();
+  const { reset, load, clearHandles, saved } = useApp();
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [nextAction, setNextAction] = useState<string | undefined>();
+  const hiddenFileInput = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleMenuClick = (menuName: string) => {
-    if (menuName === "New Mapping") {
-      reset();
-    }
-    if (menuName === "Delete All Mappings") {
-      clearHandles();
-    }
-    handleClose();
-  };
+  const handleClose = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
+
+  const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  }, []);
+
+  const handleOpenSaveDialog = useCallback((nextAction?: string) => {
+    setNextAction(nextAction);
+    setIsSaveDialogOpen(true);
+  }, []);
+
+  const handleSelectFile = useCallback(() => {
+    hiddenFileInput.current && hiddenFileInput.current.click();
+  }, []);
+
+  const handleFileUpload = useCallback(
+    (event: any) => {
+      const files = Array.from(event.target.files).map((file: any) => file);
+      if (files.length >= 1) {
+        const file = files[0];
+        const reader = new FileReader();
+        reader.onload = () => {
+          const jsonData = reader.result as string;
+
+          try {
+            const json = JSON.parse(jsonData);
+            console.log("JSON content:", json);
+            load(json);
+            navigate("");
+            window.location.reload();
+          } catch (err) {
+            console.error("Error parsing JSON:", err);
+          }
+        };
+        reader.readAsText(file);
+      }
+    },
+    [load, navigate]
+  );
+
+  const handleCloseSaveDialog = useCallback(
+    (type: CloseDialogType, nextAction?: string) => {
+      setIsSaveDialogOpen(false);
+
+      if (type === "success") {
+        if (nextAction === "open-mapping") {
+          handleSelectFile();
+        }
+      }
+    },
+    [handleSelectFile]
+  );
+
+  const handleMenuClick = useCallback(
+    (menuName: string) => {
+      if (menuName === "New Mapping") {
+        reset();
+      } else if (menuName === "Delete All Mappings") {
+        clearHandles();
+      } else if (menuName === "Save Mapping") {
+        handleOpenSaveDialog();
+      } else if (menuName === "Open Mapping") {
+        if (!saved) {
+          handleOpenSaveDialog("open-mapping");
+        } else {
+          handleSelectFile();
+        }
+      }
+
+      handleClose();
+    },
+    [
+      reset,
+      clearHandles,
+      handleOpenSaveDialog,
+      handleSelectFile,
+      handleClose,
+      saved,
+    ]
+  );
 
   return (
     <div className="navbar">
@@ -86,6 +161,22 @@ export const Navbar = () => {
           })}
         </Breadcrumbs>
       </div>
+      <SaveMappingDialog
+        open={isSaveDialogOpen}
+        nextAction={nextAction}
+        onClose={handleCloseSaveDialog}
+      />
+      <input
+        ref={hiddenFileInput}
+        type="file"
+        accept=".json"
+        onChange={handleFileUpload}
+        onClick={(event) => {
+          (event.target as any).value = null;
+        }}
+        style={{ display: "none" }}
+        id="open-mapping-json"
+      />
     </div>
   );
 };
