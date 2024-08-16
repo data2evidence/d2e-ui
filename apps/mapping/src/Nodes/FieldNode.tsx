@@ -4,9 +4,10 @@ import { debounce } from "lodash";
 import { useField } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
 import { FieldTargetHandle } from "./FieldTargetHandle";
-import "./node.scss";
+import "./BaseNode.scss";
+import "./FieldNode.scss";
 
-export const PlaceholderNode = (props: NodeProps) => {
+export const FieldNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const { sourceHandles, targetHandles } = useField();
   const isSource = props.data.type === "source";
@@ -18,15 +19,15 @@ export const PlaceholderNode = (props: NodeProps) => {
 
   return (
     <div
-      className="link-tables__column nodrag nowheel"
+      className="base-node field-node nodrag nowheel"
       onWheel={() => handleWheel()}
     >
       <div className="content-container">
         <div
           className={
             isSource
-              ? "handle-container handle-container-source"
-              : "handle-container"
+              ? "handle-container scroll-shadow handle-container-source"
+              : "handle-container scroll-shadow"
           }
         >
           {data.map((node) => (
