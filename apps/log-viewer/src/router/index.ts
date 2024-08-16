@@ -1,5 +1,5 @@
 import { RouteGuardExecutioner, createWorkspaceRouteRecords } from '@prefecthq/prefect-ui-library'
-import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
+import { RouteRecordRaw, createRouter, createWebHistory, RouteComponent } from 'vue-router'
 import { routes, NamedRoute, AppRouteLocation, AppRouteRecord } from '@/router/routes'
 import AppRouterView from '@/views/AppRouterView.vue'
 import Sidebar from '@/components/Sidebar.vue'
@@ -16,9 +16,13 @@ const routeRecords: AppRouteRecord[] = [
   {
     name: 'root',
     path: '/',
-    // redirect: routes.dashboard(),
     components: { default: AppRouterView, sidebar: Sidebar },
     children: workspaceRoutes
+  },
+  {
+    name: 'settings',
+    path: '/settings',
+    components: { default: import('@/views/Settings.vue'), siderbar: Sidebar }
   }
 ]
 
