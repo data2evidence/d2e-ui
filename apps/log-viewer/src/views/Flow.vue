@@ -23,7 +23,7 @@
     import { computed } from 'vue'
     import { useRouter } from 'vue-router'
     import { usePageTitle } from '@/compositions/usePageTitle'
-    // import { routes } from '@/router/routes'
+    import { routes } from '@/router/routes'
   
     const api = useWorkspaceApi()
     const flowId = useRouteParam('flowId')
@@ -46,7 +46,7 @@
     })
   
     function deleteFlow(): void {
-      // router.push(routes.flows())
+      router.push(routes.flows())
     }
   
     const title = computed(() => {
