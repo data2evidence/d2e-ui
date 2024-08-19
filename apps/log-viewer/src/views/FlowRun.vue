@@ -65,7 +65,7 @@ import { computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import FlowRunGraphs from '@/components/FlowRunGraphs.vue'
 import { routes } from '@/router'
-import { RUN_TYPES } from '@/types/types'
+import { RUN_TYPES } from '@/types/runs'
 import { mapFlowRunResults } from '@/utils/mapFlowRunResults'
 
 const router = useRouter()
