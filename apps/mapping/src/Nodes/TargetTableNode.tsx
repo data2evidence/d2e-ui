@@ -6,7 +6,7 @@ import { TableTargetHandleData, useTable } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
 import { api } from "../axios/api";
 import targetSourceData from "../../dummyData/5.4Version.json";
-import "./node.scss";
+import "./BaseNode.scss";
 
 export const TargetTableNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
@@ -52,14 +52,14 @@ export const TargetTableNode = (props: NodeProps) => {
 
   return (
     <div
-      className="link-tables__column nodrag nowheel"
+      className="base-node table-node nodrag nowheel"
       onWheel={() => {
         handleWheel();
       }}
     >
       <div className="content-container">
         {targetHandles.length ? (
-          <div className="handle-container">
+          <div className="handle-container scroll-shadow">
             {targetHandles.map((node) => (
               <MappingHandle {...node} key={node.id} />
             ))}
