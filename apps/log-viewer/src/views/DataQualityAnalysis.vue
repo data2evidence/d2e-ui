@@ -45,7 +45,7 @@ const loaded = computed(() => datasetSubscription.executed)
 
 // modal
 const { showModal: showAnalysisModal, open: openAnalysisModal } = useShowModal()
-const analysisName = ref("")
+const analysisName = ref(JobRunTypes.DQD)
 const openModel = (analysis: JobRunTypes) => {
   analysisName.value = analysis
   openAnalysisModal()

@@ -1,5 +1,9 @@
 <template>
   <p-modal v-model:showModal="showModal" :title="title">
+    <p-message v-if="showMessage" :success="success" :error="error" dismissible @dismiss="dismiss">
+      {{ message }}
+    </p-message>
+
     <p-form @submit="submit">
       <p-content>
         <p-label label="Comment">
@@ -25,6 +29,7 @@ import { useForm } from '@prefecthq/prefect-ui-library'
 import { Study } from '@/types/study'
 import { CreateFlowRunByMetadata, JobRunTypes } from '@/types/runs'
 import { api } from '@/api/api'
+
 const showModal = defineModel<boolean>('showModal', { required: true })
 const props = defineProps<{
   dataset: Study | undefined
@@ -54,14 +59,49 @@ const submit = handleSubmit(async (): Promise<void> => {
       options: options
     }
 
-    console.log('metadata is', metadata)
     await api.dataflow.createFlowRunByMetadata(metadata)
-    console.log('completed')
-  } catch (error) {
-    console.error(error)
+    setMessage('Analysis generated', MessageType.success)
+  } catch (error: any) {
+    if (error.data?.message) {
+      setMessage(error.data?.message, MessageType.error)
+    } else {
+      setMessage('An error has occured', MessageType.error)
+    }
   } finally {
     handleReset()
-    showModal.value = false
+    setTimeout(() => {
+      dismiss
+      showModal.value = false
+    }, 3000)
   }
 })
+
+// message
+enum MessageType {
+  error = 'error',
+  success = 'success'
+}
+
+const showMessage = ref(false)
+const success = ref(false)
+const error = ref(false)
+const message = ref('')
+
+const setMessage = (newMessage: string, type: MessageType) => {
+  message.value = newMessage
+  showMessage.value = true
+
+  if (type === MessageType.success) {
+    success.value = true
+  }
+
+  if (type === MessageType.error) {
+    error.value = true
+  }
+}
+const dismiss = () => {
+  showMessage.value = false
+  success.value = false
+  error.value = false
+}
 </script>

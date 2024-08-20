@@ -100,7 +100,6 @@ watch(uploadMethodValue, ()=>{
 const { handleSubmit, isSubmitting } = useForm()
 
 const isDisabled = computed(()=> {
-    console.log( !files.value || !url.value)
     return !files.value && !url.value
 })
 
@@ -124,7 +123,7 @@ const submit = handleSubmit(async (): Promise<void> => {
     if (error.data?.message) {
       setMessage(error.data?.message, MessageType.error)
     } else {
-      setMessage('An error has Occured', MessageType.error)
+      setMessage('An error has occured', MessageType.error)
     }
   } finally {
     setTimeout(dismiss, 3000)
