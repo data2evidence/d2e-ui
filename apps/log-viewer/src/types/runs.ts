@@ -7,3 +7,11 @@ export enum JobRunTypes {
   DQD = 'dqd',
   DataCharacterization = 'data_characterization'
 }
+
+export type CreateFlowRunByMetadata = {
+  type: string
+  flowRunName?: string
+  datamodels?: string[]
+  flowId?: string
+  options?: object
+}

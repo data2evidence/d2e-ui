@@ -20,6 +20,11 @@ const routeRecords: AppRouteRecord[] = [
     children: workspaceRoutes
   },
   {
+    name: 'dataQualityAnalysis',
+    path: '/analysis',
+    components: { default: () => import('@/views/DataQualityAnalysis.vue'), sidebar: Sidebar }
+  },
+  {
     name: 'settings',
     path: '/settings',
     components: { default: import('@/views/Settings.vue'), siderbar: Sidebar }

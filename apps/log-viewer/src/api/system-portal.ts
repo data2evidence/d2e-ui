@@ -1,5 +1,4 @@
 import axios from 'axios'
-import request from './request'
 import { getPortalAPI } from '@/utils/portalApi'
 import { Study, DatasetQueryRole } from '@/types/study'
 
