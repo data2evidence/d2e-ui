@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from "react";
-import ReactFlow, { Controls, EdgeChange } from "reactflow";
+import ReactFlow, { Controls, EdgeChange, PanOnScrollMode } from "reactflow";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { ManageSearch } from "@mui/icons-material";
@@ -54,11 +54,15 @@ export const FieldMapLayout = () => {
           onConnect={(changes) => addFieldConnection(changes)}
           zoomOnDoubleClick={false}
           zoomOnScroll={false}
-          panOnScroll={false}
+          panOnScrollMode={PanOnScrollMode.Horizontal}
+          panOnScroll
+          panOnDrag={false}
           zoomOnPinch={false}
           fitView
+          maxZoom={1}
+          minZoom={1}
         >
-          <Controls />
+          <Controls showZoom={false} showInteractive={false} />
         </ReactFlow>
       </div>
 
