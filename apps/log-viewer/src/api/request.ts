@@ -7,6 +7,11 @@ client.interceptors.request.use(
   async (config) => {
     const { getAuthToken } = getPortalAPI()
     const token = await getAuthToken()
+
+    if (!token) {
+      throw new Error('No auth token present')
+    }
+
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -40,7 +45,7 @@ const request = <T = any>(options: AxiosRequestConfig): Promise<T> => {
     return Promise.reject(error.response || error.message)
   }
 
-  return client(options)
+  return client(options).then(onSuccess).catch(onError)
 }
 
 export default request

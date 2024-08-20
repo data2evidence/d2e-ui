@@ -20,6 +20,11 @@ const routeRecords: AppRouteRecord[] = [
     children: workspaceRoutes
   },
   {
+    name: 'upload',
+    path: '/upload',
+    components: { default: () => import('@/views/Upload.vue'), sidebar: Sidebar }
+  },
+  {
     name: 'dataQualityAnalysis',
     path: '/analysis',
     components: { default: () => import('@/views/DataQualityAnalysis.vue'), sidebar: Sidebar }
