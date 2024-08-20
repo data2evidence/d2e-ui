@@ -1,23 +1,20 @@
-import axios from 'axios'
 import { getPortalAPI } from '@/utils/portalApi'
+import request from './request'
 import { Study, DatasetQueryRole } from '@/types/study'
 
 export class SystemPortal {
   public async getDatasets() {
-    const { baseUrl, getAuthToken } = getPortalAPI()
-    const token = await getAuthToken()
-    if (!token) {
-      throw new Error('No auth token present')
-    }
+    const { baseUrl } = getPortalAPI()
     const params = new URLSearchParams()
     params.set('role', DatasetQueryRole.systemAdmin)
+
     const path = 'system-portal/dataset/list'
 
-    const { data } = await axios.get<Study[]>(path, {
+    return request({
       baseURL: baseUrl,
-      headers: { Authorization: `Bearer ${token}` },
+      url: path,
+      method: 'GET',
       params
     })
-    return data
   }
 }
