@@ -47,7 +47,7 @@ export class Terminology {
   public getFirstConcepts(data: RowObject[], datasetId: string): Promise<FirstConcepts[]> {
     return request({
       baseURL: TERMINOLOGY_BASE_URL,
-      url: `/fhir/4_0_0/concepts`,
+      url: `/concept/getFirstConcepts`,
       method: "POST",
       data: { data, datasetId },
     });
