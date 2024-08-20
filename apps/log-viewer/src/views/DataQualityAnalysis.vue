@@ -9,12 +9,20 @@
     </p-label>
 
     <div class="data-quality-analysis__buttons">
-      <p-button variant="outline" size="lg" @click="openModel(JobRunTypes.DQD)"> Run Data Quality </p-button>
+      <p-button variant="outline" size="lg" @click="openModel(JobRunTypes.DQD)">
+        Run Data Quality
+      </p-button>
 
-      <p-button variant="outline" size="lg" @click="openModel(JobRunTypes.DataCharacterization)"> Run Data Characterization </p-button>
+      <p-button variant="outline" size="lg" @click="openModel(JobRunTypes.DataCharacterization)">
+        Run Data Characterization
+      </p-button>
     </div>
 
-    <analysis-modal v-model:showModal="showAnalysisModal" :dataset="data" :type="analysisName"></analysis-modal>
+    <analysis-modal
+      v-model:showModal="showAnalysisModal"
+      :dataset="data"
+      :type="analysisName"
+    ></analysis-modal>
   </p-layout-default>
 </template>
 
@@ -25,6 +33,7 @@ import { useShowModal } from '@prefecthq/prefect-ui-library'
 import { computed, ref } from 'vue'
 import { api } from '../api/api'
 import { JobRunTypes } from '@/types/runs'
+import { Study } from '@/types/study'
 import AnalysisModal from '@/components/AnalysisModal.vue'
 
 // datasets
@@ -32,13 +41,15 @@ const datasetSubscription = useSubscription(api.systemPortal.getDatasets)
 const datasets = computed(() => datasetSubscription.response ?? [])
 const datasetOptions = computed(() => [
   { label: 'Select Study', value: '', disabled: true },
-  ...datasets.value.map((dataset) => {
+  ...datasets.value.map((dataset: Study) => {
     return { label: dataset.studyDetail?.name, value: dataset.id }
   })
 ])
 
-const selectDataset = ref("Select Study")
-const data = computed(() => datasets.value.find((dataset) => dataset.id === selectDataset.value))
+const selectDataset = ref('Select Study')
+const data = computed(() =>
+  datasets.value.find((dataset: Study) => dataset.id === selectDataset.value)
+)
 
 const empty = computed(() => datasetSubscription.executed && datasets.value.length === 0)
 const loaded = computed(() => datasetSubscription.executed)
@@ -50,7 +61,6 @@ const openModel = (analysis: JobRunTypes) => {
   analysisName.value = analysis
   openAnalysisModal()
 }
-
 </script>
 
 <style scoped>

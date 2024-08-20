@@ -17,14 +17,10 @@
         </p-label>
       </div>
 
-      <p-table
-        v-if="uploadMethodValue === UploadMethod.FILE"
-        :data="files ?? []"
-        :columns="columns"
-      >
+      <p-table v-if="uploadMethodValue === UploadMethod.FILE" :data="[...files]" :columns="columns">
         <template #action-heading> Action </template>
 
-        <template #action="{ row }">
+        <template #action>
           <p-button @click="reset"> Delete </p-button>
         </template>
 
@@ -38,7 +34,13 @@
         </template>
       </p-table>
 
-      <p-button v-if="uploadMethodValue" type="submit" variant="default" :loading="isSubmitting" :disabled="isDisabled">
+      <p-button
+        v-if="uploadMethodValue"
+        type="submit"
+        variant="default"
+        :loading="isSubmitting"
+        :disabled="isDisabled"
+      >
         Submit
       </p-button>
     </p-form>
@@ -48,7 +50,7 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue'
 import { useForm } from '@prefecthq/prefect-ui-library'
-import { PMessage } from '@prefecthq/prefect-design'
+import { PMessage, PTable, PButton, PForm, TableData } from '@prefecthq/prefect-design'
 import { useFileDialog } from '@vueuse/core'
 import { api } from '@/api/api'
 
@@ -92,15 +94,15 @@ const columns = computed(() => [
 ])
 
 // form
-watch(uploadMethodValue, ()=>{
-    url.value = ""
-    reset()
+watch(uploadMethodValue, () => {
+  url.value = ''
+  reset()
 })
 
 const { handleSubmit, isSubmitting } = useForm()
 
-const isDisabled = computed(()=> {
-    return !files.value && !url.value
+const isDisabled = computed(() => {
+  return !files.value && !url.value
 })
 
 const submit = handleSubmit(async (): Promise<void> => {
@@ -108,6 +110,10 @@ const submit = handleSubmit(async (): Promise<void> => {
     if (uploadMethodValue.value === UploadMethod.URL) {
       await api.dataflow.addFlowFromGitUrlDeployment(url.value)
     } else if (uploadMethodValue.value === UploadMethod.FILE) {
+      if (!files.value) {
+        setMessage('No file is uploaded', MessageType.error)
+        return
+      }
 
       const selectedFile = files.value[0]
 
