@@ -38,7 +38,7 @@
         </template>
       </p-table>
 
-      <p-button v-if="uploadMethodValue" type="submit" variant="default" :loading="isSubmitting">
+      <p-button v-if="uploadMethodValue" type="submit" variant="default" :loading="isSubmitting" :disabled="isDisabled">
         Submit
       </p-button>
     </p-form>
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useForm } from '@prefecthq/prefect-ui-library'
 import { PMessage } from '@prefecthq/prefect-design'
 import { useFileDialog } from '@vueuse/core'
@@ -91,16 +91,24 @@ const columns = computed(() => [
   }
 ])
 
-const { handleSubmit, handleReset, isSubmitting } = useForm()
+// form
+watch(uploadMethodValue, ()=>{
+    url.value = ""
+    reset()
+})
+
+const { handleSubmit, isSubmitting } = useForm()
+
+const isDisabled = computed(()=> {
+    console.log( !files.value || !url.value)
+    return !files.value && !url.value
+})
 
 const submit = handleSubmit(async (): Promise<void> => {
   try {
     if (uploadMethodValue.value === UploadMethod.URL) {
       await api.dataflow.addFlowFromGitUrlDeployment(url.value)
-    } else if (uploadMethodValue.value === UploadMethod.URL) {
-      if (!files.value) {
-        return
-      }
+    } else if (uploadMethodValue.value === UploadMethod.FILE) {
 
       const selectedFile = files.value[0]
 
