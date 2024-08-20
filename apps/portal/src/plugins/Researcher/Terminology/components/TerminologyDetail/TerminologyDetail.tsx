@@ -67,7 +67,7 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, setConceptId, c
     return <Loader />;
   }
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       {data && data.details && (
         <Typography>
           Selected {getText(i18nKeys.TERMINOLOGY_LIST__ID)}: {data?.details.conceptId}
@@ -204,7 +204,7 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, setConceptId, c
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
