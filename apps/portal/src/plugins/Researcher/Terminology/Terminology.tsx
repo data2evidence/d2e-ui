@@ -505,7 +505,7 @@ export const Terminology: FC<TerminologyProps> = ({
               />
             )}
           </div>
-          <div className="terminology__details" style={{ height: showDetails ? "35%" : "0%", overflowY: "auto" }}>
+          <div className="terminology__details" style={{ height: showDetails ? "35%" : "0%" }}>
             {showDetails && conceptId !== null ? (
               <TerminologyDetail
                 conceptId={conceptId}
