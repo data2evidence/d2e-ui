@@ -10,6 +10,7 @@
   color: $primary-color;
   border-radius: 8px;
   background-color: #fff;
+  mix-blend-mode: multiply;
 
   &__input {
     background-color: $primary-extra-lightest-color;

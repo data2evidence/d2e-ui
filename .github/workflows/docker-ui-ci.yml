@@ -71,9 +71,9 @@ jobs:
       - name: Login to ACR
         uses: docker/login-action@v3.1.0
         with:
-          registry: alpcr.azurecr.io
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          registry: ${{ vars.AZ_REGISTRY_NAME }}.azurecr.io
+          username: ${{ secrets.AZ_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZ_REGISTRY_PASSWORD }}
 
       - name: Collect Git and SSH config files in a directory that is part of the Docker build context
         run: |
@@ -87,6 +87,7 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v6
+        if: ${{ vars.SKIP_BUILD != 'true' }}
         id: build_push
         continue-on-error: false
         with:
@@ -98,43 +99,56 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.directory }}/${{ matrix.fileName }}
           push: ${{ steps.docker_tag.outputs.is_push }}
-          tags: alpcr.azurecr.io/${{ matrix.name }}:${{ env.BRANCH_NAME }},alpcr.azurecr.io/${{ matrix.name }}:${{ github.sha }}
+          tags: ${{ vars.AZ_REGISTRY_NAME }}.azurecr.io/${{ matrix.name }}:${{ env.BRANCH_NAME }},${{ vars.AZ_REGISTRY_NAME }}.azurecr.io/${{ matrix.name }}:${{ github.sha }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
           build-args: |
-            docker_image_prefix=alpcr.azurecr.io
+            docker_image_prefix=${{ vars.AZ_REGISTRY_NAME }}.azurecr.io
             GIT_COMMIT_ARG=${{ github.sha }}
 
-    # - name: Delete images older than 14 days
-    #   id: delete_old_images
-    #   if: false # ${{ github.event_name != 'workflow_dispatch' && github.ref_name == 'develop' }}
-    #   shell: bash
-    #   env:
-    #     REGISTRY: alpcr
-    #     REPOSITORY: alp-data-node/alp-local-ui-file-server
-    #     AZ_SP__CLIENT_ID: ${{ secrets.AZ__CDN__CLIENT_ID }}
-    #     AZ_SP__CLIENT_SECRET: ${{ secrets.AZ__CDN__CLIENT_SECRET }}
-    #     AZ_TENANT_NAME: data4life.care
-    #     AZ_UI_LOCAL_FILE_SERVER_USERNAME: ${{ secrets.AZ_UI_LOCAL_FILE_SERVER_USERNAME }}
-    #     AZ_UI_LOCAL_FILE_SERVER_PASSWORD: ${{ secrets.AZ_UI_LOCAL_FILE_SERVER_PASSWORD }}
-    #     AZ__EXCLUDE_DOCKER_TAG__PATTERN: project # TODO: Use another name | only single value.
-    #     AZ__ENABLE_DELETE: false # Can enable/disable if needed
-    #     NUMBER_OF_DAYS: 14
-    #   run: |
-    #     TODAY=$(date +%Y-%m-%d)
-    #     TWO_WEEKS_AGO="$(date -d "$TODAY - ${NUMBER_OF_DAYS} days" +%Y-%m-%d)"
+      - name: Prune old images
+        shell: bash
+        env:
+          ENABLE_REGISTRY_PRUNE: ${{ vars.ENABLE_REGISTRY_PRUNE }} # true|false - enable/disable as needed
+          AZ_REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
+          AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS: ${{ vars.AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS }}
+          AZ_REGISTRY_PASSWORD: ${{ secrets.AZ_REGISTRY_PASSWORD }}
+          AZ_REGISTRY_USERNAME: ${{ secrets.AZ_REGISTRY_USERNAME }}
+          AZ_REGISTRY_WHITELIST_REGEX: ${{ vars.AZ_REGISTRY_WHITELIST_REGEX }}
+          AZ_REPOSITORY: ${{ vars.AZ_REPOSITORY }}
+          TENANT_NAME: ${{ vars.AZ_TENANT_NAME }}
+        run: |
+          echo AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS=$AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS | tee -a $GITHUB_STEP_SUMMARY
+          echo AZ_REGISTRY_WHITELIST_REGEX=$AZ_REGISTRY_WHITELIST_REGEX | tee -a $GITHUB_STEP_SUMMARY
+          echo AZ_REPOSITORY=$AZ_REPOSITORY | tee -a $GITHUB_STEP_SUMMARY
+          echo ENABLE_REGISTRY_PRUNE=$ENABLE_REGISTRY_PRUNE | tee -a $GITHUB_STEP_SUMMARY
 
-    #     az login --service-principal -u ${AZ_SP__CLIENT_ID} \
-    #     -p ${AZ_SP__CLIENT_SECRET} --tenant ${AZ_TENANT_NAME}
+          if [ $AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS = 0 ]; then
+            AZ_REGISTRY_PRUNE_TIMESTAMP=$(date -u -Is)
+          else
+            TODAY=$(date +%Y-%m-%d)
+            AZ_REGISTRY_PRUNE_TIMESTAMP="$(date -d "$TODAY - ${AZ_REGISTRY_PRUNE_NUMBER_OF_DAYS} days" +%Y-%m-%d)"
+          fi
 
-    #     echo "Listing images if available.."
-    #     az acr manifest list-metadata --name ${REPOSITORY} --registry ${REGISTRY} \
-    #     --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && tags[? !(contains(@, '${AZ__EXCLUDE_DOCKER_TAG__PATTERN}'))]]" -u ${AZ_UI_LOCAL_FILE_SERVER_USERNAME} -p ${AZ_UI_LOCAL_FILE_SERVER_PASSWORD}
+          echo AZ_REGISTRY_PRUNE_TIMESTAMP=$AZ_REGISTRY_PRUNE_TIMESTAMP | tee -a $GITHUB_STEP_SUMMARY
 
-    #     if [ "${AZ__ENABLE_DELETE}" = false ]; then
-    #       echo "Images not deleted.."
-    #     else
-    #       echo "Images to be deleted.."
-    #       az acr manifest list-metadata --name ${REPOSITORY} --registry ${REGISTRY} \
-    #       --orderby time_asc --query "[?lastUpdateTime < '${TWO_WEEKS_AGO}' && tags[? !(contains(@, '${AZ__EXCLUDE_DOCKER_TAG__PATTERN}'))]].digest" -o tsv -u ${AZ_UI_LOCAL_FILE_SERVER_USERNAME} -p ${AZ_UI_LOCAL_FILE_SERVER_PASSWORD} | xargs -I% az acr repository delete -u ${AZ_UI_LOCAL_FILE_SERVER_USERNAME} -p ${AZ_UI_LOCAL_FILE_SERVER_PASSWORD} --name ${REGISTRY} --image $REPOSITORY@% --yes
-    #     fi
+          echo ". 1 - GET manifest metadata -  deprecated warning is not relevant"
+          az acr manifest metadata list --name ${AZ_REPOSITORY} --registry ${AZ_REGISTRY_NAME} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REGISTRY_PRUNE_TIMESTAMP}' && not_null(tags)]" > private.json
+          wc -l private.json
+
+          echo ". 2 - ANALYZE each tag as deletable True/False - show first 20"
+          cat private.json | yq -rP 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"deletable":(.tags|map(test(env(AZ_REGISTRY_WHITELIST_REGEX))|not)|@json)})' | tee private1-analysis.yml | yq '.[0:20]'
+
+          echo ". 3 - SELECT images to be deleted i.e. manifests excepting deletable False tags"
+          cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not))' > private2-todelete.yml
+          echo . INFO for deletion - BranchNames
+          cat private2-todelete.yml | yq -P 'map(select(.lengths!="[40]") | .tags | @jsond)'
+          echo . INFO for deletion - single tag commitIds
+          cat private2-todelete.yml | yq -P 'map(select(.lengths=="[40]") | .tags | @jsond)'
+
+          if [ "${ENABLE_REGISTRY_PRUNE}" = true ]; then
+            echo ". 4 - ACTION delete digests ..."
+            yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REPOSITORY}@% --yes
+          else
+            echo ". 4 - SKIPPED delete digests ..."
+          fi
