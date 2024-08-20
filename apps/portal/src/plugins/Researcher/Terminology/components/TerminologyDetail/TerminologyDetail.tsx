@@ -70,9 +70,9 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, setConceptId, c
     <>
       {data && data.details && (
         <Typography>
-          Selected {getText(i18nKeys.TERMINOLOGY_LIST__ID)}:{data?.details.conceptId}
+          Selected {getText(i18nKeys.TERMINOLOGY_LIST__ID)}: {data?.details.conceptId}
           <br />
-          Selected {getText(i18nKeys.TERMINOLOGY_LIST__NAME)}:{data?.details.display}
+          Selected {getText(i18nKeys.TERMINOLOGY_LIST__NAME)}: {data?.details.display}
         </Typography>
       )}
       <div
