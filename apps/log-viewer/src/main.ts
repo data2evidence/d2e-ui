@@ -10,8 +10,6 @@ import { plugin as PrefectDesign } from '@prefecthq/prefect-design'
 import { plugin as PrefectUILibrary } from '@prefecthq/prefect-ui-library'
 import { plugin as VueCompositionsDevtools } from '@prefecthq/vue-compositions'
 import App from './App.vue'
-// import FlowRun from './views/FlowRun'
-import TaskRun from './views/TaskRun.vue'
 import router from '@/router'
 import { initColorMode } from './utils/colorMode'
 
