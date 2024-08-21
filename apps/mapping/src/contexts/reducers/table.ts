@@ -54,6 +54,7 @@ export const addTableConnection = (
 
   return {
     ...state,
+    saved: false,
     table: {
       ...state.table,
       edges: addEdge(edge, state.table.edges),
@@ -66,6 +67,7 @@ export const setTableSourceHandles = (
   payload: NodeProps<TableSourceHandleData>[]
 ): AppState => ({
   ...state,
+  saved: false,
   table: {
     ...state.table,
     sourceHandles: payload,
@@ -77,6 +79,7 @@ export const setTableTargetHandles = (
   payload: NodeProps<TableTargetHandleData>[]
 ): AppState => ({
   ...state,
+  saved: false,
   table: {
     ...state.table,
     targetHandles: payload,
