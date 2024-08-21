@@ -8,7 +8,6 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { plugin as PrefectDesign } from '@prefecthq/prefect-design'
 import { plugin as PrefectUILibrary } from '@prefecthq/prefect-ui-library'
-import { plugin as VueCompositionsDevtools } from '@prefecthq/vue-compositions'
 import App from './App.vue'
 import router from '@/router'
 import { initColorMode } from './utils/colorMode'
@@ -22,7 +21,6 @@ const mountLogViewer = () => {
     app.use(router)
     app.use(PrefectDesign)
     app.use(PrefectUILibrary)
-    app.use(VueCompositionsDevtools)
     app.mount('#log-viewer-main')
   } catch (err) {
     console.log(err)

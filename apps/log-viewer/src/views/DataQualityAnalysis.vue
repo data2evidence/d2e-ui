@@ -5,11 +5,17 @@
     </template>
 
     <p-label label="Select a dataset:">
-      <p-select v-model="selectDataset" allow-deselect :options="datasetOptions" />
+      <p-select
+        v-model="selectDataset"
+        allow-deselect
+        :options="datasetOptions"
+        :empty-message="'Select Dataset'"
+      >
+      </p-select>
     </p-label>
 
     <div class="data-quality-analysis__buttons">
-      <p-button variant="outline" size="lg" @click="openModel(JobRunTypes.DQD)">
+      <p-button variant="outline" size="lg" @click="openModel(JobRunTypes.DQD)" :disabled="selectDataset == null">
         Run Data Quality
       </p-button>
 
@@ -39,14 +45,13 @@ import AnalysisModal from '@/components/AnalysisModal.vue'
 // datasets
 const datasetSubscription = useSubscription(api.systemPortal.getDatasets)
 const datasets = computed(() => datasetSubscription.response ?? [])
-const datasetOptions = computed(() => [
-  { label: 'Select Study', value: '', disabled: true },
-  ...datasets.value.map((dataset: Study) => {
+const datasetOptions = computed(() =>
+  datasets.value.map((dataset: Study) => {
     return { label: dataset.studyDetail?.name, value: dataset.id }
   })
-])
+)
 
-const selectDataset = ref('Select Study')
+const selectDataset = ref(null)
 const data = computed(() =>
   datasets.value.find((dataset: Study) => dataset.id === selectDataset.value)
 )

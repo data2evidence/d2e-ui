@@ -17,7 +17,7 @@
         </p-label>
       </div>
 
-      <p-table v-if="uploadMethodValue === UploadMethod.FILE" :data="[...files]" :columns="columns">
+      <p-table v-if="uploadMethodValue === UploadMethod.FILE" :data="fileList" :columns="columns">
         <template #action-heading> Action </template>
 
         <template #action>
@@ -75,6 +75,7 @@ const { files, open, reset } = useFileDialog({
   multiple: false
 })
 
+const fileList = computed(()=> files.value ?? [])
 const columns = computed(() => [
   {
     property: 'name',

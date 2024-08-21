@@ -1,20 +1,20 @@
 <template>
-  <p-layout-default v-if="flowRun" :key="flowRun.id" class="flow-run">
+  <p-layout-default class="flow-run">
     <template #header>
-      <PageHeadingFlowRun :flow-run-id="flowRun.id" @delete="goToFlowRuns" />
+      <PageHeadingFlowRun v-if="flowRun" :flow-run-id="flowRun.id" @delete="goToFlowRuns" />
     </template>
 
-    <FlowRunGraphs v-if="!isPending" :flow-run="flowRun" />
+    <FlowRunGraphs v-if="flowRun && !isPending" :flow-run="flowRun" />
 
     <p-button v-if="showResultButton" lg @click="displayResultsDialog"> View Results</p-button>
 
     <p-tabs v-model:selected="tab" :tabs="tabs">
       <template #details>
-        <FlowRunDetails :flow-run="flowRun" />
+        <FlowRunDetails v-if="flowRun" :flow-run="flowRun" />
       </template>
 
       <template #logs>
-        <FlowRunLogs :flow-run="flowRun" />
+        <FlowRunLogs v-if="flowRun" :flow-run="flowRun" />
       </template>
 
       <template #results>
@@ -22,11 +22,11 @@
       </template>
 
       <template #artifacts>
-        <FlowRunArtifacts :flow-run="flowRun" />
+        <FlowRunArtifacts v-if="flowRun" :flow-run="flowRun" />
       </template>
 
       <template #task-runs>
-        <FlowRunTaskRuns :flow-run-id="flowRun.id" />
+        <FlowRunTaskRuns v-if="flowRun" :flow-run-id="flowRun.id" />
       </template>
 
       <template #subflow-runs>
@@ -34,15 +34,21 @@
       </template>
 
       <template #parameters>
-        <CopyableWrapper :text-to-copy="parameters">
+        <CopyableWrapper v-if="flowRun" :text-to-copy="parameters">
           <p-code-highlight lang="json" :text="parameters" class="flow-run__parameters" />
+        </CopyableWrapper>
+      </template>
+
+      <template #job-variables>
+        <CopyableWrapper v-if="flowRun" :text-to-copy="jobVariables">
+          <p-code-highlight lang="json" :text="jobVariables" class="flow-run__job-variables" />
         </CopyableWrapper>
       </template>
     </p-tabs>
   </p-layout-default>
 </template>
-  
-  <script lang="ts" setup>
+
+<script lang="ts" setup>
 import {
   PageHeadingFlowRun,
   FlowRunArtifacts,
@@ -52,6 +58,8 @@ import {
   FlowRunResults,
   FlowRunFilteredList,
   useFavicon,
+  useDeployment,
+  getSchemaValuesWithDefaultsJson,
   CopyableWrapper,
   isPendingStateType,
   useTabs,
@@ -64,39 +72,20 @@ import { useRouteParam, useRouteQueryParam } from '@prefecthq/vue-compositions'
 import { computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import FlowRunGraphs from '@/components/FlowRunGraphs.vue'
+import { usePageTitle } from '@/compositions/usePageTitle'
 import { routes } from '@/router'
-import { RUN_TYPES } from '@/types/runs'
-import { mapFlowRunResults } from '@/utils/mapFlowRunResults'
 
 const router = useRouter()
 const flowRunId = useRouteParam('flowRunId')
 
 const { flowRun, subscription: flowRunSubscription } = useFlowRun(flowRunId, { interval: 5000 })
-
-const tags = computed(() => flowRun.value?.tags ?? [])
-const showResultButton = computed(
-  () =>
-    (tags.value.includes(RUN_TYPES.DATA_QUALITY) ||
-      tags.value.includes(RUN_TYPES.DATA_CHARACTERIZATION)) &&
-    flowRun.value?.stateType === 'completed'
-)
-const displayResultsDialog = () => {
-  const job = mapFlowRunResults(flowRun.value)
-  const event = new CustomEvent('alp-results-dialog-open', {
-    detail: {
-      props: {
-        job: job
-      }
-    }
-  })
-  window.dispatchEvent(event)
-}
-
-const parameters = computed(() => stringify(flowRun.value?.parameters ?? {}))
+const deploymentId = computed(() => flowRun.value?.deploymentId)
+const { deployment } = useDeployment(deploymentId)
 
 const isPending = computed(() => {
   return flowRun.value?.stateType ? isPendingStateType(flowRun.value.stateType) : true
 })
+
 
 const computedTabs = computed(() => [
   { label: 'Logs' },
@@ -106,10 +95,15 @@ const computedTabs = computed(() => [
   { label: 'Artifacts', hidden: isPending.value },
   { label: 'Details' },
   { label: 'Parameters' },
-  { label: 'Job Variables' }
 ])
 const tab = useRouteQueryParam('tab', 'Logs')
 const { tabs } = useTabs(computedTabs, tab)
+
+const flowRunParameters = computed(() => flowRun.value?.parameters ?? {})
+const deploymentSchema = computed(() => deployment.value?.parameterOpenApiSchema ?? {})
+const parameters = computed(() =>
+  getSchemaValuesWithDefaultsJson(flowRunParameters.value, deploymentSchema.value)
+)
 
 const parentFlowRunIds = computed(() => [flowRunId.value])
 const { filter: subflowsFilter } = useFlowRunsFilter({
@@ -131,6 +125,7 @@ const title = computed(() => {
   }
   return `Flow Run: ${flowRun.value.name}`
 })
+usePageTitle(title)
 
 watchEffect(() => {
   if (flowRunSubscription.error) {
@@ -141,9 +136,32 @@ watchEffect(() => {
     }
   }
 })
+
+import { RUN_TYPES } from '@/types/runs'
+import { mapFlowRunResults } from '@/utils/mapFlowRunResults'
+
+const tags = computed(() => flowRun.value?.tags ?? [])
+const showResultButton = computed(
+  () =>
+    (tags.value.includes(RUN_TYPES.DATA_QUALITY) ||
+      tags.value.includes(RUN_TYPES.DATA_CHARACTERIZATION)) &&
+    flowRun.value?.stateType === 'completed'
+)
+const displayResultsDialog = () => {
+  const job = mapFlowRunResults(flowRun.value)
+  const event = new CustomEvent('alp-results-dialog-open', {
+    detail: {
+      props: {
+        job: job
+      }
+    }
+  })
+  window.dispatchEvent(event)
+}
+
 </script>
-  
-  <style>
+
+<style>
 .flow-run {
   @apply items-start;
 }
@@ -154,15 +172,14 @@ watchEffect(() => {
 
 .flow-run__header-meta {
   @apply flex
-    gap-2
-    items-center
-    xl:hidden;
+  gap-2
+  items-center
+  xl:hidden;
 }
 
 .flow-run__job-variables,
 .flow-run__parameters {
   @apply px-4
-    py-3;
+  py-3;
 }
 </style>
-  
