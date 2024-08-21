@@ -10,10 +10,15 @@ import { Header } from "./components/NotebookHeader/NotebookHeader";
 import { convertJupyterToStarboard, notebookContentToText } from "./utils/jupystar";
 import env from "../../env";
 import "./Starboard.scss";
+import { getAccessTokenAndCallApi } from "./chat";
 
 const MRI_ROOT_URL = `${env.REACT_APP_DN_BASE_URL}analytics-svc`;
 const uiFilesUrl = env.REACT_APP_DN_BASE_URL;
 const zipUrl = `${uiFilesUrl}starboard-notebook-base/alp-starboard-notebook-base.zip`;
+const CogClientId = env.COGNITO_CLIENT_ID;
+const CogClientSecret = env.COGNITO_CLIENT_SECRET;
+const CogTokenEndpoint = env.COGNITO_TOKEN_ENDPOINT;
+const LambdaApiEndpoint = env.LAMBDA_API_ENDPOINT
 interface StarboardProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const Starboard: FC<StarboardProps> = ({ metadata }) => {
@@ -77,10 +82,16 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
         mount.removeChild(mount.firstChild);
       }
 
+      //1 get the notebook concent -> taken cared by alp-starboard; 2 create credential method and get response from AWS -> Done; 3 Show the result to the starboard -> taken cared by alp-starboard; 4 TODO: API-gateway reverse proxy
+      const accessToken = await getAccessTokenAndCallApi(CogClientId, CogClientSecret, CogTokenEndpoint);
+      // TODO: then how to show the LLM result to Starboard
+
       const embedEl = new StarboardEmbed({
         notebookContent: notebookContent || "",
         src: `${uiFilesUrl}starboard-notebook-base/index.html`,
         preventNavigationWithUnsavedChanges: true,
+        suggestionUrl: LambdaApiEndpoint,
+        bearerToken: accessToken,
         onUnsavedChangesStatusChange: () => setUnsaved(true),
       });
 

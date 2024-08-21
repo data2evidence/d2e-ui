@@ -2,6 +2,7 @@
 //   await import(/* webpackChunkName: "super-admin-page-plugin" */ './SuperAdminPage/module')
 
 const moduleNames = [
+  "NewPlugin",
   "mri/CDM",
   "mri/Assignment",
   "mri/PatientAnalyticsConfig",
