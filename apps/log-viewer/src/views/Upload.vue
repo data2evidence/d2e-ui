@@ -48,11 +48,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, ComputedRef} from 'vue'
 import { useForm } from '@prefecthq/prefect-ui-library'
 import { PMessage, PTable, PButton, PForm, TableData } from '@prefecthq/prefect-design'
 import { useFileDialog } from '@vueuse/core'
 import { api } from '@/api/api'
+import { TableColumn } from '@prefecthq/prefect-design/dist/types/src/types'
 
 enum UploadMethod {
   URL = 'URL',
@@ -75,8 +76,9 @@ const { files, open, reset } = useFileDialog({
   multiple: false
 })
 
-const fileList = computed(()=> files.value ?? [])
-const columns = computed(() => [
+const fileList: ComputedRef<File[]> = computed(()=> files.value ? [...files.value] : [] )
+
+const columns: TableColumn<File>[] = [
   {
     property: 'name',
     label: 'Filename'
@@ -92,7 +94,7 @@ const columns = computed(() => [
   {
     label: 'Action'
   }
-])
+]
 
 // form
 watch(uploadMethodValue, () => {
