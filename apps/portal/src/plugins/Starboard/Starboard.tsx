@@ -82,7 +82,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
         mount.removeChild(mount.firstChild);
       }
 
-      //1 get the notebook concent -> taken cared by alp-starboard; 2 create credential method and get response from AWS -> Done; 3 Show the result to the starboard -> taken cared by alp-starboard; 4 TODO: API-gateway reverse proxy
+      // 1 get the notebook concent -> taken cared by alp-starboard; 2 create credential method and get response from AWS -> Done; 3 Show the result to the starboard -> taken cared by alp-starboard; 4 TODO: API-gateway reverse proxy
       const accessToken = await getAccessTokenAndCallApi(CogClientId, CogClientSecret, CogTokenEndpoint);
       // TODO: then how to show the LLM result to Starboard
 
