@@ -9,10 +9,6 @@
         <FlowDetails v-if="flow" :flow="flow" />
       </template>
 
-      <template #deployments>
-        <DeploymentsList :filter="deploymentsFilter" prefix="deployments" />
-      </template>
-
       <template #runs>
         <FlowRunFilteredList :filter="flowRunsFilter" selectable prefix="runs" />
       </template>
@@ -22,13 +18,11 @@
   
   <script lang="ts" setup>
 import {
-  DeploymentsList,
   PageHeadingFlow,
   FlowDetails,
   FlowRunFilteredList,
   useWorkspaceApi,
-  useFlowRunsFilter,
-  useDeploymentsFilter
+  useFlowRunsFilter
 } from '@prefecthq/prefect-ui-library'
 import { useSubscription, useRouteParam, useRouteQueryParam } from '@prefecthq/vue-compositions'
 import { computed } from 'vue'
@@ -41,7 +35,7 @@ const flowId = useRouteParam('flowId')
 const flowIds = computed(() => [flowId.value])
 const router = useRouter()
 const tab = useRouteQueryParam('tab', 'Runs')
-const tabs = ['Runs','Deployments', 'Details']
+const tabs = ['Runs', 'Details']
 
 const subscriptionOptions = {
   interval: 300000
@@ -51,12 +45,6 @@ const flowSubscription = useSubscription(api.flows.getFlow, [flowId.value], subs
 const flow = computed(() => flowSubscription.response)
 
 const { filter: flowRunsFilter } = useFlowRunsFilter({
-  flows: {
-    id: flowIds
-  }
-})
-
-const { filter: deploymentsFilter } = useDeploymentsFilter({
   flows: {
     id: flowIds
   }

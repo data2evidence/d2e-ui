@@ -39,8 +39,7 @@ export class Dataflow {
     return request({
       baseURL: baseUrl,
       url: path,
-      data: metadata,
-      method: 'POST'
+      data: metadata
     })
   }
 }
