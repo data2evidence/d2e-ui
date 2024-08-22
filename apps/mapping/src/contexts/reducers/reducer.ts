@@ -14,6 +14,8 @@ import {
   setFieldSourceHandles,
   setFieldTargetHandles,
 } from "./field";
+import { setScannedSchema } from "./scanned-schema";
+import { setCdmTables } from "./cdm-table";
 
 export enum ACTION_TYPES {
   RESET = "RESET",
@@ -30,6 +32,8 @@ export enum ACTION_TYPES {
   ADD_FIELD_CONNECTION = "ADD_FIELD_CONNECTION",
   SET_FIELD_SOURCE_HANDLES = "SET_FIELD_SOURCE_HANDLES",
   SET_FIELD_TARGET_HANDLES = "SET_FIELD_TARGET_HANDLES",
+  SET_SCANNED_SCHEMA = "SET_SCANNED_SCHEMA",
+  SET_CDM_TABLES = "SET_CDM_TABLES",
 }
 
 type ActionType = keyof typeof ACTION_TYPES;
@@ -50,6 +54,8 @@ const actionMap = new Map<ActionType, ActionFunction>([
   [ACTION_TYPES.ADD_FIELD_CONNECTION, addFieldConnection],
   [ACTION_TYPES.SET_FIELD_SOURCE_HANDLES, setFieldSourceHandles],
   [ACTION_TYPES.SET_FIELD_TARGET_HANDLES, setFieldTargetHandles],
+  [ACTION_TYPES.SET_SCANNED_SCHEMA, setScannedSchema],
+  [ACTION_TYPES.SET_CDM_TABLES, setCdmTables],
 ]);
 
 export interface DispatchType {
