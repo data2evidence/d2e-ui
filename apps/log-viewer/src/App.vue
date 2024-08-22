@@ -10,7 +10,8 @@
 import { useColorTheme } from '@prefecthq/prefect-design';
 import AppRouterView from '@/views/AppRouterView.vue'
 
-useColorTheme()
+const { setTheme } = useColorTheme()
+setTheme('light')
 </script>
 
 <style scoped>
