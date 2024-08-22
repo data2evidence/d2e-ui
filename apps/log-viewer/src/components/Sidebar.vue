@@ -4,10 +4,6 @@
     <p-context-nav-item title="Upload" to="/upload" />
     <p-context-nav-item title="Jobs" to="/flows" />
     <p-context-nav-item title="Flow Runs" to="/flow-runs" />
-
-    <template #footer>
-      <p-context-nav-item title="Settings" to="/settings" />
-    </template>
   </p-context-sidebar>
 
 </template>

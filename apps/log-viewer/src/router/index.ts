@@ -28,11 +28,6 @@ const routeRecords: AppRouteRecord[] = [
     name: 'dataQualityAnalysis',
     path: '/analysis',
     components: { default: () => import('@/views/DataQualityAnalysis.vue'), sidebar: Sidebar }
-  },
-  {
-    name: 'settings',
-    path: '/settings',
-    components: { default: import('@/views/Settings.vue'), siderbar: Sidebar }
   }
 ]
 
@@ -46,10 +41,6 @@ router.beforeEach(async (to, from) => {
 })
 
 router.afterEach((to, from) => {
-  if (to.fullPath !== from.fullPath) {
-    document.title = 'Prefect Server'
-  }
-
   return RouteGuardExecutioner.after(to, from)
 })
 

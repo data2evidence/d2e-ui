@@ -27,7 +27,6 @@ import {
 import { useSubscription, useRouteParam, useRouteQueryParam } from '@prefecthq/vue-compositions'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { usePageTitle } from '@/compositions/usePageTitle'
 import { routes } from '@/router/routes'
 
 const api = useWorkspaceApi()
@@ -60,5 +59,4 @@ const title = computed(() => {
   }
   return `Flow: ${flow.value.name}`
 })
-usePageTitle(title)
 </script>

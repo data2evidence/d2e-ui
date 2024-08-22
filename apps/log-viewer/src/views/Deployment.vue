@@ -65,7 +65,6 @@ import {
 import { useRouteParam, useRouteQueryParam, useSubscription } from '@prefecthq/vue-compositions'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { usePageTitle } from '@/compositions/usePageTitle'
 import { routes } from '@/router'
 
 const deploymentId = useRouteParam('deploymentId')
@@ -133,7 +132,7 @@ const title = computed(() => {
   }
   return `Deployment: ${deployment.value.name}`
 })
-usePageTitle(title)
+
 </script>
   
   <style>

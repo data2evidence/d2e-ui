@@ -2,7 +2,6 @@ import axios from 'axios'
 import { mapper } from '@/utils/mapper'
 import { SettingsResponse } from '@/types/settingsResponse'
 import { getPortalAPI } from '@/utils/portalApi'
-import { MODE, BASE_URL } from '@/env'
 import { FeatureFlag } from '@/utils/permissions'
 
 export type Settings = {

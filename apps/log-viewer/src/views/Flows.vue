@@ -25,7 +25,6 @@ import {
 } from '@prefecthq/prefect-ui-library'
 import { useSubscription } from '@prefecthq/vue-compositions'
 import { computed } from 'vue'
-import { usePageTitle } from '@/compositions/usePageTitle'
 
 const api = useWorkspaceApi()
 const subscriptionOptions = {
@@ -41,5 +40,4 @@ const handleDelete = (): void => {
   flowsCountSubscription.refresh()
 }
 
-usePageTitle('Jobs')
 </script>

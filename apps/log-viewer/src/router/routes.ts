@@ -6,7 +6,6 @@ export const routes = {
   upload: () => ({ name: 'upload' }) as const,
   dataQualityAnalysis: () => ({ name: 'dataQualityAnalysis' }) as const,
   404: () => ({ name: '404' }) as const,
-  settings: () => ({ name: 'settings' }) as const,
   ...createWorkspaceRoutes()
 }
 

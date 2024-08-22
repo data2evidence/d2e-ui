@@ -84,7 +84,6 @@ import {
 } from '@prefecthq/vue-compositions'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { usePageTitle } from '@/compositions/usePageTitle'
 import { routes } from '@/router'
 
 const router = useRouter()
@@ -149,7 +148,6 @@ const deleteFlowRuns = (): void => {
   flowRunsSubscriptions.refresh()
 }
 
-usePageTitle('Flow Runs')
 </script>
   
   <style>
