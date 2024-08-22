@@ -9,7 +9,12 @@ export const AppDispatchContext = createContext<Dispatch<DispatchType>>(
 );
 
 const storageKey = "d2e_mapping_app";
-const whitelist: (keyof AppState)[] = ["table", "field"];
+const whitelist: (keyof AppState)[] = [
+  "table",
+  "field",
+  "scannedSchema",
+  "cdmTables",
+];
 
 interface AppProviderProps {
   children?: React.ReactNode;

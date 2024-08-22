@@ -51,6 +51,7 @@ export const addFieldConnection = (
 
   return {
     ...state,
+    saved: false,
     field: {
       ...state.field,
       edges: addEdge(edge, state.field.edges),
@@ -63,6 +64,7 @@ export const setFieldSourceHandles = (
   payload: NodeProps<FieldHandleData>[]
 ): AppState => ({
   ...state,
+  saved: false,
   field: {
     ...state.field,
     sourceHandles: payload,
@@ -74,6 +76,7 @@ export const setFieldTargetHandles = (
   payload: NodeProps<FieldTargetHandleData>[]
 ): AppState => ({
   ...state,
+  saved: false,
   field: {
     ...state.field,
     targetHandles: payload,
