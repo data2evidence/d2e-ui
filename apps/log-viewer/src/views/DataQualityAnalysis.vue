@@ -15,11 +15,21 @@
     </p-label>
 
     <div class="data-quality-analysis__buttons">
-      <p-button variant="outline" size="lg" @click="openModel(JobRunTypes.DQD)" :disabled="selectDataset == null">
+      <p-button
+        variant="outline"
+        size="lg"
+        @click="openModel(JobRunTypes.DQD)"
+        :disabled="selectDataset == null"
+      >
         Run Data Quality
       </p-button>
 
-      <p-button variant="outline" size="lg" @click="openModel(JobRunTypes.DataCharacterization)">
+      <p-button
+        variant="outline"
+        size="lg"
+        @click="openModel(JobRunTypes.DataCharacterization)"
+        :disabled="selectDataset == null"
+      >
         Run Data Characterization
       </p-button>
     </div>
@@ -55,9 +65,6 @@ const selectDataset = ref(null)
 const data = computed(() =>
   datasets.value.find((dataset: Study) => dataset.id === selectDataset.value)
 )
-
-const empty = computed(() => datasetSubscription.executed && datasets.value.length === 0)
-const loaded = computed(() => datasetSubscription.executed)
 
 // modal
 const { showModal: showAnalysisModal, open: openAnalysisModal } = useShowModal()

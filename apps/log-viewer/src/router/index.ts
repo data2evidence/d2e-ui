@@ -14,10 +14,9 @@ const workspaceRoutes = createWorkspaceRouteRecords({
 
 const routeRecords: AppRouteRecord[] = [
   {
-    name: 'root',
+    name: 'dataQualityAnalysis',
     path: '/',
-    components: { default: AppRouterView, sidebar: Sidebar },
-    children: workspaceRoutes
+    components: { default: () => import('@/views/DataQualityAnalysis.vue'), sidebar: Sidebar }
   },
   {
     name: 'upload',
@@ -25,9 +24,10 @@ const routeRecords: AppRouteRecord[] = [
     components: { default: () => import('@/views/Upload.vue'), sidebar: Sidebar }
   },
   {
-    name: 'dataQualityAnalysis',
-    path: '/analysis',
-    components: { default: () => import('@/views/DataQualityAnalysis.vue'), sidebar: Sidebar }
+    name: 'root',
+    path: '/',
+    components: { default: AppRouterView, sidebar: Sidebar },
+    children: workspaceRoutes
   }
 ]
 
