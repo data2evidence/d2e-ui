@@ -8,12 +8,17 @@ import { useFeedback, useTranslation } from "../../contexts";
 import { EmptyNotebook } from "./components/EmptyNotebook";
 import { Header } from "./components/NotebookHeader/NotebookHeader";
 import { convertJupyterToStarboard, notebookContentToText } from "./utils/jupystar";
+import { getAccessTokenAndCallApi } from "./chat";
 import env from "../../env";
 import "./Starboard.scss";
 
 const MRI_ROOT_URL = `${env.REACT_APP_DN_BASE_URL}analytics-svc`;
 const uiFilesUrl = env.REACT_APP_DN_BASE_URL;
 const zipUrl = `${uiFilesUrl}starboard-notebook-base/alp-starboard-notebook-base.zip`;
+const CogClientId = env.REACT_APP_COGNITO_CLIENT_ID;
+const CogClientSecret = env.REACT_APP_COGNITO_CLIENT_SECRET;
+const CogTokenEndpoint = env.REACT_APP_COGNITO_TOKEN_ENDPOINT;
+const LambdaApiEndpoint = `${env.REACT_APP_DN_BASE_URL}code-suggestion`;
 interface StarboardProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const Starboard: FC<StarboardProps> = ({ metadata }) => {
@@ -77,10 +82,13 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
         mount.removeChild(mount.firstChild);
       }
 
+      const accessToken = await getAccessTokenAndCallApi(CogClientId, CogClientSecret, CogTokenEndpoint);
       const embedEl = new StarboardEmbed({
         notebookContent: notebookContent || "",
         src: `${uiFilesUrl}starboard-notebook-base/index.html`,
         preventNavigationWithUnsavedChanges: true,
+        suggestionUrl: LambdaApiEndpoint,
+        bearerToken: accessToken,
         onUnsavedChangesStatusChange: () => setUnsaved(true),
       });
 
