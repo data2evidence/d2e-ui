@@ -91,7 +91,6 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
         <div className="terminology_detail__related-concepts">
           <div
             style={{
-              border: "1px solid #d4d4d4",
               visibility: data ? "inherit" : "hidden",
               overflow: "auto",
               width: "60%",
@@ -128,7 +127,7 @@ const TerminologyDetail: FC<TerminologyDetailProps> = ({ userId, conceptId, data
               </Table>
             </div>
           </div>
-          <div style={{ border: "1px solid #d4d4d4", flex: 1, marginLeft: 15, overflow: "auto" }}>
+          <div style={{ flex: 1, marginLeft: 15, overflow: "auto" }}>
             <div className="terminology_detail__table-details">
               {data && data?.connections.length > 0 && (
                 <Table size="small" sx={{ "& .MuiTableCell-root": { color: "#000080" } }} stickyHeader>

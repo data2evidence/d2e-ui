@@ -1,12 +1,17 @@
 import { TableState } from "./table-state";
 import { FieldState } from "./field-state";
+import { ScannedSchemaState, TableSchemaState } from "./scanned-schema-state";
 
 export interface AppState {
+  saved: boolean;
   table: TableState;
   field: FieldState;
+  scannedSchema: ScannedSchemaState | undefined;
+  cdmTables: TableSchemaState[];
 }
 
 export const initialState: AppState = {
+  saved: true,
   table: {
     nodes: [
       {
@@ -38,7 +43,7 @@ export const initialState: AppState = {
     nodes: [
       {
         id: "field_source_menu",
-        type: "placeholderNode",
+        type: "fieldNode",
         position: { x: 0, y: 0 },
         style: {
           width: "30vw",
@@ -48,7 +53,7 @@ export const initialState: AppState = {
       },
       {
         id: "field_target_menu",
-        type: "placeholderNode",
+        type: "fieldNode",
         position: { x: 700, y: 0 },
         style: {
           width: "30vw",
@@ -61,4 +66,6 @@ export const initialState: AppState = {
     sourceHandles: [],
     targetHandles: [],
   },
+  scannedSchema: undefined,
+  cdmTables: [],
 };

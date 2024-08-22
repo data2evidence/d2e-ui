@@ -1,11 +1,11 @@
 import { SourceTableNode } from "./SourceTableNode";
 import { TargetTableNode } from "./TargetTableNode";
-import { PlaceholderNode } from "./PlaceholderNode";
+import { FieldNode } from "./FieldNode";
 
 export const nodeTypes = {
   sourceTable: SourceTableNode,
   targetTable: TargetTableNode,
-  placeholderNode: PlaceholderNode,
+  fieldNode: FieldNode,
 };
 
 export * from "./MappingHandle";

@@ -1,7 +1,11 @@
 import { FC, useEffect, useState, useCallback, useRef } from "react";
 import { Button, Dialog, DialogTitle, LinearProgress } from "@mui/material";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
-import { TableSourceHandleData, useTable } from "../../contexts";
+import {
+  TableSourceHandleData,
+  useScannedSchema,
+  useTable,
+} from "../../contexts";
 import { CloseDialogType } from "../ScanDataDialog/ScanDataDialog";
 import { api } from "../../axios/api";
 import { saveBlobAs } from "../../utils/utils";
@@ -32,6 +36,7 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const updateNodeInternals = useUpdateNodeInternals();
   const { setTableSourceHandles } = useTable();
+  const { setScannedSchema } = useScannedSchema();
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
@@ -79,6 +84,7 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
         })
       );
       setTableSourceHandles(sourceHandles);
+      setScannedSchema(scannedResult);
       updateNodeInternals(nodeId);
       handleClose("success");
     } catch (error) {

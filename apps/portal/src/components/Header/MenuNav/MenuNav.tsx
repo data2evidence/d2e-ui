@@ -104,7 +104,7 @@ const MenuNav: FC<MenuNavProps> = ({ type, plugin, isSysAdmin }) => {
       const type = plugin.name.replace(/\s+/g, "-").toLowerCase();
       return currLocation.includes(type);
     } else {
-      return currLocation === menuLink;
+      return currLocation.startsWith(menuLink);
     }
   }, [location.pathname, menuLink, plugin]);
 
