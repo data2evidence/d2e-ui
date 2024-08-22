@@ -82,15 +82,15 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
         mount.removeChild(mount.firstChild);
       }
 
-      // TODO: API-gateway reverse proxy
-      const accessToken = await getAccessTokenAndCallApi(CogClientId, CogClientSecret, CogTokenEndpoint);
+      // TODO: Lmambda function: API-gateway reverse proxy
+      // const accessToken = await getAccessTokenAndCallApi(CogClientId, CogClientSecret, CogTokenEndpoint);
 
       const embedEl = new StarboardEmbed({
         notebookContent: notebookContent || "",
         src: `${uiFilesUrl}starboard-notebook-base/index.html`,
         preventNavigationWithUnsavedChanges: true,
-        suggestionUrl: LambdaApiEndpoint,
-        bearerToken: accessToken,
+        // suggestionUrl: LambdaApiEndpoint,
+        // bearerToken: accessToken,
         onUnsavedChangesStatusChange: () => setUnsaved(true),
       });
 
