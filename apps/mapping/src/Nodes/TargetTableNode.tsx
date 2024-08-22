@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
 import { Button } from "@mui/material";
-import { TableSchemaState, TableTargetHandleData, useScannedSchema, useTable } from "../contexts";
+import { TableSchemaState, TableTargetHandleData, useCdmSchema, useTable } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
 import { api } from "../axios/api";
 import "./BaseNode.scss";
@@ -11,7 +11,7 @@ export const TargetTableNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const { targetHandles, setTableTargetHandles } = useTable();
   const [cdmVersions, setCdmVersions] = useState<string[]>([]);
-  const { setCdmTables } = useScannedSchema();
+  const { setCdmTables } = useCdmSchema();
 
   const populateCDMVersion = useCallback((data: TableSchemaState[]) => {
     const targetHandles: Partial<NodeProps<TableTargetHandleData>>[] = data.map((table, index) => ({

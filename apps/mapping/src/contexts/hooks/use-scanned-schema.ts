@@ -19,9 +19,5 @@ export const useScannedSchema = () => {
     dispatch({ type: ACTION_TYPES.SET_SCANNED_SCHEMA, payload: scannedSchema });
   }, []);
 
-  const setCdmTables = useCallback((cdmTables: TableSchemaState[]) => {
-    dispatch({ type: ACTION_TYPES.SET_CDM_TABLES, payload: cdmTables });
-  }, []);
-
-  return { setScannedSchema, setCdmTables, sourceTables };
+  return { setScannedSchema, sourceTables };
 };
