@@ -1,10 +1,13 @@
 import { TableState } from "./table-state";
 import { FieldState } from "./field-state";
+import { ScannedSchemaState, TableSchemaState } from "./scanned-schema-state";
 
 export interface AppState {
   saved: boolean;
   table: TableState;
   field: FieldState;
+  scannedSchema: ScannedSchemaState | undefined;
+  cdmTables: TableSchemaState[];
 }
 
 export const initialState: AppState = {
@@ -63,4 +66,6 @@ export const initialState: AppState = {
     sourceHandles: [],
     targetHandles: [],
   },
+  scannedSchema: undefined,
+  cdmTables: [],
 };

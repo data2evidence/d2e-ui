@@ -2,7 +2,7 @@ import React from "react";
 import { NodeProps, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
 import { useField } from "../contexts";
-import { MappingHandle } from "./MappingHandle";
+import { FieldSourceHandle } from "./FieldSourceHandle";
 import { FieldTargetHandle } from "./FieldTargetHandle";
 import "./BaseNode.scss";
 import "./FieldNode.scss";
@@ -18,16 +18,11 @@ export const FieldNode = (props: NodeProps) => {
   }, 100);
 
   return (
-    <div
-      className="base-node field-node nodrag nowheel"
-      onWheel={() => handleWheel()}
-    >
+    <div className="base-node field-node nodrag nowheel" onWheel={() => handleWheel()}>
       <div className="content-container">
         <div
           className={
-            isSource
-              ? "handle-container scroll-shadow handle-container-source"
-              : "handle-container scroll-shadow"
+            isSource ? "handle-container scroll-shadow handle-container-source" : "handle-container scroll-shadow"
           }
         >
           {data.map((node) => (
@@ -35,7 +30,7 @@ export const FieldNode = (props: NodeProps) => {
               {node.data.isField && node.data.type === "output" ? (
                 <FieldTargetHandle {...node} />
               ) : (
-                <MappingHandle {...node} />
+                <FieldSourceHandle {...node} />
               )}
             </React.Fragment>
           ))}
