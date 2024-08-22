@@ -41,6 +41,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
     setActiveNotebook(notebook);
     setIsShared(notebook?.isShared ?? false);
   }, []);
+  
 
   const fetchNotebooks = useCallback(
     async (runInBackground?: boolean) => {
