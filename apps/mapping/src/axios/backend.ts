@@ -1,8 +1,8 @@
 import request from "./request";
-import env from "../env";
 import { TableSchemaState } from "../contexts";
+import { pluginMetadata } from "../App";
 
-const PERSEUS_BACKEND_BASE_URL = `${env.VITE_PERSEUS_BASE_URL}backend/api/`;
+const PERSEUS_BACKEND_BASE_URL = `${pluginMetadata?.data?.dnBaseUrl}backend/api/`;
 
 export class Backend {
   public getCDMVersions(): Promise<string[]> {

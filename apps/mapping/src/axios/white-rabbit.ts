@@ -1,7 +1,7 @@
 import request from "./request";
-import env from "../env";
+import { pluginMetadata } from "../App";
 
-const WHITE_RABBIT_BASE_URL = `${env.VITE_PERSEUS_BASE_URL}white-rabbit/api/`;
+const WHITE_RABBIT_BASE_URL = `${pluginMetadata?.data?.dnBaseUrl}white-rabbit/api/`;
 
 export class WhiteRabbit {
   public createScanReport(files: File[]) {
