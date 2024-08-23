@@ -43,11 +43,23 @@
         padding: 1em;
       }
 
-      .button-container {
+      .button-group-container {
         display: flex;
-        justify-content: center;
-        margin-bottom: 2em;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .button-container {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 10px;
+        }
+        .success-message-container {
+          color: green;
+          display: flex;
+          justify-content: center;
+        }
       }
+
     }
 
     .container-content-scan {

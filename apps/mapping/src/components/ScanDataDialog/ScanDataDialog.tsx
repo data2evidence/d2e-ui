@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useMemo, useRef, useState } from "react";
 import { Button, Dialog, InputLabel, DialogTitle, TextField, FormGroup, FormControlLabel } from "@mui/material";
+import { Check } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -17,7 +18,8 @@ interface ScanDataDialogProps {
 }
 
 const EMPTY_POSTGRESQL_FORM_DATA = {
-  server: "localhost",
+  dbType: "PostgreSQL",
+  server: "",
   port: 5432,
   database: "",
   user: "",
@@ -27,12 +29,13 @@ const EMPTY_POSTGRESQL_FORM_DATA = {
 
 export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScanId }) => {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [availableFiles, setAvailableFiles] = useState<string[]>([]);
-  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [availableTables, setAvailableTables] = useState<string[]>([]);
+  const [selectedTables, setSelectedTables] = useState<string[]>([]);
   const [dataType, setDataType] = useState("");
   const [loading, setLoading] = useState(false);
   const [delimiter, setDelimiter] = useState(",");
   const [postgresqlForm, setPostgresqlForm] = useState<ScanDataPostgresForm>(EMPTY_POSTGRESQL_FORM_DATA);
+  const [canConnect, setCanConnect] = useState(false);
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const handleClose = useCallback(
@@ -45,14 +48,18 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
   const handleApply = useCallback(async () => {
     try {
       setLoading(true);
-      scanData();
+      if (dataType === "csv") {
+        scanData();
+      } else {
+        scanDBData();
+      }
       handleClose("success");
     } catch (err: any) {
       console.error("err", err);
     } finally {
       setLoading(false);
     }
-  }, [selectedFiles, delimiter, handleClose]);
+  }, [selectedTables, dataType]);
 
   const handleDataTypeChange = useCallback((event: SelectChangeEvent<string>) => {
     setDataType(event.target.value);
@@ -79,55 +86,61 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
     }));
   }, []);
 
-  const handleTestConnection = useCallback(
-    (dataType: string) => {
-      if (dataType === "csv") {
-        setAvailableFiles(uploadedFiles.map((file) => file.name));
-      } else if (dataType === "postgresql") {
-        // TODO: Call white-rabbit to connect DB
+  const handleTestConnection = useCallback(async () => {
+    if (dataType === "csv") {
+      setAvailableTables(uploadedFiles.map((file) => file.name));
+    } else if (dataType === "postgresql") {
+      const res = await api.whiteRabbit.testDBConnection(postgresqlForm);
+      if (res.canConnect) {
+        setCanConnect(true);
+        setAvailableTables(res.tableNames);
+      } else {
+        // TODO: Open up connection failed dialog
         return;
       }
-    },
-    [uploadedFiles]
-  );
+      console.log(res);
+      return;
+    }
+  }, [postgresqlForm, uploadedFiles, dataType]);
 
-  const handleClear = useCallback((dataType: string) => {
+  const handleClear = useCallback(() => {
     if (dataType === "csv") {
       setDataType("");
-      setSelectedFiles([]);
-      setAvailableFiles([]);
+      setSelectedTables([]);
+      setAvailableTables([]);
       setUploadedFiles([]);
       setDelimiter(",");
     } else if (dataType === "postgresql") {
       setPostgresqlForm(EMPTY_POSTGRESQL_FORM_DATA);
     }
-  }, []);
+  }, [dataType]);
 
   const handleSelectedFile = useCallback((event: React.ChangeEvent<HTMLInputElement>, file: string) => {
     if (event.target.checked) {
-      setSelectedFiles((prev) => [...prev, file]);
+      setSelectedTables((prev) => [...prev, file]);
     } else {
-      setSelectedFiles((prev) => prev.filter((f) => f !== file));
+      setSelectedTables((prev) => prev.filter((f) => f !== file));
     }
   }, []);
 
   const handleSelectedFileAll = useCallback(
     (select: boolean) => {
       if (select) {
-        setSelectedFiles(uploadedFiles.map((file) => file.name));
+        const tables = dataType === "csv" ? uploadedFiles.map((file) => file.name) : availableTables;
+        setSelectedTables(tables);
       } else {
-        setSelectedFiles([]);
+        setSelectedTables([]);
       }
     },
-    [uploadedFiles]
+    [dataType, uploadedFiles, availableTables]
   );
 
   const checkSelectedFile = useCallback(
-    (file: string): boolean | undefined => selectedFiles.some((selectedFile) => selectedFile === file),
-    [selectedFiles]
+    (file: string): boolean | undefined => selectedTables.some((selectedFile) => selectedFile === file),
+    [selectedTables]
   );
 
-  const scanData = async () => {
+  const scanData = useCallback(async () => {
     try {
       setLoading(true);
       if (uploadedFiles) {
@@ -137,9 +150,25 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
         console.error("No file was uploaded");
       }
     } catch {
+      console.error("Failed to create scan report from CSV");
       setLoading(false);
     }
-  };
+  }, [uploadedFiles]);
+
+  const scanDBData = useCallback(async () => {
+    try {
+      setLoading(true);
+      if (canConnect) {
+        const response = await api.whiteRabbit.createDBScanReport(postgresqlForm, selectedTables);
+        setScanId(response.id);
+      } else {
+        console.error("No connection to the database was established");
+      }
+    } catch (error) {
+      console.error("Failed to create scan report from DB", error);
+      setLoading(false);
+    }
+  }, [postgresqlForm, selectedTables]);
 
   const fileNames = useMemo(() => uploadedFiles.map((file) => file.name).join(", "), [uploadedFiles]);
 
@@ -202,7 +231,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                       <MenuItem value=",">,</MenuItem>
                     </Select>
                   </FormControl>
-                  <Button onClick={() => handleClear(dataType)}>Clear all</Button>
+                  <Button onClick={handleClear}>Clear all</Button>
                 </>
               )}
               {dataType === "postgresql" && (
@@ -262,33 +291,40 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                       variant="standard"
                     />
                   </FormControl>
-                  <Button onClick={() => handleClear(dataType)}>Clear all</Button>
+                  <Button onClick={handleClear}>Clear all</Button>
                 </>
               )}
             </div>
-
-            <div className="button-container">
-              <Button
-                onClick={() => handleTestConnection(dataType)}
-                variant="outlined"
-                disabled={uploadedFiles.length === 0 && !isFormValid(postgresqlForm)}
-              >
-                Test Connection
-              </Button>
+            <div className="button-group-container">
+              <div className="button-container">
+                <Button
+                  onClick={handleTestConnection}
+                  variant="outlined"
+                  disabled={uploadedFiles.length === 0 && !isFormValid(postgresqlForm)}
+                >
+                  Test Connection
+                </Button>
+              </div>
+              {canConnect && (
+                <div className="success-message-container">
+                  <Check />
+                  <div>Connected</div>
+                </div>
+              )}
             </div>
           </div>
         </div>
         <div className="scan-data-dialog__container">
           <div className="container-header">Table to Scan</div>
           <div className="container-content-scan">
-            {availableFiles.length ? (
+            {availableTables.length ? (
               <>
                 <div className="button-container">
                   <Button onClick={() => handleSelectedFileAll(true)}>Select all</Button>
                   <Button onClick={() => handleSelectedFileAll(false)}>Deselect all</Button>
                 </div>
                 <FormGroup>
-                  {availableFiles.map((file) => (
+                  {availableTables.map((file) => (
                     <FormControlLabel
                       key={file}
                       control={
@@ -316,7 +352,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
         <Button
           onClick={handleApply}
           variant="contained"
-          disabled={selectedFiles.length === 0}
+          disabled={selectedTables.length === 0}
           style={{ marginLeft: "20px" }}
         >
           {loading ? "Loading..." : "Apply"}

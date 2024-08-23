@@ -1,5 +1,6 @@
 import request from "./request";
 import env from "../env";
+import { ScanDataPostgresForm } from "../types/scanDataDialog";
 
 const WHITE_RABBIT_BASE_URL = `${env.VITE_PERSEUS_BASE_URL}white-rabbit/api/`;
 
@@ -37,6 +38,31 @@ export class WhiteRabbit {
     });
   }
 
+  public createDBScanReport(postgresqlForm: ScanDataPostgresForm, tablesToScan: string[]) {
+    const data = {
+      ...postgresqlForm,
+      scanDataParams: {
+        sampleSize: 100000,
+        scanValues: true,
+        minCellCount: 5,
+        maxValues: 1000,
+        calculateNumericStats: false,
+        numericStatsSamplerSize: 100000,
+      },
+      tablesToScan: tablesToScan.join(","),
+    };
+
+    return request({
+      baseURL: WHITE_RABBIT_BASE_URL,
+      url: `scan-report/db`,
+      method: "POST",
+      data: data,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
   public getScanReportProgress(id: number) {
     return request({
       baseURL: WHITE_RABBIT_BASE_URL,
@@ -58,6 +84,15 @@ export class WhiteRabbit {
       baseURL: WHITE_RABBIT_BASE_URL,
       url: `scan-report/result/${id}`,
       method: "GET",
+    });
+  }
+
+  public testDBConnection(connectionDetail: ScanDataPostgresForm) {
+    return request({
+      baseURL: WHITE_RABBIT_BASE_URL,
+      url: `test-connection`,
+      method: "POST",
+      data: connectionDetail,
     });
   }
 }
