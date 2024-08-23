@@ -260,6 +260,24 @@ const StudyOverview: FC = () => {
         })
       );
     }
+    apiRequests.push(
+      api.dataflow.createFlowRunByMetadata({
+        type: "datamart",
+        flowRunName: "datamart-get_version_info",
+        options: {
+          options: {
+            flow_action_type: "get_version_info",
+            token: "",
+            database_code: "",
+            data_model: "",
+            datasets: datasets.filter(
+              (dataset) => dataset.attributes?.some((attribute) => attribute.attributeId === "source_dataset_id") // Filter out the datamart dataset
+            ),
+          },
+        },
+        flowId: getFlowId("datamart-plugin"),
+      })
+    );
 
     try {
       const res: string[] = await Promise.all(apiRequests);
