@@ -27,7 +27,7 @@ export const HighlightText: FC<HighlightTextProps> = ({ text, searchText }) => {
     <>
       {parts.map((part, index) =>
         regex && regex.test(part) ? (
-          <span key={index} style={{ background: "#DCDEF4", paddingLeft: 6, paddingRight: 6 }}>
+          <span key={index} style={{ background: "#DCDEF4" }}>
             {part}
           </span>
         ) : (
