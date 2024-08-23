@@ -1,18 +1,11 @@
 import { FC, useEffect, useState, useCallback, useRef } from "react";
 import { Button, Dialog, DialogTitle, LinearProgress } from "@mui/material";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
-import {
-  TableSourceHandleData,
-  useScannedSchema,
-  useTable,
-} from "../../contexts";
+import { TableSourceHandleData, useScannedSchema, useTable } from "../../contexts";
 import { CloseDialogType } from "../ScanDataDialog/ScanDataDialog";
 import { api } from "../../axios/api";
 import { saveBlobAs } from "../../utils/utils";
-import {
-  ScanDataProgressLogs,
-  ScanDataSourceTable,
-} from "../../types/scanDataDialog";
+import { ScanDataProgressLogs, ScanDataSourceTable } from "../../types/scanDataDialog";
 import "./ScanProgressDialog.scss";
 
 interface ScanProgressDialogProps {
@@ -23,13 +16,7 @@ interface ScanProgressDialogProps {
   scanId: number;
 }
 
-export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
-  open,
-  onBack,
-  onClose,
-  nodeId,
-  scanId,
-}) => {
+export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({ open, onBack, onClose, nodeId, scanId }) => {
   const [progress, setProgress] = useState(0);
   const [scanCompleted, setScanCompleted] = useState(false);
   const [log, setLog] = useState<string[]>([]);
@@ -69,20 +56,16 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
   const handleLinkTables = useCallback(async () => {
     try {
       const response = await api.whiteRabbit.getScanResult(scanId);
+      const dataId = response.dataId;
       const fileName = response.fileName;
-      const scannedResult = await api.backend.createSourceSchemaByScanReport(
-        scanId,
-        fileName
-      );
+      const scannedResult = await api.backend.createSourceSchemaByScanReport(dataId, fileName);
 
       let sourceHandles: Partial<NodeProps<TableSourceHandleData>>[];
-      sourceHandles = scannedResult.source_tables.map(
-        (table: ScanDataSourceTable, index: number) => ({
-          id: `C.${index + 1}`,
-          data: { label: table.table_name, type: "input" },
-          sourcePosition: Position.Right,
-        })
-      );
+      sourceHandles = scannedResult.source_tables.map((table: ScanDataSourceTable, index: number) => ({
+        id: `C.${index + 1}`,
+        data: { label: table.table_name, type: "input" },
+        sourcePosition: Position.Right,
+      }));
       setTableSourceHandles(sourceHandles);
       setScannedSchema(scannedResult);
       updateNodeInternals(nodeId);
@@ -138,18 +121,10 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
   }, [open, scanId, scanCompleted, fetchScanProgress]);
 
   return (
-    <Dialog
-      className="scan-progress-dialog"
-      open={open}
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
-    >
+    <Dialog className="scan-progress-dialog" open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Scan Data</DialogTitle>
       <div className="scan-progress-dialog__content">
-        <div className="scan-progress-dialog__status">
-          Scanning... Estimated time depends on selected database
-        </div>
+        <div className="scan-progress-dialog__status">Scanning... Estimated time depends on selected database</div>
         <LinearProgress variant="determinate" value={progress} />
         <div className="scan-progress-dialog__log">
           {log.map((entry, index) => (
@@ -158,11 +133,7 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
         </div>
       </div>
       <div className="scan-progress-dialog__actions">
-        <Button
-          onClick={handleBack}
-          variant="outlined"
-          disabled={!scanCompleted}
-        >
+        <Button onClick={handleBack} variant="outlined" disabled={!scanCompleted}>
           Back
         </Button>
         <Button onClick={handleSaveReport} variant="contained" color="primary">

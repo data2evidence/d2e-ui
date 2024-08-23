@@ -1,13 +1,5 @@
 import React, { FC, useCallback, useMemo, useRef, useState } from "react";
-import {
-  Button,
-  Dialog,
-  InputLabel,
-  DialogTitle,
-  TextField,
-  FormGroup,
-  FormControlLabel,
-} from "@mui/material";
+import { Button, Dialog, InputLabel, DialogTitle, TextField, FormGroup, FormControlLabel } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -23,11 +15,7 @@ interface ScanDataDialogProps {
   setScanId: (id: number) => void;
 }
 
-export const ScanDataDialog: FC<ScanDataDialogProps> = ({
-  open,
-  onClose,
-  setScanId,
-}) => {
+export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScanId }) => {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [availableFiles, setAvailableFiles] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
@@ -55,12 +43,9 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
     }
   }, [selectedFiles, delimiter, handleClose]);
 
-  const handleDataTypeChange = useCallback(
-    (event: SelectChangeEvent<string>) => {
-      setDataType(event.target.value);
-    },
-    []
-  );
+  const handleDataTypeChange = useCallback((event: SelectChangeEvent<string>) => {
+    setDataType(event.target.value);
+  }, []);
 
   const handleSelectFile = useCallback((_event: any) => {
     hiddenFileInput.current && hiddenFileInput.current.click();
@@ -71,12 +56,9 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
     setUploadedFiles(files);
   }, []);
 
-  const handleDelimiterChange = useCallback(
-    (event: SelectChangeEvent<string>) => {
-      setDelimiter(event.target.value as string);
-    },
-    []
-  );
+  const handleDelimiterChange = useCallback((event: SelectChangeEvent<string>) => {
+    setDelimiter(event.target.value as string);
+  }, []);
 
   const handleTestConnection = useCallback(() => {
     setAvailableFiles(uploadedFiles.map((file) => file.name));
@@ -90,16 +72,13 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
     setDelimiter(",");
   }, []);
 
-  const handleSelectedFile = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>, file: string) => {
-      if (event.target.checked) {
-        setSelectedFiles((prev) => [...prev, file]);
-      } else {
-        setSelectedFiles((prev) => prev.filter((f) => f !== file));
-      }
-    },
-    []
-  );
+  const handleSelectedFile = useCallback((event: React.ChangeEvent<HTMLInputElement>, file: string) => {
+    if (event.target.checked) {
+      setSelectedFiles((prev) => [...prev, file]);
+    } else {
+      setSelectedFiles((prev) => prev.filter((f) => f !== file));
+    }
+  }, []);
 
   const handleSelectedFileAll = useCallback(
     (select: boolean) => {
@@ -113,8 +92,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
   );
 
   const checkSelectedFile = useCallback(
-    (file: string): boolean | undefined =>
-      selectedFiles.some((selectedFile) => selectedFile === file),
+    (file: string): boolean | undefined => selectedFiles.some((selectedFile) => selectedFile === file),
     [selectedFiles]
   );
 
@@ -132,10 +110,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
     }
   };
 
-  const fileNames = useMemo(
-    () => uploadedFiles.map((file) => file.name).join(", "),
-    [uploadedFiles]
-  );
+  const fileNames = useMemo(() => uploadedFiles.map((file) => file.name).join(", "), [uploadedFiles]);
 
   return (
     <Dialog
@@ -153,26 +128,15 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
           <div className="container-header">Select Data Location</div>
           <div className="container-content-data">
             <div className="form-container">
-              <FormControl
-                fullWidth
-                variant="standard"
-                className="scan-data-dialog__form-control"
-              >
+              <FormControl fullWidth variant="standard" className="scan-data-dialog__form-control">
                 <InputLabel>Data type</InputLabel>
-                <Select
-                  value={dataType}
-                  label="Data type"
-                  onChange={handleDataTypeChange}
-                >
+                <Select value={dataType} label="Data type" onChange={handleDataTypeChange}>
                   <MenuItem value="csv">CSV files</MenuItem>
                 </Select>
               </FormControl>
               {dataType && (
                 <>
-                  <FormControl
-                    fullWidth
-                    className="scan-data-dialog__form-control"
-                  >
+                  <FormControl fullWidth className="scan-data-dialog__form-control">
                     <TextField
                       fullWidth
                       variant="standard"
@@ -194,17 +158,9 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
                     />
                   </FormControl>
 
-                  <FormControl
-                    fullWidth
-                    variant="standard"
-                    className="scan-data-dialog__form-control"
-                  >
-                    <InputLabel>Delimeter</InputLabel>
-                    <Select
-                      label="Delimeter"
-                      value={delimiter}
-                      onChange={handleDelimiterChange}
-                    >
+                  <FormControl fullWidth variant="standard" className="scan-data-dialog__form-control">
+                    <InputLabel>Delimiter</InputLabel>
+                    <Select label="Delimiter" value={delimiter} onChange={handleDelimiterChange}>
                       <MenuItem value=",">,</MenuItem>
                     </Select>
                   </FormControl>
@@ -214,11 +170,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
             </div>
 
             <div className="button-container">
-              <Button
-                onClick={handleTestConnection}
-                variant="outlined"
-                disabled={uploadedFiles.length === 0}
-              >
+              <Button onClick={handleTestConnection} variant="outlined" disabled={uploadedFiles.length === 0}>
                 Test Connection
               </Button>
             </div>
@@ -230,12 +182,8 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
             {availableFiles.length ? (
               <>
                 <div className="button-container">
-                  <Button onClick={() => handleSelectedFileAll(true)}>
-                    Select all
-                  </Button>
-                  <Button onClick={() => handleSelectedFileAll(false)}>
-                    Deselect all
-                  </Button>
+                  <Button onClick={() => handleSelectedFileAll(true)}>Select all</Button>
+                  <Button onClick={() => handleSelectedFileAll(false)}>Deselect all</Button>
                 </div>
                 <FormGroup>
                   {availableFiles.map((file) => (
@@ -260,11 +208,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button
-          onClick={() => handleClose("cancelled")}
-          variant="outlined"
-          disabled={loading}
-        >
+        <Button onClick={() => handleClose("cancelled")} variant="outlined" disabled={loading}>
           Cancel
         </Button>
         <Button
