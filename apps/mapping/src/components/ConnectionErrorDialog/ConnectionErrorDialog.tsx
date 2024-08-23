@@ -10,12 +10,12 @@ interface ConnectionErrorDialogProps {
 
 export const ConnectionErrorDialog: FC<ConnectionErrorDialogProps> = ({ open, onClose, errorMessage }) => {
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth className="connection-error-dialog">
+      <DialogTitle className="connection-error-dialog__title">
         <ErrorOutline style={{ color: "red", marginRight: "0.5em" }} />
         Connection Error
       </DialogTitle>
-      <DialogContent>
+      <DialogContent className="connection-error-dialog__content">
         <Typography variant="body1">Could not connect to DB server:</Typography>
         <Typography variant="body2" style={{ marginTop: "1em" }}>
           {errorMessage}
