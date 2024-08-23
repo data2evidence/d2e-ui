@@ -233,8 +233,8 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                   </FormControl>
 
                   <FormControl fullWidth variant="standard" className="scan-data-dialog__form-control">
-                    <InputLabel>Delimeter</InputLabel>
-                    <Select label="Delimeter" value={delimiter} onChange={handleDelimiterChange}>
+                    <InputLabel>Delimiter</InputLabel>
+                    <Select label="Delimiter" value={delimiter} onChange={handleDelimiterChange}>
                       <MenuItem value=",">,</MenuItem>
                     </Select>
                   </FormControl>

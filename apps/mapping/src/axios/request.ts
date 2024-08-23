@@ -20,7 +20,6 @@ client.interceptors.request.use(
 
 const request = <T = any>(options: AxiosRequestConfig): Promise<T> => {
   const onSuccess = function (response: any) {
-    console.log(response);
     console.debug("Request Successful!", response);
     return response.data;
   };

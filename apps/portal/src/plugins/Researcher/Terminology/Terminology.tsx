@@ -400,8 +400,7 @@ export const Terminology: FC<TerminologyProps> = ({
     if (mode === "CONCEPT_MAPPING" || !conceptsResult?.data) {
       return;
     }
-    const selectedConcept = conceptsResult?.data.find((c) => c.conceptId === conceptId);
-    if (conceptId === null || !selectedConcept) {
+    if (conceptId === null) {
       setShowDetails(false);
     } else {
       setShowDetails(true);
@@ -506,9 +505,14 @@ export const Terminology: FC<TerminologyProps> = ({
               />
             )}
           </div>
-          <div className="terminology__details" style={{ height: showDetails ? "35%" : "0%", overflowY: "auto" }}>
+          <div className="terminology__details" style={{ height: showDetails ? "35%" : "0%" }}>
             {showDetails && conceptId !== null ? (
-              <TerminologyDetail conceptId={conceptId} userId={userId} datasetId={activeDatasetId} />
+              <TerminologyDetail
+                conceptId={conceptId}
+                setConceptId={setConceptId}
+                userId={userId}
+                datasetId={activeDatasetId}
+              />
             ) : null}
           </div>
         </div>
