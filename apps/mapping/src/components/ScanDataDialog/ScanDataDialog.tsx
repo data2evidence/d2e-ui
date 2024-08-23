@@ -8,6 +8,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
 import { api } from "../../axios/api";
 import { ScanDataPostgresForm } from "../../types/scanDataDialog";
+import { ConnectionErrorDialog } from "../ConnectionErrorDialog/ConnectionErrorDialog";
+
 import "./ScanDataDialog.scss";
 
 export type CloseDialogType = "success" | "cancelled";
@@ -36,6 +38,8 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
   const [delimiter, setDelimiter] = useState(",");
   const [postgresqlForm, setPostgresqlForm] = useState<ScanDataPostgresForm>(EMPTY_POSTGRESQL_FORM_DATA);
   const [canConnect, setCanConnect] = useState(false);
+  const [connectionErrorDialogVisible, setConnectionErrorDialogVisible] = useState(false);
+  const [connectionErrorMessage, setConnectionErrorMesssage] = useState<string>("");
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const handleClose = useCallback(
@@ -95,7 +99,10 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
         setCanConnect(true);
         setAvailableTables(res.tableNames);
       } else {
-        // TODO: Open up connection failed dialog
+        setCanConnect(false);
+        setConnectionErrorMesssage(res.message);
+        setConnectionErrorDialogVisible(true);
+        setAvailableTables([]);
         return;
       }
       console.log(res);
@@ -252,6 +259,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                       value={postgresqlForm.port}
                       onChange={handlePostgresFormChange}
                       variant="standard"
+                      type="number"
                     />
                   </FormControl>
                   <FormControl fullWidth variant="standard" className="scan-data-dialog__form-control">
@@ -358,6 +366,13 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
           {loading ? "Loading..." : "Apply"}
         </Button>
       </div>
+      {connectionErrorDialogVisible && (
+        <ConnectionErrorDialog
+          open={connectionErrorDialogVisible}
+          onClose={() => setConnectionErrorDialogVisible(false)}
+          errorMessage={connectionErrorMessage}
+        />
+      )}
     </Dialog>
   );
 };
