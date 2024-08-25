@@ -30,5 +30,98 @@
   "devDependencies": {
     "@ui5/cli": "^2.12.0",
     "nx": "^18.0.0"
-  }
+  },
+  "trex" : {
+    "ui": {
+    "routes": [
+      {
+        "source": "/portal",
+        "target": "/resources/portal"
+      },
+      {
+        "source": "/flow",
+        "target": "/resources/flow"
+      },
+      {
+        "source": "/analysis",
+        "target": "/resources/analysis"
+      },
+      {
+        "source": "/mapping",
+        "target": "/resources/mapping"
+      },
+      {
+        "source": "/log-viewer",
+        "target": "/resources/log-viewer"
+      },
+      {
+        "source": "/starboard-jupyter",
+        "target": "/resources/starboard-jupyter"
+      },
+      {
+        "source": "/mri",
+        "target": "/resources/mri"
+      },
+      {
+        "source": "/hc/hph/core/ui",
+        "target": "/resources/mri-ui5/utils/core"
+      },
+      {
+        "source": "/hc/hph/config/global/ui",
+        "target": "/resources/mri-ui5/utils/global"
+      },
+      {
+        "source": "/hc/mri/pa/config/ui",
+        "target": "/resources/mri-ui5/PatientAnalyticsConfig/ui5/"
+      },
+      {
+        "source": "/hc/mri/pa/ui",
+        "target": "/resources/mri-ui5/mri-pa-ui/mri/"
+      },
+      {
+        "source": "/hc/hph/genomics/ui",
+        "target": "/resources/mri-ui5/genomics-ui/ui/"
+      },
+      {
+        "source": "/hc/mri/pa/config/i18n",
+        "target": "/resources/mri-ui5/PatientAnalyticsConfig/ui5/i18n/"
+      },
+      {
+        "source": "/ui/core",
+        "target": "/resources/ui5/resources/sap/ui/core/"
+      },
+      {
+        "source": "/ui/m",
+        "target": "/resources/ui5/resources/sap/m"
+      },
+      {
+        "source": "/hc/hph/patient/app/ui",
+        "target": "/resources/mri-ui5/chp-ps-ui"
+      },
+      {
+        "source": "/hc/hph/cdw/config/i18n",
+        "target": "/resources/mri-ui5/CDM/ui5/i18n/"
+      },
+      {
+        "source": "/hc/hph/cdw/config/ui",
+        "target": "/resources/mri-ui5/CDM/ui5"
+      },
+      {
+        "source": "/hc/hph/patient/config/ui",
+        "target": "/resources/mri-ui5/PatientSummaryConfig/ui5/"
+      },
+      {
+        "source": "/hc/hph/patient/shared",
+        "target": "/resources/mri-ui5/PatientSummaryConfig/ui5/shared"
+      },
+      {
+        "source": "/hc/hph/patient/config/i18n",
+        "target": "/resources/mri-ui5/PatientSummaryConfig/ui5/i18n/"
+      },
+      {
+        "source": "/ui",
+        "target": "/resources/ui5/resources/"
+      }
+    ]
+  }}
 }
