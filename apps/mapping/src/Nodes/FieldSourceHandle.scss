@@ -1,4 +1,4 @@
-.field-target-handle {
+.field-source-handle {
   &__content {
     display: flex;
     align-items: center;
@@ -13,11 +13,7 @@
   }
 
   &__column-type {
-    text-transform: capitalize;
     width: 100px;
-  }
-
-  .mapping-handle__header {
-    padding: 4px 1em;
+    text-transform: capitalize;
   }
 }

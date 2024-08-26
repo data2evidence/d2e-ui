@@ -33,32 +33,18 @@ export const FieldTargetHandle = (props: FieldTargetHandleProps) => {
       <MappingHandle {...props} className="field-target-handle">
         <div className="field-target-handle__content">
           <IconButton
-            startIcon={
-              props.data.constantValue ? <CActiveIcon /> : <CGreyIcon />
-            }
+            startIcon={props.data.constantValue ? <CActiveIcon /> : <CGreyIcon />}
             size="small"
             disableRipple
             onClick={handleOpenConstantDialog}
           />
           <div className="field-target-handle__label">{props.data.label}</div>
-          <IconButton
-            startIcon={<CommentIcon />}
-            size="small"
-            disableRipple
-            onClick={handleOpenCommentDialog}
-          />
+          <div className="field-target-handle__column-type">{props.data.columnType}</div>
+          <IconButton startIcon={<CommentIcon />} size="small" disableRipple onClick={handleOpenCommentDialog} />
         </div>
       </MappingHandle>
-      <ConstantValueDialog
-        open={isConstantDialogOpen}
-        onClose={handleCloseConstantDialog}
-        handleId={props.id}
-      />
-      <CommentDialog
-        open={isCommentDialogOpen}
-        onClose={handleCloseCommentDialog}
-        handleId={props.id}
-      />
+      <ConstantValueDialog open={isConstantDialogOpen} onClose={handleCloseConstantDialog} handleId={props.id} />
+      <CommentDialog open={isCommentDialogOpen} onClose={handleCloseCommentDialog} handleId={props.id} />
     </>
   );
 };
