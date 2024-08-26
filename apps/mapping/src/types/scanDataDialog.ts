@@ -15,7 +15,7 @@ export interface ScanDataSourceTable {
   table_name: string;
 }
 
-export interface ScanDataPostgresForm {
+export interface ScanDataDBConnectionForm {
   dbType: string;
   server: string;
   port: number;

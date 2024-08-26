@@ -1,6 +1,6 @@
 import request from "./request";
 import env from "../env";
-import { ScanDataPostgresForm } from "../types/scanDataDialog";
+import { ScanDataDBConnectionForm } from "../types/scanDataDialog";
 
 const WHITE_RABBIT_BASE_URL = `${env.VITE_PERSEUS_BASE_URL}white-rabbit/api/`;
 
@@ -38,7 +38,7 @@ export class WhiteRabbit {
     });
   }
 
-  public createDBScanReport(postgresqlForm: ScanDataPostgresForm, tablesToScan: string[]) {
+  public createDBScanReport(postgresqlForm: ScanDataDBConnectionForm, tablesToScan: string[]) {
     const data = {
       ...postgresqlForm,
       scanDataParams: {
@@ -87,7 +87,7 @@ export class WhiteRabbit {
     });
   }
 
-  public testDBConnection(connectionDetail: ScanDataPostgresForm) {
+  public testDBConnection(connectionDetail: ScanDataDBConnectionForm) {
     return request({
       baseURL: WHITE_RABBIT_BASE_URL,
       url: `test-connection`,

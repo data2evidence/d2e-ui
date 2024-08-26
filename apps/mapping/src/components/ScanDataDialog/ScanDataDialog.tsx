@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useRef, useState } from "react";
+import React, { FC, useEffect, useCallback, useMemo, useRef, useState } from "react";
 import { Button, Dialog, InputLabel, DialogTitle, TextField, FormGroup, FormControlLabel } from "@mui/material";
 import { Check } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
@@ -7,7 +7,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
 import { api } from "../../axios/api";
-import { ScanDataPostgresForm } from "../../types/scanDataDialog";
+import { ScanDataDBConnectionForm } from "../../types/scanDataDialog";
 import { ConnectionErrorDialog } from "../ConnectionErrorDialog/ConnectionErrorDialog";
 
 import "./ScanDataDialog.scss";
@@ -19,10 +19,20 @@ interface ScanDataDialogProps {
   setScanId: (id: number) => void;
 }
 
-const EMPTY_POSTGRESQL_FORM_DATA = {
-  dbType: "PostgreSQL",
+const DEFAULT_PORTS = {
+  postgresql: 5432,
+  mysql: 3306,
+  sqlserver: 1433,
+  azure: 1433,
+  oracle: 1521,
+  msaccess: 1521,
+  redshift: 5439,
+};
+
+const EMPTY_DBCONNECTION_FORM_DATA = {
+  dbType: "",
   server: "",
-  port: 5432,
+  port: 0,
   database: "",
   user: "",
   password: "",
@@ -36,11 +46,20 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
   const [dataType, setDataType] = useState("");
   const [loading, setLoading] = useState(false);
   const [delimiter, setDelimiter] = useState(",");
-  const [postgresqlForm, setPostgresqlForm] = useState<ScanDataPostgresForm>(EMPTY_POSTGRESQL_FORM_DATA);
+  const [dbConnectionForm, setDbConnectionForm] = useState<ScanDataDBConnectionForm>(EMPTY_DBCONNECTION_FORM_DATA);
   const [canConnect, setCanConnect] = useState(false);
   const [connectionErrorDialogVisible, setConnectionErrorDialogVisible] = useState(false);
   const [connectionErrorMessage, setConnectionErrorMesssage] = useState<string>("");
   const hiddenFileInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (dataType) {
+      setDbConnectionForm((prevForm) => ({
+        ...prevForm,
+        port: DEFAULT_PORTS[dataType as keyof typeof DEFAULT_PORTS] || 0,
+      }));
+    }
+  }, [dataType]);
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
@@ -65,9 +84,14 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
     }
   }, [selectedTables, dataType]);
 
-  const handleDataTypeChange = useCallback((event: SelectChangeEvent<string>) => {
-    setDataType(event.target.value);
-  }, []);
+  const handleDataTypeChange = useCallback(
+    (event: SelectChangeEvent<string>) => {
+      handleClear();
+      setDataType(event.target.value);
+      setDbConnectionForm({ ...dbConnectionForm, dbType: event.target.value });
+    },
+    [dataType]
+  );
 
   const handleSelectFile = useCallback((_event: any) => {
     hiddenFileInput.current && hiddenFileInput.current.click();
@@ -84,7 +108,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
 
   const handlePostgresFormChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setPostgresqlForm((prevForm) => ({
+    setDbConnectionForm((prevForm) => ({
       ...prevForm,
       [name]: value,
     }));
@@ -93,8 +117,8 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
   const handleTestConnection = useCallback(async () => {
     if (dataType === "csv") {
       setAvailableTables(uploadedFiles.map((file) => file.name));
-    } else if (dataType === "postgresql") {
-      const res = await api.whiteRabbit.testDBConnection(postgresqlForm);
+    } else {
+      const res = await api.whiteRabbit.testDBConnection(dbConnectionForm);
       if (res.canConnect) {
         setCanConnect(true);
         setAvailableTables(res.tableNames);
@@ -105,7 +129,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
         setAvailableTables([]);
       }
     }
-  }, [postgresqlForm, uploadedFiles, dataType]);
+  }, [dbConnectionForm, uploadedFiles, dataType]);
 
   const handleClear = useCallback(() => {
     if (dataType === "csv") {
@@ -114,8 +138,8 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
       setAvailableTables([]);
       setUploadedFiles([]);
       setDelimiter(",");
-    } else if (dataType === "postgresql") {
-      setPostgresqlForm(EMPTY_POSTGRESQL_FORM_DATA);
+    } else {
+      setDbConnectionForm(EMPTY_DBCONNECTION_FORM_DATA);
     }
   }, [dataType]);
 
@@ -163,7 +187,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
     try {
       setLoading(true);
       if (canConnect) {
-        const response = await api.whiteRabbit.createDBScanReport(postgresqlForm, selectedTables);
+        const response = await api.whiteRabbit.createDBScanReport(dbConnectionForm, selectedTables);
         setScanId(response.id);
       } else {
         console.error("No connection to the database was established");
@@ -172,14 +196,20 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
       console.error("Failed to create scan report from DB", error);
       setLoading(false);
     }
-  }, [postgresqlForm, selectedTables]);
+  }, [dbConnectionForm, selectedTables]);
 
   const fileNames = useMemo(() => uploadedFiles.map((file) => file.name).join(", "), [uploadedFiles]);
 
-  const isFormValid = (formData: ScanDataPostgresForm) => {
+  const isFormValid = (formData: ScanDataDBConnectionForm) => {
     return Object.entries(formData)
       .filter(([key]) => key !== "httppath") // Exclude 'httppath'
-      .every(([, value]) => value !== "" && value !== null && value !== undefined);
+      .every(([key, value]) => {
+        // If dbType is 'mysql', allow 'schema' to be empty
+        if (formData.dbType === "mysql" && key === "schema") {
+          return true;
+        }
+        return value !== "" && value !== null && value !== undefined;
+      });
   };
 
   return (
@@ -202,7 +232,18 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                 <InputLabel>Data type</InputLabel>
                 <Select value={dataType} label="Data type" onChange={handleDataTypeChange}>
                   <MenuItem value="csv">CSV files</MenuItem>
+                  <MenuItem disabled>Fully supported</MenuItem>
                   <MenuItem value="postgresql">PostgreSQL</MenuItem>
+                  <MenuItem value="sqlserver">SQL Server</MenuItem>
+                  <MenuItem value="azure">Azure</MenuItem>
+                  <MenuItem value="mysql">{"MySQL (CTE not supported prior to v8)"}</MenuItem>
+                  {/* Below menuItems are supported with limitation */}
+                  <MenuItem disabled>Supported with limitations</MenuItem>
+                  <MenuItem value="oracle">Oracle</MenuItem>
+                  <MenuItem value="redshift">Redshift</MenuItem>
+                  <MenuItem value="msaccess">MS Access</MenuItem>
+                  <MenuItem value="teradata">Teradata</MenuItem>
+                  <MenuItem value="bigquery">BigQuery</MenuItem>
                 </Select>
               </FormControl>
               {dataType === "csv" && (
@@ -238,13 +279,13 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                   <Button onClick={handleClear}>Clear all</Button>
                 </>
               )}
-              {dataType === "postgresql" && (
+              {dataType !== "csv" && (
                 <>
                   <FormControl fullWidth variant="standard" className="scan-data-dialog__form-control">
                     <TextField
                       name="server"
                       label="Server Location"
-                      value={postgresqlForm.server}
+                      value={dbConnectionForm.server}
                       onChange={handlePostgresFormChange}
                       variant="standard"
                     />
@@ -253,7 +294,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                     <TextField
                       name="port"
                       label="Port"
-                      value={postgresqlForm.port}
+                      value={dbConnectionForm.port}
                       onChange={handlePostgresFormChange}
                       variant="standard"
                       type="number"
@@ -263,7 +304,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                     <TextField
                       name="user"
                       label="User Name"
-                      value={postgresqlForm.user}
+                      value={dbConnectionForm.user}
                       onChange={handlePostgresFormChange}
                       variant="standard"
                     />
@@ -272,7 +313,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                     <TextField
                       name="password"
                       label="Password"
-                      value={postgresqlForm.password}
+                      value={dbConnectionForm.password}
                       onChange={handlePostgresFormChange}
                       variant="standard"
                       type="password"
@@ -282,20 +323,22 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                     <TextField
                       name="database"
                       label="Database Name"
-                      value={postgresqlForm.database}
+                      value={dbConnectionForm.database}
                       onChange={handlePostgresFormChange}
                       variant="standard"
                     />
                   </FormControl>
-                  <FormControl fullWidth variant="standard" className="scan-data-dialog__form-control">
-                    <TextField
-                      name="schema"
-                      label="Schema Name"
-                      value={postgresqlForm.schema}
-                      onChange={handlePostgresFormChange}
-                      variant="standard"
-                    />
-                  </FormControl>
+                  {dataType !== "mysql" && (
+                    <FormControl fullWidth variant="standard" className="scan-data-dialog__form-control">
+                      <TextField
+                        name="schema"
+                        label="Schema Name"
+                        value={dbConnectionForm.schema}
+                        onChange={handlePostgresFormChange}
+                        variant="standard"
+                      />
+                    </FormControl>
+                  )}
                   <Button onClick={handleClear}>Clear all</Button>
                 </>
               )}
@@ -305,7 +348,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                 <Button
                   onClick={handleTestConnection}
                   variant="outlined"
-                  disabled={uploadedFiles.length === 0 && !isFormValid(postgresqlForm)}
+                  disabled={uploadedFiles.length === 0 && !isFormValid(dbConnectionForm)}
                 >
                   Test Connection
                 </Button>
