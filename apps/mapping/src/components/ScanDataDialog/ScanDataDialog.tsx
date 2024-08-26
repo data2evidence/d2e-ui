@@ -201,11 +201,12 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
   const fileNames = useMemo(() => uploadedFiles.map((file) => file.name).join(", "), [uploadedFiles]);
 
   const isFormValid = (formData: ScanDataDBConnectionForm) => {
+    const optionalSchemaDbType = ["mysql", "ms access"];
     return Object.entries(formData)
       .filter(([key]) => key !== "httppath") // Exclude 'httppath'
       .every(([key, value]) => {
         // If dbType is 'mysql', allow 'schema' to be empty
-        if (formData.dbType === "mysql" && key === "schema") {
+        if (optionalSchemaDbType.includes(formData.dbType) && key === "schema") {
           return true;
         }
         return value !== "" && value !== null && value !== undefined;
@@ -234,14 +235,14 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                   <MenuItem value="csv">CSV files</MenuItem>
                   <MenuItem disabled>Fully supported</MenuItem>
                   <MenuItem value="postgresql">PostgreSQL</MenuItem>
-                  <MenuItem value="sqlserver">SQL Server</MenuItem>
+                  <MenuItem value="sql server">SQL Server</MenuItem>
                   <MenuItem value="azure">Azure</MenuItem>
                   <MenuItem value="mysql">{"MySQL (CTE not supported prior to v8)"}</MenuItem>
                   {/* Below menuItems are supported with limitation */}
                   <MenuItem disabled>Supported with limitations</MenuItem>
                   <MenuItem value="oracle">Oracle</MenuItem>
                   <MenuItem value="redshift">Redshift</MenuItem>
-                  <MenuItem value="msaccess">MS Access</MenuItem>
+                  <MenuItem value="ms access">MS Access</MenuItem>
                   <MenuItem value="teradata">Teradata</MenuItem>
                   <MenuItem value="bigquery">BigQuery</MenuItem>
                 </Select>
@@ -328,7 +329,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                       variant="standard"
                     />
                   </FormControl>
-                  {dataType !== "mysql" && (
+                  {dataType !== "mysql" && dataType !== "ms access" && (
                     <FormControl fullWidth variant="standard" className="scan-data-dialog__form-control">
                       <TextField
                         name="schema"
