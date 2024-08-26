@@ -103,9 +103,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
         setConnectionErrorMesssage(res.message);
         setConnectionErrorDialogVisible(true);
         setAvailableTables([]);
-        return;
       }
-      return;
     }
   }, [postgresqlForm, uploadedFiles, dataType]);
 
