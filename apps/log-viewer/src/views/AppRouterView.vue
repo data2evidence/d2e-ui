@@ -35,7 +35,7 @@ provide(workspaceRoutesKey, routes)
 <style scoped>
 .app-router-view {
   display: flex;
-  height: inherit;
+  flex-direction: column;
 }
 
 .app-router-view__view {
@@ -53,9 +53,4 @@ provide(workspaceRoutesKey, routes)
   opacity: 0;
 }
 
-.app-router-view__sidebar {
-  @apply top-[54px]
-  lg:bg-transparent
-  lg:top-0;
-}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <p-layout-default class="flows">
+  <p-layout-default>
     <template #header>
       <p-heading heading="4"> Jobs </p-heading>
     </template>
