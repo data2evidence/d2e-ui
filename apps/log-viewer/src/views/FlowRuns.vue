@@ -1,7 +1,7 @@
 <template>
   <p-layout-default class="flow-runs">
     <template #header>
-      <PageHeadingFlowRuns />
+      <p-heading heading="4"> Job Runs </p-heading>
     </template>
 
     <template v-if="loaded">
@@ -62,7 +62,6 @@
   <script lang="ts" setup>
 import { Getter, PEmptyResults, media } from '@prefecthq/prefect-design'
 import {
-  PageHeadingFlowRuns,
   FlowRunsPageEmptyState,
   FlowRunsSort,
   FlowRunList,

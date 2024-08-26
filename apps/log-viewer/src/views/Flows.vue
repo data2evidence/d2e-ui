@@ -1,7 +1,7 @@
 <template>
   <p-layout-default class="flows">
     <template #header>
-      <PageHeadingFlows />
+      <p-heading heading="4"> Jobs </p-heading>
     </template>
 
     <template v-if="loaded">
@@ -20,7 +20,6 @@
 import {
   FlowList,
   FlowsPageEmptyState,
-  PageHeadingFlows,
   useWorkspaceApi
 } from '@prefecthq/prefect-ui-library'
 import { useSubscription } from '@prefecthq/vue-compositions'
