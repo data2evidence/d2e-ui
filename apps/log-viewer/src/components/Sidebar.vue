@@ -13,6 +13,7 @@ import { PContextNavItem } from '@prefecthq/prefect-design'
 
 <style scoped>
 .side-bar {
+  margin-top: 5px;
   padding: 0 400px 0 400px;
   display: flex;
   height: 40px;
