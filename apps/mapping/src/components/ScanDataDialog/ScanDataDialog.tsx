@@ -105,7 +105,6 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
         setAvailableTables([]);
         return;
       }
-      console.log(res);
       return;
     }
   }, [postgresqlForm, uploadedFiles, dataType]);
@@ -205,7 +204,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                 <InputLabel>Data type</InputLabel>
                 <Select value={dataType} label="Data type" onChange={handleDataTypeChange}>
                   <MenuItem value="csv">CSV files</MenuItem>
-                  <MenuItem value="postgresql">Postgresql</MenuItem>
+                  <MenuItem value="postgresql">PostgreSQL</MenuItem>
                 </Select>
               </FormControl>
               {dataType === "csv" && (
