@@ -5,7 +5,7 @@
     </p-message>
 
     <template #header>
-      <p-heading heading="4"> Upload Flow </p-heading>
+      <p-heading heading="4"> Upload Job </p-heading>
     </template>
 
     <p-form @submit="submit">
