@@ -33,7 +33,7 @@ const JobsViewer: FC<{
       });
     // Remove scripts and links upon component unmounting
     return () => callbacks.forEach((callback) => callback());
-  }, [isLocalDev]);
+  }, [isLocalDev, setJobsViewerScriptsLoaded]);
   const browserBaseUrl = `${window.location.protocol}//${window.location.hostname}${
     window.location.port ? ":" + window.location.port : ""
   }/portal/systemadmin/jobs`;
