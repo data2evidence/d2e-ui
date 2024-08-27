@@ -48,12 +48,10 @@
   <script lang="ts" setup>
 import { media } from '@prefecthq/prefect-design'
 import {
-  PrefectStateNames,
   FlowRunListItem,
   DeploymentDetails,
   PageHeadingDeployment,
   ParametersTable,
-  DeploymentDeprecatedMessage,
   useTabs,
   useWorkspaceApi,
   useFlowRunsFilter,
@@ -125,14 +123,6 @@ const { flowRun: nextRun } = useNextFlowRun(() => ({
     id: deploymentIds.value
   }
 }))
-
-const title = computed(() => {
-  if (!deployment.value) {
-    return 'Deployment'
-  }
-  return `Deployment: ${deployment.value.name}`
-})
-
 </script>
   
   <style>

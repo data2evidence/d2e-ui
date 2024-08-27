@@ -1,5 +1,3 @@
-type AnyObject = { [key: string]: any }
-
 export const snakeToCamelCase = (str: string): string => {
   return str.replace(/([_][a-z])/gi, ($1) => {
     return $1.toUpperCase().replace('_', '')
@@ -14,9 +12,9 @@ export const convertKeysToCamelCase = <T>(obj: any): T => {
   if (Array.isArray(obj)) {
     return obj.map((obj1) => convertKeysToCamelCase(obj1)) as T
   }
-  let newObj: { [key: string]: any } = {}
+  const newObj: { [key: string]: any } = {}
 
-  for (let key in obj) {
+  for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const newKey = snakeToCamelCase(key)
 

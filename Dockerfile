@@ -114,11 +114,11 @@ RUN cp ./dist/pyodidepyqe-0.0.2-py3-none-any.whl /usr/src/services/app/alp-ui/re
 
 RUN ls -l /usr/src/services/app/alp-ui/resources
 
-FROM base-build AS log-viewer-build
+FROM base-build AS jobs-build
 
 RUN --mount=type=cache,target=build \
     --mount=type=cache,target=dist \
-    npx nx build log-viewer
+    npx nx build jobs
 
 RUN ls -l /usr/src/services/app/alp-ui/resources
 
@@ -147,7 +147,7 @@ COPY --from=mapping-ui-build /usr/src/services/app/alp-ui/resources/mapping serv
 COPY --from=ui5-build /usr/src/services/app/alp-ui/resources/ui5 services/app/alp-ui/resources/ui5
 COPY --from=starboard-build /usr/src/services/app/alp-ui/resources/starboard-notebook-base services/app/alp-ui/resources/starboard-notebook-base
 COPY --from=pyqe-build /usr/src/services/app/alp-ui/resources/pyodidepyqe-0.0.2-py3-none-any.whl services/app/alp-ui/resources/starboard-notebook-base
-COPY --from=log-viewer-build /usr/src/services/app/alp-ui/resources/log-viewer services/app/alp-ui/resources/log-viewer
+COPY --from=jobs-build /usr/src/services/app/alp-ui/resources/jobs services/app/alp-ui/resources/jobs
 COPY --from=pystrategus-build /usr/src/services/app/alp-ui/resources/pystrategus-0.0.1-py3-none-any.whl services/app/alp-ui/resources/starboard-notebook-base
 
 FROM caddy:2.8-alpine AS final
