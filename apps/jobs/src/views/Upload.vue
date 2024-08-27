@@ -126,7 +126,7 @@ const submit = handleSubmit(async (): Promise<void> => {
       }
       await api.dataflow.addFlowFromFileDeployment(selectedFile)
 
-      setMessage('Flow successfully uploaded', MessageType.success)
+      setMessage('Job successfully uploaded', MessageType.success)
     }
   } catch (error: any) {
     if (error.data?.message) {
