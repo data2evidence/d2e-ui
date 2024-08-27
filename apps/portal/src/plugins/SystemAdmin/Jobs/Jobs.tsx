@@ -1,23 +1,26 @@
 import React, { FC, useState, useEffect } from "react";
-import LogViewer from "./LogViewer/LogViewer";
+import JobsViewer from "./JobsViewer/JobsViewer";
 
 const Jobs: FC = () => {
-  const [logViewerScriptsLoaded, setLogViewerScriptsLoaded] = useState(false);
-  const [logViewerDivLoaded, setLogViewerDivLoaded] = useState(false);
+  const [jobsViewerScriptsLoaded, setJobsViewerScriptsLoaded] = useState(false);
+  const [jobsViewerDivLoaded, setJobsViewerDivLoaded] = useState(false);
 
   useEffect(() => {
-    if (logViewerScriptsLoaded && logViewerDivLoaded) {
-      if (typeof (window as any)?.mountLogViewer !== "function") {
-        setLogViewerScriptsLoaded(false);
+    if (jobsViewerScriptsLoaded && jobsViewerDivLoaded) {
+      if (typeof (window as any)?.mountJobs !== "function") {
+        setJobsViewerScriptsLoaded(false);
       } else {
-        console.log("mounting...", typeof (window as any)?.mountLogViewer);
-        (window as any).mountLogViewer();
+        console.log("mounting...", typeof (window as any)?.mountJobs);
+        (window as any).mountJobs();
       }
     }
-  }, [logViewerScriptsLoaded, logViewerDivLoaded]);
+  }, [jobsViewerScriptsLoaded, jobsViewerDivLoaded]);
 
   return (
-    <LogViewer setLogViewerScriptsLoaded={setLogViewerScriptsLoaded} setLogViewerDivLoaded={setLogViewerDivLoaded} />
+    <JobsViewer
+      setJobsViewerScriptsLoaded={setJobsViewerScriptsLoaded}
+      setJobsViewerDivLoaded={setJobsViewerDivLoaded}
+    />
   );
 };
 
