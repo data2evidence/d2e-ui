@@ -95,6 +95,7 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
     columns,
     data: csvData,
     enableColumnResizing: true,
+    layoutMode: "grid",
     muiTableHeadCellProps: {
       style: {
         fontWeight: "bold",
@@ -145,7 +146,7 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
 
     setIsLoading(true);
     const api = new Terminology();
-    const result = await api.getFirstConcepts(formattedRows, selectedDatasetId);
+    const result = await api.getStandardConcepts(formattedRows, selectedDatasetId);
 
     dispatch({ type: "UPDATE_MULTIPLE_ROWS", data: result });
     setIsLoading(false);

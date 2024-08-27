@@ -1,6 +1,6 @@
 import React, { FC, createContext, useReducer } from "react";
 import { ConceptMappingProviderProps, ConceptMappingStateType, actionType } from "../types";
-import { FirstConcepts } from "../../../Researcher/Terminology/utils/types";
+import { StandardConcepts } from "../../../Researcher/Terminology/utils/types";
 export const ConceptMappingContext = createContext<any>(null);
 export const ConceptMappingDispatchContext = createContext<any>(null);
 
@@ -76,7 +76,7 @@ const updateMultipleRows = (
   state: ConceptMappingStateType,
   action: {
     type: string;
-    data: FirstConcepts[];
+    data: StandardConcepts[];
   }
 ) => {
   switch (action.type) {

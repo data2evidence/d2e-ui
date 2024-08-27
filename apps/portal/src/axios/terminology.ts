@@ -9,7 +9,7 @@ import {
   HybridSearchConfig,
   Concept,
   ConceptHierarchyResponse,
-  FirstConcepts,
+  StandardConcepts,
 } from "../plugins/Researcher/Terminology/utils/types";
 
 import { RowObject } from "../plugins/SystemAdmin/ConceptMapping/types";
@@ -44,10 +44,10 @@ export class Terminology {
     });
   }
 
-  public getFirstConcepts(data: RowObject[], datasetId: string): Promise<FirstConcepts[]> {
+  public getStandardConcepts(data: RowObject[], datasetId: string): Promise<StandardConcepts[]> {
     return request({
       baseURL: TERMINOLOGY_BASE_URL,
-      url: `/concept/getFirstConcepts`,
+      url: `/concept/getStandardConcepts`,
       method: "POST",
       data: { data, datasetId },
     });
