@@ -1,4 +1,4 @@
-import { FlowRun, GetRunsForFlowRunResponse, LogInfo, TaskRun } from '@/types'
+import { FlowRun, GetRunsForFlowRunResponse, LogInfo, TaskRun } from '@/types/types'
 import { getPortalAPI } from '@/utils/portalApi'
 import { convertKeysToCamelCase } from '@/utils/snakeToCamelCase'
 import axios from 'axios'
