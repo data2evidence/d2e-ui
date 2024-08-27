@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [
     vue(),
     basicSsl({
-      name: 'log-viewer-localhost',
+      name: 'jobs-localhost',
       domains: ['localhost'],
       certDir: './.devServer/cert'
     }),
@@ -32,7 +32,7 @@ export default defineConfig({
         }
 
         // Path where the assets.json will be generated
-        const outputPath = path.join(options.dir || '.', 'assets.json')
+        // const outputPath = path.join(options.dir || '.', 'assets.json')
 
         // Write assets object to assets.json
         this.emitFile({
@@ -52,7 +52,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: path.resolve(__dirname, '../../resources/log-viewer'),
+    outDir: path.resolve(__dirname, '../../resources/jobs'),
     sourcemap: true
   }
 })

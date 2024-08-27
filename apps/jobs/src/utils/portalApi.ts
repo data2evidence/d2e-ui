@@ -4,7 +4,7 @@ export const getPortalAPI = (): {
   browserBaseUrl: string
   backToJobs: () => void
 } => {
-  const portalApiNode = document.getElementById('log-viewer-main') as any
+  const portalApiNode = document.getElementById('jobs-main') as any
   if (portalApiNode) {
     return portalApiNode.portalAPI
   }

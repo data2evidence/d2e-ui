@@ -110,11 +110,6 @@ const parentTaskRunIdNull = computed({
 })
 const interval = 30000
 
-const flowRunHistorySubscription = useSubscription(api.ui.getFlowRunHistory, [filter], {
-  interval
-})
-const flowRunHistory = computed(() => flowRunHistorySubscription.response ?? [])
-
 const {
   flowRuns,
   total: flowRunCount,
@@ -146,7 +141,6 @@ const deleteFlowRuns = (): void => {
   selectedFlowRuns.value = []
   flowRunsSubscriptions.refresh()
 }
-
 </script>
   
   <style>

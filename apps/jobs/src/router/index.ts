@@ -1,5 +1,5 @@
 import { RouteGuardExecutioner, createWorkspaceRouteRecords } from '@prefecthq/prefect-ui-library'
-import { RouteRecordRaw, createRouter, createWebHistory, RouteComponent } from 'vue-router'
+import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 import { routes, NamedRoute, AppRouteLocation, AppRouteRecord } from '@/router/routes'
 import AppRouterView from '@/views/AppRouterView.vue'
 import Sidebar from '@/components/Sidebar.vue'

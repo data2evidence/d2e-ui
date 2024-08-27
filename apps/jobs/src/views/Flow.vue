@@ -52,11 +52,4 @@ const { filter: flowRunsFilter } = useFlowRunsFilter({
 function deleteFlow(): void {
   router.push(routes.flows())
 }
-
-const title = computed(() => {
-  if (!flow.value) {
-    return 'Flow'
-  }
-  return `Flow: ${flow.value.name}`
-})
 </script>

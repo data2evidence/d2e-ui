@@ -125,13 +125,6 @@ function goToFlowRuns(): void {
 const stateType = computed(() => flowRun.value?.stateType)
 useFavicon(stateType)
 
-const title = computed(() => {
-  if (!flowRun.value) {
-    return 'Flow Run'
-  }
-  return `Flow Run: ${flowRun.value.name}`
-})
-
 watchEffect(() => {
   if (flowRunSubscription.error) {
     const status = httpStatus(flowRunSubscription.error)

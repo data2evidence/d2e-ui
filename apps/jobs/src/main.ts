@@ -14,14 +14,14 @@ import { initColorMode } from './utils/colorMode'
 
 initColorMode()
 
-const mountLogViewer = () => {
+const mountJobs = () => {
   try {
     const app = createApp(App)
     app.use(createPinia())
     app.use(router)
     app.use(PrefectDesign)
     app.use(PrefectUILibrary)
-    app.mount('#log-viewer-main')
+    app.mount('#jobs-main')
   } catch (err) {
     console.log(err)
   }
@@ -32,11 +32,11 @@ const mountLogViewer = () => {
 // like we do for cohorts vue app.
 
 // @ts-ignore
-window.mountLogViewer = mountLogViewer
+window.mountJobs = mountJobs
 
 if (process.env.NODE_ENV === 'development') {
-  console.log('Log Viewer is running in development mode')
-  mountLogViewer()
+  console.log('Jobs is running in development mode')
+  mountJobs()
 } else {
-  console.log('Log Viewer is running in production mode')
+  console.log('Jobs is running in production mode')
 }
