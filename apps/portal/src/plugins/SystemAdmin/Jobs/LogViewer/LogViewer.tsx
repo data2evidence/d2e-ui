@@ -2,6 +2,7 @@ import React, { FC, useEffect } from "react";
 import env from "../../../../env";
 import { loadStyleSheet, loadEsModuleScript } from "../../../../utils/loadScript";
 import { getAuthToken } from "../../../../containers/auth";
+import "./LogViewer.scss";
 
 const LOG_VIEWER_ASSETS_URL = `${env.REACT_APP_DN_BASE_URL}log-viewer/assets.json`;
 const APPROUTER_ORIGIN = new URL(LOG_VIEWER_ASSETS_URL).origin;
@@ -9,8 +10,7 @@ const APPROUTER_ORIGIN = new URL(LOG_VIEWER_ASSETS_URL).origin;
 const LogViewer: FC<{
   setLogViewerScriptsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
   setLogViewerDivLoaded: React.Dispatch<React.SetStateAction<boolean>>;
-  backToJobs: () => void;
-}> = ({ setLogViewerScriptsLoaded, setLogViewerDivLoaded, backToJobs }) => {
+}> = ({ setLogViewerScriptsLoaded, setLogViewerDivLoaded }) => {
   const isLocalDev = window.location.hostname === "localhost";
 
   const addOrigin = (arr: string[]) => {
@@ -39,6 +39,7 @@ const LogViewer: FC<{
   }/portal/systemadmin/jobs`;
   return (
     <div
+      className="log-viewer"
       id="log-viewer-main"
       ref={(node: any) => {
         if (node) {
@@ -47,7 +48,6 @@ const LogViewer: FC<{
             baseUrl: env.REACT_APP_DN_BASE_URL,
             getAuthToken,
             browserBaseUrl,
-            backToJobs,
           };
         }
       }}
