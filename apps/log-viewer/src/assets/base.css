@@ -88,3 +88,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.flow-run-work-pool, .flow-run-work-queue {
+  display: none !important;
+}

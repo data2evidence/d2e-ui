@@ -1,14 +1,22 @@
-<script setup lang="ts"></script>
-
 <template>
-  <div class="router">
-    <RouterView />
+  <div class="app" data-teleport-target="app">
+    <suspense>
+      <AppRouterView />
+    </suspense>
   </div>
 </template>
 
+<script setup lang="ts">
+import { useColorTheme } from '@prefecthq/prefect-design';
+import AppRouterView from '@/views/AppRouterView.vue'
+
+const { setTheme } = useColorTheme()
+setTheme('light')
+</script>
+
 <style scoped>
-.router {
+.app {
   @apply h-[calc(100vh-80px)];
-  background-color: var(--color-neutral-lightest);
+  /* background-color: var(--color-neutral-lightest); */
 }
 </style>

@@ -4,10 +4,17 @@
     align-items: center;
     width: 100%;
     gap: 1em;
+    font-size: 0.9em;
+    word-break: break-all;
   }
 
   &__label {
     flex: 1;
+  }
+
+  &__column-type {
+    text-transform: capitalize;
+    width: 100px;
   }
 
   .mapping-handle__header {
