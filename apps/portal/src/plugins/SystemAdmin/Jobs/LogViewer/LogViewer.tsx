@@ -4,7 +4,7 @@ import { loadStyleSheet, loadEsModuleScript } from "../../../../utils/loadScript
 import { getAuthToken } from "../../../../containers/auth";
 import "./LogViewer.scss";
 
-const LOG_VIEWER_ASSETS_URL = `${env.REACT_APP_DN_BASE_URL}log-viewer/assets.json`;
+const LOG_VIEWER_ASSETS_URL = `${env.REACT_APP_DN_BASE_URL}jobs/assets.json`;
 const APPROUTER_ORIGIN = new URL(LOG_VIEWER_ASSETS_URL).origin;
 
 const LogViewer: FC<{
@@ -15,7 +15,7 @@ const LogViewer: FC<{
 
   const addOrigin = (arr: string[]) => {
     return arr.map((path) =>
-      path.startsWith("http://") || path.startsWith("https://") ? path : `${APPROUTER_ORIGIN}/log-viewer/${path}`
+      path.startsWith("http://") || path.startsWith("https://") ? path : `${APPROUTER_ORIGIN}/jobs/${path}`
     );
   };
   useEffect(() => {
@@ -39,8 +39,8 @@ const LogViewer: FC<{
   }/portal/systemadmin/jobs`;
   return (
     <div
-      className="log-viewer"
-      id="log-viewer-main"
+      className="jobs"
+      id="jobs-main"
       ref={(node: any) => {
         if (node) {
           setLogViewerDivLoaded(true);

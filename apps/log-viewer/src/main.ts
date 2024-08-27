@@ -21,7 +21,7 @@ const mountLogViewer = () => {
     app.use(router)
     app.use(PrefectDesign)
     app.use(PrefectUILibrary)
-    app.mount('#log-viewer-main')
+    app.mount('#jobs-main')
   } catch (err) {
     console.log(err)
   }

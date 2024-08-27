@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [
     vue(),
     basicSsl({
-      name: 'log-viewer-localhost',
+      name: 'jobs-localhost',
       domains: ['localhost'],
       certDir: './.devServer/cert'
     }),
@@ -52,7 +52,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: path.resolve(__dirname, '../../resources/log-viewer'),
+    outDir: path.resolve(__dirname, '../../resources/jobs'),
     sourcemap: true
   }
 })

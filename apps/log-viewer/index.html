@@ -21,11 +21,11 @@
     >
       Portal Header
     </div>
-    <div id="log-viewer-main"></div>
+    <div id="jobs-main"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
   <script>
-    document.getElementById('log-viewer-main').portalAPI = {
+    document.getElementById('jobs-main').portalAPI = {
       baseUrl: 'https://localhost:41100/',
       browserBaseUrl: 'https://localhost:5173/portal/systemadmin/jobs',
       getAuthToken: async () => {
