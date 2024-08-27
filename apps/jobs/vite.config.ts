@@ -32,7 +32,7 @@ export default defineConfig({
         }
 
         // Path where the assets.json will be generated
-        const outputPath = path.join(options.dir || '.', 'assets.json')
+        // const outputPath = path.join(options.dir || '.', 'assets.json')
 
         // Write assets object to assets.json
         this.emitFile({
