@@ -1,5 +1,6 @@
 import React, { FC, createContext, useReducer } from "react";
 import { ConceptMappingProviderProps, ConceptMappingStateType, actionType } from "../types";
+import { StandardConcepts } from "../../../Researcher/Terminology/utils/types";
 export const ConceptMappingContext = createContext<any>(null);
 export const ConceptMappingDispatchContext = createContext<any>(null);
 
@@ -71,6 +72,35 @@ const csvDataReducer = (state: ConceptMappingStateType, action: actionType) => {
   }
 };
 
+const updateMultipleRows = (
+  state: ConceptMappingStateType,
+  action: {
+    type: string;
+    data: StandardConcepts[];
+  }
+) => {
+  switch (action.type) {
+    case "UPDATE_MULTIPLE_ROWS":
+      return {
+        ...state,
+        csvData: {
+          ...state.csvData,
+          data: state.csvData.data.map((row, index) => {
+            const updatedRow = action.data.find((item) => item.index === index);
+            if (updatedRow) {
+              const { index: _, ...rest } = updatedRow;
+              return { ...row, ...rest, status: "checked" };
+            }
+            return row;
+          }),
+        },
+      };
+
+    default:
+      return state;
+  }
+};
+
 const selectedDataReducer = (state: ConceptMappingStateType, action: actionType) => {
   switch (action.type) {
     case "ADD_SELECTED_DATA":
@@ -115,7 +145,12 @@ const initialState: ConceptMappingStateType = {
 };
 
 export const ConceptMappingProvider: FC<ConceptMappingProviderProps> = ({ children }) => {
-  const combinedReducers = combineReducers(columnMappingReducer, csvDataReducer, selectedDataReducer);
+  const combinedReducers = combineReducers(
+    columnMappingReducer,
+    csvDataReducer,
+    selectedDataReducer,
+    updateMultipleRows
+  );
   const [state, dispatch] = useReducer(combinedReducers, initialState);
   return (
     <ConceptMappingContext.Provider value={state}>

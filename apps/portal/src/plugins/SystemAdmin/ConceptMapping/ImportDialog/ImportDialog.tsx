@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useContext, useState, useEffect } from "react";
-import { Button, Dialog, TablePaginationActions } from "@portal/components";
+import React, { FC, useCallback, useContext, useState, useEffect, ChangeEvent } from "react";
+import { Button, Dialog, TablePaginationActions, Checkbox } from "@portal/components";
 import {
   TableContainer,
   Table,
@@ -29,11 +29,19 @@ interface ImportDialogProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface ColumnMappingState {
+  sourceCode: string;
+  sourceName: string;
+  sourceFrequency: string;
+  description: string;
+  domainId?: string;
+}
+
 const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoading }) => {
   const { getText, i18nKeys } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
-  const [columnMappingState, setColumnMappingState] = useState({
+  const [columnMappingState, setColumnMappingState] = useState<ColumnMappingState>({
     sourceCode: "",
     sourceName: "",
     sourceFrequency: "",
@@ -42,6 +50,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPageData, setCurrentPageData] = useState([]);
+  const [showDomainMapping, setShowDomainMapping] = useState(false);
   const importDataCount: number = conceptMappingState.importData.data.length;
 
   const handleClose = useCallback(
@@ -62,7 +71,6 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
   const handleColumnMappingChange = useCallback(
     (event: SelectChangeEvent<any>, type: string) => {
       setColumnMappingState({ ...columnMappingState, [type]: event.target.value });
-      event.target.value;
     },
     [columnMappingState]
   );
@@ -75,6 +83,19 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
     setRowsPerPage(Number(event.target.value) || 10);
     setPage(0);
   }, []);
+
+  const handleToggleDomainMapping = useCallback(
+    (checked: boolean) => {
+      setShowDomainMapping(checked);
+      if (checked) {
+        setColumnMappingState({ ...columnMappingState, domainId: "" });
+      } else {
+        const { domainId, ...newColumnMappingState } = columnMappingState;
+        setColumnMappingState(newColumnMappingState);
+      }
+    },
+    [columnMappingState]
+  );
 
   const handleImport = useCallback(() => {
     dispatch({ type: "UPDATE_COLUMN_MAPPING", data: columnMappingState });
@@ -158,8 +179,17 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
                 {getText(i18nKeys.IMPORT_DIALOG__COLUMN_MAPPING)}
               </Typography>
             </div>
+            <div className="import-dialog-selection__checkbox">
+              <Checkbox
+                checked={showDomainMapping}
+                label={getText(i18nKeys.IMPORT_DIALOG__SHOW_SOURCE_DOMAIN_COLUMN)}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  handleToggleDomainMapping(event.target.checked);
+                }}
+              />
+            </div>
             <FormControl component="fieldset" className="import-dialog__selector">
-              <Typography minWidth={200}>n{getText(i18nKeys.IMPORT_DIALOG__SOURCE_CODE_COLUMN)}</Typography>
+              <Typography minWidth={200}>{getText(i18nKeys.IMPORT_DIALOG__SOURCE_CODE_COLUMN)}</Typography>
               <Select
                 value={columnMappingState.sourceCode}
                 onChange={(e) => handleColumnMappingChange(e, "sourceCode")}
@@ -215,6 +245,22 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
                 ))}
               </Select>
             </FormControl>
+            {showDomainMapping && (
+              <FormControl component="fieldset" className="import-dialog__selector">
+                <Typography minWidth={200}>{getText(i18nKeys.IMPORT_DIALOG__SOURCE_DOMAIN_COLUMN)}</Typography>
+                <Select
+                  value={columnMappingState.domainId}
+                  onChange={(e) => handleColumnMappingChange(e, "domainId")}
+                  fullWidth
+                >
+                  {conceptMappingState.importData.columns.map((d: any) => (
+                    <MenuItem value={d} key={d}>
+                      {d}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
           </div>
 
           {/* <div className="import-dialog-selection__filters">

@@ -15,7 +15,7 @@ const JobsViewer: FC<{
 
   const addOrigin = (arr: string[]) => {
     return arr.map((path) =>
-      path.startsWith("http://") || path.startsWith("https://") ? path : `${APPROUTER_ORIGIN}/jobs/${path}`
+      path.startsWith("http://") || path.startsWith("https://") ? `jobs/${path}` : `${APPROUTER_ORIGIN}/jobs/${path}`
     );
   };
   useEffect(() => {
