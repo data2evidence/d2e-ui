@@ -20,7 +20,7 @@ export GITHUB_TOKEN=<GITHUB_PERSONAL_ACCESS_TOKEN>
   - Tenant Settings: `https://localhost:41000/superadmin/config` > `System Overview` > `Tenant Overview` > `Settings` for desired tenant > choose and save the settings
   - Feature Flags: Ensure `REACT_APP_PLUGINS` in `.env` is uncommented to show plugins on the portal UI
 - Run `nx build vue-mri` to build patient analytics used by portal
-- Run `nx build log-viewer` to build log viewer used by jobs plugin in portal
+- Run `nx build jobs` to build log viewer used by jobs plugin in portal
 - Run `nx build @portal/plugin` to build libs used by portal
 - Run `nx build @portal/components` to build components used by portal
 - Run `nx start portal` to start portal, and visit `https://localhost:4000/portal`
@@ -30,7 +30,7 @@ export GITHUB_TOKEN=<GITHUB_PERSONAL_ACCESS_TOKEN>
 ### Local development setup
 
 - Copy contents of `.env.example` to a new `.env` file in the `/apps/superadmin` directory
-- Run `nx build log-viewer` to build log viewer used by jobs plugin in portal
+- Run `nx build jobs` to build log viewer used by jobs plugin in portal
 - Run `nx build @portal/plugin` to build libs used by superadmin
 - Run `nx start superadmin` to start superadmin, and visit `https://localhost:4100/superadmin`
 
@@ -45,7 +45,7 @@ Note:
 - When accessing via `https://localhost:41100/portal`, the PA UI files is served from CDN (DEV)
 - When accessing via `https://localhost:4000/portal`, the PA UI files is served from local built-files under `alp-ui/resources/mri`
 
-- For developing log viewer, run `nx dev log-viewer`, and visit `https://localhost:5173/`
+- For developing log viewer, run `nx dev jobs`, and visit `https://localhost:5173/`
 
 ## PYQE / Starboard Notebookpsave
 

@@ -15,7 +15,7 @@ services:
     # - ../d2e-ui/resources/starboard-notebook-base:/home/docker/ui-files/starboard-notebook-base
     # - ../d2e-ui/resources/mri-ui5/mri-pa-ui:/home/docker/ui-files/mri-ui5/mri-pa-ui
     # - ../d2e-ui/resources/mri-ui5/chp-ps-ui:/home/docker/ui-files/mri-ui5/chp-ps-ui
-    # - ../d2e-ui/resources/log-viewer:/home/docker/ui-files/log-viewer
+    # - ../d2e-ui/resources/jobs:/home/docker/ui-files/jobs
     # - ../d2e-ui/resources/mapping:/home/docker/ui-files/mapping
     networks:
       - alp

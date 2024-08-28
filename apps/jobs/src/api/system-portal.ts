@@ -1,6 +1,6 @@
 import { getPortalAPI } from '@/utils/portalApi'
 import request from './request'
-import { Study, DatasetQueryRole } from '@/types/study'
+import { DatasetQueryRole } from '@/types/study'
 
 export class SystemPortal {
   public async getDatasets() {

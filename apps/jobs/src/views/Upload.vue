@@ -5,7 +5,7 @@
     </p-message>
 
     <template #header>
-      <p-heading heading="4"> Upload Flow </p-heading>
+      <p-heading heading="4"> Upload Job </p-heading>
     </template>
 
     <p-form @submit="submit">
@@ -50,7 +50,7 @@
 <script lang="ts" setup>
 import { ref, computed, watch, ComputedRef} from 'vue'
 import { useForm } from '@prefecthq/prefect-ui-library'
-import { PMessage, PTable, PButton, PForm, TableData } from '@prefecthq/prefect-design'
+import { PMessage, PTable, PButton, PForm } from '@prefecthq/prefect-design'
 import { useFileDialog } from '@vueuse/core'
 import { api } from '@/api/api'
 import { TableColumn } from '@prefecthq/prefect-design/dist/types/src/types'
@@ -126,7 +126,7 @@ const submit = handleSubmit(async (): Promise<void> => {
       }
       await api.dataflow.addFlowFromFileDeployment(selectedFile)
 
-      setMessage('Flow successfully uploaded', MessageType.success)
+      setMessage('Job successfully uploaded', MessageType.success)
     }
   } catch (error: any) {
     if (error.data?.message) {
