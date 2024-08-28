@@ -1,7 +1,8 @@
 import path from "path";
-import { defineConfig } from "vite";
+import { defineConfig, PluginOption } from "vite";
 import react from "@vitejs/plugin-react";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
+import basicSsl from "@vitejs/plugin-basic-ssl";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -16,17 +17,23 @@ export default defineConfig(({ command, mode }) => {
   return {
     mode,
     define: { "process.env.NODE_ENV": `"${mode}"` },
-    plugins: [cssInjectedByJsPlugin(), react()],
-    // optimizeDeps: {
-    //   include: ["@portal/plugin", "@portal/components"],
-    // },
+    plugins: [
+      cssInjectedByJsPlugin(),
+      react(),
+      basicSsl({
+        name: "mapping-localhost",
+        domains: ["localhost"],
+        certDir: "./.devServer/cert",
+      }) as PluginOption,
+    ],
+    optimizeDeps: {
+      include: ["@portal/plugin", "@portal/components"],
+    },
     build: {
       commonjsOptions: {
         include: [/plugin/, /node_modules/],
       },
-      outDir: isProduction
-        ? path.resolve(__dirname, "../../resources/mapping")
-        : path.resolve(__dirname, "dist"),
+      outDir: isProduction ? path.resolve(__dirname, "../../resources/mapping") : path.resolve(__dirname, "dist"),
       emptyOutDir: true,
       minify: isProduction,
       lib: {
@@ -39,12 +46,7 @@ export default defineConfig(({ command, mode }) => {
         treeshake: true,
         ...(isBuild && isProduction
           ? {
-              external: [
-                "react",
-                "react-dom",
-                "react-router",
-                "react-router-dom",
-              ],
+              external: ["react", "react-dom", "react-router", "react-router-dom"],
               output: {
                 globals: {
                   react: "React",
