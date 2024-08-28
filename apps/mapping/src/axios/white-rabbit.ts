@@ -1,7 +1,6 @@
 import request from "./request";
-import env from "../env";
 
-const WHITE_RABBIT_BASE_URL = `${env.VITE_PERSEUS_BASE_URL}white-rabbit/api/`;
+const WHITE_RABBIT_BASE_ENDPOINT = `white-rabbit/api/`;
 
 export class WhiteRabbit {
   public createScanReport(files: File[]) {
@@ -27,8 +26,7 @@ export class WhiteRabbit {
     });
 
     return request({
-      baseURL: WHITE_RABBIT_BASE_URL,
-      url: `scan-report/files`,
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/files`,
       method: "POST",
       data: formData,
       headers: {
@@ -39,24 +37,21 @@ export class WhiteRabbit {
 
   public getScanReportProgress(id: number) {
     return request({
-      baseURL: WHITE_RABBIT_BASE_URL,
-      url: `scan-report/conversion/${id}`,
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/conversion/${id}`,
       method: "GET",
     });
   }
 
   public getScanReport(id: number) {
     return request({
-      baseURL: WHITE_RABBIT_BASE_URL,
-      url: `scan-report/result-as-resource/${id}`,
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/result-as-resource/${id}`,
       method: "GET",
     });
   }
 
   public getScanResult(id: number) {
     return request({
-      baseURL: WHITE_RABBIT_BASE_URL,
-      url: `scan-report/result/${id}`,
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/result/${id}`,
       method: "GET",
     });
   }
