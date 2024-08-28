@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
 import { ErrorOutline } from "@mui/icons-material";
 
@@ -8,7 +8,7 @@ interface ConnectionErrorDialogProps {
   errorMessage: string;
 }
 
-export const ConnectionErrorDialog: FC<ConnectionErrorDialogProps> = ({ open, onClose, errorMessage }) => {
+export const ConnectionErrorDialog: React.FC<ConnectionErrorDialogProps> = ({ open, onClose, errorMessage }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth className="connection-error-dialog">
       <DialogTitle className="connection-error-dialog__title">
