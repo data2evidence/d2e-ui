@@ -27,6 +27,7 @@ export class Dataflow {
       url: path,
       method: 'POST',
       data: { file },
+      headers: { 'Content-Type': 'multipart/form-data' },
       timeout: 600000
     })
   }
