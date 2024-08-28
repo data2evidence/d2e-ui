@@ -21,6 +21,7 @@ export GITHUB_TOKEN=<GITHUB_PERSONAL_ACCESS_TOKEN>
   - Feature Flags: Ensure `REACT_APP_PLUGINS` in `.env` is uncommented to show plugins on the portal UI
 - Run `nx build vue-mri` to build patient analytics used by portal
 - Run `nx build jobs` to build log viewer used by jobs plugin in portal
+- Run `nx build mapping` to build mapping used by ETL plugin in portal
 - Run `nx build @portal/plugin` to build libs used by portal
 - Run `nx build @portal/components` to build components used by portal
 - Run `nx start portal` to start portal, and visit `https://localhost:4000/portal`

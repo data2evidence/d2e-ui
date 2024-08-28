@@ -10,7 +10,7 @@ client.interceptors.request.use(
       const baseURL = await pluginMetadata.data?.dnBaseUrl;
       if (token && config.headers) {
         config.baseURL = baseURL;
-        config.headers.Authorization = `${token}`; // TODO: add prefix Bearer for Logto's access token
+        config.headers.Authorization = `Bearer ${token}`;
       }
     }
     return config;
