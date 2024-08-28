@@ -37,3 +37,9 @@ export type conceptDataType = {
   conceptName: string;
   domainId: string;
 };
+
+export type RowObject = {
+  index: number;
+  searchText: string;
+  domainId?: string;
+};

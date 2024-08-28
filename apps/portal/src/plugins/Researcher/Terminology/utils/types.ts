@@ -177,3 +177,10 @@ export interface HybridSearchConfig {
   semanticRatio: number;
   model: string;
 }
+export interface StandardConcepts {
+  index: number;
+  conceptId: number;
+  conceptName: string;
+  domainId: string;
+}
+

@@ -108,7 +108,7 @@ const Overview: FC = () => {
             />
           </div>
 
-          <MappingTable />
+          <MappingTable selectedDatasetId={selectedDatasetId} />
         </>
       )}
       <MappingDrawer selectedDatasetId={selectedDatasetId} />
