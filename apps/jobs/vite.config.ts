@@ -7,6 +7,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/jobs/',
   plugins: [
     vue(),
     basicSsl({
