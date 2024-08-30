@@ -62,7 +62,8 @@
               @open-filtersummary="toggleFilterCardSummary(...arguments)"
               @openAddCohort="showAddCohortDialog = true"
             ></chartToolbar>
-            <div class="d-flex pane-right-content">
+            <!-- "ref" used in solution from similar issue: https://github.com/antoniandre/splitpanes/issues/157 -->
+            <div class="d-flex pane-right-content" ref="pane-right-content">
               <chartController
                 :showLeftPane="!hideLeftPane"
                 @drilldown="onDrilldown"
@@ -207,7 +208,7 @@ export default {
       paneSize: PANE_SIZE.FULL,
       PANE_SIZE,
       PANEL,
-      showAddCohortDialog: false
+      showAddCohortDialog: false,
     }
   },
   created() {
@@ -343,6 +344,10 @@ export default {
     },
     toggleFilterCardSummary(displayFilterCardSummary) {
       this.displayFilterCardSummary = displayFilterCardSummary
+      // Need to wait for 'has-filtercard-summary' to happen in this tick so the rerender calculates correctly
+      this.$nextTick(() => {
+        this.rerenderStackBarChart()
+      })
     },
     togglePanel(panel) {
       if (panel === PANEL.LEFT) {
