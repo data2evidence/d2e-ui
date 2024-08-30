@@ -86,7 +86,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getMriFrontendConfig', 'getBookmarksData', 'getText', 'getAxis', 'getFilterCard']),
+    ...mapGetters([
+      'getMriFrontendConfig',
+      'getBookmarksData',
+      'getText',
+      'getAxis',
+      'getFilterCard',
+      'getActiveBookmark',
+      'getResponse',
+    ]),
     currentBookmark() {
       return this.getBookmarksData
     },
@@ -197,7 +205,14 @@ export default {
       this.$emit('unloadFilterCardSummaryEv')
     },
     onClickDownloadSql() {
-      console.log('jer onClickDownloadSql')
+      const content = this.getResponse()?.data?.sql || ''
+      const blob = new Blob([content], { type: 'text/sql' })
+      const link = document.createElement('a')
+      link.download = `${this.getActiveBookmark.bookmarkname}.sql`
+      link.href = URL.createObjectURL(blob)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
     },
     getChartInfo(chart, type) {
       if (Constants.chartInfo[chart]) {
