@@ -63,6 +63,7 @@
         :text="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL')"
         :title="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL')"
         classes="button--block"
+        :disabled="chartBusy"
       />
     </div>
   </div>
@@ -78,7 +79,7 @@ import messageBox from './MessageBox.vue'
 
 export default {
   name: 'filterCardSummary',
-  props: ['unloadBookmarkEv'],
+  props: ['unloadBookmarkEv', 'chartBusy'],
   data() {
     return {
       bookmarks: [],

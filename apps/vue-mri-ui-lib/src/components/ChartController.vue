@@ -46,10 +46,9 @@ import patientCount from './PatientCount.vue'
 
 export default {
   name: 'chartController',
-  props: ['shouldRerenderChart', 'showLeftPane'],
+  props: ['shouldRerenderChart', 'showLeftPane', 'chartBusy'],
   data() {
     return {
-      chartBusy: false,
       response: {},
       showCensoring: false,
       showErrorLines: false,
@@ -136,7 +135,7 @@ export default {
   methods: {
     ...mapActions(['setFireRequest', 'setKMDisplayInfo']),
     setChartBusy(status) {
-      this.chartBusy = status
+      this.$emit('setChartBusy', status)
     },
     updateDisplay() {
       this.setKMDisplayInfo({
