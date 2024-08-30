@@ -57,6 +57,14 @@
         </li>
       </ul>
     </div>
+    <div class="download-sql">
+      <d4l-button
+        @click="onClickDownloadSql"
+        :text="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL')"
+        :title="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL')"
+        classes="button--block"
+      />
+    </div>
   </div>
 </template>
 
@@ -186,6 +194,9 @@ export default {
     ...mapActions(['setActiveChart', 'fireBookmarkQuery']),
     unloadBookmark() {
       this.$emit('unloadFilterCardSummaryEv')
+    },
+    onClickDownloadSql() {
+      console.log('jer onClickDownloadSql')
     },
     getChartInfo(chart, type) {
       if (Constants.chartInfo[chart]) {
