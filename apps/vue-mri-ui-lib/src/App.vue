@@ -52,7 +52,7 @@ export default {
       this.setDataset()
       this.setDatasetReleaseId()
       this.setFireRequest()
-      this.setPatientTotalRequested(true)
+      this.requestTotalPatientCount()
       this.refreshPatientCount()
     })
   },
@@ -76,7 +76,7 @@ export default {
       'toggleConfigSelectionDialog',
       'setFireRequest',
       'refreshPatientCount',
-      'setPatientTotalRequested',
+      'requestTotalPatientCount',
     ]),
     ...mapMutations([MESSAGE_FATAL_SHOW_TOGGLE, MESSAGE_ALERT_SHOW_TOGGLE]),
     okFatal() {
