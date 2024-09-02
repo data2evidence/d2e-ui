@@ -25,12 +25,12 @@ COPY ./nx.json ./nx.json
 ENV GIT_SSH_COMMAND='ssh -Tvv'
 
 # This is a dummy folder to copy over as its used for different purpose in GHA temporarily
+COPY .github /root/
 
 RUN --mount=type=ssh mkdir -p -m 700 ~/.ssh/ &&  \
     ssh-keyscan github.com >> ~/.ssh/known_hosts && \
     yarn install --network-timeout 1000000 --frozen-lockfile
 
-COPY .github /root/
 COPY ./.cert ./.cert
 COPY ./resources ./resources
 
