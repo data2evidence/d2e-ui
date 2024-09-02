@@ -4,18 +4,39 @@ RUN apk add --update python3 py3-pip build-base git openssh-client
 
 WORKDIR /usr/src/services/app/alp-ui
 
-COPY . .
+COPY ./yarn.lock ./yarn.lock
+COPY ./package.json ./package.json
+COPY ./plugins/sample-superadmin-page/package.json ./plugins/sample-superadmin-page/package.json
+COPY ./plugins/sample-researcher-study/package.json ./plugins/sample-researcher-study/package.json
+COPY ./libs/portal-components/package.json ./libs/portal-components/package.json
+COPY ./libs/portal-plugin/package.json ./libs/portal-plugin/package.json
+COPY ./apps/mapping/package.json ./apps/mapping/package.json
+COPY ./apps/chp-ps-ui/package.json ./apps/chp-ps-ui/package.json
+COPY ./apps/portal/package.json ./apps/portal/package.json
+COPY ./apps/analysis/package.json ./apps/analysis/package.json
+COPY ./apps/superadmin/package.json ./apps/superadmin/package.json
+COPY ./apps/vue-mri-ui-lib/package.json ./apps/vue-mri-ui-lib/package.json
+COPY ./apps/jobs/package.json ./apps/jobs/package.json
+COPY ./apps/mri-pa-ui/package.json ./apps/mri-pa-ui/package.json
+COPY ./apps/flow/package.json ./apps/flow/package.json
+
+COPY ./nx.json ./nx.json
 
 ENV GIT_SSH_COMMAND='ssh -Tvv'
 
 # This is a dummy folder to copy over as its used for different purpose in GHA temporarily
-COPY .github /root/
 
 RUN --mount=type=ssh mkdir -p -m 700 ~/.ssh/ &&  \
     ssh-keyscan github.com >> ~/.ssh/known_hosts && \
     yarn install --network-timeout 1000000 --frozen-lockfile
 
+COPY .github /root/
+COPY ./.cert ./.cert
+COPY ./resources ./resources
+
 FROM base-build AS mri-vue-build
+
+COPY ./apps/vue-mri-ui-lib ./apps/vue-mri-ui-lib
 
 RUN --mount=type=cache,target=build \
     --mount=type=cache,target=dist \
@@ -24,6 +45,8 @@ RUN --mount=type=cache,target=build \
 RUN ls -l /usr/src/services/app/alp-ui/resources/
 
 FROM base-build AS portal-base-build
+
+COPY ./libs ./libs
 
 RUN --mount=type=cache,target=build \
     --mount=type=cache,target=dist \
@@ -37,6 +60,8 @@ RUN ls -l /usr/src/services/app/alp-ui/resources/
 
 FROM portal-base-build AS portal-ui-build
 
+COPY ./apps/portal ./apps/portal
+
 RUN --mount=type=cache,target=build \
     --mount=type=cache,target=dist \
     npx nx build portal
@@ -44,6 +69,10 @@ RUN --mount=type=cache,target=build \
 RUN ls -l /usr/src/services/app/alp-ui/resources/
 
 FROM portal-base-build AS mri-portal-build
+COPY ./apps/portal ./apps/portal
+COPY ./apps/mri-pa-ui ./apps/mri-pa-ui
+COPY ./apps/chp-ps-ui ./apps/chp-ps-ui
+COPY ./apps/genomics-ui ./apps/genomics-ui
 
 RUN --mount=type=cache,target=build \
     --mount=type=cache,target=dist \
@@ -63,12 +92,16 @@ RUN ls -l /usr/src/services/app/alp-ui/resources/
 
 FROM portal-base-build AS superadmin-ui-build
 
+COPY ./apps/superadmin ./apps/superadmin
+
 RUN --mount=type=cache,target=build \
     --mount=type=cache,target=dist \
     npx nx build superadmin
 RUN ls -l /usr/src/services/app/alp-ui/resources/
 
 FROM portal-base-build AS flow-ui-build
+COPY ./apps/flow ./apps/flow
+COPY ./apps/portal ./apps/portal
 
 RUN --mount=type=cache,target=build \
     --mount=type=cache,target=dist \
@@ -77,12 +110,15 @@ RUN ls -l /usr/src/services/app/alp-ui/resources/
 
 FROM portal-base-build AS analysis-ui-build
 
+COPY ./apps/analysis ./apps/analysis
+
 RUN --mount=type=cache,target=build \
     --mount=type=cache,target=dist \
     npx nx build analysis_flow
 RUN ls -l /usr/src/services/app/alp-ui/resources/
 
 FROM portal-base-build AS mapping-ui-build
+COPY ./apps/mapping ./apps/mapping
 
 RUN --mount=type=cache,target=build \
     --mount=type=cache,target=dist \
@@ -90,6 +126,8 @@ RUN --mount=type=cache,target=build \
 RUN ls -l /usr/src/services/app/alp-ui/resources/
 
 FROM base-build AS ui5-build
+COPY . .
+COPY ./ui5.yaml ./ui5.yaml
 
 RUN yarn ui5 build -a --clean-dest --dest ./resources/ui5
 RUN ls -l /usr/src/services/app/alp-ui/resources/
@@ -115,6 +153,8 @@ RUN cp ./dist/pyodidepyqe-0.0.2-py3-none-any.whl /usr/src/services/app/alp-ui/re
 RUN ls -l /usr/src/services/app/alp-ui/resources
 
 FROM base-build AS jobs-build
+
+COPY ./apps/jobs ./apps/jobs
 
 RUN --mount=type=cache,target=build \
     --mount=type=cache,target=dist \
