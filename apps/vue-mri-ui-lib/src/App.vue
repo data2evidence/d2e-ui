@@ -15,7 +15,7 @@
     />
     <!-- <ui5adaptor /> -->
     <splashScreen v-if="getInitialLoad" />
-    <patientanalytics v-show="!getInitialLoad"/>
+    <patientanalytics v-show="!getInitialLoad" />
   </div>
 </template>
 
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       showDialog: false,
-      listener: null
+      listener: null,
     }
   },
   created() {
@@ -48,15 +48,16 @@ export default {
     this.requestMriConfig()
   },
   mounted() {
-    this.listener = window.addEventListener('dataset', () => {
+    this.listener = window.addEventListener('alp-dataset-change', () => {
       this.setDataset()
       this.setDatasetReleaseId()
       this.setFireRequest()
+      this.setPatientTotalRequested(true)
       this.refreshPatientCount()
     })
   },
   unmounted() {
-    window.removeEventListener('dataset', this.listener)
+    window.removeEventListener('alp-dataset-change', this.listener)
   },
   computed: {
     ...mapGetters([
@@ -68,7 +69,15 @@ export default {
     ]),
   },
   methods: {
-    ...mapActions(['requestMriConfig', 'setDataset', 'setDatasetReleaseId', 'toggleConfigSelectionDialog', 'setFireRequest', 'refreshPatientCount']),
+    ...mapActions([
+      'requestMriConfig',
+      'setDataset',
+      'setDatasetReleaseId',
+      'toggleConfigSelectionDialog',
+      'setFireRequest',
+      'refreshPatientCount',
+      'setPatientTotalRequested',
+    ]),
     ...mapMutations([MESSAGE_FATAL_SHOW_TOGGLE, MESSAGE_ALERT_SHOW_TOGGLE]),
     okFatal() {
       this[MESSAGE_FATAL_SHOW_TOGGLE]()
