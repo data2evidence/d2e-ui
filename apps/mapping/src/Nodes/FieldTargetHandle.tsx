@@ -15,7 +15,7 @@ export const FieldTargetHandle = (props: FieldTargetHandleProps) => {
 
   const handleOpenTransformDialog = useCallback(() => {
     setIsTransformDialogOpen(true);
-  }, [props]);
+  }, []);
 
   const handleCloseTransformDialog = useCallback(() => {
     setIsTransformDialogOpen(false);
