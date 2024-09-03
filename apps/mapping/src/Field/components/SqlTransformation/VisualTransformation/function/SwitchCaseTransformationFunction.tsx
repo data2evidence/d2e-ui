@@ -8,7 +8,7 @@ interface SwitchCaseTransformationFunctionProps {
   onChange: (cases: Case[]) => void;
 }
 
-const AnyValue = "Any value";
+const ANY_VALUE = "Any value";
 
 export const SwitchCaseTransformationFunction: FC<SwitchCaseTransformationFunctionProps> = ({ cases, onChange }) => {
   const hasDefault = useMemo(() => cases.some((c) => c.isDefault), [cases]);
@@ -29,7 +29,7 @@ export const SwitchCaseTransformationFunction: FC<SwitchCaseTransformationFuncti
   }, [cases, reorderCases]);
 
   const handleAddDefault = useCallback(() => {
-    reorderCases([...cases, { id: cases.length + 1, in: AnyValue, out: "default", isDefault: true }]);
+    reorderCases([...cases, { id: cases.length + 1, in: ANY_VALUE, out: "default", isDefault: true }]);
   }, [cases, reorderCases]);
 
   return (
