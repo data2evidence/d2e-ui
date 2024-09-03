@@ -4,7 +4,7 @@ export interface FieldNodeData {
   type: "source" | "target";
 }
 
-export interface FieldHandleData {
+export interface FieldHandleData extends TransformationConfig {
   label: string;
   tableName: string;
   isField: boolean;
