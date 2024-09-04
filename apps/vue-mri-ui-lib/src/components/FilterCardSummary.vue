@@ -57,6 +57,15 @@
         </li>
       </ul>
     </div>
+    <div class="download-sql">
+      <d4l-button
+        @click="onClickDownloadSql"
+        :text="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL')"
+        :title="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL')"
+        classes="button--block"
+        :disabled="chartBusy"
+      />
+    </div>
   </div>
 </template>
 
@@ -70,14 +79,22 @@ import messageBox from './MessageBox.vue'
 
 export default {
   name: 'filterCardSummary',
-  props: ['unloadBookmarkEv'],
+  props: ['unloadBookmarkEv', 'chartBusy'],
   data() {
     return {
       bookmarks: [],
     }
   },
   computed: {
-    ...mapGetters(['getMriFrontendConfig', 'getBookmarksData', 'getText', 'getAxis', 'getFilterCard']),
+    ...mapGetters([
+      'getMriFrontendConfig',
+      'getBookmarksData',
+      'getText',
+      'getAxis',
+      'getFilterCard',
+      'getActiveBookmark',
+      'getResponse',
+    ]),
     currentBookmark() {
       return this.getBookmarksData
     },
@@ -186,6 +203,16 @@ export default {
     ...mapActions(['setActiveChart', 'fireBookmarkQuery']),
     unloadBookmark() {
       this.$emit('unloadFilterCardSummaryEv')
+    },
+    onClickDownloadSql() {
+      const content = this.getResponse()?.data?.sql || ''
+      const blob = new Blob([content], { type: 'text/sql' })
+      const link = document.createElement('a')
+      link.download = `${this.getActiveBookmark.bookmarkname}.sql`
+      link.href = URL.createObjectURL(blob)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
     },
     getChartInfo(chart, type) {
       if (Constants.chartInfo[chart]) {
