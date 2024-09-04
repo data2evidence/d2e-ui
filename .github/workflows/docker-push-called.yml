@@ -1,47 +1,47 @@
 name: Docker Build, Push, Prune (called)
 
 on:
-  # workflow_dispatch:
-  #   inputs:
-  #     AZ_REGISTRY_REPOSITORY:
-  #       required: true
-  #       type: string
-  #     DOCKER_BUILD_CONTEXT_PATH:
-  #       default: "."
-  #       required: false
-  #       type: string
-  #     DOCKER_BUILD_FILE_PATH:
-  #       required: true
-  #       type: string
-  #     DOCKER_BUILD_PLATFORMS:
-  #       default: "linux/amd64"
-  #       required: false
-  #       type: string
-  #     DOCKER_BUILD_PULL_BOOL_STR:
-  #       default: "false"
-  #       required: false
-  #       type: string
-  #     DOCKER_BUILD_PUSH_BOOL_STR:
-  #       default: "false"
-  #       required: false
-  #       type: string
-  #     DOCKER_IMG_TAG_NAME:
-  #       required: true
-  #       type: string
-  #     GIT_BRANCH_NAME:
-  #       required: true
-  #       type: string
-  #     GIT_COMMIT_ID__PLUGINS_REPO:
-  #       default: main
-  #       required: false
-  #       type: string
-  #     GIT_REPO_FULL_NAME:
-  #       required: true
-  #       type: string
-  #     GIT_SSH_PRIVATE_KEYS:
-  #       default: "null"
-  #       required: false
-  #       type: string
+  workflow_dispatch:
+    inputs:
+      AZ_REGISTRY_REPOSITORY:
+        required: true
+        type: string
+      DOCKER_BUILD_CONTEXT_PATH:
+        default: "."
+        required: false
+        type: string
+      DOCKER_BUILD_FILE_PATH:
+        required: true
+        type: string
+      DOCKER_BUILD_PLATFORMS:
+        default: "linux/amd64"
+        required: false
+        type: string
+      DOCKER_BUILD_PULL_BOOL_STR:
+        default: "false"
+        required: false
+        type: string
+      DOCKER_BUILD_PUSH_BOOL_STR:
+        default: "false"
+        required: false
+        type: string
+      DOCKER_IMG_TAG_NAME:
+        required: true
+        type: string
+      GIT_BRANCH_NAME:
+        required: true
+        type: string
+      # GIT_COMMIT_ID__PLUGINS_REPO:
+      #   default: main
+      #   required: false
+      #   type: string
+      GIT_REPO_FULL_NAME:
+        required: true
+        type: string
+      GIT_SSH_PRIVATE_KEYS:
+        default: "null"
+        required: false
+        type: string
 
   workflow_call:
     inputs:
