@@ -89,7 +89,7 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v6
-        if: ${{ vars.SKIP_BUILD != 'true' }}
+        if: ${{ vars.DOCKER_BUILD_DISABLE != 'true' }}
         id: build_push
         continue-on-error: false
         with:
