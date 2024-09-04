@@ -2,12 +2,12 @@ name: Docker Build, Push, Prune
 run-name: ${{ github.head_ref || github.ref_name }}
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [opened, reopened, ready_for_review, synchronize]
   push:
     branches:
       - develop
-  workflow_dispatch:
 
 concurrency:
   group: ${{ github.head_ref || github.ref_name }}-${{ github.event_name }}-docker-push
