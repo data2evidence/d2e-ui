@@ -9,6 +9,7 @@ const mockMetadata: SystemAdminPageMetadata<AppMetadataParams> = {
   system: "Local1",
   userId: "Mock user",
   getToken: () => Promise.resolve("MockToken"),
+  getToken: () =>
   data: {
     dnBaseUrl: "https://localhost:41100/",
   },
