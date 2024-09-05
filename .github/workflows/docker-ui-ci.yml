@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: ${{ (github.head_ref || github.ref_name) != 'develop' }} # except for develop branch
 
 env:
-  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  GIT_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 jobs:
   bld:
@@ -54,15 +54,19 @@ jobs:
       - name: Get docker tag name
         id: docker_tag
         shell: bash
+        env:
+          DOCKER_BUILD_PUSH_BOOL_STR: ${{ vars.DOCKER_BUILD_PUSH_BOOL_STR || false }}
         run: |
-          echo BRANCH_NAME=$BRANCH_NAME
-          if [ $BRANCH_NAME = "develop" ]; then
-            echo "is_push=true" >> $GITHUB_OUTPUT
-          elif [ $GITHUB_EVENT_NAME = "workflow_dispatch" ]; then
-            echo "is_push=true" >> $GITHUB_OUTPUT
-          else
-            echo "is_push=false" >> $GITHUB_OUTPUT
+          DOCKER_BUILD_PUSH_BOOL_STR=false
+          if [ $GITHUB_EVENT_NAME = "workflow_dispatch" ]; then
+            DOCKER_BUILD_PUSH_BOOL_STR=true
+          elif [ $GIT_BRANCH_NAME = 'develop' ]; then
+            DOCKER_BUILD_PUSH_BOOL_STR=true
           fi
+          [ $DOCKER_BUILD_PUSH_BOOL_STR = "true" ] && DOCKER_BUILD_PUSH_BOOL_STR=true
+
+          echo "DOCKER_BUILD_PLATFORMS=linux/amd64" | tee -a $GITHUB_OUTPUT
+          echo "DOCKER_BUILD_PUSH_BOOL_STR=$DOCKER_BUILD_PUSH_BOOL_STR" | tee -a $GITHUB_OUTPUT
 
       - uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -100,8 +104,8 @@ jobs:
           platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
           context: ${{ matrix.context }}
           file: ${{ matrix.directory }}/${{ matrix.fileName }}
-          push: ${{ steps.docker_tag.outputs.is_push }}
-          tags: ${{ vars.AZ_REGISTRY_NAME }}.azurecr.io/${{ matrix.name }}:${{ env.BRANCH_NAME }},${{ vars.AZ_REGISTRY_NAME }}.azurecr.io/${{ matrix.name }}:${{ github.sha }}
+          push: ${{ env.DOCKER_BUILD_PUSH_BOOL_STR == 'true' }}
+          tags: ${{ vars.AZ_REGISTRY_NAME }}.azurecr.io/${{ matrix.name }}:${{ env.GIT_BRANCH_NAME }},${{ vars.AZ_REGISTRY_NAME }}.azurecr.io/${{ matrix.name }}:${{ github.sha }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
           build-args: |
