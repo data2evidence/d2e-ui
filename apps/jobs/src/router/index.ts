@@ -6,6 +6,7 @@ import Sidebar from '@/components/Sidebar.vue'
 
 const workspaceRoutes = createWorkspaceRouteRecords({
   deployment: () => import('@/views/Deployment.vue'),
+  deploymentFlowRunCreate: () => import('@/views/FlowRunCreate.vue'),
   flows: () => import('@/views/Flows.vue'),
   flow: () => import('@/views/Flow.vue'),
   flowRuns: () => import('@/views/FlowRuns.vue'),
