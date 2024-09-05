@@ -1,4 +1,4 @@
-name: Build Docker Image
+name: Docker Build, Push, Prune
 
 on:
   workflow_dispatch:
