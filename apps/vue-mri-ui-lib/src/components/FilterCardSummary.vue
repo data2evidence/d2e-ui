@@ -75,6 +75,10 @@
         :disabled="chartBusy"
       />
     </div>
+    <download-webapi-dialog
+      v-if="showWebapiDownloadDialog"
+      @closeEv="showWebapiDownloadDialog = false"
+    ></download-webapi-dialog>
   </div>
 </template>
 
@@ -85,6 +89,7 @@ import icon from '../lib/ui/app-icon.vue'
 import appLabel from '../lib/ui/app-label.vue'
 import Constants from '../utils/Constants'
 import messageBox from './MessageBox.vue'
+import downloadWebapiDialog from './DownloadWebapiDialog.vue'
 
 export default {
   name: 'filterCardSummary',
@@ -92,6 +97,7 @@ export default {
   data() {
     return {
       bookmarks: [],
+      showWebapiDownloadDialog: false,
     }
   },
   computed: {
@@ -225,17 +231,7 @@ export default {
       document.body.removeChild(link)
     },
     onClickDownloadWebapi() {
-      const callback = () => {
-        const content = this.getWebapiResponse()?.data || ''
-        const blob = new Blob([JSON.stringify(content, null, 4)])
-        const link = document.createElement('a')
-        link.download = `${this.getActiveBookmark?.bookmarkname || 'Untitled'}.json`
-        link.href = URL.createObjectURL(blob)
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-      }
-      this.fireWebapiQuery().then(callback)
+      this.showWebapiDownloadDialog = true
     },
     getChartInfo(chart, type) {
       if (Constants.chartInfo[chart]) {
@@ -350,6 +346,7 @@ export default {
     messageBox,
     appButton,
     appLabel,
+    downloadWebapiDialog,
   },
 }
 </script>

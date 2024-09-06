@@ -832,7 +832,8 @@ export const i18n = {
     MRI_PA_VB_CREATE_FILTERS_INCLUDED: 'Add filter to Inclusion',
     MRI_PA_VB_CREATE_FILTERS_EXCLUDED: 'Add filter to Exclusion',
     MRI_PA_TOOLTIP_CREATE_FILTERS: 'Add Filter Card',
-    MRI_PA_TOOLTIP_CREATE_FILTERS_DISABLED_DUE_TO_EXCEEDING_MAX_FILTERCARD_COUNT: 'Maximum number of filtercards allowed is {0}',
+    MRI_PA_TOOLTIP_CREATE_FILTERS_DISABLED_DUE_TO_EXCEEDING_MAX_FILTERCARD_COUNT:
+      'Maximum number of filtercards allowed is {0}',
     MRI_PA_TOOLTIP_CREATE_FILTERS_INCLUDED: 'Add Included Filter Card',
     MRI_PA_TOOLTIP_CREATE_FILTERS_EXCLUDED: 'Add Excluded Filter Card',
     MRI_PA_TOOLTIP_SAVE_FILTERS: 'Save Current Filters',
@@ -847,6 +848,8 @@ export const i18n = {
     MRI_PA_FILTER_SUMMARY_DESC_LABEL: 'Showing patients with:',
     MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL: 'Download SQL',
     MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI: 'Download Webapi Filter',
+    MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI_WARNING: 'Download Webapi Filter Warning',
+    MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI_DOWNLOAD: 'Download',
     MRI_PA_FILTERCARD_CLEAR_ALL_BTN: 'Clear All',
     MRI_PA_BMK_COMPATIBLE_ERROR: 'Saved filter incompatible',
     MRI_PA_BMK_CONVERSION_ERROR: "Bookmark couldn't be converted",

@@ -16,6 +16,11 @@ const actions = {
   clearResponse({ commit }) {
     commit(types.WEBAPI_RESPONSE_SET, { response: {} })
   },
+  cancelWebapiQuery({ commit, dispatch, getters, rootGetters }) {
+    if (cancel) {
+      cancel('cancel')
+    }
+  },
   fireWebapiQuery({ commit, dispatch, getters, rootGetters }) {
     if (cancel) {
       cancel('cancel')
