@@ -25,6 +25,9 @@ import LoadingAnimation from './LoadingAnimation.vue'
 import messageBox from './MessageBox.vue'
 
 export default {
+  compatConfig: {
+    MODE: 3,
+  },
   name: 'download-webapi-dialog',
   props: ['closeEv'],
   data() {
