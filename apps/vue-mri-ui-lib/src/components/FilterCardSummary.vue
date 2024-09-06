@@ -92,6 +92,9 @@ import messageBox from './MessageBox.vue'
 import downloadWebapiDialog from './DownloadWebapiDialog.vue'
 
 export default {
+  compatConfig: {
+    MODE: 3,
+  },
   name: 'filterCardSummary',
   props: ['unloadBookmarkEv', 'chartBusy'],
   data() {
