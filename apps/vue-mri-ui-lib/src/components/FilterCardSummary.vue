@@ -57,6 +57,15 @@
         </li>
       </ul>
     </div>
+    <div class="download-webapi">
+      <d4l-button
+        @click="onClickDownloadWebapi"
+        :text="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI')"
+        :title="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI')"
+        classes="button--block"
+        :disabled="chartBusy"
+      />
+    </div>
     <div class="download-sql">
       <d4l-button
         @click="onClickDownloadSql"
@@ -94,6 +103,7 @@ export default {
       'getFilterCard',
       'getActiveBookmark',
       'getResponse',
+      'getWebapiResponse',
     ]),
     currentBookmark() {
       return this.getBookmarksData
@@ -200,7 +210,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['setActiveChart', 'fireBookmarkQuery']),
+    ...mapActions(['setActiveChart', 'fireBookmarkQuery', 'fireWebapiQuery']),
     unloadBookmark() {
       this.$emit('unloadFilterCardSummaryEv')
     },
@@ -208,11 +218,24 @@ export default {
       const content = this.getResponse()?.data?.sql || ''
       const blob = new Blob([content], { type: 'text/sql' })
       const link = document.createElement('a')
-      link.download = `${this.getActiveBookmark.bookmarkname}.sql`
+      link.download = `${this.getActiveBookmark?.bookmarkname || 'Untitled'}.sql`
       link.href = URL.createObjectURL(blob)
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+    },
+    onClickDownloadWebapi() {
+      const callback = () => {
+        const content = this.getWebapiResponse()?.data || ''
+        const blob = new Blob([JSON.stringify(content, null, 4)])
+        const link = document.createElement('a')
+        link.download = `${this.getActiveBookmark?.bookmarkname || 'Untitled'}.json`
+        link.href = URL.createObjectURL(blob)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
+      this.fireWebapiQuery().then(callback)
     },
     getChartInfo(chart, type) {
       if (Constants.chartInfo[chart]) {
