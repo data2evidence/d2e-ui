@@ -112,7 +112,6 @@ export default {
       'getFilterCard',
       'getActiveBookmark',
       'getResponse',
-      'getWebapiResponse',
     ]),
     currentBookmark() {
       return this.getBookmarksData
@@ -236,12 +235,6 @@ export default {
     onClickDownloadWebapi() {
       this.showWebapiDownloadDialog = true
     },
-    getChartInfo(chart, type) {
-      if (Constants.chartInfo[chart]) {
-        return Constants.chartInfo[chart][type]
-      }
-      return ''
-    },
     getAdvanceTimeFilterFormatted(filter) {
       let str = ''
       const filterCardName = this.getFilterCard(filter.value).props.name
@@ -296,34 +289,6 @@ export default {
       ]
       const o = targetSelectionOptions.find(option => option.key === afterBefore + '_' + other)
       return o ? o.text : afterBefore + '_' + other
-    },
-    getAxisFormatted(axis, type) {
-      const returnObj = []
-      if (type === 'list') {
-        const tempObject = {}
-        let count = 0
-        Object.keys(axis).forEach(key => {
-          tempObject[axis[key]] = key
-          count += 1
-        })
-        for (let i = 0; i < count; i += 1) {
-          returnObj.push({
-            name: this.getAttributeName(tempObject[i], type),
-          })
-        }
-      } else {
-        for (let i = 0; i < axis.length; i += 1) {
-          if (axis[i].attributeId !== 'n/a') {
-            const axisModel = this.getAxis(i)
-            returnObj.push({
-              name: `= ${this.getAttributeName(axis[i].attributeId, type)}`,
-              icon: axisModel.props.icon,
-              iconGroup: axisModel.props.iconFamily,
-            })
-          }
-        }
-      }
-      return returnObj
     },
     getAttributeName(attributeId, type) {
       /* Note: This is the current Implementation of Bookmark Rendering. */
