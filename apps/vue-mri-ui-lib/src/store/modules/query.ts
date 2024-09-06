@@ -978,7 +978,7 @@ const actions = {
         }
         commit(types.SET_CHART_SELECTION, { selection: [] })
         if (rootGetters.getActiveChart === 'list') {
-          response.data.sql = response.data.data.map(listItem => listItem.sql).join(';\n\n')
+          response.data.sql = response.data.data.map(listItem => listItem.sql).join(';\n')
         }
         commit(types.RESPONSE_SET, { response: { data: response.data } })
         return response.data
