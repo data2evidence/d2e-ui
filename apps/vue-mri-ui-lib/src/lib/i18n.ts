@@ -848,7 +848,8 @@ export const i18n = {
     MRI_PA_FILTER_SUMMARY_DESC_LABEL: 'Showing patients with:',
     MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL: 'Download SQL',
     MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI: 'Download Webapi Filter',
-    MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI_WARNING: 'Download Webapi Filter Warning',
+    MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI_WARNING:
+      'Note that conversion to Webapi definition is an approximation, and currently does not support "datetime" and "text" types and advanced time filtering',
     MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI_DOWNLOAD: 'Download',
     MRI_PA_FILTERCARD_CLEAR_ALL_BTN: 'Clear All',
     MRI_PA_BMK_COMPATIBLE_ERROR: 'Saved filter incompatible',
