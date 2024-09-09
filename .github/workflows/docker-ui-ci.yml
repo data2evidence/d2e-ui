@@ -54,15 +54,12 @@ jobs:
       - name: setup
         id: setup
         env:
-          DOCKER_BUILD_PUSH_BOOL_STR: ${{ vars.DOCKER_BUILD_PUSH_BOOL_STR || false }}
+          DOCKER_BUILD_PUSH_BOOL_OVERRIDE: ${{ vars.DOCKER_BUILD_PUSH_BOOL_OVERRIDE || false }}
         run: |
           DOCKER_BUILD_PUSH_BOOL_STR=false
-          if [ $GITHUB_EVENT_NAME = "workflow_dispatch" ]; then
-            DOCKER_BUILD_PUSH_BOOL_STR=true
-          elif [ $GIT_BRANCH_NAME = 'develop' ]; then
+          if [ $DOCKER_BUILD_PUSH_BOOL_OVERRIDE = "true" ] || [ $GITHUB_EVENT_NAME = "workflow_dispatch" ] || [ $GIT_BRANCH_NAME = 'develop' ]; then
             DOCKER_BUILD_PUSH_BOOL_STR=true
           fi
-          [ $DOCKER_BUILD_PUSH_BOOL_STR = "true" ] && DOCKER_BUILD_PUSH_BOOL_STR=true
 
           echo "DOCKER_BUILD_PLATFORMS=linux/amd64" | tee -a $GITHUB_OUTPUT
           echo "DOCKER_BUILD_PUSH_BOOL_STR=$DOCKER_BUILD_PUSH_BOOL_STR" | tee -a $GITHUB_OUTPUT
