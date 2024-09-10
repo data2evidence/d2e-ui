@@ -10,6 +10,7 @@ export interface Study {
   visibilityStatus: string;
   publicKey: string;
   dataModel: string;
+  dataModelCustom: string | null;
   databaseCode: string;
   dialect?: string;
   paConfigId: string;
@@ -30,10 +31,11 @@ export interface NewStudyInput {
   cleansedSchemaOption: boolean;
   tenantName?: string;
   dataModel?: string;
+  dataModelCustom: string | null;
   databaseCode: string;
   dialect: string;
   paConfigId: string;
-  fhirProjectId: string | undefined;
+  fhirProjectId: string | null;
   visibilityStatus: string;
   detail: DatasetDetail;
   dashboards: DatasetDashboard[];

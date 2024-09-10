@@ -65,6 +65,12 @@ const mdeOptions = {
   maxHeight: "150px",
 };
 
+const customDataModelOption = {
+  name: "Custom Data Model",
+  datamodel: "custom",
+  flowId: "",
+};
+
 interface FormData {
   type: string;
   tokenStudyCode: string;
@@ -79,6 +85,7 @@ interface FormData {
   cleansedSchemaOption: boolean;
   description: string;
   dataModel: string;
+  dataModelCustom: string | null;
   databaseCode: string;
   dialect: string;
   paConfigId: string;
@@ -142,6 +149,7 @@ const EMPTY_FORM_DATA: FormData = {
   cleansedSchemaOption: false,
   description: "",
   dataModel: "", //Optional
+  dataModelCustom: null, //Optional
   databaseCode: "", //Optional
   dialect: "",
   paConfigId: "",
@@ -250,6 +258,8 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
     () => formData.databaseCode && formData.schemaOption !== SchemaTypes.NoCDM,
     [formData.schemaOption, formData.databaseCode]
   );
+
+  const displayCustomDataModelInput = useMemo(() => formData.dataModel === customDataModelOption.datamodel, []);
 
   const displaySameCdmVocabSchemaCheckbox = useMemo(
     () => [SchemaTypes.CreateCDM, SchemaTypes.CustomCDM].includes(formData.schemaOption),
@@ -492,6 +502,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       showRequestAccess,
       description,
       dataModel,
+      dataModelCustom,
       databaseCode,
       dialect,
       paConfigId,
@@ -525,6 +536,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       cleansedSchemaOption,
       tenantName: tenant?.name || "",
       dataModel,
+      dataModelCustom,
       databaseCode,
       dialect,
       paConfigId,
@@ -860,6 +872,18 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
                   </MenuItem>
                 ))}
               </Select>
+
+              {displayCustomDataModelInput && (
+                <Box mb={4}>
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    label={getText(i18nKeys.ADD_STUDY_DIALOG__CUSTOM_DATA_MODEL_OPTION)}
+                    value={formData.dataModelCustom}
+                    onChange={(event) => handleFormDataChange({ type: event.target.value })}
+                  />
+                </Box>
+              )}
               {formError.dataModel.required && (
                 <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
               )}
