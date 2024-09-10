@@ -259,7 +259,10 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
     [formData.schemaOption, formData.databaseCode]
   );
 
-  const displayCustomDataModelInput = useMemo(() => formData.dataModel === customDataModelOption.datamodel, []);
+  const displayCustomDataModelInput = useMemo(
+    () => formData.dataModel === customDataModelOption.datamodel,
+    [formData.dataModel]
+  );
 
   const displaySameCdmVocabSchemaCheckbox = useMemo(
     () => [SchemaTypes.CreateCDM, SchemaTypes.CustomCDM].includes(formData.schemaOption),
