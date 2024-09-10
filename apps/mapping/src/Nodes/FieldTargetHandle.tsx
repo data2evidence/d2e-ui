@@ -1,9 +1,10 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { CGreyIcon, CActiveIcon, CommentIcon, IconButton, TActiveIcon, TGreyIcon } from "@portal/components";
 import { MappingHandle, MappingHandleProps } from "./MappingHandle";
 import { TransformConfigDialog } from "../Field/components/TransformConfigDialog";
 import { ConstantValueDialog } from "../Field/components/ConstantValueDialog";
 import { CommentDialog } from "../Field/components/CommentDialog";
+import { useField } from "../contexts";
 import "./FieldTargetHandle.scss";
 
 interface FieldTargetHandleProps extends MappingHandleProps {}
@@ -12,6 +13,12 @@ export const FieldTargetHandle = (props: FieldTargetHandleProps) => {
   const [isTransformDialogOpen, setIsTransformDialogOpen] = useState(false);
   const [isConstantDialogOpen, setIsConstantDialogOpen] = useState(false);
   const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
+  const { edges } = useField();
+
+  const isLinked = useMemo(
+    () => edges.some((e) => e.targetHandle === `${props.data.tableName}-${props.data.label}`),
+    [edges]
+  );
 
   const handleOpenTransformDialog = useCallback(() => {
     setIsTransformDialogOpen(true);
@@ -46,6 +53,7 @@ export const FieldTargetHandle = (props: FieldTargetHandleProps) => {
               startIcon={props.data.isSqlEnabled || props.data.isLookupEnabled ? <TActiveIcon /> : <TGreyIcon />}
               size="small"
               disableRipple
+              disabled={!isLinked}
               onClick={handleOpenTransformDialog}
             />
             <IconButton

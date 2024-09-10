@@ -1,8 +1,8 @@
-import { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Divider from "@mui/material/Divider";
-import { Box, Button, Checkbox, Dialog } from "@portal/components";
+import { Button, Dialog } from "@portal/components";
 import { TransformationConfig, useField } from "../../contexts";
 import {
   EMPTY_SQL_TRANSFORMATION_FUNCTION,
@@ -10,6 +10,7 @@ import {
   SqlTransformation,
 } from "./SqlTransformation/SqlTransformation";
 import { getPreviewSql } from "./SqlTransformation/VisualTransformation/function/transformation-function";
+import { Lookup } from "./Lookup/Lookup";
 import "./TransformConfigDialog.scss";
 
 type CloseDialogType = "success" | "cancelled";
@@ -27,7 +28,7 @@ interface FormData extends TransformationConfig {
 const EMPTY_FORM_DATA: FormData = {
   ...EPMTY_SQL_TRANSFORMATION_FORM_DATA,
   isLookupEnabled: true,
-  lookup: "",
+  lookupSql: "",
 };
 
 enum TabChoice {
@@ -54,7 +55,8 @@ export const TransformConfigDialog: FC<TransformConfigDialogProps> = ({ handleId
       const functions = handle.data.functions || [EMPTY_SQL_TRANSFORMATION_FUNCTION];
       const sql = getPreviewSql(columnName, columnType, functions);
       const isLookupEnabled = handle.data.isLookupEnabled || false;
-      const lookup = handle.data.lookup || "";
+      const lookupName = handle.data.lookupName || "";
+      const lookupSql = handle.data.lookupSql || "";
 
       setFormData({
         isSqlEnabled,
@@ -63,7 +65,8 @@ export const TransformConfigDialog: FC<TransformConfigDialogProps> = ({ handleId
         functions,
         sql,
         isLookupEnabled,
-        lookup,
+        lookupName,
+        lookupSql,
       });
     } else {
       setFormData(EMPTY_FORM_DATA);
@@ -130,17 +133,7 @@ export const TransformConfigDialog: FC<TransformConfigDialogProps> = ({ handleId
             }}
           />
         )}
-        {tabValue === TabChoice.LOOKUP && (
-          <Box py={4}>
-            <Checkbox
-              label="Enabled"
-              checked={formData.isLookupEnabled}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleFormDataChange({ isLookupEnabled: e.target.checked })
-              }
-            />
-          </Box>
-        )}
+        {tabValue === TabChoice.LOOKUP && <Lookup data={formData} onChange={(data) => handleFormDataChange(data)} />}
       </div>
       <Divider />
       <div className="button-group-actions">
