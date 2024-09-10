@@ -235,6 +235,8 @@ const StudyOverview: FC = () => {
       const match = item.dataModel.match(regex);
       const dataModelValue = match ? match[1].trim() : "";
 
+      if (dataModelValue === "custom") return;
+
       if (!datasetsByFlow[dataModelValue]) {
         datasetsByFlow[dataModelValue] = [];
       }
@@ -287,6 +289,11 @@ const StudyOverview: FC = () => {
       console.error(error);
     }
   }, [setFetchUpdatesLoading, setFetchUpdatesFlowIds, datasets]);
+
+  const getDataModelName = ({ dataModel, dataModelCustom }: Study) => {
+    if (!dataModel) return "-";
+    return dataModelCustom ? dataModelCustom : dataModel;
+  };
 
   const getAttributeValue = (
     studyAttributes: StudyAttribute[] | undefined,
@@ -411,7 +418,7 @@ const StudyOverview: FC = () => {
                     <TableCell>
                       {getAttributeValue(dataset.attributes, StudyAttributeConfigIds.LATEST_SCHEMA_VERSION)}
                     </TableCell>
-                    <TableCell>{dataset.dataModel ? dataset.dataModel : "-"}</TableCell>
+                    <TableCell>{getDataModelName(dataset)}</TableCell>
 
                     <TableCell className="col-action">
                       <ActionSelector
