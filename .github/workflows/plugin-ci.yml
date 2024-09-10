@@ -14,6 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: |
+              ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
+              ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
