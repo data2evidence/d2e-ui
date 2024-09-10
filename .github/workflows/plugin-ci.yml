@@ -1,0 +1,33 @@
+name: build plugin
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, ready_for_review, reopened, synchronize]
+  push:
+    branches:
+      - develop
+      - trex
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: Setup yarn
+        run: npm install -g yarn
+      - name: Build
+        run: yarn
+      - name: Pack
+        run: yarn pack
+      - name: Push
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: d2e-ui-v1.0.0.tgz
+          tag: trex/latest
+          overwrite: true

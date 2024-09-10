@@ -15,7 +15,8 @@
     "az:start:ui": "yarn base:ui up alp-caddy",
     "start:ui": "yarn az:start:ui",
     "build:start:ui": "yarn base:ui --file docker-compose-ui.yml up alp-caddy",
-    "build:ui": "yarn base:ui --file docker-compose-ui.yml build alp-caddy"
+    "build:ui": "yarn base:ui --file docker-compose-ui.yml build alp-caddy",
+    "prepack": "yarn build-all"
   },
   "workspaces": {
     "packages": [
