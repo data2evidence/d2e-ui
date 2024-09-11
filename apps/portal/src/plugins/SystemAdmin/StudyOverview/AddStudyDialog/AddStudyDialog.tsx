@@ -66,7 +66,7 @@ const mdeOptions = {
 };
 
 const customDataModelOption = {
-  name: "Custom Data Model",
+  name: "Use Custom Data Model",
   datamodel: "custom",
   flowId: "",
 };
@@ -303,11 +303,16 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
   const getDataModels = useCallback(async () => {
     try {
       const dataModelResult = await api.dataflow.getDatamodels();
+
+      if (formData.schemaOption === SchemaTypes.ExistingCDM) {
+        dataModelResult.push(customDataModelOption);
+      }
+
       setDataModels(dataModelResult);
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [formData.schemaOption]);
 
   useEffect(() => {
     if (formData.schemaOption !== SchemaTypes.NoCDM && formData.databaseCode) {
@@ -482,7 +487,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
 
     setDashboardErrorIndex(formError);
     return hasError;
-  }, [dashboards]);
+  }, [dashboards, allDashboards]);
 
   const handleSubmit = useCallback(async () => {
     if (isFormError() || isFormMetadataError() || isDashboardError()) {

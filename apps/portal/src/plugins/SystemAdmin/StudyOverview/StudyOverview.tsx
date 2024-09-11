@@ -385,7 +385,7 @@ const StudyOverview: FC = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {datasets?.map((dataset: Study, index: number) => (
+                {datasets?.map((dataset: Study) => (
                   <TableRow key={dataset.id}>
                     <TableCell style={{ paddingLeft: "2.75em" }}>{visibilityIcon(dataset.visibilityStatus)}</TableCell>
                     <TableCell style={{ maxWidth: "120px" }}>
