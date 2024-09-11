@@ -28,6 +28,7 @@ import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
 import "./StudyOverview.scss";
 import { api } from "../../../axios/api";
 import { FlowRunJobStateTypes } from "../Jobs/types";
+import { formatDataModelName } from "../../../utils/format";
 
 const enum StudyAttributeConfigIds {
   LATEST_SCHEMA_VERSION = "latest_schema_version",
@@ -290,11 +291,6 @@ const StudyOverview: FC = () => {
     }
   }, [setFetchUpdatesLoading, setFetchUpdatesFlowIds, datasets]);
 
-  const getDataModelName = ({ dataModel, dataModelCustom }: Study) => {
-    if (!dataModel) return "-";
-    return dataModelCustom ? dataModelCustom : dataModel;
-  };
-
   const getAttributeValue = (
     studyAttributes: StudyAttribute[] | undefined,
     attributeConfigId: StudyAttributeConfigIds
@@ -418,7 +414,7 @@ const StudyOverview: FC = () => {
                     <TableCell>
                       {getAttributeValue(dataset.attributes, StudyAttributeConfigIds.LATEST_SCHEMA_VERSION)}
                     </TableCell>
-                    <TableCell>{getDataModelName(dataset)}</TableCell>
+                    <TableCell>{formatDataModelName(dataset)}</TableCell>
 
                     <TableCell className="col-action">
                       <ActionSelector

@@ -7,6 +7,7 @@ import { Study } from "../../../types";
 import { DatasetAttribute } from "../../../constant";
 import { useActiveDataset, useTranslation } from "../../../contexts";
 import "./PublicDatasetCard.scss";
+import { formatDataModelName } from "../../../utils/format";
 
 interface PublicDatasetCardProps {
   dataset: Study;
@@ -45,7 +46,7 @@ export const PublicDatasetCard: FC<PublicDatasetCardProps> = ({ dataset, path, h
   const patientCount = getAttributeValue(DatasetAttribute.PATIENT_COUNT);
   const createdDate = getAttributeValue(DatasetAttribute.CREATED_DATE);
   const version = getAttributeValue(DatasetAttribute.VERSION);
-  const dataModel = dataset.dataModel;
+  const dataModel = formatDataModelName(dataset);
 
   const getOptions = useCallback(
     (data: { [key: string]: any }) => {
