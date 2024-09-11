@@ -31,10 +31,10 @@ jobs:
         run: yarn
         env:
          CI: false
-      - name: Pack
-        run: yarn pack
-        env:
-         CI: false
+      # - name: Pack
+      #   run: yarn pack
+      #   env:
+      #    CI: false
       # - name: Push
       #   uses: svenstaro/upload-release-action@v2
       #   with:
@@ -51,4 +51,5 @@ jobs:
       - name: Publish
         run: yarn publish
         env:
+          CI: false
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
