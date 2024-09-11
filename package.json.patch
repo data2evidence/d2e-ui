@@ -1,0 +1,11 @@
+--- package.json	2024-09-11 12:39:10.826784769 +0800
++++ package2.json	2024-09-11 12:40:11.813258799 +0800
+@@ -1,7 +1,7 @@
+ {
+   "name": "@alp-os/d2e-ui",
+   "version": "1.0.0",
+-  "private": true,
++  "private": false,
+   "repository": {
+     "type": "git",
+     "url": "git+https://github.com/alp-os/internal.git"

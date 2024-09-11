@@ -46,6 +46,8 @@ jobs:
       #     overwrite: true
       - name: Delete Package
         run: 'curl -L -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/orgs/alp-os/packages/npm/d2e-ui'
+      - name: Patch Package
+        run: 'patch -p1  package.json package.json.patch'
       - name: Publish
         run: yarn publish
         env:
