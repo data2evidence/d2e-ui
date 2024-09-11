@@ -29,6 +29,8 @@ jobs:
         run: npm install -g yarn
       - name: Build
         run: yarn
+        env:
+         CI: false
       - name: Pack
         run: yarn pack
         env:
