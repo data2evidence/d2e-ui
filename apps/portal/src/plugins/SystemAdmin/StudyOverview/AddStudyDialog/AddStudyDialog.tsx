@@ -66,7 +66,7 @@ const mdeOptions = {
 };
 
 const customDataModelOption = {
-  name: "Use Custom Data Model",
+  name: "Custom Data Model",
   datamodel: "custom",
   flowId: "",
 };
@@ -85,7 +85,7 @@ interface FormData {
   cleansedSchemaOption: boolean;
   description: string;
   dataModel: string;
-  dataModelCustom: string | null;
+  dataModelCustom: string;
   databaseCode: string;
   dialect: string;
   paConfigId: string;
@@ -149,7 +149,7 @@ const EMPTY_FORM_DATA: FormData = {
   cleansedSchemaOption: false,
   description: "",
   dataModel: "", //Optional
-  dataModelCustom: null, //Optional
+  dataModelCustom: "", //Optional
   databaseCode: "", //Optional
   dialect: "",
   paConfigId: "",
@@ -260,7 +260,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
   );
 
   const displayCustomDataModelInput = useMemo(
-    () => formData.dataModel === customDataModelOption.datamodel,
+    () => formData.dataModel === customDataModelOption.name,
     [formData.dataModel]
   );
 
@@ -881,23 +881,26 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
                 ))}
               </Select>
 
-              {displayCustomDataModelInput && (
-                <Box mb={4}>
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    label={getText(i18nKeys.ADD_STUDY_DIALOG__CUSTOM_DATA_MODEL_OPTION)}
-                    value={formData.dataModelCustom}
-                    onChange={(event) => handleFormDataChange({ type: event.target.value })}
-                  />
-                </Box>
-              )}
               {formError.dataModel.required && (
                 <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
               )}
             </FormControl>
           </Box>
         )}
+
+        {/* Custom Data Model Options */}
+        {displayCustomDataModelInput && (
+          <Box mb={4}>
+            <TextField
+              fullWidth
+              variant="standard"
+              label={getText(i18nKeys.ADD_STUDY_DIALOG__CUSTOM_DATA_MODEL_OPTION)}
+              value={formData.dataModelCustom}
+              onChange={(event) => handleFormDataChange({ dataModelCustom: event.target.value })}
+            />
+          </Box>
+        )}
+
         <Box mb={4}>
           <FormControl
             sx={styles}
