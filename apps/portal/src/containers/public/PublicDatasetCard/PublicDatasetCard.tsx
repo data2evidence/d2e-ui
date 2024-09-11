@@ -87,7 +87,7 @@ export const PublicDatasetCard: FC<PublicDatasetCardProps> = ({ dataset, path, h
   const chartData = useMemo(() => {
     try {
       const data = JSON.parse(entityCounts || "{}");
-      const filteredData = Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== "0"));
+      const filteredData = Object.fromEntries(Object.entries(data).filter(([value]) => value !== "0"));
       return filteredData;
     } catch {
       return {};
