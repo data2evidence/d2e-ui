@@ -45,6 +45,6 @@ jobs:
       - name: Delete Package
         run: 'curl -L -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/orgs/alp-os/packages/npm/d2e-ui'
       - name: Publish
-        run: npm publish
+        run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
