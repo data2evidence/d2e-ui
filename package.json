@@ -1,7 +1,6 @@
 {
   "name": "@alp-os/d2e-ui",
   "version": "1.0.0",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alp-os/internal.git"
