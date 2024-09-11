@@ -23,6 +23,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@alp-os'
       - name: Setup yarn
         run: npm install -g yarn
       - name: Build
@@ -31,12 +33,18 @@ jobs:
         run: yarn pack
         env:
          CI: false
-      - name: Push
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: d2e-ui-v1.0.0.tgz
-          tag: trex-latest
-          target_commit: trex
-          prerelease: true
-          overwrite: true
+      # - name: Push
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: alp-os-d2e-ui-v1.0.0.tgz
+      #     tag: trex-latest
+      #     target_commit: trex
+      #     prerelease: true
+      #     overwrite: true
+      - name: Delete Package
+        run: 'curl -L -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/orgs/alp-os/packages/npm/d2e-ui'
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
