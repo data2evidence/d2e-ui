@@ -22,6 +22,9 @@ jobs:
     runs-on:
       group: dockerup
     if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }}) || ( github.event_name == 'pull_request' && !github.event.pull_request.draft ) # runs if PR is not draft /or/ workflow_dispatch /or/ release branch
+    env:
+      AZ_REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
+      AZ_REGISTRY_WHITELIST_REGEX: ${{ vars.AZ_REGISTRY_WHITELIST_REGEX }}
     strategy:
       matrix:
         include:
@@ -33,7 +36,7 @@ jobs:
 
     steps:
       - name: Free Disk Space (Ubuntu)
-        if: ${{ vars.DOCKER_BUILD_DEBUG != 'true' }}
+        if: ${{ vars.DOCKER_BUILD_DISABLE != 'true' }}
         uses: jlumbroso/free-disk-space@main
         with:
           # this might remove tools that are actually needed,
@@ -109,16 +112,14 @@ jobs:
             GIT_COMMIT_ARG=${{ github.sha }}
 
       - name: Prune tagged images
-        if: ${{ github.head_ref || github.ref_name }} == 'develop' || github.event_name == 'workflow_dispatch' || DOCKER_BUILD_DISABLE
+        if: ${{ github.head_ref || github.ref_name }} == 'develop' || github.event_name == 'workflow_dispatch' || vars.DOCKER_BUILD_DEBUG == 'true'
         shell: bash
         env:
-          AZ_REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
           AZ_REGISTRY_PASSWORD: ${{ secrets.AZ_REGISTRY_PASSWORD }}
-          AZ_REGISTRY_PRUNE_ENABLE_TAGGED: ${{ vars.AZ_REGISTRY_PRUNE_ENABLE_TAGGED }}
           AZ_REGISTRY_PRUNE_DAYS_TAGGED: ${{ vars.AZ_REGISTRY_PRUNE_DAYS_TAGGED }}
+          AZ_REGISTRY_PRUNE_ENABLE_TAGGED: ${{ vars.AZ_REGISTRY_PRUNE_ENABLE_TAGGED }}
           AZ_REGISTRY_REPOSITORY: ${{ matrix.name }}
           AZ_REGISTRY_USERNAME: ${{ secrets.AZ_REGISTRY_USERNAME }}
-          AZ_REGISTRY_WHITELIST_REGEX: ${{ vars.AZ_REGISTRY_WHITELIST_REGEX }}
         run: |
           if [ ${AZ_REGISTRY_PRUNE_DAYS_TAGGED:-20} = 0 ]; then
             AZ_REGISTRY_PRUNE_TIMESTAMP=$(date -u -Is)
@@ -156,13 +157,11 @@ jobs:
         shell: bash
         if: always()
         env:
-          AZ_REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
           AZ_REGISTRY_PASSWORD: ${{ secrets.AZ_REGISTRY_PASSWORD }}
-          AZ_REGISTRY_PRUNE_ENABLE_UNTAGGED: ${{ vars.AZ_REGISTRY_PRUNE_ENABLE_UNTAGGED }}
           AZ_REGISTRY_PRUNE_DAYS_UNTAGGED: ${{ vars.AZ_REGISTRY_PRUNE_DAYS_UNTAGGED }}
+          AZ_REGISTRY_PRUNE_ENABLE_UNTAGGED: ${{ vars.AZ_REGISTRY_PRUNE_ENABLE_UNTAGGED }}
           AZ_REGISTRY_REPOSITORY: ${{ matrix.name }}
           AZ_REGISTRY_USERNAME: ${{ secrets.AZ_REGISTRY_USERNAME }}
-          AZ_REGISTRY_WHITELIST_REGEX: ${{ vars.AZ_REGISTRY_WHITELIST_REGEX }}
         run: |
           if [ ${AZ_REGISTRY_PRUNE_DAYS_UNTAGGED:-1} = 0 ]; then
             AZ_REGISTRY_PRUNE_TIMESTAMP=$(date -u -Is)
@@ -181,3 +180,15 @@ jobs:
           else
             echo ". 5 - SKIPPED delete digests ..."
           fi
+
+      - name: Test tags
+        if: always()
+        env:
+          AZ_REGISTRY_PASSWORD: ${{ secrets.AZ_REGISTRY_PASSWORD }}
+          AZ_REGISTRY_REPOSITORY: ${{ matrix.name }}
+          AZ_REGISTRY_USERNAME: ${{ secrets.AZ_REGISTRY_USERNAME }}
+        run: |
+          az acr manifest metadata list --only-show-errors --registry ${AZ_REGISTRY_NAME} --name ${AZ_REGISTRY_REPOSITORY} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > private-test.json
+          cat private-test.json | yq -o tsv '.[].tags | map(select(test(env(AZ_REGISTRY_WHITELIST_REGEX))))' | sort | tee private-test-tags.txt
+          echo
+          cat private-test-tags.txt | xargs -I% sh -c "echo tag: % && az acr manifest show --only-show-errors --username ${AZ_REGISTRY_USERNAME} --password ${AZ_REGISTRY_PASSWORD} ${AZ_REGISTRY_NAME}.azurecr.io/${AZ_REGISTRY_REPOSITORY}:% | yq -P && echo"
