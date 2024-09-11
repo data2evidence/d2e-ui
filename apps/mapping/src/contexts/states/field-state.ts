@@ -76,9 +76,15 @@ export interface SqlFunctionForTransformationState<T = any> {
   value: T;
 }
 
+export interface LookupListItem {
+  id?: number;
+  name: string;
+}
+
 export interface LookupConfig {
   isLookupEnabled: boolean;
-  lookup: string;
+  lookupName?: string;
+  lookupSql: string;
 }
 
 export interface TransformationConfig extends SqlTransformationConfig, LookupConfig {}
