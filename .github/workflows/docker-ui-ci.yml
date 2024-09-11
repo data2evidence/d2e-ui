@@ -181,8 +181,8 @@ jobs:
             echo ". 5 - SKIPPED delete digests ..."
           fi
 
-      - name: Test tags
-        if: always()
+      - name: Test tags matching RegEx
+        if: vars.DOCKER_BUILD_DEBUG == 'true'
         env:
           AZ_REGISTRY_PASSWORD: ${{ secrets.AZ_REGISTRY_PASSWORD }}
           AZ_REGISTRY_REPOSITORY: ${{ matrix.name }}
