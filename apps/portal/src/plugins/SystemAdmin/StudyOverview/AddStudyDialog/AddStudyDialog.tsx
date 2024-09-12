@@ -66,7 +66,7 @@ const mdeOptions = {
 };
 
 const customDataModelOption = {
-  name: "Custom Data Model",
+  name: "custom",
   datamodel: "custom",
   flowId: "",
 };
