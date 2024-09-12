@@ -35,7 +35,7 @@ export interface NewStudyInput {
   databaseCode: string;
   dialect: string;
   paConfigId: string;
-  fhirProjectId: string;
+  fhirProjectId: string | undefined;
   visibilityStatus: string;
   detail: DatasetDetail;
   dashboards: DatasetDashboard[];
