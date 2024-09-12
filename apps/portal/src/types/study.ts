@@ -9,8 +9,8 @@ export interface Study {
   type: string;
   visibilityStatus: string;
   publicKey: string;
-  dataModel: string;
-  dataModelCustom: string | null;
+  dataModel?: string;
+  dataModelCustom?: string;
   databaseCode: string;
   dialect?: string;
   paConfigId: string;
@@ -31,11 +31,11 @@ export interface NewStudyInput {
   cleansedSchemaOption: boolean;
   tenantName?: string;
   dataModel?: string;
-  dataModelCustom: string | null;
+  dataModelCustom?: string;
   databaseCode: string;
   dialect: string;
   paConfigId: string;
-  fhirProjectId: string | null;
+  fhirProjectId: string;
   visibilityStatus: string;
   detail: DatasetDetail;
   dashboards: DatasetDashboard[];
