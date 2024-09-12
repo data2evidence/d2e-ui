@@ -112,6 +112,9 @@ interface FormError {
   dataModel: {
     required: boolean;
   };
+  dataModelCustom: {
+    required: boolean;
+  };
   databaseCode: {
     required: boolean;
   };
@@ -130,6 +133,7 @@ const EMPTY_FORM_ERROR: FormError = {
   cdmSchemaValue: { required: false },
   vocabSchemaValue: { required: false },
   dataModel: { required: false },
+  dataModelCustom: { required: false },
   databaseCode: { required: false },
   paConfigId: { required: false },
   name: { required: false },
@@ -420,6 +424,10 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
 
     if (schemaOption != SchemaTypes.NoCDM && dataModel == "") {
       formError = { ...formError, dataModel: { required: true } };
+    }
+
+    if (schemaOption === SchemaTypes.ExistingCDM && dataModel === customDataModelOption.name) {
+      formError = { ...formError, dataModelCustom: { required: true } };
     }
 
     if (
@@ -897,7 +905,12 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
               label={getText(i18nKeys.ADD_STUDY_DIALOG__CUSTOM_DATA_MODEL_OPTION)}
               value={formData.dataModelCustom}
               onChange={(event) => handleFormDataChange({ dataModelCustom: event.target.value })}
+              error={formError.dataModelCustom.required}
             />
+
+            {formError.dataModelCustom.required && (
+              <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+            )}
           </Box>
         )}
 
