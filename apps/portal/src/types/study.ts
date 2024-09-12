@@ -9,7 +9,7 @@ export interface Study {
   type: string;
   visibilityStatus: string;
   publicKey: string;
-  dataModel?: string;
+  dataModel: string;
   dataModelCustom?: string;
   databaseCode: string;
   dialect?: string;
