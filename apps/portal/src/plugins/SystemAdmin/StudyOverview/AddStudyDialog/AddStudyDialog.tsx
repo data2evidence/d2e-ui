@@ -392,6 +392,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       isSameCdmSchemaForVocab,
       vocabSchemaValue,
       dataModel,
+      dataModelCustom,
       databaseCode,
       paConfigId,
       name,
@@ -426,7 +427,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       formError = { ...formError, dataModel: { required: true } };
     }
 
-    if (schemaOption === SchemaTypes.ExistingCDM && dataModel === customDataModelOption.name) {
+    if (schemaOption === SchemaTypes.ExistingCDM && dataModel === customDataModelOption.name && !dataModelCustom) {
       formError = { ...formError, dataModelCustom: { required: true } };
     }
 
