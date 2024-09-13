@@ -110,6 +110,7 @@ jobs:
           build-args: |
             docker_image_prefix=${{ vars.AZ_REGISTRY_NAME }}.azurecr.io
             GIT_COMMIT_ARG=${{ github.sha }}
+            NX_DAEMON_ARG=false
 
       - name: Prune tagged images
         if: ${{ github.head_ref || github.ref_name }} == 'develop' || github.event_name == 'workflow_dispatch' || vars.DOCKER_BUILD_DEBUG == 'true'
