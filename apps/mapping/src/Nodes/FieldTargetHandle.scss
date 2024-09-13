@@ -21,4 +21,12 @@
     padding: 4px 1em 4px 0.5em;
     overflow: auto;
   }
+
+  .alp-icon-button {
+    &.Mui-disabled {
+      svg {
+        opacity: 0.2;
+      }
+    }
+  }
 }

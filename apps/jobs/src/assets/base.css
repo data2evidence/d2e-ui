@@ -89,6 +89,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.flow-run-work-pool, .flow-run-work-queue {
+.flow-run-work-pool, .flow-run-work-queue, .state-list-item__meta {
   display: none !important;
 }
