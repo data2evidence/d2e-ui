@@ -19,8 +19,8 @@ env:
 jobs:
   bld:
     environment: development
-    runs-on:
-      group: dockerup
+    # runs-on:
+    #   group: dockerup
     if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }}) || ( github.event_name == 'pull_request' && !github.event.pull_request.draft ) # runs if PR is not draft /or/ workflow_dispatch /or/ release branch
     env:
       AZ_REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
