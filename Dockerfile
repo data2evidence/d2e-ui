@@ -23,6 +23,7 @@ COPY ./apps/flow/package.json ./apps/flow/package.json
 COPY ./nx.json ./nx.json
 
 ENV GIT_SSH_COMMAND='ssh -Tvv'
+ENV NX_DAEMON=false 
 
 # This is a dummy folder to copy over as its used for different purpose in GHA temporarily
 COPY .github /root/
