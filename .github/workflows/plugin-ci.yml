@@ -31,8 +31,6 @@ jobs:
         run: yarn
         env:
          CI: false
-      - name: Delete Package
-        run: 'curl -L -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/orgs/alp-os/packages/npm/d2e-ui'
       - name: Patch Package
         run: jq '.private+=false' package.json > tmppkg; mv tmppkg package.json
       - name: Update version
