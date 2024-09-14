@@ -2,7 +2,7 @@ services:
   alp-caddy:
     image: alpcr.azurecr.io/alp-data-node/alp-caddy:local # will build from local
     build:
-      context: ../d2e-ui # Relative to d2e repo!!
+      context: ../d2e/services/trex/plugins/d2e-ui # Relative to d2e repo!!
       dockerfile: Dockerfile
       ssh:
         - default=${SSH_AUTH_SOCK}
