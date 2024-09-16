@@ -214,13 +214,18 @@ const actions = {
                 const path = parsedBookmark.axisSelection[i].attributeId.split('.')
                 const key = path.pop()
                 path.pop()
+                const filterCardId = path.join('.')
                 dispatch('setNewAxisValue', {
                   id: i,
                   props: {
                     key,
                     attributeId: parsedBookmark.axisSelection[i].attributeId,
-                    filterCardId: path.join('.'),
+                    filterCardId,
                   },
+                })
+                dispatch('addFilterCardConstraint', {
+                  filterCardId,
+                  key,
                 })
               } else {
                 dispatch('clearAxisValue', i)
