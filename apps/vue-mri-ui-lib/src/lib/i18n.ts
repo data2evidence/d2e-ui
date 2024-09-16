@@ -845,6 +845,7 @@ export const i18n = {
     MRI_PA_AND: 'AND',
     MRI_PA_OR: 'OR',
     MRI_PA_FILTER_SUMMARY_DESC_LABEL: 'Showing patients with:',
+    MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL: 'Download SQL',
     MRI_PA_FILTERCARD_CLEAR_ALL_BTN: 'Clear All',
     MRI_PA_BMK_COMPATIBLE_ERROR: 'Saved filter incompatible',
     MRI_PA_BMK_CONVERSION_ERROR: "Bookmark couldn't be converted",
