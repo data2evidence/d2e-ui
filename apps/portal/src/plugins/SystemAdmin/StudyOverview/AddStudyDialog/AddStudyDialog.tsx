@@ -65,8 +65,8 @@ const mdeOptions = {
   maxHeight: "150px",
 };
 
-const customDataModelOption = {
-  name: "custom",
+const customDataModelOption: Datamodel = {
+  flowName: "custom-flow",
   datamodel: "custom",
   flowId: "",
 };
@@ -86,6 +86,7 @@ interface FormData {
   description: string;
   dataModel: string;
   dataModelCustom: string;
+  plugin: string;
   databaseCode: string;
   dialect: string;
   paConfigId: string;
@@ -154,6 +155,7 @@ const EMPTY_FORM_DATA: FormData = {
   description: "",
   dataModel: "", //Optional
   dataModelCustom: "", //Optional
+  plugin: "",
   databaseCode: "", //Optional
   dialect: "",
   paConfigId: "",
@@ -171,7 +173,7 @@ interface dropdownOption {
 }
 
 interface Datamodel {
-  name: string;
+  flowName: string;
   datamodel: string;
   flowId: string;
 }
@@ -220,7 +222,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
   const [tenant] = useTenant();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [formError, setFormError] = useState<FormError>(EMPTY_FORM_ERROR);
-  const [dataModels, setDataModels] = useState<Datamodel[]>([]);
+  const [dataModelOptions, setDataModelOptions] = useState<string[]>([]);
   const [schemas, setSchemas] = useState<string[]>([]);
   const [paConfigs] = usePaConfigs();
   const [vocabSchemas] = useVocabSchemas(databases, formData.databaseCode);
@@ -264,7 +266,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
   );
 
   const displayCustomDataModelInput = useMemo(
-    () => formData.dataModel === customDataModelOption.name,
+    () => formData.dataModel.split(" ")[0] === customDataModelOption.datamodel,
     [formData.dataModel]
   );
 
@@ -306,13 +308,17 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
 
   const getDataModels = useCallback(async () => {
     try {
-      const dataModelResult = await api.dataflow.getDatamodels();
+      const dataModelResult: Datamodel[] = await api.dataflow.getDatamodels();
 
       if (formData.schemaOption === SchemaTypes.ExistingCDM) {
         dataModelResult.push(customDataModelOption);
       }
 
-      setDataModels(dataModelResult);
+      const dataModelOptions = dataModelResult.map((dataModel: Datamodel) => {
+        return `${dataModel.datamodel} [${dataModel.flowName}]`;
+      });
+
+      setDataModelOptions(dataModelOptions);
     } catch (error) {
       console.error(error);
     }
@@ -427,7 +433,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       formError = { ...formError, dataModel: { required: true } };
     }
 
-    if (schemaOption === SchemaTypes.ExistingCDM && dataModel === customDataModelOption.name && !dataModelCustom) {
+    if (schemaOption === SchemaTypes.ExistingCDM && dataModel === customDataModelOption.datamodel && !dataModelCustom) {
       formError = { ...formError, dataModelCustom: { required: true } };
     }
 
@@ -498,6 +504,14 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
     return hasError;
   }, [dashboards, allDashboards]);
 
+  const parseDatamodelOption = useCallback((dataModelOption: string) => {
+    const parsedOption = dataModelOption.replace(/[[\]]/g, "").split(" ");
+    return {
+      dataModel: parsedOption[0],
+      plugin: parsedOption[1],
+    };
+  }, []);
+
   const handleSubmit = useCallback(async () => {
     if (isFormError() || isFormMetadataError() || isDashboardError()) {
       return;
@@ -526,8 +540,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       visibilityStatus,
     } = formData;
 
+    const dataModelDetails = parseDatamodelOption(dataModel);
     let fhirProjectId;
-
+    console.log(dataModelDetails);
     if (createFhirProject) {
       const fhirProjectInput: NewFhirProjectInput = {
         name: name,
@@ -552,8 +567,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       vocabSchemaValue,
       cleansedSchemaOption,
       tenantName: tenant?.name || "",
-      dataModel,
-      dataModelCustom,
+      dataModel:
+        dataModelDetails.dataModel === customDataModelOption.datamodel ? dataModelCustom : dataModelDetails.dataModel,
+      plugin: dataModelDetails.plugin,
       databaseCode,
       dialect,
       paConfigId,
@@ -588,6 +604,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
     isDashboardError,
     setLoading,
     handleClose,
+    parseDatamodelOption,
   ]);
 
   return (
@@ -883,9 +900,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
                 <MenuItem sx={styles} value="">
                   &nbsp;
                 </MenuItem>
-                {dataModels?.map((model) => (
-                  <MenuItem sx={styles} key={model.name} value={model.name}>
-                    {model.name}
+                {dataModelOptions?.map((model) => (
+                  <MenuItem sx={styles} key={model} value={model}>
+                    {model}
                   </MenuItem>
                 ))}
               </Select>

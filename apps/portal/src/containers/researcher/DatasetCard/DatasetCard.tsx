@@ -15,7 +15,6 @@ import { Study } from "../../../types";
 import { DatasetAttribute } from "../../../constant";
 import { useActiveDataset, useTranslation, useUser } from "../../../contexts";
 import "./DatasetCard.scss";
-import { formatDataModelName } from "../../../utils/format";
 
 interface DatasetCardProps {
   dataset: Study;
@@ -55,7 +54,6 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path, highlightText
   const patientCount = getAttributeValue(DatasetAttribute.PATIENT_COUNT);
   const createdDate = getAttributeValue(DatasetAttribute.CREATED_DATE);
   const version = getAttributeValue(DatasetAttribute.VERSION);
-  const dataModel = formatDataModelName(dataset);
 
   const getOptions = useCallback(
     (data: { [key: string]: any }) => {
@@ -149,7 +147,7 @@ export const DatasetCard: FC<DatasetCardProps> = ({ dataset, path, highlightText
           </div>
           <div className="dataset-card__attribute">
             <DatabaseIcon />
-            {getText(i18nKeys.DATASET_CARD__DATA_MODEL)}: {dataModel || "-"}
+            {getText(i18nKeys.DATASET_CARD__DATA_MODEL)}: {dataset.dataModel || "-"}
           </div>
         </div>
       </div>
