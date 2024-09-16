@@ -1,10 +1,11 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import ReactFlow, { Controls, Edge, PanOnScrollMode, Position } from "reactflow";
 import { Button } from "@mui/material";
 import { ManageSearch } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { nodeTypes } from "../Nodes";
 import { FieldHandleData, TableSchemaState, useCdmSchema, useField, useScannedSchema, useTable } from "../contexts";
+import { SelectVocabDatasetDialog } from "../components/SelectVocabDatasetDialog/SelectVocabDatasetDialog";
 import "./TableMapLayout.scss";
 import "reactflow/dist/style.css";
 
@@ -14,6 +15,7 @@ export const TableMapLayout = () => {
   const { sourceTables } = useScannedSchema();
   const { cdmTables } = useCdmSchema();
   const navigate = useNavigate();
+  const [isSelectDatasetDialogOpen, setIsSelectDatasetDialogOpen] = useState(false);
 
   const handleEdgeClick = useCallback(
     (_event: any, edge: Edge) => {
@@ -37,6 +39,14 @@ export const TableMapLayout = () => {
     },
     [sourceTables, cdmTables]
   );
+
+  const handleOpenDialog = useCallback(() => {
+    setIsSelectDatasetDialogOpen(true);
+  }, []);
+
+  const handleCloseDialog = useCallback(() => {
+    setIsSelectDatasetDialogOpen(false);
+  }, []);
 
   return (
     <div className="table-map-layout">
@@ -64,7 +74,7 @@ export const TableMapLayout = () => {
       </div>
 
       <div className="footer">
-        <Button aria-label="managesearch">
+        <Button aria-label="managesearch" onClick={handleOpenDialog}>
           <ManageSearch />
           Vocabulary
         </Button>
@@ -75,6 +85,7 @@ export const TableMapLayout = () => {
           <Button variant="contained">Go To Link Fields</Button>
         </div>
       </div>
+      <SelectVocabDatasetDialog open={isSelectDatasetDialogOpen} onClose={handleCloseDialog} />
     </div>
   );
 };
