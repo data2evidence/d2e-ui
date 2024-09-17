@@ -28,7 +28,6 @@ import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
 import "./StudyOverview.scss";
 import { api } from "../../../axios/api";
 import { FlowRunJobStateTypes } from "../Jobs/types";
-import { formatDataModelName } from "../../../utils/format";
 
 const enum StudyAttributeConfigIds {
   LATEST_SCHEMA_VERSION = "latest_schema_version",
@@ -230,19 +229,14 @@ const StudyOverview: FC = () => {
 
     const datasetsByFlow: Record<string, Study[]> = {};
     const apiRequests = [];
-
     datasets.forEach((item: Study) => {
-      const regex = /\[([^[\]]*)\]/;
-      const match = item.dataModel.match(regex);
-      const dataModelValue = match ? match[1].trim() : "";
+      const flowName = item.plugin;
 
-      if (dataModelValue === "custom") return;
-
-      if (!datasetsByFlow[dataModelValue]) {
-        datasetsByFlow[dataModelValue] = [];
+      if (flowName === "custom-flow") return;
+      if (!datasetsByFlow[flowName]) {
+        datasetsByFlow[flowName] = [];
       }
-
-      datasetsByFlow[dataModelValue].push(item);
+      datasetsByFlow[flowName].push(item);
     });
 
     for (const flow in datasetsByFlow) {
@@ -414,7 +408,7 @@ const StudyOverview: FC = () => {
                     <TableCell>
                       {getAttributeValue(dataset.attributes, StudyAttributeConfigIds.LATEST_SCHEMA_VERSION)}
                     </TableCell>
-                    <TableCell>{formatDataModelName(dataset)}</TableCell>
+                    <TableCell>{`${dataset.dataModel} [${dataset.plugin}]`}</TableCell>
 
                     <TableCell className="col-action">
                       <ActionSelector
