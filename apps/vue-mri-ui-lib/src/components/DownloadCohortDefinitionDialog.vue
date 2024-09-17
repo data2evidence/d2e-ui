@@ -1,16 +1,16 @@
 <template>
   <messageBox @close="cancel">
-    <template v-slot:header>{{ getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI') }}</template>
+    <template v-slot:header>{{ getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_COHORT_DEFINITION') }}</template>
     <template v-slot:body>
       <div>
-        <div style="padding: 24px">{{ getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI_WARNING') }}</div>
+        <div style="padding: 24px">{{ getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_COHORT_DEFINITION_WARNING') }}</div>
       </div>
     </template>
     <template v-slot:footer>
       <div class="flex-spacer"></div>
       <appButton
-        :click="onClickDownloadWebapi"
-        :text="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI_DOWNLOAD')"
+        :click="onClickDownloadCohortDefinition"
+        :text="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_COHORT_DEFINITION_DOWNLOAD')"
         v-focus
       ></appButton>
       <appButton :click="cancel" :text="getText('MRI_PA_BUTTON_CANCEL')"></appButton>
@@ -28,26 +28,26 @@ export default {
   compatConfig: {
     MODE: 3,
   },
-  name: 'download-webapi-dialog',
+  name: 'download-cohort-definition-dialog',
   props: ['closeEv'],
   data() {
     return {}
   },
   computed: {
-    ...mapGetters(['getText', 'getWebapiResponse', 'getActiveBookmark']),
+    ...mapGetters(['getText', 'getCohortDefinitionResponse', 'getActiveBookmark']),
   },
   watch: {},
   methods: {
-    ...mapActions(['setFireDownloadZIP', 'cancelWebapiQuery', 'fireWebapiQuery']),
+    ...mapActions(['setFireDownloadZIP', 'cancelCohortDefinitionQuery', 'fireCohortDefinitionQuery']),
     cancel() {
       if (this.busy) {
-        this.cancelWebapiQuery()
+        this.cancelCohortDefinitionQuery()
       }
       this.$emit('closeEv')
     },
-    onClickDownloadWebapi() {
+    onClickDownloadCohortDefinition() {
       const callback = () => {
-        const content = this.getWebapiResponse()?.data || ''
+        const content = this.getCohortDefinitionResponse()?.data || ''
         const blob = new Blob([JSON.stringify(content, null, 4)])
         const link = document.createElement('a')
         link.download = `${this.getActiveBookmark?.bookmarkname || 'Untitled'}.json`
@@ -57,7 +57,7 @@ export default {
         document.body.removeChild(link)
         this.$emit('closeEv')
       }
-      this.fireWebapiQuery().then(callback)
+      this.fireCohortDefinitionQuery().then(callback)
     },
   },
   components: {

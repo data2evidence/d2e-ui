@@ -9,19 +9,19 @@ const state = {
 }
 
 const getters = {
-  getWebapiResponse: modulestate => () => modulestate.response,
+  getCohortDefinitionResponse: modulestate => () => modulestate.response,
 }
 
 const actions = {
   clearResponse({ commit }) {
     commit(types.WEBAPI_RESPONSE_SET, { response: {} })
   },
-  cancelWebapiQuery({ commit, dispatch, getters, rootGetters }) {
+  cancelCohortDefinitionQuery({ commit, dispatch, getters, rootGetters }) {
     if (cancel) {
       cancel('cancel')
     }
   },
-  fireWebapiQuery({ commit, dispatch, getters, rootGetters }) {
+  fireCohortDefinitionQuery({ commit, dispatch, getters, rootGetters }) {
     if (cancel) {
       cancel('cancel')
     }
@@ -34,7 +34,7 @@ const actions = {
       mriquery: StringToBinary(JSON.stringify(rootGetters.getPLRequest({ bmkId: this.bookmarkId }))),
     }
     return dispatch('ajaxAuth', {
-      url: '/analytics-svc/api/services/generate-webapi-definition',
+      url: '/analytics-svc/api/services/generate-cohort-definition',
       params,
       cancelToken,
     })

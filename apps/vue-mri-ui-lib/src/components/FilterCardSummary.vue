@@ -57,11 +57,11 @@
         </li>
       </ul>
     </div>
-    <div class="download-webapi">
+    <div class="download-cohort-definition">
       <d4l-button
-        @click="onClickDownloadWebapi"
-        :text="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI')"
-        :title="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_WEBAPI')"
+        @click="onClickDownloadCohortDefinition"
+        :text="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_COHORT_DEFINITION')"
+        :title="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_COHORT_DEFINITION')"
         classes="button--block"
         :disabled="chartBusy"
       />
@@ -75,10 +75,10 @@
         :disabled="chartBusy"
       />
     </div>
-    <download-webapi-dialog
-      v-if="showWebapiDownloadDialog"
-      @closeEv="showWebapiDownloadDialog = false"
-    ></download-webapi-dialog>
+    <download-cohort-definition-dialog
+      v-if="showCohortDefinitionDownloadDialog"
+      @closeEv="showCohortDefinitionDownloadDialog = false"
+    ></download-cohort-definition-dialog>
   </div>
 </template>
 
@@ -89,7 +89,7 @@ import icon from '../lib/ui/app-icon.vue'
 import appLabel from '../lib/ui/app-label.vue'
 import Constants from '../utils/Constants'
 import messageBox from './MessageBox.vue'
-import downloadWebapiDialog from './DownloadWebapiDialog.vue'
+import downloadCohortDefinitionDialog from './DownloadCohortDefinitionDialog.vue'
 
 export default {
   compatConfig: {
@@ -100,7 +100,7 @@ export default {
   data() {
     return {
       bookmarks: [],
-      showWebapiDownloadDialog: false,
+      showCohortDefinitionDownloadDialog: false,
     }
   },
   computed: {
@@ -218,7 +218,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['setActiveChart', 'fireBookmarkQuery', 'fireWebapiQuery']),
+    ...mapActions(['setActiveChart', 'fireBookmarkQuery', 'fireCohortDefinitionQuery']),
     unloadBookmark() {
       this.$emit('unloadFilterCardSummaryEv')
     },
@@ -232,8 +232,8 @@ export default {
       link.click()
       document.body.removeChild(link)
     },
-    onClickDownloadWebapi() {
-      this.showWebapiDownloadDialog = true
+    onClickDownloadCohortDefinition() {
+      this.showCohortDefinitionDownloadDialog = true
     },
     getAdvanceTimeFilterFormatted(filter) {
       let str = ''
@@ -314,7 +314,7 @@ export default {
     messageBox,
     appButton,
     appLabel,
-    downloadWebapiDialog,
+    downloadCohortDefinitionDialog,
   },
 }
 </script>
