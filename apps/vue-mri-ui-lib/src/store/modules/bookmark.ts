@@ -218,8 +218,8 @@ const actions = {
                 dispatch('setNewAxisValue', {
                   id: i,
                   props: {
+                    ...parsedBookmark.axisSelection[i],
                     key,
-                    attributeId: parsedBookmark.axisSelection[i].attributeId,
                     filterCardId,
                   },
                 })
