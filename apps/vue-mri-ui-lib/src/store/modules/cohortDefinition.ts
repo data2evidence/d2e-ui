@@ -14,7 +14,7 @@ const getters = {
 
 const actions = {
   clearResponse({ commit }) {
-    commit(types.WEBAPI_RESPONSE_SET, { response: {} })
+    commit(types.COHORT_DEFINITION_RESPONSE_SET, { response: {} })
   },
   cancelCohortDefinitionQuery({ commit, dispatch, getters, rootGetters }) {
     if (cancel) {
@@ -42,11 +42,11 @@ const actions = {
         if (response.data.noDataReason) {
           response.data.noDataReason = getters.getText(response.data.noDataReason)
         }
-        commit(types.WEBAPI_RESPONSE_SET, { response: { data: response.data } })
+        commit(types.COHORT_DEFINITION_RESPONSE_SET, { response: { data: response.data } })
         return response.data
       })
       .catch(error => {
-        commit(types.WEBAPI_RESPONSE_SET, {
+        commit(types.COHORT_DEFINITION_RESPONSE_SET, {
           response: {
             data: 'An error occured',
           },
@@ -57,7 +57,7 @@ const actions = {
 }
 
 const mutations = {
-  [types.WEBAPI_RESPONSE_SET](modulestate, { response }) {
+  [types.COHORT_DEFINITION_RESPONSE_SET](modulestate, { response }) {
     modulestate.response = { ...modulestate.response, ...response }
   },
 }
