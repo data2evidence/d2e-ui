@@ -119,9 +119,14 @@ const getters = {
       return false
     }
 
-    const newBookmarksData = moduleGetters.getBookmarksData.filter
-    const currentBookmarksData = JSON.parse(modulestate.activeBookmark?.bookmark)?.filter
-    return !isEqual(newBookmarksData, currentBookmarksData)
+    const newBookmarksFilter = moduleGetters.getBookmarksData.filter
+    const currentBookmarksFilter = JSON.parse(modulestate.activeBookmark?.bookmark)?.filter
+    const newBookmarksAxisSelection = moduleGetters.getBookmarksData.axisSelection
+    const currentBookmarksAxisSelection = JSON.parse(modulestate.activeBookmark?.bookmark)?.axisSelection
+    return (
+      !isEqual(newBookmarksFilter, currentBookmarksFilter) ||
+      JSON.stringify(newBookmarksAxisSelection) !== JSON.stringify(currentBookmarksAxisSelection)
+    )
   },
 }
 
@@ -284,6 +289,7 @@ const actions = {
           resolve(null)
         })
         .catch(e => {
+          console.log(e)
           reject()
         })
     })
