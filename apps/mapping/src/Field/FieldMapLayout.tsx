@@ -2,7 +2,6 @@ import { useEffect, useCallback } from "react";
 import ReactFlow, { Controls, EdgeChange, PanOnScrollMode } from "reactflow";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-import { ManageSearch } from "@mui/icons-material";
 import { nodeTypes } from "../Nodes";
 import { useField } from "../contexts";
 import { TableToTable } from "./TableToTable";
@@ -17,6 +16,10 @@ export const FieldMapLayout = () => {
       navigate("/");
     }
   }, [sourceHandles, targetHandles]);
+
+  const handleBack = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
 
   const sourceTableName = sourceHandles?.length ? sourceHandles[0].data.tableName : "";
   const targetTableName = targetHandles?.length ? targetHandles[0].data.tableName : "";
@@ -55,18 +58,14 @@ export const FieldMapLayout = () => {
       </div>
 
       <div className="footer">
-        <Button aria-label="managesearch">
-          <ManageSearch />
-          Vocabulary
+        <Button variant="outlined" onClick={handleBack}>
+          Back
         </Button>
         <div className="button-group">
           <Button variant="outlined" color="error" onClick={deleteLinks}>
             Delete links
           </Button>
-          <Button variant="outlined">Preview</Button>
-          <Button variant="outlined">Generate Fake Data</Button>
-          <Button variant="outlined">Report</Button>
-          <Button variant="contained">Convert to CDM</Button>
+          <Button variant="contained">Report</Button>
         </div>
       </div>
     </div>
