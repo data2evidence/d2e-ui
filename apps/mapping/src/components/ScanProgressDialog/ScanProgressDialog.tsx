@@ -136,10 +136,10 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({ open, onBack, 
         <Button onClick={handleBack} variant="outlined" disabled={!scanCompleted}>
           Back
         </Button>
-        <Button onClick={handleSaveReport} variant="contained" color="primary">
+        <Button onClick={handleSaveReport} variant="contained" color="primary" disabled={!scanCompleted}>
           Save report
         </Button>
-        <Button onClick={handleLinkTables} variant="contained" color="primary">
+        <Button onClick={handleLinkTables} variant="contained" color="primary" disabled={!scanCompleted}>
           Link tables
         </Button>
       </div>
