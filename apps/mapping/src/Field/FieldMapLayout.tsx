@@ -9,15 +9,7 @@ import { TableToTable } from "./TableToTable";
 import "./FieldMapLayout.scss";
 
 export const FieldMapLayout = () => {
-  const {
-    nodes,
-    edges,
-    sourceHandles,
-    targetHandles,
-    setFieldNodes,
-    setFieldEdges,
-    addFieldConnection,
-  } = useField();
+  const { nodes, edges, sourceHandles, targetHandles, setFieldNodes, setFieldEdges, addFieldConnection } = useField();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,12 +18,8 @@ export const FieldMapLayout = () => {
     }
   }, [sourceHandles, targetHandles]);
 
-  const sourceTableName = sourceHandles?.length
-    ? sourceHandles[0].data.tableName
-    : "";
-  const targetTableName = targetHandles?.length
-    ? targetHandles[0].data.tableName
-    : "";
+  const sourceTableName = sourceHandles?.length ? sourceHandles[0].data.tableName : "";
+  const targetTableName = targetHandles?.length ? targetHandles[0].data.tableName : "";
 
   const deleteLinks = useCallback(() => {
     const edgeChanges: EdgeChange[] = edges.map((edge) => ({

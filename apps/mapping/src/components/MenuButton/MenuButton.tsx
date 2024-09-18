@@ -1,13 +1,12 @@
 import React, { useCallback, useRef, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
-import { Breadcrumbs, IconButton, Link, Menu, MenuItem } from "@mui/material";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { useApp } from "../contexts";
-import { CloseDialogType, SaveMappingDialog } from "../components/SaveMappingDialog/SaveMappingDialog";
-import { SelectVocabDatasetDialog } from "../components/SelectVocabDatasetDialog/SelectVocabDatasetDialog";
-import { TerminologyProps } from "../types/vocabSearchDialog";
-import "./Navbar.scss";
+import { useNavigate } from "react-router-dom";
+import { IconButton, Menu, MenuItem } from "@mui/material";
+import { useApp } from "../../contexts";
+import { CloseDialogType, SaveMappingDialog } from "../SaveMappingDialog/SaveMappingDialog";
+import { SelectVocabDatasetDialog } from "../SelectVocabDatasetDialog/SelectVocabDatasetDialog";
+import { TerminologyProps } from "../../types/vocabSearchDialog";
+import "./MenuButton.scss";
 
 const MENU_ITEMS = [
   "New Mapping",
@@ -19,13 +18,7 @@ const MENU_ITEMS = [
   "Delete All Mappings",
 ];
 
-const BREADCRUMBS_NAME_MAP: { [key: string]: string } = {
-  "/link-fields": "Link Fields",
-};
-
-export const Navbar = () => {
-  const location = useLocation();
-  const pathnames = location.pathname.split("/").filter((x) => x);
+export const MenuButton = () => {
   const { reset, load, clearHandles, saved, datasetSelected } = useApp();
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [isSelectDatasetDialogOpen, setIsDatasetSelectionDialogOpen] = useState(false);
@@ -148,7 +141,7 @@ export const Navbar = () => {
   );
 
   return (
-    <div className="navbar">
+    <div className="menuButton">
       <div className="menu">
         <IconButton onClick={handleClick}>
           <MenuIcon />
@@ -160,30 +153,6 @@ export const Navbar = () => {
             </MenuItem>
           ))}
         </Menu>
-      </div>
-
-      <div className="breadcrumbs">
-        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
-          {pathnames.length > 0 ? (
-            <Link to="/" component={RouterLink} color="inherit">
-              Link Tables
-            </Link>
-          ) : (
-            <span>Link Tables</span>
-          )}
-          {pathnames.map((name, index) => {
-            const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
-            const isLast = index === pathnames.length - 1;
-
-            return isLast ? (
-              <span key={name}>{BREADCRUMBS_NAME_MAP[routeTo]}</span>
-            ) : (
-              <Link key={name} to={routeTo} component={RouterLink} color="inherit">
-                {name}
-              </Link>
-            );
-          })}
-        </Breadcrumbs>
       </div>
       <SaveMappingDialog open={isSaveDialogOpen} nextAction={nextAction} onClose={handleCloseSaveDialog} />
       <SelectVocabDatasetDialog open={isSelectDatasetDialogOpen} onClose={handleCloseDatasetSelectionDialog} />

@@ -72,8 +72,8 @@ export const SelectVocabDatasetDialog: FC<SaveMappingDialogProps> = ({ open, onC
       <Divider />
       <div className="select-dataset__content">
         <div style={{ display: "flex", alignItems: "center" }}>
-          <div style={{ marginRight: "10px" }}>Select Dataset </div>
-          <FormControl sx={{ marginRight: "20px" }}>
+          <div style={{ margin: "30px" }}>Select Dataset: </div>
+          <FormControl sx={{ marginRight: "20px", marginLeft: "-15px" }}>
             <Select
               value={selectedDatasetId}
               onChange={(e: SelectChangeEvent) => {
