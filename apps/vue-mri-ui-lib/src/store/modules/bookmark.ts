@@ -118,11 +118,11 @@ const getters = {
     if (modulestate.activeBookmark == null) {
       return false
     }
-
+    const bookmark = JSON.parse(modulestate.activeBookmark?.bookmark)
     const newBookmarksFilter = moduleGetters.getBookmarksData.filter
-    const currentBookmarksFilter = JSON.parse(modulestate.activeBookmark?.bookmark)?.filter
+    const currentBookmarksFilter = bookmark?.filter
     const newBookmarksAxisSelection = moduleGetters.getBookmarksData.axisSelection
-    const currentBookmarksAxisSelection = JSON.parse(modulestate.activeBookmark?.bookmark)?.axisSelection
+    const currentBookmarksAxisSelection = bookmark?.axisSelection
     return (
       !isEqual(newBookmarksFilter, currentBookmarksFilter) ||
       JSON.stringify(newBookmarksAxisSelection) !== JSON.stringify(currentBookmarksAxisSelection)
