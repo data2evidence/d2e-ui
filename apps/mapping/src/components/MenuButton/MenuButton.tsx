@@ -141,7 +141,7 @@ export const MenuButton = () => {
   );
 
   return (
-    <div className="menuButton">
+    <div className="menu-button">
       <div className="menu">
         <IconButton onClick={handleClick}>
           <MenuIcon />
