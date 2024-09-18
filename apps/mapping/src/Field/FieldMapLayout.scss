@@ -11,8 +11,11 @@
   .footer {
     padding: 1em;
     display: flex;
-    justify-content: space-between;
+
     .button-group {
+      flex: 1;
+      text-align: right;
+
       .MuiButtonBase-root {
         margin: 0 1em 0 1em;
       }
