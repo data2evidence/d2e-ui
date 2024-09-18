@@ -16,7 +16,7 @@ const PluginContainer: FC<PluginContainerProps> = ({ children, getToken, qeSvcUr
   const { idTokenClaims } = useToken();
 
   useEffect(() => {
-    const pluginEvent = new CustomEvent("dataset");
+    const pluginEvent = new CustomEvent("alp-dataset-change");
     window.dispatchEvent(pluginEvent);
   }, [studyId, releaseId]);
 
