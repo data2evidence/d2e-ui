@@ -17,6 +17,10 @@ export const FieldMapLayout = () => {
     }
   }, [sourceHandles, targetHandles]);
 
+  const handleBack = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
+
   const sourceTableName = sourceHandles?.length ? sourceHandles[0].data.tableName : "";
   const targetTableName = targetHandles?.length ? targetHandles[0].data.tableName : "";
 
@@ -54,6 +58,9 @@ export const FieldMapLayout = () => {
       </div>
 
       <div className="footer">
+        <Button variant="outlined" onClick={handleBack}>
+          Back
+        </Button>
         <div className="button-group">
           <Button variant="outlined" color="error" onClick={deleteLinks}>
             Delete links
