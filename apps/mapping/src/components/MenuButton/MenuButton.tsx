@@ -12,7 +12,6 @@ const MENU_ITEMS = [
   "New Mapping",
   "Open Mapping",
   "Save Mapping",
-  "Convert Data",
   "Open Vocabulary Search",
   "Change Vocabulary Dataset",
   "Delete All Mappings",
