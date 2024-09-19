@@ -1,9 +1,7 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useNavigate } from "react-router-dom";
 import { IconButton, Menu, MenuItem } from "@mui/material";
-import { useApp } from "../../contexts";
-import { CloseDialogType, SaveMappingDialog } from "../SaveMappingDialog/SaveMappingDialog";
+import { useApp, useDialog } from "../../contexts";
 import { SelectVocabDatasetDialog } from "../SelectVocabDatasetDialog/SelectVocabDatasetDialog";
 import { TerminologyProps } from "../../types/vocabSearchDialog";
 import "./MenuButton.scss";
@@ -18,12 +16,9 @@ const MENU_ITEMS = [
 ];
 
 export const MenuButton = () => {
-  const { reset, load, clearHandles, state } = useApp();
-  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const { reset, clearHandles, state } = useApp();
+  const { openLoadMappingDialog, openSaveMappingDialog } = useDialog();
   const [isSelectDatasetDialogOpen, setIsDatasetSelectionDialogOpen] = useState(false);
-  const [nextAction, setNextAction] = useState<string | undefined>();
-  const hiddenFileInput = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -35,53 +30,6 @@ export const MenuButton = () => {
   const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   }, []);
-
-  const handleOpenSaveDialog = useCallback((nextAction?: string) => {
-    setNextAction(nextAction);
-    setIsSaveDialogOpen(true);
-  }, []);
-
-  const handleSelectFile = useCallback(() => {
-    hiddenFileInput.current && hiddenFileInput.current.click();
-  }, []);
-
-  const handleFileUpload = useCallback(
-    (event: any) => {
-      const files = Array.from(event.target.files).map((file: any) => file);
-      if (files.length >= 1) {
-        const file = files[0];
-        const reader = new FileReader();
-        reader.onload = () => {
-          const jsonData = reader.result as string;
-
-          try {
-            const json = JSON.parse(jsonData);
-            console.log("JSON content:", json);
-            load(json);
-            navigate("");
-            window.location.reload();
-          } catch (err) {
-            console.error("Error parsing JSON:", err);
-          }
-        };
-        reader.readAsText(file);
-      }
-    },
-    [load, navigate]
-  );
-
-  const handleCloseSaveDialog = useCallback(
-    (type: CloseDialogType, nextAction?: string) => {
-      setIsSaveDialogOpen(false);
-
-      if (type === "success") {
-        if (nextAction === "open-mapping") {
-          handleSelectFile();
-        }
-      }
-    },
-    [handleSelectFile]
-  );
 
   const handleOpenDatasetSelectDialog = useCallback(() => {
     setIsDatasetSelectionDialogOpen(true);
@@ -116,13 +64,9 @@ export const MenuButton = () => {
       } else if (menuName === "Delete All Mappings") {
         clearHandles();
       } else if (menuName === "Save Mapping") {
-        handleOpenSaveDialog();
+        openSaveMappingDialog(true);
       } else if (menuName === "Open Mapping") {
-        if (!state.saved) {
-          handleOpenSaveDialog("open-mapping");
-        } else {
-          handleSelectFile();
-        }
+        openLoadMappingDialog(true);
       } else if (menuName === "Change Vocabulary Dataset") {
         handleOpenDatasetSelectDialog();
       } else if (menuName === "Open Vocabulary Search") {
@@ -135,7 +79,7 @@ export const MenuButton = () => {
 
       handleClose();
     },
-    [reset, clearHandles, handleOpenSaveDialog, handleSelectFile, handleClose, state.saved, state.datasetSelected]
+    [reset, clearHandles, openSaveMappingDialog, openLoadMappingDialog, handleClose, state.saved, state.datasetSelected]
   );
 
   return (
@@ -152,19 +96,7 @@ export const MenuButton = () => {
           ))}
         </Menu>
       </div>
-      <SaveMappingDialog open={isSaveDialogOpen} nextAction={nextAction} onClose={handleCloseSaveDialog} />
       <SelectVocabDatasetDialog open={isSelectDatasetDialogOpen} onClose={handleCloseDatasetSelectionDialog} />
-      <input
-        ref={hiddenFileInput}
-        type="file"
-        accept=".json"
-        onChange={handleFileUpload}
-        onClick={(event) => {
-          (event.target as any).value = null;
-        }}
-        style={{ display: "none" }}
-        id="open-mapping-json"
-      />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Route, Routes } from "react-router-dom";
 import { TableMapLayout } from "./Table/TableMapLayout";
 import { FieldMapLayout } from "./Field/FieldMapLayout";
+import { MappingFileDialogController } from "./components/MappingFileDialogController";
 import "./MappingLayout.css";
 
 export const MappingLayout: FC = () => {
@@ -12,6 +13,7 @@ export const MappingLayout: FC = () => {
           <Route index element={<TableMapLayout />} />
           <Route path="link-fields" element={<FieldMapLayout />} />
         </Routes>
+        <MappingFileDialogController />
       </div>
     </div>
   );
