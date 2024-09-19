@@ -5,7 +5,7 @@ import { AppState } from "../states";
 
 export const useApp = () => {
   const dispatch = useContext(AppDispatchContext);
-  const { saved, table, field, datasetSelected } = useContext(AppContext);
+  const state = useContext(AppContext);
 
   const reset = useCallback(() => {
     dispatch({ type: ACTION_TYPES.RESET });
@@ -27,5 +27,5 @@ export const useApp = () => {
     dispatch({ type: ACTION_TYPES.SET_VOCABULARY_DATASET_ID, payload: data });
   }, []);
 
-  return { reset, load, clearHandles, markAsSaved, setVocabularyDatasetId, table, field, saved, datasetSelected };
+  return { reset, load, clearHandles, markAsSaved, setVocabularyDatasetId, state };
 };

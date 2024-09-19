@@ -18,7 +18,7 @@ const MENU_ITEMS = [
 ];
 
 export const MenuButton = () => {
-  const { reset, load, clearHandles, saved, datasetSelected } = useApp();
+  const { reset, load, clearHandles, state } = useApp();
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [isSelectDatasetDialogOpen, setIsDatasetSelectionDialogOpen] = useState(false);
   const [nextAction, setNextAction] = useState<string | undefined>();
@@ -96,7 +96,7 @@ export const MenuButton = () => {
       detail: {
         props: {
           mode: "CONCEPT_SEARCH",
-          selectedDatasetId: datasetSelected,
+          selectedDatasetId: state.datasetSelected,
           onClose: (onCloseValues) => {
             // No action to do if no concept set is being created
             if (!onCloseValues?.currentConceptSet) {
@@ -107,7 +107,7 @@ export const MenuButton = () => {
       },
     });
     window.dispatchEvent(event);
-  }, [datasetSelected]);
+  }, [state.datasetSelected]);
 
   const handleMenuClick = useCallback(
     (menuName: string) => {
@@ -118,7 +118,7 @@ export const MenuButton = () => {
       } else if (menuName === "Save Mapping") {
         handleOpenSaveDialog();
       } else if (menuName === "Open Mapping") {
-        if (!saved) {
+        if (!state.saved) {
           handleOpenSaveDialog("open-mapping");
         } else {
           handleSelectFile();
@@ -126,8 +126,7 @@ export const MenuButton = () => {
       } else if (menuName === "Change Vocabulary Dataset") {
         handleOpenDatasetSelectDialog();
       } else if (menuName === "Open Vocabulary Search") {
-        console.log(`IsDatasetSelected: ${datasetSelected}`);
-        if (!datasetSelected) {
+        if (!state.datasetSelected) {
           handleOpenDatasetSelectDialog();
         } else {
           handleOpenVocabularySearch();
@@ -136,7 +135,7 @@ export const MenuButton = () => {
 
       handleClose();
     },
-    [reset, clearHandles, handleOpenSaveDialog, handleSelectFile, handleClose, saved]
+    [reset, clearHandles, handleOpenSaveDialog, handleSelectFile, handleClose, state.saved, state.datasetSelected]
   );
 
   return (
