@@ -118,10 +118,15 @@ const getters = {
     if (modulestate.activeBookmark == null) {
       return false
     }
-
-    const newBookmarksData = moduleGetters.getBookmarksData.filter
-    const currentBookmarksData = JSON.parse(modulestate.activeBookmark?.bookmark)?.filter
-    return !isEqual(newBookmarksData, currentBookmarksData)
+    const bookmark = JSON.parse(modulestate.activeBookmark?.bookmark)
+    const newBookmarksFilter = moduleGetters.getBookmarksData.filter
+    const currentBookmarksFilter = bookmark?.filter
+    const newBookmarksAxisSelection = moduleGetters.getBookmarksData.axisSelection
+    const currentBookmarksAxisSelection = bookmark?.axisSelection
+    return (
+      !isEqual(newBookmarksFilter, currentBookmarksFilter) ||
+      JSON.stringify(newBookmarksAxisSelection) !== JSON.stringify(currentBookmarksAxisSelection)
+    )
   },
 }
 
@@ -218,8 +223,8 @@ const actions = {
                 dispatch('setNewAxisValue', {
                   id: i,
                   props: {
+                    ...parsedBookmark.axisSelection[i],
                     key,
-                    attributeId: parsedBookmark.axisSelection[i].attributeId,
                     filterCardId,
                   },
                 })
@@ -284,6 +289,7 @@ const actions = {
           resolve(null)
         })
         .catch(e => {
+          console.log(e)
           reject()
         })
     })
