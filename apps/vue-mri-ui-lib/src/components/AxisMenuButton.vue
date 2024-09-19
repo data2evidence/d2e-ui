@@ -167,8 +167,10 @@ export default {
         const defaultBinningVal = this.getMriFrontendConfig
           .getAttributeByPath(axisModel.props.attributeId)
           .getDefaultBinSize()
-
-        if (defaultBinningVal) {
+        if (axisModel.props.binsize !== null && axisModel.props.binsize !== undefined) {
+          this.cachedBinValue = `${axisModel.props.binsize}`
+          return `${axisModel.props.binsize}`
+        } else if (defaultBinningVal) {
           this.cachedBinValue = `${defaultBinningVal}`
           return `${defaultBinningVal}`
         } else {
