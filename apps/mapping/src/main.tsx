@@ -21,6 +21,19 @@ const pageProps: AppProps = {
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
+      <div
+        style={{
+          minHeight: 80,
+          background: "#fbfbfd",
+          boxShadow: "0 .5px 8px 0 #acaba8",
+          fontSize: 24,
+          display: "flex",
+          alignItems: "center",
+          padding: "0 24px",
+        }}
+      >
+        Portal Header
+      </div>
       <App {...pageProps} />
     </BrowserRouter>
   </React.StrictMode>

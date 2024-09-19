@@ -1,5 +1,5 @@
 import { AppState } from "../states";
-import { reset, clearHandles, markAsSaved, load } from "./app";
+import { reset, clearHandles, markAsSaved, load, setVocabularybDatasetId } from "./app";
 import {
   setTableNodes,
   setTableEdges,
@@ -22,6 +22,7 @@ export enum ACTION_TYPES {
   LOAD = "LOAD",
   CLEAR_HANDLES = "CLEAR_HANDLES",
   MARK_AS_SAVED = "MARK_AS_SAVED",
+  SET_VOCABULARY_DATASET_ID = "SET_VOCABULARY_DATASET_ID",
   SET_TABLE_NODES = "SET_TABLE_NODES",
   SET_TABLE_EDGES = "SET_TABLE_EDGES",
   ADD_TABLE_CONNECTION = "ADD_TABLE_CONNECTION",
@@ -44,6 +45,7 @@ const actionMap = new Map<ActionType, ActionFunction>([
   [ACTION_TYPES.LOAD, load],
   [ACTION_TYPES.CLEAR_HANDLES, clearHandles],
   [ACTION_TYPES.MARK_AS_SAVED, markAsSaved],
+  [ACTION_TYPES.SET_VOCABULARY_DATASET_ID, setVocabularybDatasetId],
   [ACTION_TYPES.SET_TABLE_NODES, setTableNodes],
   [ACTION_TYPES.SET_TABLE_EDGES, setTableEdges],
   [ACTION_TYPES.ADD_TABLE_CONNECTION, addTableConnection],

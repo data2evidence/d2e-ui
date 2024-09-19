@@ -4,6 +4,7 @@ import { ScannedSchemaState, TableSchemaState } from "./scanned-schema-state";
 
 export interface AppState {
   saved: boolean;
+  datasetSelected: string;
   table: TableState;
   field: FieldState;
   scannedSchema: ScannedSchemaState | undefined;
@@ -12,6 +13,7 @@ export interface AppState {
 
 export const initialState: AppState = {
   saved: true,
+  datasetSelected: "",
   table: {
     nodes: [
       {

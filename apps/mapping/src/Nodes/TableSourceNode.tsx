@@ -9,7 +9,7 @@ import { CloseDialogType } from "../components/ScanDataDialog/ScanDataDialog";
 import "./BaseNode.scss";
 import "./TableNode.scss";
 
-export const SourceTableNode = (props: NodeProps) => {
+export const TableSourceNode = (props: NodeProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [scanId, setScanId] = useState<number>(-1);
   const { sourceHandles } = useTable();
@@ -47,22 +47,12 @@ export const SourceTableNode = (props: NodeProps) => {
           </div>
         ) : (
           <div className="action-container">
-            <div className="description">
-              Please load New Report to see Source tables
-            </div>
+            <div className="description">Please load New Report to see Source tables</div>
             <div className="button-group">
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={openScanDataDialog}
-              >
+              <Button variant="contained" fullWidth onClick={openScanDataDialog}>
                 Load New Report
               </Button>
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={openScanDataDialog}
-              >
+              <Button variant="contained" fullWidth onClick={openScanDataDialog}>
                 Scan Data
               </Button>
               <Button variant="contained" fullWidth>
@@ -72,11 +62,7 @@ export const SourceTableNode = (props: NodeProps) => {
           </div>
         )}
       </div>
-      <ScanDataDialog
-        open={isDialogOpen}
-        onClose={handleScanDataDialogClose}
-        setScanId={setScanId}
-      />
+      <ScanDataDialog open={isDialogOpen} onClose={handleScanDataDialogClose} setScanId={setScanId} />
       <ScanProgressDialog
         open={isScanProgressDialogOpen}
         onBack={handleBack}

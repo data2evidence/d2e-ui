@@ -19,3 +19,8 @@ export const markAsSaved = (state: AppState) => ({
   ...state,
   saved: true,
 });
+
+export const setVocabularybDatasetId = (state: AppState, payload: Partial<AppState>) => ({
+  ...state,
+  ...payload,
+});
