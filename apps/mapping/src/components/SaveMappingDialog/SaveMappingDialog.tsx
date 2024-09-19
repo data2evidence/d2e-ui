@@ -12,13 +12,9 @@ interface SaveMappingDialogProps {
   onClose?: (type: CloseDialogType, nextAction?: string) => void;
 }
 
-export const SaveMappingDialog: FC<SaveMappingDialogProps> = ({
-  open,
-  nextAction,
-  onClose,
-}) => {
+export const SaveMappingDialog: FC<SaveMappingDialogProps> = ({ open, nextAction, onClose }) => {
   const [fileName, setFileName] = useState("");
-  const { markAsSaved, table, field } = useApp();
+  const { markAsSaved, state } = useApp();
   const [ask, setAsk] = useState(false);
   const hasNextAction = Boolean(nextAction);
 
@@ -35,13 +31,13 @@ export const SaveMappingDialog: FC<SaveMappingDialogProps> = ({
   }, []);
 
   const handleSave = useCallback(() => {
-    const jsonData = JSON.stringify({ table, field }, null, 2);
+    const jsonData = JSON.stringify(state, null, 2);
     const blob = new Blob([jsonData], { type: "application/json" });
     saveBlobAs(blob, fileName);
     markAsSaved();
 
     typeof onClose === "function" && onClose("success", nextAction);
-  }, [markAsSaved, fileName, table, field, onClose, nextAction]);
+  }, [markAsSaved, fileName, state, onClose, nextAction]);
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
@@ -60,7 +56,7 @@ export const SaveMappingDialog: FC<SaveMappingDialogProps> = ({
         "& .MuiDialog-container": {
           "& .MuiPaper-root": {
             width: "100%",
-            maxWidth: "680px",
+            maxWidth: "740px",
           },
         },
       }}
@@ -84,26 +80,10 @@ export const SaveMappingDialog: FC<SaveMappingDialogProps> = ({
       <Divider />
       <div className="button-group-actions">
         {hasNextAction && ask && (
-          <Button
-            block
-            text="Continue without save"
-            onClick={() => handleClose("success")}
-            variant="outlined"
-          />
+          <Button block text="Continue without save" onClick={() => handleClose("success")} variant="outlined" />
         )}
-        <Button
-          block
-          text="Cancel"
-          onClick={() => handleClose("cancelled")}
-          variant="outlined"
-        />
-        <Button
-          block
-          text="Save"
-          onClick={ask ? handleConfirm : handleSave}
-          variant="contained"
-          disabled={!fileName}
-        />
+        <Button block text="Cancel" onClick={() => handleClose("cancelled")} variant="outlined" />
+        <Button block text="Save" onClick={ask ? handleConfirm : handleSave} variant="contained" disabled={!fileName} />
       </div>
     </Dialog>
   );
