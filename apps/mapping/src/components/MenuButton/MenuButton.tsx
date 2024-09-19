@@ -1,33 +1,26 @@
 import React, { useCallback, useRef, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
-import { Breadcrumbs, IconButton, Link, Menu, MenuItem } from "@mui/material";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { useApp } from "../contexts";
-import {
-  CloseDialogType,
-  SaveMappingDialog,
-} from "../components/SaveMappingDialog/SaveMappingDialog";
-import "./Navbar.scss";
+import { useNavigate } from "react-router-dom";
+import { IconButton, Menu, MenuItem } from "@mui/material";
+import { useApp } from "../../contexts";
+import { CloseDialogType, SaveMappingDialog } from "../SaveMappingDialog/SaveMappingDialog";
+import { SelectVocabDatasetDialog } from "../SelectVocabDatasetDialog/SelectVocabDatasetDialog";
+import { TerminologyProps } from "../../types/vocabSearchDialog";
+import "./MenuButton.scss";
 
 const MENU_ITEMS = [
   "New Mapping",
   "Open Mapping",
   "Save Mapping",
-  "Convert Data",
-  "Vocabulary",
+  "Open Vocabulary Search",
+  "Change Vocabulary Dataset",
   "Delete All Mappings",
 ];
 
-const BREADCRUMBS_NAME_MAP: { [key: string]: string } = {
-  "/link-fields": "Link Fields",
-};
-
-export const Navbar = () => {
-  const location = useLocation();
-  const pathnames = location.pathname.split("/").filter((x) => x);
-  const { reset, load, clearHandles, saved } = useApp();
+export const MenuButton = () => {
+  const { reset, load, clearHandles, saved, datasetSelected } = useApp();
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [isSelectDatasetDialogOpen, setIsDatasetSelectionDialogOpen] = useState(false);
   const [nextAction, setNextAction] = useState<string | undefined>();
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -90,6 +83,32 @@ export const Navbar = () => {
     [handleSelectFile]
   );
 
+  const handleOpenDatasetSelectDialog = useCallback(() => {
+    setIsDatasetSelectionDialogOpen(true);
+  }, []);
+
+  const handleCloseDatasetSelectionDialog = useCallback(() => {
+    setIsDatasetSelectionDialogOpen(false);
+  }, []);
+
+  const handleOpenVocabularySearch = useCallback(() => {
+    const event = new CustomEvent<{ props: TerminologyProps }>("alp-terminology-open", {
+      detail: {
+        props: {
+          mode: "CONCEPT_SEARCH",
+          selectedDatasetId: datasetSelected,
+          onClose: (onCloseValues) => {
+            // No action to do if no concept set is being created
+            if (!onCloseValues?.currentConceptSet) {
+              return;
+            }
+          },
+        },
+      },
+    });
+    window.dispatchEvent(event);
+  }, [datasetSelected]);
+
   const handleMenuClick = useCallback(
     (menuName: string) => {
       if (menuName === "New Mapping") {
@@ -104,22 +123,24 @@ export const Navbar = () => {
         } else {
           handleSelectFile();
         }
+      } else if (menuName === "Change Vocabulary Dataset") {
+        handleOpenDatasetSelectDialog();
+      } else if (menuName === "Open Vocabulary Search") {
+        console.log(`IsDatasetSelected: ${datasetSelected}`);
+        if (!datasetSelected) {
+          handleOpenDatasetSelectDialog();
+        } else {
+          handleOpenVocabularySearch();
+        }
       }
 
       handleClose();
     },
-    [
-      reset,
-      clearHandles,
-      handleOpenSaveDialog,
-      handleSelectFile,
-      handleClose,
-      saved,
-    ]
+    [reset, clearHandles, handleOpenSaveDialog, handleSelectFile, handleClose, saved]
   );
 
   return (
-    <div className="navbar">
+    <div className="menu-button">
       <div className="menu">
         <IconButton onClick={handleClick}>
           <MenuIcon />
@@ -132,40 +153,8 @@ export const Navbar = () => {
           ))}
         </Menu>
       </div>
-
-      <div className="breadcrumbs">
-        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
-          {pathnames.length > 0 ? (
-            <Link to="/" component={RouterLink} color="inherit">
-              Link Tables
-            </Link>
-          ) : (
-            <span>Link Tables</span>
-          )}
-          {pathnames.map((name, index) => {
-            const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
-            const isLast = index === pathnames.length - 1;
-
-            return isLast ? (
-              <span key={name}>{BREADCRUMBS_NAME_MAP[routeTo]}</span>
-            ) : (
-              <Link
-                key={name}
-                to={routeTo}
-                component={RouterLink}
-                color="inherit"
-              >
-                {name}
-              </Link>
-            );
-          })}
-        </Breadcrumbs>
-      </div>
-      <SaveMappingDialog
-        open={isSaveDialogOpen}
-        nextAction={nextAction}
-        onClose={handleCloseSaveDialog}
-      />
+      <SaveMappingDialog open={isSaveDialogOpen} nextAction={nextAction} onClose={handleCloseSaveDialog} />
+      <SelectVocabDatasetDialog open={isSelectDatasetDialogOpen} onClose={handleCloseDatasetSelectionDialog} />
       <input
         ref={hiddenFileInput}
         type="file"
