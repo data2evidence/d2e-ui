@@ -61,6 +61,7 @@
               @drilldown="onDrilldown"
               @open-filtersummary="toggleFilterCardSummary(...arguments)"
               @openAddCohort="showAddCohortDialog = true"
+              v-if="getMriFrontendConfig"
             ></chartToolbar>
             <!-- "ref" used in solution from similar issue: https://github.com/antoniandre/splitpanes/issues/157 -->
             <div class="d-flex pane-right-content" ref="pane-right-content">
@@ -114,6 +115,7 @@
           @unhideEv="togglePanel(PANEL.LEFT)"
           @open-filtersummary="toggleFilterCardSummary(...arguments)"
           @toggleChartAndListModal="toggleChartAndListModal"
+          v-if="getMriFrontendConfig"
         >
         </chartToolbar>
         <div style="flex: 1; height: calc(100% - 130px); display: flex">

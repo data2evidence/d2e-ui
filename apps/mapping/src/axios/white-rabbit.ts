@@ -51,8 +51,7 @@ export class WhiteRabbit {
     };
 
     return request({
-      baseURL: WHITE_RABBIT_BASE_ENDPOINT,
-      url: `scan-report/db`,
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/db`,
       method: "POST",
       data: data,
       headers: {
@@ -84,8 +83,7 @@ export class WhiteRabbit {
 
   public testDBConnection(connectionDetail: ScanDataDBConnectionForm) {
     return request({
-      baseURL: WHITE_RABBIT_BASE_ENDPOINT,
-      url: `test-connection`,
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}test-connection`,
       method: "POST",
       data: connectionDetail,
     });

@@ -7,7 +7,7 @@ import { MappingHandle } from "./MappingHandle";
 import { api } from "../axios/api";
 import "./BaseNode.scss";
 
-export const TargetTableNode = (props: NodeProps) => {
+export const TableTargetNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const { targetHandles, setTableTargetHandles } = useTable();
   const [cdmVersions, setCdmVersions] = useState<string[]>([]);
