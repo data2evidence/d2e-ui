@@ -542,7 +542,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
 
     const dataModelDetails = parseDatamodelOption(dataModel);
     let fhirProjectId;
-    console.log(dataModelDetails);
+
     if (createFhirProject) {
       const fhirProjectInput: NewFhirProjectInput = {
         name: name,
