@@ -42,7 +42,6 @@ export default {
       menuVisible: false,
       menuButton: null,
       menuOpenParam: '',
-      selectedFilterCard: null,
     }
   },
   mounted() {
@@ -55,7 +54,7 @@ export default {
     window.removeEventListener('click', this.closeSubMenu)
   },
   computed: {
-    ...mapGetters(['getChartableFilterCards', 'getText', 'getFilterCards']),
+    ...mapGetters(['getChartableFilterCards', 'getText', 'getFilterCards', 'getSelectedEntryExitFilterCard']),
     componentStyle() {
       const result: any = {
         position: 'absolute',
@@ -83,7 +82,7 @@ export default {
       }
     },
     getSubText() {
-      return this.selectedFilterCard ? this.selectedFilterCard : this.getText('MRI_PA_CHART_ENTRY_EXIT_PLACEHOLDER')
+      return this.getSelectedEntryExitFilterCard(this.getKey) || this.getText('MRI_PA_CHART_ENTRY_EXIT_PLACEHOLDER')
     },
   },
   methods: {
@@ -97,12 +96,10 @@ export default {
       if (arg) {
         if (arg.action === 'clear') {
           this.resetAllFilterCardEntryExit({ key: this.getKey })
-          this.selectedFilterCard = null
           this.closeMenu()
         } else {
           this.resetAllFilterCardEntryExit({ key: this.getKey })
           this.updateCohortEntryExit({ filterCardId: arg.id, key: this.getKey, toggle: true })
-          this.selectedFilterCard = arg.name
           this.closeMenu()
         }
       }

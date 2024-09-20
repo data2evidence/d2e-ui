@@ -510,6 +510,16 @@ const getters = {
       oInternalConfigAttribute.annotations && oInternalConfigAttribute.annotations.indexOf(genemoicVariantType) !== -1
     )
   },
+  getSelectedEntryExitFilterCard: (modulestate, getters) => key => {
+    const filterCards = getters.getFilterCards()
+
+    for (const card in filterCards) {
+      if (filterCards[card].props[key]) {
+        return filterCards[card].props.name
+      }
+    }
+    return null
+  },
 }
 
 // actions
@@ -1322,7 +1332,12 @@ const mutations = {
   [types.FILTERCARD_RESET_ALL_ENTRY_EXIT](moduleState, { key }) {
     const filterCards = moduleState.model.entities.filterCards
     Object.keys(filterCards).forEach(id => {
-      filterCards[id].props[key] = false
+      if (key) {
+        filterCards[id].props[key] = false
+      } else {
+        filterCards[id].props.isEntry = false
+        filterCards[id].props.isExit = false
+      }
     })
   },
   [types.FILTERCARD_SET_PROPS](moduleState, { filterCardId, filterCardProps }) {
