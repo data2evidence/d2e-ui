@@ -45,7 +45,7 @@
               <appIcon icon="slimArrowRight" v-if="!showCollapse"></appIcon>
             </button>
             <label>{{ name }}</label>
-            <label>{{ entryExitLabel }}</label>
+            <b-badge variant="light" class="ml-2 filter-card-badge">{{ entryExitLabel }}</b-badge>
             <span v-show="isDisabled" class="card-help-button" @click="openHelp">
               <appIcon icon="information"></appIcon>
             </span>
@@ -494,3 +494,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.filter-card-badge {
+  color: #000080 !important;
+}
+</style>
