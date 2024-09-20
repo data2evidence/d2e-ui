@@ -306,6 +306,13 @@ const PlotlyConsts = {
   },
 }
 
+const CohortEntryExit = {
+  ENTRY: 'Entry',
+  EXIT: 'Exit',
+  ENTRY_ICON: '&#xE058;',
+  EXIT_ICON: '&#xE069;',
+}
+
 export default {
   sap,
   events,
@@ -321,4 +328,5 @@ export default {
   PlotlyConsts,
   AxisIcons,
   AxisId,
+  CohortEntryExit,
 }

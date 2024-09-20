@@ -9,6 +9,7 @@
         </template>
         <div class="sort-label" v-if="displaySort">{{ getText('MRI_PA_CHART_SORT_LABEL') }}</div>
         <sortMenuButton v-if="displaySort"></sortMenuButton>
+        <cohortEntryExit></cohortEntryExit>
       </div>
       <div class="chartContainer">
         <loadingAnimation v-if="chartBusy"></loadingAnimation>
@@ -39,6 +40,7 @@ import LoadingAnimation from './LoadingAnimation.vue'
 import PatientListContainer from './PatientListContainer.vue'
 import SacChart from './SACChart.vue'
 import SortMenuButton from './SortMenuButton.vue'
+import CohortEntryExit from './CohortEntryExit.vue'
 import StackBarChart from './StackBarChart.vue'
 import VariantBrowser from './VariantBrowser.vue'
 import CohortsAppMenu from './CohortsAppMenu.vue'
@@ -74,8 +76,8 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      window.addEventListener('click', this.closeSubMenu)
-    })
+      window.addEventListener('click', this.closeSubMenu)      
+    })    
   },
   beforeDestroy() {
     window.removeEventListener('click', this.closeSubMenu)
@@ -155,6 +157,7 @@ export default {
     DropDownMenu,
     LoadingAnimation,
     SortMenuButton,
+    CohortEntryExit,
     StackBarChart,
     VariantBrowser,
     PatientListContainer,
