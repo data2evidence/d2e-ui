@@ -6,7 +6,7 @@ import { PluginDropdownItem, SubFeatureFlags } from "@portal/plugin";
 import { Header } from "../../components";
 import { useActiveDataset, useFeedback } from "../../contexts";
 import { IPluginItem, PluginDropdown } from "../../types";
-import { getPluginChildPath, loadPlugins, sortPluginsByType } from "../../utils";
+import { getPluginChildPathPattern, loadPlugins, sortPluginsByType } from "../../utils";
 import { ResearcherStudyPluginRenderer } from "../../plugins/core/ResearcherStudyPluginRenderer";
 import { useEnabledFeatures } from "../../hooks";
 import { Overview } from "./Overview/Overview";
@@ -116,7 +116,7 @@ export const Researcher: FC = () => {
               return (
                 <Route
                   key={item.name}
-                  path={getPluginChildPath(item)}
+                  path={getPluginChildPathPattern(item)}
                   element={
                     <ErrorBoundary name={item.name} key={item.route}>
                       <ResearcherStudyPluginRenderer

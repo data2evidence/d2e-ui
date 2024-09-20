@@ -3,8 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { Snackbar, ErrorBoundary } from "@portal/components";
 import { Header } from "../../components";
 import { useFeedback } from "../../contexts";
-import { Plugins } from "../../types";
-import { loadPlugins, sortPluginsByType, getPluginChildPath } from "../../utils";
+import { IPluginItem, Plugins } from "../../types";
+import { loadPlugins, sortPluginsByType, getPluginChildPathPattern } from "../../utils";
 import { SystemAdminPluginRenderer } from "../../plugins/core/SystemAdminPluginRenderer";
 import { useSystemFeatures } from "../../hooks/useSystemFeatures";
 import { Account } from "../shared/Account/Account";
@@ -55,6 +55,17 @@ const SystemAdmin: FC = () => {
     }
   }, []);
 
+  const systemAdminPluginsFlat = useMemo(() => {
+    const flatPlugins: IPluginItem[] = [];
+    plugins.systemadmin.forEach((plugin) => {
+      flatPlugins.push(plugin);
+      plugin.children?.forEach((childPlugin) => {
+        flatPlugins.push(childPlugin);
+      });
+    });
+    return flatPlugins;
+  }, [plugins]);
+
   useEffect(() => {
     const updateSystemAdminPlugins = () => {
       const displayedSystemAdminPlugins = plugins.systemadmin.reduce<Plugins[]>((acc, item) => {
@@ -96,14 +107,14 @@ const SystemAdmin: FC = () => {
           <Route path="/">
             <Route index element={<Navigate to={defaultRoute} />} />
             <Route path={ROUTES.account} element={<Account portalType="system_admin" />} />
-            {systemAdminPlugins.map((item: Plugins) => {
+            {systemAdminPluginsFlat.map((item: Plugins) => {
               // Log viewer (a vue app) uses path routing on jobs/* route. The app is mounted in the portal Jobs component.
               // Including "jobs/*" routes avoids a blank screen which is the default when a route cannot be found.
               const items = item.route === "jobs" ? [{ ...item, route: item.route + "/*" }, item] : [item];
               return items.map((item) => (
                 <Route
                   key={item.name}
-                  path={getPluginChildPath(item)}
+                  path={getPluginChildPathPattern(item)}
                   element={
                     <ErrorBoundary name={item.name} key={item.route}>
                       <SystemAdminPluginRenderer
