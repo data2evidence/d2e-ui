@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { mapActions, mapGetters } from 'vuex'
-import Constants from '../utils/Constants';
+import Constants from '../utils/Constants'
 import DropDownMenu from './DropDownMenu.vue'
 
 export default {
@@ -54,7 +54,7 @@ export default {
     window.removeEventListener('click', this.closeSubMenu)
   },
   computed: {
-    ...mapGetters(['getChartableFilterCards', 'getText']),
+    ...mapGetters(['getChartableFilterCards', 'getText', 'getFilterCards']),
     componentStyle() {
       const result: any = {
         position: 'absolute',
@@ -63,11 +63,27 @@ export default {
       return result
     },
     getIcon() {
-      return this.text === Constants.CohortEntryExit.ENTRY ? Constants.CohortEntryExit.ENTRY_ICON : Constants.CohortEntryExit.EXIT_ICON
+      return this.text === Constants.CohortEntryExit.ENTRY
+        ? Constants.CohortEntryExit.ENTRY_ICON
+        : Constants.CohortEntryExit.EXIT_ICON
+    },
+    getKey() {
+      return this.text === Constants.CohortEntryExit.ENTRY
+        ? Constants.CohortEntryExit.ENTRY_KEY
+        : Constants.CohortEntryExit.EXIT_KEY
+    },
+    isDisabled() {
+      return id => {
+        const filterCards = this.getFilterCards()
+        if (filterCards && filterCards[id]) {
+          return filterCards[id].props.isEntry || filterCards[id].props.isExit
+        }
+        return false
+      }
     },
   },
   methods: {
-    ...mapActions(['setChartPropertyValue']),
+    ...mapActions(['setChartPropertyValue', 'updateCohortEntryExit', 'resetAllFilterCardEntryExit']),
     closeSubMenu(event) {
       if (this.menuVisible && !this.$refs.menuButtonWrapper.contains(event.target)) {
         this.closeMenu()
@@ -75,9 +91,15 @@ export default {
     },
     handleClick(arg) {
       if (arg) {
-        console.log('is clicked')
+        if (arg.action === 'clear') {
+          this.resetAllFilterCardEntryExit({ key: this.getKey })
+          this.closeMenu()
+        } else {
+          this.resetAllFilterCardEntryExit({ key: this.getKey })
+          this.updateCohortEntryExit({ filterCardId: arg.id, key: this.getKey, toggle: true})
+          this.closeMenu()
+        }
       }
-      this.closeMenu()
     },
     toggleMenu(event) {
       const sourceEvent = event || window.event
@@ -94,21 +116,39 @@ export default {
         this.menuOpenParam = 'clear'
       }
 
-
       const filterCards = this.getChartableFilterCards.filter(
         card => card.name !== this.getText('MRI_PA_FILTERCARD_TITLE_BASIC_DATA')
       )
-      
-      this.menuData = filterCards.map((card, index) => ({
-        idx: index,
+      const seperator = {
+        idx: filterCards.length,
+        hasSubMenu: false,
+        isSeperator: true,
+      }
+      const resetButton = {
+        idx: filterCards.length + 1,
         subMenuStyle: {},
-        text: card.name,
+        text: this.getText('MRI_PA_MENUITEM_NONE'),
         hasSubMenu: false,
         isSeperator: false,
         subMenu: [],
         disabled: false,
-        data: { id: card.id, name: card.name },
-      }))
+        data: { action: 'clear', type: this.text },
+      }
+
+      this.menuData = [
+        ...filterCards.map((card, index) => ({
+          idx: index,
+          subMenuStyle: {},
+          text: card.name,
+          hasSubMenu: false,
+          isSeperator: false,
+          subMenu: [],
+          disabled: this.isDisabled(card.id),
+          data: card,
+        })),
+        seperator,
+        resetButton,
+      ]
     },
     closeMenu() {
       this.menuOpenParam = 'clear'

@@ -311,6 +311,8 @@ const CohortEntryExit = {
   EXIT: 'Exit',
   ENTRY_ICON: '&#xE058;',
   EXIT_ICON: '&#xE069;',
+  ENTRY_KEY: 'isEntry',
+  EXIT_KEY: 'isExit',
 }
 
 export default {

@@ -45,6 +45,7 @@
               <appIcon icon="slimArrowRight" v-if="!showCollapse"></appIcon>
             </button>
             <label>{{ name }}</label>
+            <label>{{ entryExitLabel }}</label>
             <span v-show="isDisabled" class="card-help-button" @click="openHelp">
               <appIcon icon="information"></appIcon>
             </span>
@@ -370,6 +371,15 @@ export default {
       return !this.filterCardModel.props.name && this.filterCardModel.props.key === 'patient'
         ? this.getText('MRI_PA_FILTERCARD_TITLE_BASIC_DATA')
         : this.filterCardModel.props.name
+    },
+    entryExitLabel() {
+      if (this.filterCardModel.props.isEntry) {
+        return 'Entry'
+      }
+
+      if (this.filterCardModel.props.isExit) {
+        return 'Exit'
+      }
     },
     constraints() {
       return this.filterCardModel.props.constraints

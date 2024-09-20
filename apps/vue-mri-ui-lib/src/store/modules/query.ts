@@ -365,6 +365,9 @@ const getters = {
     const filterCard = modulestate.model.entities.filterCards[filtercardId]
     return { ...filterCard }
   },
+  getFilterCards: modulestate => () => {
+    return { ...modulestate.model.entities.filterCards }
+  },
   getFilterCardCount:
     (modulestate, moduleGetters) =>
     ({
@@ -1189,6 +1192,12 @@ const actions = {
       dispatch('setBoolContainerState', boolContainerModel)
     }
   },
+  updateCohortEntryExit({ commit }, { filterCardId, key, toggle }) {
+    commit(types.FILTERCARD_TOGGLE_IS_ENTRY_EXIT, { filterCardId, key, toggle })
+  },
+  resetAllFilterCardEntryExit({ commit }, { key }) {
+    commit(types.FILTERCARD_RESET_ALL_ENTRY_EXIT, { key })
+  },
 }
 
 // mutations
@@ -1306,6 +1315,15 @@ const mutations = {
   },
   [types.FILTERCARD_TOGGLE_ADVANCE_TIME](moduleState, { filterCardId, advancedTimeFilter }) {
     moduleState.model.entities.filterCards[filterCardId].props.advancedTimeFilter = advancedTimeFilter
+  },
+  [types.FILTERCARD_TOGGLE_IS_ENTRY_EXIT](moduleState, { filterCardId, key, toggle }) {
+    moduleState.model.entities.filterCards[filterCardId].props[key] = toggle
+  },
+  [types.FILTERCARD_RESET_ALL_ENTRY_EXIT](moduleState, { key }) {
+    const filterCards = moduleState.model.entities.filterCards
+    Object.keys(filterCards).forEach(id => {
+      filterCards[id].props[key] = false
+    })
   },
   [types.FILTERCARD_SET_PROPS](moduleState, { filterCardId, filterCardProps }) {
     moduleState.model.entities.filterCards[filterCardId].props = {
