@@ -259,6 +259,8 @@ const getters = {
               })
           ),
           inactive: filterCard.props.inactive,
+          isEntry: filterCard.props.isEntry,
+          isExit: filterCard.props.isExit,
         }
 
         // if (this.getSuccessor()) {
