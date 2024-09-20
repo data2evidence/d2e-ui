@@ -716,6 +716,7 @@ export const i18n = {
     MRI_PA_CHART_SORT_DEFAULT: 'Group - Ascending',
     MRI_PA_CHART_SORT_REVERSE: 'Group - Descending',
     MRI_PA_CHART_AXIS_PLACEHOLDER: 'Select an Attribute',
+    MRI_PA_CHART_ENTRY_EXIT_PLACEHOLDER: 'Select a Filter Card',
     MRI_PA_PATIENT_COUNT_TOOLTIP_TOTAL: 'Total Patients',
     MRI_PA_PATIENT_COUNT_TOOLTIP_MATCH: 'Patients Matching Filters',
     MRI_PA_KAPLAN_START_EVENT_LAST_OCCURRENCE_LABEL: 'Last Occurrence Before Event of Interest',

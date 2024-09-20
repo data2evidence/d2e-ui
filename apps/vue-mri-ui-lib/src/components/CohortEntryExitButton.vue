@@ -8,7 +8,7 @@
     <div class="buttonWrapper" ref="menuButtonWrapper">
       <button class="axisMenuButton" ref="menuButton" v-on:click="toggleMenu" v-bind:title="text" tabindex="0">
         <span class="axisMenuText">{{ text }}</span>
-        <span class="axisMenuSubText">Select a filtercard</span>
+        <span class="axisMenuSubText">{{ this.getSubText }}</span>
         <span class="axisMenuButtonIcon"></span>
       </button>
       <dropDownMenu
@@ -42,6 +42,7 @@ export default {
       menuVisible: false,
       menuButton: null,
       menuOpenParam: '',
+      selectedFilterCard: null,
     }
   },
   mounted() {
@@ -81,6 +82,9 @@ export default {
         return false
       }
     },
+    getSubText() {
+      return this.selectedFilterCard ? this.selectedFilterCard : this.getText('MRI_PA_CHART_ENTRY_EXIT_PLACEHOLDER')
+    },
   },
   methods: {
     ...mapActions(['setChartPropertyValue', 'updateCohortEntryExit', 'resetAllFilterCardEntryExit']),
@@ -93,10 +97,12 @@ export default {
       if (arg) {
         if (arg.action === 'clear') {
           this.resetAllFilterCardEntryExit({ key: this.getKey })
+          this.selectedFilterCard = null
           this.closeMenu()
         } else {
           this.resetAllFilterCardEntryExit({ key: this.getKey })
-          this.updateCohortEntryExit({ filterCardId: arg.id, key: this.getKey, toggle: true})
+          this.updateCohortEntryExit({ filterCardId: arg.id, key: this.getKey, toggle: true })
+          this.selectedFilterCard = arg.name
           this.closeMenu()
         }
       }
