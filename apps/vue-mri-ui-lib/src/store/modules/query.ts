@@ -620,8 +620,7 @@ const actions = {
   },
   setNewAxisValue({ commit, getters, dispatch }, { id, props }) {
     const attributeConfig = getters.getMriFrontendConfig.getAttributeByPath(props.attributeId)
-
-    if (attributeConfig.isCategory()) {
+    if (attributeConfig.isCategory() && (props.binsize === undefined || props.binsize === null)) {
       props.binsize = attributeConfig.getDefaultBinSize() === undefined ? 0 : attributeConfig.getDefaultBinSize()
     }
 

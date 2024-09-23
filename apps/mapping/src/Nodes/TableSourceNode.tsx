@@ -3,13 +3,14 @@ import { NodeProps } from "reactflow";
 import { Button } from "@mui/material";
 import { ScanDataDialog } from "../components/ScanDataDialog/ScanDataDialog";
 import { ScanProgressDialog } from "../components/ScanProgressDialog/ScanProgressDialog";
-import { useTable } from "../contexts";
+import { useDialog, useTable } from "../contexts";
 import { MappingHandle } from "./MappingHandle";
 import { CloseDialogType } from "../components/ScanDataDialog/ScanDataDialog";
 import "./BaseNode.scss";
 import "./TableNode.scss";
 
 export const TableSourceNode = (props: NodeProps) => {
+  const { openLoadMappingDialog } = useDialog();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [scanId, setScanId] = useState<number>(-1);
   const { sourceHandles } = useTable();
@@ -55,7 +56,7 @@ export const TableSourceNode = (props: NodeProps) => {
               <Button variant="contained" fullWidth onClick={openScanDataDialog}>
                 Scan Data
               </Button>
-              <Button variant="contained" fullWidth>
+              <Button variant="contained" fullWidth onClick={() => openLoadMappingDialog(true)}>
                 Open Mapping
               </Button>
             </div>

@@ -3,7 +3,7 @@ import Divider from "@mui/material/Divider";
 import { Button, Dialog, FormControl, Select, SelectChangeEvent, MenuItem } from "@portal/components";
 import { api } from "../../axios/api";
 import { Study, TerminologyProps } from "../../types/vocabSearchDialog";
-
+import { useApp } from "../../contexts";
 import "./SelectVocabDatasetDialog.scss";
 
 export type CloseDialogType = "success" | "cancelled";
@@ -16,6 +16,7 @@ interface SaveMappingDialogProps {
 export const SelectVocabDatasetDialog: FC<SaveMappingDialogProps> = ({ open, onClose }) => {
   const [datasets, setDatasets] = useState<Study[]>([]);
   const [selectedDatasetId, setSelectedDatasetId] = useState<string>("");
+  const { setVocabularyDatasetId } = useApp();
 
   useEffect(() => {
     fetchDatasets();
@@ -42,6 +43,7 @@ export const SelectVocabDatasetDialog: FC<SaveMappingDialogProps> = ({ open, onC
       },
     });
     window.dispatchEvent(event);
+    setVocabularyDatasetId({ datasetSelected: selectedDatasetId, saved: false });
     typeof onClose === "function" && onClose("success");
   }, [selectedDatasetId]);
 
@@ -70,8 +72,8 @@ export const SelectVocabDatasetDialog: FC<SaveMappingDialogProps> = ({ open, onC
       <Divider />
       <div className="select-dataset__content">
         <div style={{ display: "flex", alignItems: "center" }}>
-          <div style={{ marginRight: "10px" }}>Select Dataset </div>
-          <FormControl sx={{ marginRight: "20px" }}>
+          <div style={{ margin: "30px" }}>Select Dataset: </div>
+          <FormControl sx={{ marginRight: "20px", marginLeft: "-15px" }}>
             <Select
               value={selectedDatasetId}
               onChange={(e: SelectChangeEvent) => {
