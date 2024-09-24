@@ -4,12 +4,12 @@ import { ScanDataDBConnectionForm } from "../types/scanDataDialog";
 const WHITE_RABBIT_BASE_ENDPOINT = `white-rabbit/api/`;
 
 export class WhiteRabbit {
-  public createScanReport(files: File[]) {
+  public createScanReport(files: File[], delimiter: string = ",") {
     const formData = new FormData();
 
     const settings = {
       fileType: "CSV files",
-      delimiter: ",",
+      delimiter,
       scanDataParams: {
         sampleSize: 100000,
         scanValues: true,
