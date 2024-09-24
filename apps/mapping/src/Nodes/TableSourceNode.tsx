@@ -48,7 +48,7 @@ export const TableSourceNode = (props: NodeProps) => {
           </div>
         ) : (
           <div className="action-container">
-            <div className="description">Please load New Report to see Source tables</div>
+            <div className="description">Please scan data or open mapping to see Source tables</div>
             <div className="button-group">
               <Button variant="contained" fullWidth onClick={openScanDataDialog}>
                 Scan Data
