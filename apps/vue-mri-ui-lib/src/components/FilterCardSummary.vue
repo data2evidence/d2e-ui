@@ -26,7 +26,7 @@
                         getText('MRI_PA_FILTERCARD_TITLE_BASIC_DATA')
                       }}</span>
                       <span class="bookmark-headelement" v-else>{{ filterCard.name }}</span>
-                      <b-badge v-if="filterCard.isEntry || filterCard.isExit" variant="light" class="ml-2 filter-card-badge">{{ filterCard.isEntry ? 'Entry' : filterCard.isExit && 'Exit' }}</b-badge>
+                      <b-badge v-if="isDisplayBadge(filterCard)" variant="light" class="ml-2 filter-card-badge">{{ getBadgeText(filterCard) }}</b-badge>
                       <span class="bookmark-headelement" v-if="filterCard.isExcluded"
                         >({{ getText('MRI_PA_LABEL_EXCLUDED') }})</span
                       >
@@ -219,11 +219,12 @@ export default {
         }
       } finally {
         // Handle Incorrect Bookmark Formatting
-      }
-      console.log(returnObj);
-      
+      }      
       return returnObj
     },
+    displayShowCohortEntryExit() {      
+      return this.getMriFrontendConfig._internalConfig.panelOptions.cohortEntryExit
+    }
   },
   methods: {
     ...mapActions(['setActiveChart', 'fireBookmarkQuery', 'fireCohortDefinitionQuery']),
@@ -316,6 +317,12 @@ export default {
       }
       return attributeId
     },
+    isDisplayBadge(filterCard) {
+      return this.displayShowCohortEntryExit && (filterCard.isEntry || filterCard.isExit);
+    },
+    getBadgeText(filterCard) {
+      return filterCard.isEntry ? this.getText('MRI_PA_CHART_ENTRY') : filterCard.isExit ? this.getText('MRI_PA_CHART_EXIT') : ""
+    }
   },
   components: {
     icon,

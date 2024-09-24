@@ -45,7 +45,7 @@
               <appIcon icon="slimArrowRight" v-if="!showCollapse"></appIcon>
             </button>
             <label>{{ name }}</label>
-            <b-badge variant="light" class="ml-2 filter-card-badge">{{ entryExitLabel }}</b-badge>
+            <b-badge v-if="displayShowCohortEntryExit" variant="light" class="ml-2 filter-card-badge">{{ entryExitLabel }}</b-badge>
             <span v-show="isDisabled" class="card-help-button" @click="openHelp">
               <appIcon icon="information"></appIcon>
             </span>
@@ -373,17 +373,14 @@ export default {
         : this.filterCardModel.props.name
     },
     entryExitLabel() {
-      if (this.filterCardModel.props.isEntry) {
-        return 'Entry'
-      }
-
-      if (this.filterCardModel.props.isExit) {
-        return 'Exit'
-      }
+      return this.filterCardModel.props.isEntry ? this.getText('MRI_PA_CHART_ENTRY') : this.filterCardModel.props.isExit ? this.getText('MRI_PA_CHART_EXIT') : ""
     },
     constraints() {
       return this.filterCardModel.props.constraints
     },
+    displayShowCohortEntryExit() {      
+      return this.getMriFrontendConfig._internalConfig.panelOptions.cohortEntryExit
+    }
   },
   methods: {
     ...mapMutations([FILTERCARD_REMOVE_NEW_STATE]),

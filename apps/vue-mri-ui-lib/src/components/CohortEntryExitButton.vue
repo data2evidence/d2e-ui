@@ -119,9 +119,7 @@ export default {
         this.menuOpenParam = 'clear'
       }
 
-      const filterCards = this.getChartableFilterCards.filter(
-        card => card.name !== this.getText('MRI_PA_FILTERCARD_TITLE_BASIC_DATA')
-      )
+      const filterCards = this.getChartableFilterCards.slice(1);
       const seperator = {
         idx: filterCards.length,
         hasSubMenu: false,
