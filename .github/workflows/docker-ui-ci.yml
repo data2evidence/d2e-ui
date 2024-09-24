@@ -145,13 +145,7 @@ jobs:
           cat private2-todelete.yml | yq -P 'map(select(.lengths=="[40]") | .tags | @jsond)'
 
           if [ "${AZ_REGISTRY_PRUNE_ENABLE_TAGGED}" = true ]; then
-            echo ". 4 - ACTION set delete-enabled true on manifests with tags not-matching RegEx"
-            cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not).digest) | .[]' | xargs -I% az acr repository update -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REGISTRY_REPOSITORY}@% --delete-enabled true --query 'tags' --output tsv || true
-
-            echo ". 5 - ACTION set delete-enabled false on manifests with tags matching RegEx"
-            cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")).digest) | .[]' | xargs -I% az acr repository update -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REGISTRY_REPOSITORY}@% --delete-enabled false --query 'tags' --output tsv || true
-
-            echo ". 6 - ACTION delete tagged digests ..."
+            echo ". 4 - ACTION delete tagged digests ..."
             yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${AZ_REGISTRY_USERNAME} -p ${AZ_REGISTRY_PASSWORD} --name ${AZ_REGISTRY_NAME} --image ${AZ_REGISTRY_REPOSITORY}@% --yes || true
           else
             echo ". 4 - SKIPPED delete digests ..."
