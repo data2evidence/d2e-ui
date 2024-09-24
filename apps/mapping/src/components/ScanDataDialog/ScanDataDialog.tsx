@@ -344,6 +344,11 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                 </>
               )}
             </div>
+          </div>
+        </div>
+        <div className="scan-data-dialog__container">
+          <div className="container-header">Table to Scan</div>
+          <div className="container-content-scan">
             <div className="button-group-container">
               <div className="button-container">
                 <Button
@@ -351,21 +356,10 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                   variant="outlined"
                   disabled={uploadedFiles.length === 0 && !isFormValid(dbConnectionForm)}
                 >
-                  Test Connection
+                  Scan tables
                 </Button>
               </div>
-              {canConnect && (
-                <div className="success-message-container">
-                  <Check />
-                  <div>Connected</div>
-                </div>
-              )}
             </div>
-          </div>
-        </div>
-        <div className="scan-data-dialog__container">
-          <div className="container-header">Table to Scan</div>
-          <div className="container-content-scan">
             {availableTables.length ? (
               <>
                 <div className="button-container">
