@@ -1,14 +1,17 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { pluginMetadata } from "../App";
 
 const client = axios.create();
 
 client.interceptors.request.use(
   async (config) => {
-    // TODO: retrieve bearer token from portal
-    // use token from perseus
-    const token = "";
-    if (token && config.headers) {
-      config.headers.Authorization = token;
+    if (pluginMetadata) {
+      const token = await pluginMetadata.getToken();
+      const baseURL = await pluginMetadata.data?.dnBaseUrl;
+      if (token && config.headers) {
+        config.baseURL = baseURL;
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
@@ -19,7 +22,6 @@ client.interceptors.request.use(
 
 const request = <T = any>(options: AxiosRequestConfig): Promise<T> => {
   const onSuccess = function (response: any) {
-    console.log(response);
     console.debug("Request Successful!", response);
     return response.data;
   };

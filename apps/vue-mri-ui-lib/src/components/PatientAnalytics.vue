@@ -61,15 +61,20 @@
               @drilldown="onDrilldown"
               @open-filtersummary="toggleFilterCardSummary(...arguments)"
               @openAddCohort="showAddCohortDialog = true"
+              v-if="getMriFrontendConfig"
             ></chartToolbar>
-            <div class="d-flex pane-right-content">
+            <!-- "ref" used in solution from similar issue: https://github.com/antoniandre/splitpanes/issues/157 -->
+            <div class="d-flex pane-right-content" ref="pane-right-content">
               <chartController
+                @setChartBusy="setChartBusy"
+                :chartBusy="chartBusy"
                 :showLeftPane="!hideLeftPane"
                 @drilldown="onDrilldown"
                 :class="{ 'has-filtercard-summary': displayFilterCardSummary }"
                 :shouldRerenderChart="shouldRerenderChart"
               ></chartController>
               <filterCardSummary
+                :chartBusy="chartBusy"
                 @unloadFilterCardSummaryEv="toggleFilterCardSummary(false)"
                 v-if="displayFilterCardSummary"
               >
@@ -110,10 +115,13 @@
           @unhideEv="togglePanel(PANEL.LEFT)"
           @open-filtersummary="toggleFilterCardSummary(...arguments)"
           @toggleChartAndListModal="toggleChartAndListModal"
+          v-if="getMriFrontendConfig"
         >
         </chartToolbar>
         <div style="flex: 1; height: calc(100% - 130px); display: flex">
           <chartController
+            @setChartBusy="setChartBusy"
+            :chartBusy="chartBusy"
             @drilldown="onDrilldown"
             :class="{ 'has-filtercard-summary': displayFilterCardSummary }"
             :shouldRerenderChart="shouldRerenderChart"
@@ -207,7 +215,8 @@ export default {
       paneSize: PANE_SIZE.FULL,
       PANE_SIZE,
       PANEL,
-      showAddCohortDialog: false
+      showAddCohortDialog: false,
+      chartBusy: false,
     }
   },
   created() {
@@ -343,6 +352,10 @@ export default {
     },
     toggleFilterCardSummary(displayFilterCardSummary) {
       this.displayFilterCardSummary = displayFilterCardSummary
+      // Need to wait for 'has-filtercard-summary' to happen in this tick so the rerender calculates correctly
+      this.$nextTick(() => {
+        this.rerenderStackBarChart()
+      })
     },
     togglePanel(panel) {
       if (panel === PANEL.LEFT) {
@@ -361,6 +374,9 @@ export default {
       const chartSelectionDuplicate = JSON.parse(JSON.stringify(this.getChartSelection()))
       const aSelectedData = this.reverseTranslate(chartSelectionDuplicate)
       this.drilldown({ aSelectedData })
+    },
+    setChartBusy(status: boolean) {
+      this.chartBusy = status
     },
     getActiveBookmarkName() {
       if (this.getActiveBookmark) {

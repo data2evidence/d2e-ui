@@ -1,29 +1,42 @@
 import { useCallback } from "react";
-import ReactFlow, { Controls, Edge, PanOnScrollMode } from "reactflow";
-import { Button } from "@mui/material";
-import { ManageSearch } from "@mui/icons-material";
+import ReactFlow, { Controls, Edge, PanOnScrollMode, Position, Panel } from "reactflow";
 import { useNavigate } from "react-router-dom";
 import { nodeTypes } from "../Nodes";
-import { buildFieldHandles } from "../utils/nodes";
-import { useField, useTable } from "../contexts";
+import { FieldHandleData, TableSchemaState, useCdmSchema, useField, useScannedSchema, useTable } from "../contexts";
+import { Box } from "@portal/components";
+import { MenuButton } from "../components/MenuButton/MenuButton";
 import "./TableMapLayout.scss";
 import "reactflow/dist/style.css";
 
 export const TableMapLayout = () => {
-  const { nodes, edges, setTableNodes, setTableEdges, addTableConnection } =
-    useTable();
+  const { nodes, edges, setTableNodes, setTableEdges, addTableConnection } = useTable();
   const { setFieldSourceHandles, setFieldTargetHandles } = useField();
+  const { sourceTables } = useScannedSchema();
+  const { cdmTables } = useCdmSchema();
   const navigate = useNavigate();
 
-  const handleEdgeClick = useCallback((_event: any, edge: Edge) => {
-    const handles = buildFieldHandles(edge);
-    if (!handles) return;
+  const handleEdgeClick = useCallback(
+    (_event: any, edge: Edge) => {
+      const { sourceHandle, targetHandle } = edge;
 
-    const { sourceHandles, targetHandles } = handles;
-    setFieldSourceHandles(sourceHandles);
-    setFieldTargetHandles(targetHandles);
-    navigate("link-fields");
-  }, []);
+      if (!sourceHandle || !targetHandle) {
+        console.error(`Source (${sourceHandle}) or target (${targetHandle}) handles are empty`);
+        return;
+      }
+
+      const sourceColumns = getColumns(sourceTables, sourceHandle);
+      const targetColumns = getColumns(cdmTables, targetHandle);
+
+      const sourceHandles = buildFieldHandle(sourceColumns, sourceHandle, true);
+      const targetHandles = buildFieldHandle(targetColumns, targetHandle, false);
+
+      setFieldSourceHandles(sourceHandles);
+      setFieldTargetHandles(targetHandles);
+
+      navigate("link-fields");
+    },
+    [sourceTables, cdmTables]
+  );
 
   return (
     <div className="table-map-layout">
@@ -47,21 +60,32 @@ export const TableMapLayout = () => {
           onEdgeDoubleClick={handleEdgeClick}
         >
           <Controls showZoom={false} showInteractive={false} />
+          <Panel position="top-left" className="panel">
+            <Box className="flow-panel__custom-controls">
+              <MenuButton />
+            </Box>
+          </Panel>
         </ReactFlow>
-      </div>
-
-      <div className="footer">
-        <Button aria-label="managesearch">
-          <ManageSearch />
-          Vocabulary
-        </Button>
-        <div className="button-group">
-          <Button variant="outlined" color="error">
-            Delete Mapping
-          </Button>
-          <Button variant="contained">Go To Link Fields</Button>
-        </div>
       </div>
     </div>
   );
 };
+
+const getColumns = (tables: TableSchemaState[], tableName: string) => {
+  const table = tables.find((t) => t.table_name === tableName);
+  return table?.column_list || [];
+};
+
+const buildFieldHandle = (columnList: any[], tableName: string, isSource?: boolean) =>
+  columnList.map((column, index) => ({
+    id: `FIELD.${index + 1}`,
+    data: {
+      label: column.column_name,
+      tableName: tableName,
+      isField: true,
+      columnType: column.column_type,
+      isNullable: column.is_column_nullable,
+      type: isSource ? "input" : "output",
+    } as FieldHandleData,
+    targetPosition: isSource ? Position.Right : Position.Left,
+  }));

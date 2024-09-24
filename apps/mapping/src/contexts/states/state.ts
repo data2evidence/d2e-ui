@@ -1,14 +1,22 @@
 import { TableState } from "./table-state";
 import { FieldState } from "./field-state";
+import { ScannedSchemaState, TableSchemaState } from "./scanned-schema-state";
+import { DialogState, INIT_DIALOG_STATE } from "./dialog-state";
 
 export interface AppState {
   saved: boolean;
+  datasetSelected: string;
+  dialog: DialogState;
   table: TableState;
   field: FieldState;
+  scannedSchema: ScannedSchemaState | undefined;
+  cdmTables: TableSchemaState[];
 }
 
 export const initialState: AppState = {
   saved: true,
+  datasetSelected: "",
+  dialog: INIT_DIALOG_STATE,
   table: {
     nodes: [
       {
@@ -63,4 +71,6 @@ export const initialState: AppState = {
     sourceHandles: [],
     targetHandles: [],
   },
+  scannedSchema: undefined,
+  cdmTables: [],
 };

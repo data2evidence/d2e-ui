@@ -4,13 +4,29 @@
     align-items: center;
     width: 100%;
     gap: 1em;
+    font-size: 0.9em;
+    word-break: break-all;
   }
 
   &__label {
     flex: 1;
   }
 
+  &__column-type {
+    text-transform: capitalize;
+    width: 100px;
+  }
+
   .mapping-handle__header {
-    padding: 4px 1em;
+    padding: 4px 1em 4px 0.5em;
+    overflow: auto;
+  }
+
+  .alp-icon-button {
+    &.Mui-disabled {
+      svg {
+        opacity: 0.2;
+      }
+    }
   }
 }

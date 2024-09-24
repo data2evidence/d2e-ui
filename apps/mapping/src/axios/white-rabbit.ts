@@ -1,15 +1,15 @@
 import request from "./request";
-import env from "../env";
+import { ScanDataDBConnectionForm } from "../types/scanDataDialog";
 
-const WHITE_RABBIT_BASE_URL = `${env.VITE_PERSEUS_BASE_URL}white-rabbit/api/`;
+const WHITE_RABBIT_BASE_ENDPOINT = `white-rabbit/api/`;
 
 export class WhiteRabbit {
-  public createScanReport(files: File[]) {
+  public createScanReport(files: File[], delimiter: string = ",") {
     const formData = new FormData();
 
     const settings = {
       fileType: "CSV files",
-      delimiter: ",",
+      delimiter,
       scanDataParams: {
         sampleSize: 100000,
         scanValues: true,
@@ -27,8 +27,7 @@ export class WhiteRabbit {
     });
 
     return request({
-      baseURL: WHITE_RABBIT_BASE_URL,
-      url: `scan-report/files`,
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/files`,
       method: "POST",
       data: formData,
       headers: {
@@ -37,27 +36,56 @@ export class WhiteRabbit {
     });
   }
 
+  public createDBScanReport(postgresqlForm: ScanDataDBConnectionForm, tablesToScan: string[]) {
+    const data = {
+      ...postgresqlForm,
+      scanDataParams: {
+        sampleSize: 100000,
+        scanValues: true,
+        minCellCount: 5,
+        maxValues: 1000,
+        calculateNumericStats: false,
+        numericStatsSamplerSize: 100000,
+      },
+      tablesToScan: tablesToScan.join(","),
+    };
+
+    return request({
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/db`,
+      method: "POST",
+      data: data,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
   public getScanReportProgress(id: number) {
     return request({
-      baseURL: WHITE_RABBIT_BASE_URL,
-      url: `scan-report/conversion/${id}`,
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/conversion/${id}`,
       method: "GET",
     });
   }
 
   public getScanReport(id: number) {
     return request({
-      baseURL: WHITE_RABBIT_BASE_URL,
-      url: `scan-report/result-as-resource/${id}`,
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/result-as-resource/${id}`,
       method: "GET",
     });
   }
 
   public getScanResult(id: number) {
     return request({
-      baseURL: WHITE_RABBIT_BASE_URL,
-      url: `scan-report/result/${id}`,
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/result/${id}`,
       method: "GET",
+    });
+  }
+
+  public testDBConnection(connectionDetail: ScanDataDBConnectionForm) {
+    return request({
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}test-connection`,
+      method: "POST",
+      data: connectionDetail,
     });
   }
 }
