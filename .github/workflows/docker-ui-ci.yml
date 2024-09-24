@@ -179,14 +179,19 @@ jobs:
             echo ". 5 - SKIPPED delete digests ..."
           fi
 
-      - name: Test tags matching RegEx
+      - name: Show manfests
         if: vars.DOCKER_BUILD_DEBUG == 'true'
+        continue-on-error: true
         env:
           AZ_REGISTRY_PASSWORD: ${{ secrets.AZ_REGISTRY_PASSWORD }}
           AZ_REGISTRY_REPOSITORY: ${{ matrix.name }}
           AZ_REGISTRY_USERNAME: ${{ secrets.AZ_REGISTRY_USERNAME }}
         run: |
           az acr manifest metadata list --only-show-errors --registry ${AZ_REGISTRY_NAME} --name ${AZ_REGISTRY_REPOSITORY} --username "${AZ_REGISTRY_USERNAME}" --password "${AZ_REGISTRY_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > private-test.json
+          echo . INFO show full manifests
+          cat private-test.json | yq -P
+          echo . INFO show tags
           cat private-test.json | yq -o tsv '.[].tags | map(select(test(env(AZ_REGISTRY_WHITELIST_REGEX))))' | sort | tee private-test-tags.txt
-          echo
-          cat private-test-tags.txt | xargs -I% sh -c "echo tag: % && az acr manifest show --only-show-errors --username ${AZ_REGISTRY_USERNAME} --password ${AZ_REGISTRY_PASSWORD} ${AZ_REGISTRY_NAME}.azurecr.io/${AZ_REGISTRY_REPOSITORY}:% | yq -P && echo"
+          # echo
+          # echo . INFO show manifests for each tag matching RegEx
+          # cat private-test-tags.txt | xargs -I% sh -c "echo tag: % && az acr manifest show --only-show-errors --username ${AZ_REGISTRY_USERNAME} --password ${AZ_REGISTRY_PASSWORD} ${AZ_REGISTRY_NAME}.azurecr.io/${AZ_REGISTRY_REPOSITORY}:% | yq -P && echo"
