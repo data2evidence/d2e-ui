@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useCallback, useMemo, useRef, useState } from "react";
 import { Button, Dialog, InputLabel, DialogTitle, TextField, FormGroup, FormControlLabel } from "@mui/material";
-import { Check } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -119,13 +118,13 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
       setAvailableTables(uploadedFiles.map((file) => file.name));
     } else {
       try {
-      const res = await api.whiteRabbit.testDBConnection(dbConnectionForm);
-      if (res.canConnect) {
-        setCanConnect(true);
-        setAvailableTables(res.tableNames);
-      } else {
-        setCanConnect(false);
-        setConnectionErrorMesssage(res.message);
+        const res = await api.whiteRabbit.testDBConnection(dbConnectionForm);
+        if (res.canConnect) {
+          setCanConnect(true);
+          setAvailableTables(res.tableNames);
+        } else {
+          setCanConnect(false);
+          setConnectionErrorMesssage(res.message);
           setConnectionErrorDialogVisible(true);
           setAvailableTables([]);
         }
