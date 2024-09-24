@@ -102,7 +102,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
     setUploadedFiles(files);
   }, []);
 
-  const handleDelimiterChange = useCallback((event: SelectChangeEvent<string>) => {
+  const handleDelimiterChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setDelimiter(event.target.value as string);
   }, []);
 
@@ -272,10 +272,12 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                   </FormControl>
 
                   <FormControl fullWidth variant="standard" className="scan-data-dialog__form-control">
-                    <InputLabel>Delimiter</InputLabel>
-                    <Select label="Delimiter" value={delimiter} onChange={handleDelimiterChange}>
-                      <MenuItem value=",">,</MenuItem>
-                    </Select>
+                    <TextField
+                      label="Delimiter"
+                      value={delimiter}
+                      onChange={handleDelimiterChange}
+                      variant="standard"
+                    />
                   </FormControl>
                   <Button onClick={handleClear}>Clear all</Button>
                 </>
