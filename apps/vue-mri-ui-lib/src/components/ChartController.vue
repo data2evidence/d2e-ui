@@ -76,7 +76,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      window.addEventListener('click', this.closeSubMenu)      
+      window.addEventListener('click', this.closeSubMenu)
     })
   },
   beforeDestroy() {

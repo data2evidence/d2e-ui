@@ -219,7 +219,7 @@ export default {
         }
       } finally {
         // Handle Incorrect Bookmark Formatting
-      }      
+      }
       return returnObj
     },
     displayShowCohortEntryExit() {      
