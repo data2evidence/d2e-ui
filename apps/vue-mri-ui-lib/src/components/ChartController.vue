@@ -9,7 +9,7 @@
         </template>
         <div class="sort-label" v-if="displaySort">{{ getText('MRI_PA_CHART_SORT_LABEL') }}</div>
         <sortMenuButton v-if="displaySort"></sortMenuButton>
-        <cohortEntryExit></cohortEntryExit>
+        <cohortEntryExit v-if="displayShowCohortEntryExit"></cohortEntryExit>
       </div>
       <div class="chartContainer">
         <loadingAnimation v-if="chartBusy"></loadingAnimation>
@@ -77,7 +77,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       window.addEventListener('click', this.closeSubMenu)      
-    })    
+    })
   },
   beforeDestroy() {
     window.removeEventListener('click', this.closeSubMenu)
@@ -133,6 +133,9 @@ export default {
     chartSelection() {
       return this.getChartSelection()
     },
+    displayShowCohortEntryExit() {      
+      return this.getMriFrontendConfig._internalConfig.panelOptions.cohortEntryExit
+    }
   },
   methods: {
     ...mapActions(['setFireRequest', 'setKMDisplayInfo']),
