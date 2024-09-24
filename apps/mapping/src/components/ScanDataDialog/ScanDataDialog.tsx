@@ -118,6 +118,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
     if (dataType === "csv") {
       setAvailableTables(uploadedFiles.map((file) => file.name));
     } else {
+      try {
       const res = await api.whiteRabbit.testDBConnection(dbConnectionForm);
       if (res.canConnect) {
         setCanConnect(true);
@@ -125,6 +126,12 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
       } else {
         setCanConnect(false);
         setConnectionErrorMesssage(res.message);
+          setConnectionErrorDialogVisible(true);
+          setAvailableTables([]);
+        }
+      } catch (error: any) {
+        setCanConnect(false);
+        setConnectionErrorMesssage(`[${error.status}] ${error.data}`);
         setConnectionErrorDialogVisible(true);
         setAvailableTables([]);
       }
