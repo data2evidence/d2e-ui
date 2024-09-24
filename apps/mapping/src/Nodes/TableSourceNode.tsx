@@ -51,9 +51,6 @@ export const TableSourceNode = (props: NodeProps) => {
             <div className="description">Please load New Report to see Source tables</div>
             <div className="button-group">
               <Button variant="contained" fullWidth onClick={openScanDataDialog}>
-                Load New Report
-              </Button>
-              <Button variant="contained" fullWidth onClick={openScanDataDialog}>
                 Scan Data
               </Button>
               <Button variant="contained" fullWidth onClick={() => openLoadMappingDialog(true)}>
