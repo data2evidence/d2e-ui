@@ -157,7 +157,6 @@ jobs:
 
       - name: Prune untagged images before vars.AZ_REG_PRUNE_DAYS_UNTAGGED
         shell: bash
-        if: always()
         continue-on-error: true
         env:
           AZ_REG_PASSWORD: ${{ secrets.AZ_REG_PASSWORD }}
