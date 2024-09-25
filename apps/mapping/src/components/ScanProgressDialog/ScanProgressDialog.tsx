@@ -1,11 +1,11 @@
-import { FC, useEffect, useState, useCallback, useRef } from "react";
 import { Button, Dialog, DialogTitle, LinearProgress } from "@mui/material";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
-import { TableSourceHandleData, useScannedSchema, useTable } from "../../contexts";
-import { CloseDialogType } from "../ScanDataDialog/ScanDataDialog";
 import { api } from "../../axios/api";
-import { saveBlobAs } from "../../utils/utils";
+import { TableSourceHandleData, useScannedSchema, useTable } from "../../contexts";
 import { ScanDataProgressLogs, ScanDataSourceTable } from "../../types/scanDataDialog";
+import { saveBlobAs } from "../../utils/utils";
+import { CloseDialogType } from "../ScanDataDialog/ScanDataDialog";
 import "./ScanProgressDialog.scss";
 
 interface ScanProgressDialogProps {
@@ -36,16 +36,8 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({ open, onBack, 
   const handleSaveReport = useCallback(async () => {
     try {
       const binaryString = await api.whiteRabbit.getScanReport(scanId);
-      const binaryLength = binaryString.length;
-      const bytes = new Uint8Array(binaryLength);
-
-      for (let i = 0; i < binaryLength; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-
-      // Create a Blob from Uint8Array
-      const blob = new Blob([bytes], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      const blob = new Blob([binaryString], {
+        type: "application/application/x-xls",
       });
       saveBlobAs(blob, "report.xlsx");
     } catch (error) {

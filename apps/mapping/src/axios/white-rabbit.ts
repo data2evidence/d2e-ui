@@ -1,5 +1,5 @@
-import request from "./request";
 import { ScanDataDBConnectionForm } from "../types/scanDataDialog";
+import request from "./request";
 
 const WHITE_RABBIT_BASE_ENDPOINT = `white-rabbit/api/`;
 
@@ -71,6 +71,7 @@ export class WhiteRabbit {
     return request({
       url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/result-as-resource/${id}`,
       method: "GET",
+      responseType: "arraybuffer",
     });
   }
 
