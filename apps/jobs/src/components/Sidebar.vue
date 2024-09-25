@@ -14,7 +14,8 @@ import { PContextNavItem } from '@prefecthq/prefect-design'
 <style scoped>
 .side-bar {
   margin-top: 5px;
-  padding: 0 400px 0 400px;
+  padding: 0 400px 5px 400px;
+  gap: 10px;
   display: flex;
   height: 40px;
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
