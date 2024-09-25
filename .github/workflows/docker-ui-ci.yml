@@ -25,7 +25,7 @@ jobs:
       AZ_REG_PRUNE_DAYS_UNTAGGED: ${{ vars.AZ_REG_PRUNE_DAYS_UNTAGGED || '7' }}
       AZ_REG_PRUNE_ENABLE_TAGGED: ${{ vars.AZ_REG_PRUNE_ENABLE_TAGGED || 'false' }}
       AZ_REG_PRUNE_ENABLE_UNTAGGED: ${{ vars.AZ_REG_PRUNE_ENABLE_UNTAGGED || 'false' }}
-      AZ_REG_PRUNE_ENABLE: ${{ vars.AZ_REG_PRUNE_ENABLE || 'false' }}
+      AZ_REG_PRUNE_SKIP_TAGGED: ${{ vars.AZ_REG_PRUNE_SKIP_TAGGED || 'false' }}
       AZ_REG_WHITELIST_REGEX: ${{ vars.AZ_REG_WHITELIST_REGEX }}
       DOCKER_BUILD_DEBUG: ${{ vars.DOCKER_BUILD_DEBUG || 'false' }}
       DOCKER_BUILD_DISABLE: true # ${{ vars.DOCKER_BUILD_DISABLE || 'false' }} # debug
@@ -65,7 +65,7 @@ jobs:
         run: |
           echo AZ_REG_PRUNE_ENABLE_TAGGED=$AZ_REG_PRUNE_ENABLE_TAGGED | tee -a $GITHUB_STEP_SUMMARY
           echo AZ_REG_PRUNE_ENABLE_UNTAGGED=$AZ_REG_PRUNE_ENABLE_UNTAGGED | tee -a $GITHUB_STEP_SUMMARY
-          echo AZ_REG_PRUNE_ENABLE=$AZ_REG_PRUNE_ENABLE | tee -a $GITHUB_STEP_SUMMARY
+          echo AZ_REG_PRUNE_SKIP_TAGGED=$AZ_REG_PRUNE_SKIP_TAGGED | tee -a $GITHUB_STEP_SUMMARY
           echo DOCKER_BUILD_DEBUG=$DOCKER_BUILD_DEBUG | tee -a $GITHUB_STEP_SUMMARY
           echo DOCKER_BUILD_PUSH_BOOL_OVERRIDE=$DOCKER_BUILD_PUSH_BOOL_OVERRIDE | tee -a $GITHUB_STEP_SUMMARY
 
@@ -126,7 +126,7 @@ jobs:
             GIT_COMMIT_ARG=${{ github.sha }}
 
       - name: Prune tagged images
-        if: env.AZ_REG_PRUNE_ENABLE == 'true' && env.DOCKER_BUILD_DEBUG == 'true' || env.GIT_BRANCH_NAME == 'develop' || github.event_name == 'workflow_dispatch'
+        if: env.AZ_REG_PRUNE_SKIP_TAGGED == 'true' && env.DOCKER_BUILD_DEBUG == 'true' || env.GIT_BRANCH_NAME == 'develop' || github.event_name == 'workflow_dispatch'
         shell: bash
         continue-on-error: true
         env:
