@@ -44,8 +44,8 @@
         "target": "/resources/portal"
       },
       {
-        "source": "/flow",
-        "target": "/resources/flow"
+        "source": "/jobs",
+        "target": "/resources/jobs"
       },
       {
         "source": "/analysis",
