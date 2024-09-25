@@ -44,8 +44,8 @@
         "target": "/resources/portal"
       },
       {
-        "source": "/jobs",
-        "target": "/resources/jobs"
+        "source": "/flow",
+        "target": "/resources/flow"
       },
       {
         "source": "/analysis",
@@ -56,8 +56,8 @@
         "target": "/resources/mapping"
       },
       {
-        "source": "/log-viewer",
-        "target": "/resources/log-viewer"
+        "source": "/jobs",
+        "target": "/resources/jobs"
       },
       {
         "source": "/starboard-jupyter",
