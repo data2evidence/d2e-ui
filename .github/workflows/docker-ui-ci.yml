@@ -137,7 +137,7 @@ jobs:
           echo AZ_REG_PRUNE_TIMESTAMP=$AZ_REG_PRUNE_TIMESTAMP
 
           echo ". 1 - GET manifest metadata"
-          az acr manifest list-metadata --name ${AZ_REG_REPOSITORY} --registry ${AZ_REG_NAME} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && not_null(tags)]" > private-manifests-start.json
+          az acr manifest list-metadata --only-show-errors --name ${AZ_REG_REPOSITORY} --registry ${AZ_REG_NAME} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && not_null(tags)]" > private-manifests-start.json
           wc -l private-manifests-start.json
 
           echo ". 2 - ANALYZE each tag as deletable True/False"
@@ -173,7 +173,7 @@ jobs:
           echo AZ_REG_PRUNE_TIMESTAMP=$AZ_REG_PRUNE_TIMESTAMP
 
           echo . INFO for deletion - untagged
-          az acr manifest list-metadata --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && tags[0]==null]" -o json > private-untagged.json
+          az acr manifest list-metadata --only-show-errors --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && tags[0]==null]" -o json > private-untagged.json
           cat private-untagged.json | yq -P
 
           if [ "${AZ_REG_PRUNE_DELETE_UNTAGGED}" = true ]; then
@@ -192,7 +192,7 @@ jobs:
           AZ_REG_USERNAME: ${{ secrets.AZ_REG_USERNAME }}
           JSON_FILE: private-manifests-end.json
         run: |
-          az acr manifest list-metadata --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > $JSON_FILE
+          az acr manifest list-metadata --only-show-errors --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > $JSON_FILE
           echo . INFO show full manifests
           cat $JSON_FILE | yq -P
           echo . INFO show all tags
