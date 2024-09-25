@@ -126,7 +126,7 @@ jobs:
             GIT_COMMIT_ARG=${{ github.sha }}
 
       - name: Prune tagged images
-        if: ${{ env.GIT_BRANCH_NAME == 'develop' }}
+        if: ${{ env.GIT_BRANCH_NAME == '189_docker-build-push-prune5' }}
         # ${{ github.head_ref || github.ref_name }}
         # || github.event_name == 'workflow_dispatch' || env.DOCKER_BUILD_DEBUG == true
         # env.AZ_REGISTRY_PRUNE_ENABLE == 'false' &&
