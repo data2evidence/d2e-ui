@@ -14,7 +14,7 @@ import { PContextNavItem } from '@prefecthq/prefect-design'
 <style scoped>
 .side-bar {
   margin-top: 5px;
-  padding: 0 400px 5px 400px;
+  padding: 0 400px 0 400px;
   gap: 10px;
   display: flex;
   height: 40px;
@@ -23,5 +23,11 @@ import { PContextNavItem } from '@prefecthq/prefect-design'
 
 .p-context-nav-item {
   justify-content: center;
+  background: none;
+  border-radius: 0;
+
+  &--active {
+    border-bottom: 5px solid var(--color-primary);
+  }
 }
 </style>
