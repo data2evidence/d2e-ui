@@ -142,8 +142,8 @@ jobs:
           fi
           echo AZ_REG_PRUNE_TIMESTAMP=$AZ_REG_PRUNE_TIMESTAMP
 
-          echo ". 1 - GET manifest metadata -  deprecated warning is not relevant"
-          az acr manifest metadata list --name ${AZ_REG_REPOSITORY} --registry ${AZ_REG_NAME} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && not_null(tags)]" > private.json
+          echo ". 1 - GET manifest metadata"
+          az acr manifest list-metadata --name ${AZ_REG_REPOSITORY} --registry ${AZ_REG_NAME} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && not_null(tags)]" > private.json
           wc -l private.json
 
           echo ". 2 - ANALYZE each tag as deletable True/False"
@@ -179,7 +179,7 @@ jobs:
           echo AZ_REG_PRUNE_TIMESTAMP=$AZ_REG_PRUNE_TIMESTAMP
 
           echo . INFO for deletion - untagged
-          az acr manifest metadata list --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && tags[0]==null]" -o json > private-untagged.json
+          az acr manifest list-metadata --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && tags[0]==null]" -o json > private-untagged.json
           cat private-untagged.json | yq -P
 
           if [ "${AZ_REG_PRUNE_ENABLE_UNTAGGED}" = true ]; then
@@ -197,7 +197,7 @@ jobs:
           AZ_REG_REPOSITORY: ${{ matrix.name }}
           AZ_REG_USERNAME: ${{ secrets.AZ_REG_USERNAME }}
         run: |
-          az acr manifest metadata list --only-show-errors --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > private-test.json
+          az acr manifest list-metadata --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > private-test.json
           echo . INFO show full manifests
           cat private-test.json | yq -P
           echo . INFO show all tags
