@@ -63,17 +63,10 @@ jobs:
       - name: Setup
         id: setup
         run: |
-          echo AZ_REG_PRUNE_DELETE_TAGGED=$AZ_REG_PRUNE_DELETE_TAGGED | tee -a $GITHUB_STEP_SUMMARY
-          echo AZ_REG_PRUNE_DELETE_UNTAGGED=$AZ_REG_PRUNE_DELETE_UNTAGGED | tee -a $GITHUB_STEP_SUMMARY
-          echo AZ_REG_PRUNE_ENABLE_TAGGED=$AZ_REG_PRUNE_ENABLE_TAGGED | tee -a $GITHUB_STEP_SUMMARY
-          echo DOCKER_BUILD_DEBUG=$DOCKER_BUILD_DEBUG | tee -a $GITHUB_STEP_SUMMARY
-          echo DOCKER_BUILD_PUSH_BOOL_OVERRIDE=$DOCKER_BUILD_PUSH_BOOL_OVERRIDE | tee -a $GITHUB_STEP_SUMMARY
-
           DOCKER_BUILD_PUSH_BOOL_STR=false
           if [ $DOCKER_BUILD_PUSH_BOOL_OVERRIDE = "true" ] || [ $GITHUB_EVENT_NAME = "workflow_dispatch" ] || [ $GIT_BRANCH_NAME = 'develop' ]; then
             DOCKER_BUILD_PUSH_BOOL_STR=true
           fi
-
           echo "DOCKER_BUILD_PLATFORMS=linux/amd64" | tee -a $GITHUB_OUTPUT
           echo "DOCKER_BUILD_PUSH_BOOL_STR=$DOCKER_BUILD_PUSH_BOOL_STR" | tee -a $GITHUB_OUTPUT | tee -a $GITHUB_STEP_SUMMARY
 
@@ -196,12 +189,12 @@ jobs:
           AZ_REG_PASSWORD: ${{ secrets.AZ_REG_PASSWORD }}
           AZ_REG_REPOSITORY: ${{ matrix.name }}
           AZ_REG_USERNAME: ${{ secrets.AZ_REG_USERNAME }}
-
+          JSON_FILE: private-manifests-end.json
         run: |
-          az acr manifest list-metadata --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > private-manifests-end.json
+          az acr manifest list-metadata --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > $JSON_FILE
           echo . INFO show full manifests
-          cat private-manifests-end.json | yq -P
+          cat $JSON_FILE | yq -P
           echo . INFO show all tags
-          cat private-manifests-end.json | yq -P 'map({ "digest": .digest, "tags":.tags})'
+          cat $JSON_FILE | yq -P 'map({ "digest": .digest, "tags":.tags})'
           echo . INFO show tags matching RegEx
-          cat private-manifests-end.json | yq -P -o tsv '.[].tags | map(select(test(env(AZ_REG_WHITELIST_REGEX))))' | sort
+          cat $JSON_FILE | yq -P -o tsv '.[].tags | map(select(test(env(AZ_REG_WHITELIST_REGEX))))' | sort
