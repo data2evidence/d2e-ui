@@ -143,11 +143,11 @@ jobs:
           echo AZ_REG_PRUNE_TIMESTAMP=$AZ_REG_PRUNE_TIMESTAMP
 
           echo ". 1 - GET manifest metadata"
-          az acr manifest list-metadata --name ${AZ_REG_REPOSITORY} --registry ${AZ_REG_NAME} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && not_null(tags)]" > private.json
-          wc -l private.json
+          az acr manifest list-metadata --name ${AZ_REG_REPOSITORY} --registry ${AZ_REG_NAME} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && not_null(tags)]" > private-manifests-start.json
+          wc -l private-manifests-start.json
 
           echo ". 2 - ANALYZE each tag as deletable True/False"
-          cat private.json | yq -rP 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"deletable":(.tags|map(test(env(AZ_REG_WHITELIST_REGEX))|not)|@json),"deleteEnabled":.changeableAttributes.deleteEnabled})' | tee private1-analysis.yml
+          cat private-manifests-start.json | yq -rP 'map({"digest":.digest, "tags":(.tags|@json),"count":(.tags|length),"lengths":([.tags[]|length]|@json),"deletable":(.tags|map(test(env(AZ_REG_WHITELIST_REGEX))|not)|@json),"deleteEnabled":.changeableAttributes.deleteEnabled})' | tee private1-analysis.yml
 
           echo ". 3 - SELECT images to be deleted i.e. manifests excepting deletable False i.e. tags not matching RegEx"
           cat private1-analysis.yml | yq 'map(select(.deletable|contains("false")|not))' > private2-todelete.yml
@@ -197,10 +197,10 @@ jobs:
           AZ_REG_REPOSITORY: ${{ matrix.name }}
           AZ_REG_USERNAME: ${{ secrets.AZ_REG_USERNAME }}
         run: |
-          az acr manifest list-metadata --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > private-test.json
+          az acr manifest list-metadata --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > private-manifests-end.json
           echo . INFO show full manifests
-          cat private-test.json | yq -P
+          cat private-manifests-end.json | yq -P
           echo . INFO show all tags
-          cat private-test.json | yq 'map(.tags)' | sort | tee private-all-tags.yml
+          cat private-manifests-end.json | yq -P 'map(.tags)'
           echo . INFO show tags matching RegEx
-          cat private-test.json | yq -o tsv '.[].tags | map(select(test(env(AZ_REG_WHITELIST_REGEX))))' | sort | tee private-regex-tags.txt
+          cat private-manifests-end.json | yq -P -o tsv '.[].tags | map(select(test(env(AZ_REG_WHITELIST_REGEX))))' | sort
