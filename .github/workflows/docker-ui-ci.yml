@@ -60,7 +60,7 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: setup
+      - name: Setup
         id: setup
         run: |
           echo AZ_REG_PRUNE_DELETE_TAGGED=$AZ_REG_PRUNE_DELETE_TAGGED | tee -a $GITHUB_STEP_SUMMARY
@@ -125,7 +125,7 @@ jobs:
             docker_image_prefix=${{ env.AZ_REG_NAME }}.azurecr.io
             GIT_COMMIT_ARG=${{ github.sha }}
 
-      - name: Prune tagged images
+      - name: Prune tagged images before vars.AZ_REG_PRUNE_DAYS_TAGGED
         if: env.AZ_REG_PRUNE_ENABLE_TAGGED == 'true' && env.DOCKER_BUILD_DEBUG == 'true' || env.GIT_BRANCH_NAME == 'develop' || github.event_name == 'workflow_dispatch'
         shell: bash
         continue-on-error: true
@@ -161,7 +161,7 @@ jobs:
             echo ". 4 - SKIPPED delete digests ..."
           fi
 
-      - name: Prune untagged images
+      - name: Prune untagged images before vars.AZ_REG_PRUNE_DAYS_UNTAGGED
         shell: bash
         if: always()
         continue-on-error: true
@@ -201,6 +201,6 @@ jobs:
           echo . INFO show full manifests
           cat private-manifests-end.json | yq -P
           echo . INFO show all tags
-          cat private-manifests-end.json | yq -P 'map(.tags)'
+          cat private-manifests-end.json | yq -P 'map({ "digest": .digest, "tags":.tags})'
           echo . INFO show tags matching RegEx
           cat private-manifests-end.json | yq -P -o tsv '.[].tags | map(select(test(env(AZ_REG_WHITELIST_REGEX))))' | sort
