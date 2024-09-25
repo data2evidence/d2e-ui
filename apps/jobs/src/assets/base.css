@@ -89,6 +89,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* flow run page*/
 .flow-run-work-pool, .flow-run-work-queue, .state-list-item__meta {
   display: none !important;
+}
+
+/* deployment page*/
+.deployment-relationships {
+  display: none !important;
+}
+
+.deployment-details > *:nth-child(-n + 2) {
+  display: none;
 }
