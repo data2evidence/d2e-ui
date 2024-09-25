@@ -150,7 +150,7 @@ jobs:
 
           if [ "${AZ_REG_PRUNE_DELETE_TAGGED}" = true ]; then
             echo ". 4 - ACTION delete tagged digests ..."
-            yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${AZ_REG_USERNAME} -p ${AZ_REG_PASSWORD} --name ${AZ_REG_NAME} --image ${AZ_REG_REPOSITORY}@% --yes || true
+            yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${AZ_REG_USERNAME} -p ${AZ_REG_PASSWORD} --name ${AZ_REG_NAME} --image ${AZ_REG_REPOSITORY}@% --yes
           else
             echo ". 4 - SKIPPED delete digests ..."
           fi
@@ -177,14 +177,13 @@ jobs:
 
           if [ "${AZ_REG_PRUNE_DELETE_UNTAGGED}" = true ]; then
             echo ". ACTION delete untagged digests ..."
-            cat private-untagged.json | yq '.[].digest' | xargs -I% az acr repository delete -n ${AZ_REG_NAME} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" -t ${AZ_REG_REPOSITORY}@% -y || true
+            cat private-untagged.json | yq '.[].digest' | xargs -I% az acr repository delete -n ${AZ_REG_NAME} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" -t ${AZ_REG_REPOSITORY}@% -y
           else
             echo ". 5 - SKIPPED delete digests ..."
           fi
 
       - name: Show tagged manfests
         if: env.DOCKER_BUILD_DEBUG == 'true'
-        continue-on-error: true
         env:
           AZ_REG_PASSWORD: ${{ secrets.AZ_REG_PASSWORD }}
           AZ_REG_REPOSITORY: ${{ matrix.name }}
