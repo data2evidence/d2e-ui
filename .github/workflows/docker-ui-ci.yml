@@ -127,6 +127,7 @@ jobs:
 
       - name: Prune tagged images
         if: env.AZ_REGISTRY_PRUNE_ENABLE == 'true' && env.DOCKER_BUILD_DEBUG == 'true' || env.GIT_BRANCH_NAME == 'develop' || github.event_name == 'workflow_dispatch'
+
         shell: bash
         continue-on-error: true
         env:
