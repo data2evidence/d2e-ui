@@ -189,7 +189,7 @@ jobs:
             echo ". 5 - SKIPPED delete digests ..."
           fi
 
-      - name: Show manfests
+      - name: Show tagged manfests
         if: env.DOCKER_BUILD_DEBUG == 'true'
         continue-on-error: true
         env:
@@ -200,8 +200,7 @@ jobs:
           az acr manifest metadata list --only-show-errors --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > private-test.json
           echo . INFO show full manifests
           cat private-test.json | yq -P
-          echo . INFO show tags
-          cat private-test.json | yq -o tsv '.[].tags | map(select(test(env(AZ_REG_WHITELIST_REGEX))))' | sort | tee private-test-tags.txt
-          # echo
-          # echo . INFO show manifests for each tag matching RegEx
-          # cat private-test-tags.txt | xargs -I% sh -c "echo tag: % && az acr manifest show --only-show-errors --username ${AZ_REG_USERNAME} --password ${AZ_REG_PASSWORD} ${AZ_REG_NAME}.azurecr.io/${AZ_REG_REPOSITORY}:% | yq -P && echo"
+          echo . INFO show all tags
+          cat private-test.json | yq 'map(.tags)' | sort | tee private-all-tags.yml
+          echo . INFO show tags matching RegEx
+          cat private-test.json | yq -o tsv '.[].tags | map(select(test(env(AZ_REG_WHITELIST_REGEX))))' | sort | tee private-regex-tags.txt
