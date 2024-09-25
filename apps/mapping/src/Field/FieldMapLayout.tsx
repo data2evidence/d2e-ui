@@ -3,34 +3,71 @@ import ReactFlow, { Controls, EdgeChange, PanOnScrollMode } from "reactflow";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { nodeTypes } from "../Nodes";
-import { useField } from "../contexts";
+import { useCdmSchema, useField, useTable } from "../contexts";
 import { TableToTable } from "./TableToTable";
+import { transformEtlModel } from "../utils/etl-transformer";
+import { saveBlobAs } from "../utils/utils";
+import { api } from "../axios/api";
 import "./FieldMapLayout.scss";
 
 export const FieldMapLayout = () => {
-  const { nodes, edges, sourceHandles, targetHandles, setFieldNodes, setFieldEdges, addFieldConnection } = useField();
+  const {
+    nodes,
+    edges: fieldEdges,
+    sourceHandles: sourceFields,
+    targetHandles: targetFields,
+    setFieldNodes,
+    setFieldEdges,
+    addFieldConnection,
+  } = useField();
+
+  const { edges: tableEdges, sourceHandles: sourceTables, targetHandles: targetTables } = useTable();
+  const { cdmVersion } = useCdmSchema();
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (sourceHandles?.length == 0 || targetHandles?.length === 0) {
+    if (sourceFields?.length == 0 || targetFields?.length === 0) {
       navigate("/");
     }
-  }, [sourceHandles, targetHandles]);
+  }, [sourceFields, targetFields]);
 
   const handleBack = useCallback(() => {
     navigate(-1);
   }, [navigate]);
 
-  const sourceTableName = sourceHandles?.length ? sourceHandles[0].data.tableName : "";
-  const targetTableName = targetHandles?.length ? targetHandles[0].data.tableName : "";
+  const sourceTableName = sourceFields?.length ? sourceFields[0].data.tableName : "";
+  const targetTableName = targetFields?.length ? targetFields[0].data.tableName : "";
 
   const deleteLinks = useCallback(() => {
-    const edgeChanges: EdgeChange[] = edges.map((edge) => ({
+    const edgeChanges: EdgeChange[] = fieldEdges.map((edge) => ({
       id: edge.id,
       type: "remove",
     }));
     setFieldEdges(edgeChanges);
-  }, [setFieldEdges, edges]);
+  }, [setFieldEdges, fieldEdges]);
+
+  const handleReport = useCallback(async () => {
+    const model = transformEtlModel(
+      1,
+      "Source",
+      sourceTables,
+      sourceFields,
+      2,
+      `CDM ${cdmVersion}`,
+      targetTables,
+      targetFields,
+      tableEdges,
+      fieldEdges
+    );
+
+    try {
+      const response = await api.whiteRabbit.getEtlReport("word", model);
+      saveBlobAs(response, "etl-mapping.docx");
+    } catch (error) {
+      console.error("Failed to generate ETL report", error);
+    }
+  }, [fieldEdges, tableEdges, sourceFields, targetFields, sourceTables, targetTables, cdmVersion]);
 
   return (
     <div className="field-map-layout">
@@ -38,7 +75,7 @@ export const FieldMapLayout = () => {
       <div className="react-flow-container">
         <ReactFlow
           nodes={nodes}
-          edges={edges}
+          edges={fieldEdges}
           nodeTypes={nodeTypes}
           onNodesChange={(changes) => setFieldNodes(changes)}
           onEdgesChange={(changes) => setFieldEdges(changes)}
@@ -65,7 +102,9 @@ export const FieldMapLayout = () => {
           <Button variant="outlined" color="error" onClick={deleteLinks}>
             Delete links
           </Button>
-          <Button variant="contained">Report</Button>
+          <Button variant="contained" onClick={handleReport}>
+            Report
+          </Button>
         </div>
       </div>
     </div>
