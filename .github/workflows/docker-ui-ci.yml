@@ -126,7 +126,8 @@ jobs:
             GIT_COMMIT_ARG=${{ github.sha }}
 
       - name: Prune tagged images
-        if: ${{ env.GIT_BRANCH_NAME == 'develop' }} || github.event_name == 'workflow_dispatch' || env.DOCKER_BUILD_DEBUG == true
+        if: env.GIT_BRANCH_NAME == 'develop' || github.event_name == 'workflow_dispatch'
+        # || env.DOCKER_BUILD_DEBUG == true
         # env.AZ_REGISTRY_PRUNE_ENABLE == 'false' &&
         shell: bash
         continue-on-error: true
