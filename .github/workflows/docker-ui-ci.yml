@@ -68,7 +68,6 @@ jobs:
             DOCKER_BUILD_PUSH_BOOL_STR=true
             echo push to registry | tee -a $GITHUB_STEP_SUMMARY
           fi
-
           echo "DOCKER_BUILD_PLATFORMS=linux/amd64" | tee -a $GITHUB_OUTPUT
           echo "DOCKER_BUILD_PUSH_BOOL_STR=$DOCKER_BUILD_PUSH_BOOL_STR" | tee -a $GITHUB_OUTPUT
 
