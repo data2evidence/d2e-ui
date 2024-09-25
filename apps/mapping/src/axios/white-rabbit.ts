@@ -71,7 +71,7 @@ export class WhiteRabbit {
     return request({
       url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/result-as-resource/${id}`,
       method: "GET",
-      responseType: "arraybuffer",
+      responseType: "blob",
     });
   }
 
