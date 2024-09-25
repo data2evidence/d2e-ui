@@ -196,6 +196,7 @@ jobs:
           AZ_REG_PASSWORD: ${{ secrets.AZ_REG_PASSWORD }}
           AZ_REG_REPOSITORY: ${{ matrix.name }}
           AZ_REG_USERNAME: ${{ secrets.AZ_REG_USERNAME }}
+
         run: |
           az acr manifest list-metadata --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?tags[0]!=null]" -o json > private-manifests-end.json
           echo . INFO show full manifests
