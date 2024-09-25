@@ -23,9 +23,9 @@ jobs:
       AZ_REG_NAME: ${{ vars.AZ_REG_NAME }}
       AZ_REG_PRUNE_DAYS_TAGGED: ${{ vars.AZ_REG_PRUNE_DAYS_TAGGED || '20' }}
       AZ_REG_PRUNE_DAYS_UNTAGGED: ${{ vars.AZ_REG_PRUNE_DAYS_UNTAGGED || '7' }}
+      AZ_REG_PRUNE_DELETE_TAGGED: ${{ vars.AZ_REG_PRUNE_DELETE_TAGGED || 'false' }}
+      AZ_REG_PRUNE_DELETE_UNTAGGED: ${{ vars.AZ_REG_PRUNE_DELETE_UNTAGGED || 'false' }}
       AZ_REG_PRUNE_ENABLE_TAGGED: ${{ vars.AZ_REG_PRUNE_ENABLE_TAGGED || 'false' }}
-      AZ_REG_PRUNE_ENABLE_UNTAGGED: ${{ vars.AZ_REG_PRUNE_ENABLE_UNTAGGED || 'false' }}
-      AZ_REG_PRUNE_SKIP_TAGGED: ${{ vars.AZ_REG_PRUNE_SKIP_TAGGED || 'false' }}
       AZ_REG_WHITELIST_REGEX: ${{ vars.AZ_REG_WHITELIST_REGEX }}
       DOCKER_BUILD_DEBUG: ${{ vars.DOCKER_BUILD_DEBUG || 'false' }}
       DOCKER_BUILD_DISABLE: true # ${{ vars.DOCKER_BUILD_DISABLE || 'false' }} # debug
@@ -63,9 +63,9 @@ jobs:
       - name: setup
         id: setup
         run: |
+          echo AZ_REG_PRUNE_DELETE_TAGGED=$AZ_REG_PRUNE_DELETE_TAGGED | tee -a $GITHUB_STEP_SUMMARY
+          echo AZ_REG_PRUNE_DELETE_UNTAGGED=$AZ_REG_PRUNE_DELETE_UNTAGGED | tee -a $GITHUB_STEP_SUMMARY
           echo AZ_REG_PRUNE_ENABLE_TAGGED=$AZ_REG_PRUNE_ENABLE_TAGGED | tee -a $GITHUB_STEP_SUMMARY
-          echo AZ_REG_PRUNE_ENABLE_UNTAGGED=$AZ_REG_PRUNE_ENABLE_UNTAGGED | tee -a $GITHUB_STEP_SUMMARY
-          echo AZ_REG_PRUNE_SKIP_TAGGED=$AZ_REG_PRUNE_SKIP_TAGGED | tee -a $GITHUB_STEP_SUMMARY
           echo DOCKER_BUILD_DEBUG=$DOCKER_BUILD_DEBUG | tee -a $GITHUB_STEP_SUMMARY
           echo DOCKER_BUILD_PUSH_BOOL_OVERRIDE=$DOCKER_BUILD_PUSH_BOOL_OVERRIDE | tee -a $GITHUB_STEP_SUMMARY
 
@@ -126,7 +126,7 @@ jobs:
             GIT_COMMIT_ARG=${{ github.sha }}
 
       - name: Prune tagged images
-        if: env.AZ_REG_PRUNE_SKIP_TAGGED == 'true' && env.DOCKER_BUILD_DEBUG == 'true' || env.GIT_BRANCH_NAME == 'develop' || github.event_name == 'workflow_dispatch'
+        if: env.AZ_REG_PRUNE_ENABLE_TAGGED == 'true' && env.DOCKER_BUILD_DEBUG == 'true' || env.GIT_BRANCH_NAME == 'develop' || github.event_name == 'workflow_dispatch'
         shell: bash
         continue-on-error: true
         env:
@@ -154,7 +154,7 @@ jobs:
           echo . INFO for deletion
           cat private2-todelete.yml | yq -P 'map({ "digest": .digest, "tags":.tags | @jsond })'
 
-          if [ "${AZ_REG_PRUNE_ENABLE_TAGGED}" = true ]; then
+          if [ "${AZ_REG_PRUNE_DELETE_TAGGED}" = true ]; then
             echo ". 4 - ACTION delete tagged digests ..."
             yq '.[].digest' private2-todelete.yml | sort -u | xargs -I% az acr repository delete -u ${AZ_REG_USERNAME} -p ${AZ_REG_PASSWORD} --name ${AZ_REG_NAME} --image ${AZ_REG_REPOSITORY}@% --yes || true
           else
@@ -182,7 +182,7 @@ jobs:
           az acr manifest list-metadata --registry ${AZ_REG_NAME} --name ${AZ_REG_REPOSITORY} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" --orderby time_asc --query "[?lastUpdateTime < '${AZ_REG_PRUNE_TIMESTAMP}' && tags[0]==null]" -o json > private-untagged.json
           cat private-untagged.json | yq -P
 
-          if [ "${AZ_REG_PRUNE_ENABLE_UNTAGGED}" = true ]; then
+          if [ "${AZ_REG_PRUNE_DELETE_UNTAGGED}" = true ]; then
             echo ". ACTION delete untagged digests ..."
             cat private-untagged.json | yq '.[].digest' | xargs -I% az acr repository delete -n ${AZ_REG_NAME} --username "${AZ_REG_USERNAME}" --password "${AZ_REG_PASSWORD}" -t ${AZ_REG_REPOSITORY}@% -y || true
           else
