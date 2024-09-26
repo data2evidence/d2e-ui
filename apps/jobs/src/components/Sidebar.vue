@@ -25,6 +25,7 @@ import { PContextNavItem } from '@prefecthq/prefect-design'
   justify-content: center;
   background: none;
   border-radius: 0;
+  font-weight: 700;
 
   &--active {
     border-bottom: 5px solid var(--color-primary);
