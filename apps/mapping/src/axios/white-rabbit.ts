@@ -1,4 +1,5 @@
 import { ScanDataDBConnectionForm } from "../types/scanDataDialog";
+import { EtlModel } from "../utils/etl-transformer";
 import request from "./request";
 
 const WHITE_RABBIT_BASE_ENDPOINT = `white-rabbit/api/`;
@@ -87,6 +88,15 @@ export class WhiteRabbit {
       url: `${WHITE_RABBIT_BASE_ENDPOINT}test-connection`,
       method: "POST",
       data: connectionDetail,
+    });
+  }
+
+  public generateEtlReport(formatType: "word", etlModel: EtlModel) {
+    return request({
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}report/${formatType}`,
+      method: "POST",
+      responseType: "blob",
+      data: etlModel,
     });
   }
 }
