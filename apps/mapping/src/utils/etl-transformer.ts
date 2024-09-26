@@ -1,5 +1,5 @@
 import { Edge } from "reactflow";
-import { FieldSourceState, FieldTargetState, TableSourceState, TableTargetState } from "../contexts";
+import { ScannedSchemaState, TableSchemaState } from "../contexts";
 
 interface Ref {
   "@ref": number | undefined;
@@ -10,8 +10,9 @@ interface Field {
   "@type": string;
   table: Ref;
   name: string;
-  tableName: string;
+  tableName: string; // Temporary stored for lookup purpose
   comment: string;
+  logic: string; // Temporary stored for display in the item-to-item-map
   valueCounts: {
     "@id"?: number;
     valueCounts: Array<{ "@type": string; value: string; frequency: number; this$0: { "@ref": number } }>;
@@ -88,12 +89,13 @@ export interface EtlModel {
 
 const getFieldName = (fieldName: string) => fieldName.toLowerCase().replace(/\s+/g, "_");
 
-const createField = (fieldId: number, field: FieldSourceState | FieldTargetState): Omit<Field, "table"> => ({
+const createField = (fieldId: number, fieldName: string, tableName: string, type: string): Omit<Field, "table"> => ({
   "@id": fieldId,
   "@type": "org.ohdsi.rabbitInAHat.dataModel.Field",
-  name: getFieldName(field.data.label),
-  tableName: field.data.tableName, // Temporary stored for lookup purpose
+  name: getFieldName(fieldName),
+  tableName,
   comment: "",
+  logic: "",
   valueCounts: {
     valueCounts: [],
     totalFrequency: 0,
@@ -101,7 +103,7 @@ const createField = (fieldId: number, field: FieldSourceState | FieldTargetState
     mostFrequentValueCount: -1,
   },
   isNullable: true,
-  type: field.data.columnType,
+  type,
   description: "",
   maxLength: 0,
   isStem: false,
@@ -111,10 +113,10 @@ const createField = (fieldId: number, field: FieldSourceState | FieldTargetState
   fractionUnique: 1.0,
 });
 
-const createTable = (tableId: number, table: TableSourceState | TableTargetState): Omit<Table, "fields" | "db"> => ({
+const createTable = (tableId: number, tableName: string): Omit<Table, "fields" | "db"> => ({
   "@id": tableId,
   "@type": "org.ohdsi.rabbitInAHat.dataModel.Table",
-  name: table.data.label,
+  name: tableName,
   description: "",
   rowCount: 0,
   rowsCheckedCount: 0,
@@ -144,6 +146,35 @@ const createMap = (sourceId: number | undefined, targetId: number | undefined): 
   isCompleted: false,
 });
 
+const getFieldByHandleId = (
+  lookupTables: Table[],
+  tableId: number | undefined,
+  handleId: string | null | undefined
+) => {
+  if (!tableId) return undefined;
+
+  const sourceParts = handleId?.split("-");
+  const fieldName = sourceParts && sourceParts.length >= 2 ? sourceParts[1] : "";
+
+  const table = lookupTables.find((t) => t["@id"] === tableId);
+  const field = table?.fields["@items"]?.find((f) => getFieldName(f.name) === getFieldName(fieldName));
+
+  return field;
+};
+
+// const getLogicString = (fieldData: FieldTargetHandleData) => {
+//   if (fieldData.constantValue) {
+//     return `Constant value: "${fieldData.constantValue}"`;
+//   }
+//   if (fieldData.isSqlEnabled && fieldData.sql) {
+//     return `SQL Function: ${fieldData.sql}`;
+//   }
+//   if (fieldData.isLookupEnabled && fieldData.lookupSql) {
+//     return `Lookup: ${fieldData.lookupName} ${fieldData.lookupSql}`;
+//   }
+//   return "";
+// };
+
 let etlGlobalVar = {
   tableId: 10,
   fieldId: 100,
@@ -152,69 +183,54 @@ let etlGlobalVar = {
 export const transformEtlModel = (
   sourceDbId: number,
   sourceDbName: string,
-  sourceTables: TableSourceState[],
-  sourceFields: FieldSourceState[],
+  sourceSchema: ScannedSchemaState | undefined,
   targetDbId: number,
   targetDbName: string,
-  targetTables: TableTargetState[],
-  targetFields: FieldTargetState[],
+  cdmTables: TableSchemaState[],
   tableToTableMaps: Edge[],
   fieldToFieldMaps: Edge[]
 ): EtlModel => {
-  const mappeSourceFields = sourceFields.map((field) => {
-    etlGlobalVar.fieldId++;
-    return createField(etlGlobalVar.fieldId, field) as Field;
-  });
+  const mappedSourceTables =
+    sourceSchema?.source_tables.map((table) => {
+      etlGlobalVar.tableId++;
+      return {
+        ...createTable(etlGlobalVar.tableId, table.table_name),
+        db: {
+          "@ref": sourceDbId,
+        },
+        fields: {
+          "@type": "java.util.ArrayList",
+          "@items": table.column_list.map((column) => {
+            etlGlobalVar.fieldId++;
+            return {
+              ...createField(etlGlobalVar.fieldId, column.column_name, table.table_name, column.column_type),
+              table: {
+                "@ref": etlGlobalVar.tableId,
+              },
+            } as Field;
+          }),
+        },
+      } as Table;
+    }) || [];
 
-  const mappedSourceTables = sourceTables.map((table) => {
+  const mappedTargetTables = cdmTables.map((table) => {
     etlGlobalVar.tableId++;
     return {
-      ...createTable(etlGlobalVar.tableId, table),
-      db: {
-        "@ref": sourceDbId,
-      },
-      fields: {
-        "@type": "java.util.ArrayList",
-        "@items": mappeSourceFields
-          .filter((field) => field.tableName === table.data.label)
-          .map((field) => ({
-            ...field,
-            table: {
-              "@ref": etlGlobalVar.tableId,
-            },
-          })),
-      },
-    } as Table;
-  });
-
-  const mappedTargetFields = targetFields.map((field) => {
-    etlGlobalVar.fieldId++;
-    if (field.data.comment) {
-      console.log("field.data.comment", field.data.comment);
-    }
-    return {
-      ...createField(etlGlobalVar.fieldId, field),
-      comment: field.data.comment,
-    } as Field;
-  });
-
-  const mappedTargetTables = targetTables.map((table) => {
-    etlGlobalVar.tableId++;
-    return {
-      ...createTable(etlGlobalVar.tableId, table),
+      ...createTable(etlGlobalVar.tableId, table.table_name),
       db: {
         "@ref": targetDbId,
       },
       fields: {
         "@type": "java.util.ArrayList",
-        "@items": mappedTargetFields
-          .filter((field) => field.tableName === table.data.label)
-          .map((field) => ({
-            ...field,
+        "@items": table.column_list.map((column) => {
+          etlGlobalVar.fieldId++;
+          return {
+            ...createField(etlGlobalVar.fieldId, column.column_name, table.table_name, column.column_type),
             table: {
               "@ref": etlGlobalVar.tableId,
             },
-          })),
+          };
+        }),
       },
     } as Table;
   });
@@ -226,27 +242,30 @@ export const transformEtlModel = (
     )
   );
 
-  const mappedFieldToFieldMaps = fieldToFieldMaps.map((item) => {
-    let sourceField = "",
-      targetField = "";
+  const mappedFieldToFieldMaps = mappedTableToTableMaps.map((table) => {
+    return {
+      "@type": "java.util.ArrayList",
+      "@items": fieldToFieldMaps
+        .filter((item) => {
+          const mappedSourceField = getFieldByHandleId(mappedSourceTables, table.sourceItem["@ref"], item.sourceHandle);
+          if (!mappedSourceField) return false;
 
-    const sourceParts = item.sourceHandle?.split("-");
-    sourceField = sourceParts && sourceParts.length >= 2 ? sourceParts[1] : "";
+          const mappedTargetField = getFieldByHandleId(mappedTargetTables, table.cdmItem["@ref"], item.targetHandle);
+          if (!mappedTargetField) return false;
 
-    const sourceFieldId = mappeSourceFields.find((f) => getFieldName(f.name) === getFieldName(sourceField))?.["@id"];
-    if (!sourceFieldId) {
-      console.warn("Missing source field", sourceField, mappeSourceFields);
-    }
+          return true;
+        })
+        .map((item) => {
+          const mappedSourceField = getFieldByHandleId(mappedSourceTables, table.sourceItem["@ref"], item.sourceHandle);
+          const mappedTargetField = getFieldByHandleId(mappedTargetTables, table.cdmItem["@ref"], item.targetHandle);
 
-    const targetParts = item.targetHandle?.split("-");
-    targetField = targetParts && targetParts.length >= 2 ? targetParts[1] : "";
-
-    const targetFieldId = mappedTargetFields.find((f) => getFieldName(f.name) === getFieldName(targetField))?.["@id"];
-    if (!targetFieldId) {
-      console.warn("Missing source field", targetField, mappedTargetFields);
-    }
-
-    return createMap(sourceFieldId, targetFieldId);
+          return {
+            ...createMap(mappedSourceField?.["@id"], mappedTargetField?.["@id"]),
+            comment: mappedTargetField?.comment || "",
+            logic: mappedTargetField?.logic || "",
+          };
+        }),
+    };
   });
 
   return {
@@ -255,14 +274,16 @@ export const transformEtlModel = (
       ...createDb(sourceDbId, sourceDbName),
       tables: {
         "@type": "java.util.ArrayList",
-        "@items": mappedSourceTables,
+        "@items": mappedSourceTables.filter((s) =>
+          mappedTableToTableMaps.some((m) => m.sourceItem["@ref"] === s["@id"])
+        ),
       },
     },
     cdmDb: {
       ...createDb(targetDbId, targetDbName),
       tables: {
         "@type": "java.util.ArrayList",
-        "@items": mappedTargetTables,
+        "@items": mappedTargetTables.filter((s) => mappedTableToTableMaps.some((m) => m.cdmItem["@ref"] === s["@id"])),
       },
     },
     tableToTableMaps: {
@@ -272,12 +293,7 @@ export const transformEtlModel = (
     tableMapToFieldToFieldMaps: {
       "@type": "java.util.HashMap",
       "@keys": mappedTableToTableMaps,
-      "@items": [
-        {
-          "@type": "java.util.ArrayList",
-          "@items": mappedFieldToFieldMaps,
-        },
-      ],
+      "@items": mappedFieldToFieldMaps,
     },
   };
 };

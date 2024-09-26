@@ -3,7 +3,7 @@ import ReactFlow, { Controls, EdgeChange, PanOnScrollMode } from "reactflow";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { nodeTypes } from "../Nodes";
-import { useCdmSchema, useField, useTable } from "../contexts";
+import { useApp, useCdmSchema, useField, useTable } from "../contexts";
 import { TableToTable } from "./TableToTable";
 import { transformEtlModel } from "../utils/etl-transformer";
 import { saveBlobAs } from "../utils/utils";
@@ -11,6 +11,7 @@ import { api } from "../axios/api";
 import "./FieldMapLayout.scss";
 
 export const FieldMapLayout = () => {
+  const { state } = useApp();
   const {
     nodes,
     edges: fieldEdges,
@@ -51,12 +52,10 @@ export const FieldMapLayout = () => {
     const model = transformEtlModel(
       1,
       "Source",
-      sourceTables,
-      sourceFields,
+      state.scannedSchema,
       2,
       `CDM ${cdmVersion}`,
-      targetTables,
-      targetFields,
+      state.cdmTables,
       tableEdges,
       fieldEdges
     );
