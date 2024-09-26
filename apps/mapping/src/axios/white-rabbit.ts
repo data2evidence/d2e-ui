@@ -93,7 +93,7 @@ export class WhiteRabbit {
   public getEtlReport(formatType: "word", etlModel: EtlModel) {
     return request({
       url: `${WHITE_RABBIT_BASE_ENDPOINT}report/${formatType}`,
-      method: "GET",
+      method: "POST",
       responseType: "blob",
       data: etlModel,
     });
