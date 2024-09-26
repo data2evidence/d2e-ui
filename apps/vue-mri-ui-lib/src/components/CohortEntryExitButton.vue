@@ -58,7 +58,7 @@ export default {
     componentStyle() {
       const result: any = {
         position: 'absolute',
-        top: this.text === Constants.CohortEntryExit.ENTRY ? 250 : 300,
+        top: (this.text === Constants.CohortEntryExit.ENTRY ? 250 : 300) + 'px',
       }
       return result
     },
@@ -119,7 +119,7 @@ export default {
         this.menuOpenParam = 'clear'
       }
 
-      const filterCards = this.getChartableFilterCards.slice(1);
+      const filterCards = this.getChartableFilterCards.slice(1)
       const seperator = {
         idx: filterCards.length,
         hasSubMenu: false,
@@ -161,4 +161,3 @@ export default {
   },
 }
 </script>
-
