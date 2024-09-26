@@ -5,12 +5,16 @@
   justify-content: center;
   cursor: default;
   width: 100%;
-  font-size: 1em;
+  font-size: 14px;
   position: relative;
   color: $primary-color;
   border-radius: 8px;
   background-color: #fff;
   mix-blend-mode: multiply;
+
+  .alp-icon-button {
+    padding: 0;
+  }
 
   .react-flow__handle {
     background: transparent;

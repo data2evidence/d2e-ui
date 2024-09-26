@@ -11,7 +11,7 @@ export const TableTargetNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const { targetHandles, setTableTargetHandles } = useTable();
   const [cdmVersions, setCdmVersions] = useState<string[]>([]);
-  const { setCdmTables } = useCdmSchema();
+  const { setCdmVersion, setCdmTables } = useCdmSchema();
 
   const populateCDMVersion = useCallback((data: TableSchemaState[]) => {
     const targetHandles: Partial<NodeProps<TableTargetHandleData>>[] = data.map((table, index) => ({
@@ -29,6 +29,7 @@ export const TableTargetNode = (props: NodeProps) => {
     async (cdmVersion: string) => {
       try {
         const response = await api.backend.getCDMSchema(cdmVersion);
+        setCdmVersion(cdmVersion);
         setCdmTables(response);
         populateCDMVersion(response);
       } catch (e) {
