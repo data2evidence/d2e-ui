@@ -35,8 +35,8 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({ open, onBack, 
 
   const handleSaveReport = useCallback(async () => {
     try {
-      const binaryString = await api.whiteRabbit.getScanReport(scanId);
-      saveBlobAs(binaryString, "report.xlsx");
+      const blob = await api.whiteRabbit.getScanReport(scanId);
+      saveBlobAs(blob, "report.xlsx");
     } catch (error) {
       console.error("Failed to save report", error);
     }
