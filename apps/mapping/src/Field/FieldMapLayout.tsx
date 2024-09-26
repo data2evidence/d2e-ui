@@ -61,7 +61,7 @@ export const FieldMapLayout = () => {
     );
 
     try {
-      const response = await api.whiteRabbit.getEtlReport("word", model);
+      const response = await api.whiteRabbit.generateEtlReport("word", model);
       saveBlobAs(response, "etl-mapping.docx");
     } catch (error) {
       console.error("Failed to generate ETL report", error);

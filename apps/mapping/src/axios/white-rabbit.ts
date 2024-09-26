@@ -90,7 +90,7 @@ export class WhiteRabbit {
     });
   }
 
-  public getEtlReport(formatType: "word", etlModel: EtlModel) {
+  public generateEtlReport(formatType: "word", etlModel: EtlModel) {
     return request({
       url: `${WHITE_RABBIT_BASE_ENDPOINT}report/${formatType}`,
       method: "POST",
