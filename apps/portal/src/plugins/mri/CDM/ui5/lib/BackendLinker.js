@@ -18,7 +18,8 @@ sap.ui.define([
 		tableTypePlaceholderMap: {
 			factTable: {},
 			dimTables: []
-		}
+		},
+		extCohortDefinitionTableMapping: {}
 	};
 	BackendLinker._calculatedPholderMap = {
 		"@@AGE_START": "FLOOR(DAYS_BETWEEN(@PATIENT.DOB, @INTERACTION.START) / 365)",
