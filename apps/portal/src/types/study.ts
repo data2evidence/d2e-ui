@@ -10,10 +10,10 @@ export interface Study {
   visibilityStatus: string;
   publicKey: string;
   dataModel: string;
+  plugin: string;
   databaseCode: string;
   dialect?: string;
   paConfigId: string;
-
   studyDetail?: StudyDetail;
   attributes?: StudyAttribute[];
   tags?: StudyTag[];
@@ -30,6 +30,7 @@ export interface NewStudyInput {
   cleansedSchemaOption: boolean;
   tenantName?: string;
   dataModel?: string;
+  plugin: string;
   databaseCode: string;
   dialect: string;
   paConfigId: string;
