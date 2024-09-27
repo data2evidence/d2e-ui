@@ -83,6 +83,11 @@
             <Input value="{configEditorModel>standardConceptCodeFilter/value}" />
 
             <html:hr class="sapMXVerticalSeparator"></html:hr>
+
+            <Label text="{hc.hph.cdw.config.ui.i18n>HPH_CDM_CFG_COHORT_DEFINITION_KEY_TITLE}" />
+            <Input value="{configEditorModel>cohortDefinitionKey/value}" />
+
+            <html:hr class="sapMXVerticalSeparator"></html:hr>
             <FlexBox direction="RowReverse" 
                 alignItems="Start">
                 <items>

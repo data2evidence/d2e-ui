@@ -18,8 +18,7 @@ sap.ui.define([
 		tableTypePlaceholderMap: {
 			factTable: {},
 			dimTables: []
-		},
-		extCohortDefinitionTableMapping: {}
+		}
 	};
 	BackendLinker._calculatedPholderMap = {
 		"@@AGE_START": "FLOOR(DAYS_BETWEEN(@PATIENT.DOB, @INTERACTION.START) / 365)",
@@ -275,7 +274,8 @@ sap.ui.define([
 				from: {},
 				parentInteraction: [],
 				parentInteractionLabel: "",
-				allowSameInteraction: "false"
+				allowSameInteraction: "false",
+				cohortDefinitionKey: ""
 			},
 			attributeSkeleton: {
 				name: [],
@@ -303,7 +303,8 @@ sap.ui.define([
 				from: {},
 				annotations: [],
 				domainFilter: "",
-				standardConceptCodeFilter: ""
+				standardConceptCodeFilter: "",
+				cohortDefinitionKey: ""
 			},
 			censorSkeleton: {
 				minCohortSize: 0
@@ -566,6 +567,10 @@ sap.ui.define([
 
 		standardConceptCodeFilter: function (frontValue, originalContainer, destination) {
 			destination.standardConceptCodeFilter = frontValue.value;
+		},
+
+		cohortDefinitionKey: function (frontValue, originalContainer, destination) {
+			destination.cohortDefinitionKey = frontValue.value;
 		},
 
 		defaultFilterKey: function (frontValue, originalContainer, destination, feConfig) {
@@ -1165,6 +1170,17 @@ sap.ui.define([
 				}
 			};
 			destination.standardConceptCodeFilter = frontValue;
+		},
+
+		cohortDefinitionKey: function (backValue, destination) {
+			var frontValue = {
+				value: backValue,
+				validity: {
+					message: "",
+					status: "valid"
+				}
+			};
+			destination.cohortDefinitionKey = frontValue;
 		},
 
 		parentInteraction: function (backValue, destination) {

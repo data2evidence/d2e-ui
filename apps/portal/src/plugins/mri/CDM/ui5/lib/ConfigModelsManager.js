@@ -998,7 +998,6 @@ sap.ui.define([
         meta, beConfig, template) {
         var configForUi = this._convertBackendConfig(meta, beConfig);
         configForUi = this._loadTemplates(template, configForUi);
-        configForUi.configEditorModelData.extCohortDefinitionTableMapping = beConfig.advancedSettings.extCohortDefinitionTableMapping
         this._loadSuggestions(beConfig, configForUi)
             .then((function (result) {
                 configForUi = result;
@@ -1989,7 +1988,6 @@ sap.ui.define([
                 beAdvancedSettings.settings[prop] = feConfig.settings[prop].value;
             }
         }
-        beAdvancedSettings.extCohortDefinitionTableMapping = feConfig.extCohortDefinitionTableMapping
         return beAdvancedSettings;
     };
 
