@@ -147,7 +147,8 @@ sap.ui.define([
 				textPlaceholder: [],
 				guardedPlaceholder: [],
 				otsPlaceholder: []
-			}
+			},
+			extCohortDefinitionTableMapping: {},
 		};
 
 		BackendLinker.getAttributeTypes(function (err, types) {
