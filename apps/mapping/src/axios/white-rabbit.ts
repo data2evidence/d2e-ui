@@ -1,15 +1,16 @@
-import request from "./request";
 import { ScanDataDBConnectionForm } from "../types/scanDataDialog";
+import { EtlModel } from "../utils/etl-transformer";
+import request from "./request";
 
 const WHITE_RABBIT_BASE_ENDPOINT = `white-rabbit/api/`;
 
 export class WhiteRabbit {
-  public createScanReport(files: File[]) {
+  public createScanReport(files: File[], delimiter: string = ",") {
     const formData = new FormData();
 
     const settings = {
       fileType: "CSV files",
-      delimiter: ",",
+      delimiter,
       scanDataParams: {
         sampleSize: 100000,
         scanValues: true,
@@ -71,6 +72,7 @@ export class WhiteRabbit {
     return request({
       url: `${WHITE_RABBIT_BASE_ENDPOINT}scan-report/result-as-resource/${id}`,
       method: "GET",
+      responseType: "blob",
     });
   }
 
@@ -86,6 +88,15 @@ export class WhiteRabbit {
       url: `${WHITE_RABBIT_BASE_ENDPOINT}test-connection`,
       method: "POST",
       data: connectionDetail,
+    });
+  }
+
+  public generateEtlReport(formatType: "word", etlModel: EtlModel) {
+    return request({
+      url: `${WHITE_RABBIT_BASE_ENDPOINT}report/${formatType}`,
+      method: "POST",
+      responseType: "blob",
+      data: etlModel,
     });
   }
 }

@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useCallback, useMemo, useRef, useState } from "react";
 import { Button, Dialog, InputLabel, DialogTitle, TextField, FormGroup, FormControlLabel } from "@mui/material";
-import { Check } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -102,7 +101,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
     setUploadedFiles(files);
   }, []);
 
-  const handleDelimiterChange = useCallback((event: SelectChangeEvent<string>) => {
+  const handleDelimiterChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setDelimiter(event.target.value as string);
   }, []);
 
@@ -118,13 +117,20 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
     if (dataType === "csv") {
       setAvailableTables(uploadedFiles.map((file) => file.name));
     } else {
-      const res = await api.whiteRabbit.testDBConnection(dbConnectionForm);
-      if (res.canConnect) {
-        setCanConnect(true);
-        setAvailableTables(res.tableNames);
-      } else {
+      try {
+        const res = await api.whiteRabbit.testDBConnection(dbConnectionForm);
+        if (res.canConnect) {
+          setCanConnect(true);
+          setAvailableTables(res.tableNames);
+        } else {
+          setCanConnect(false);
+          setConnectionErrorMesssage(res.message);
+          setConnectionErrorDialogVisible(true);
+          setAvailableTables([]);
+        }
+      } catch (error: any) {
         setCanConnect(false);
-        setConnectionErrorMesssage(res.message);
+        setConnectionErrorMesssage(`[${error.status}] ${error.data}`);
         setConnectionErrorDialogVisible(true);
         setAvailableTables([]);
       }
@@ -172,7 +178,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
     try {
       setLoading(true);
       if (uploadedFiles) {
-        const response = await api.whiteRabbit.createScanReport(uploadedFiles);
+        const response = await api.whiteRabbit.createScanReport(uploadedFiles, delimiter);
         setScanId(response.id);
       } else {
         console.error("No file was uploaded");
@@ -181,7 +187,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
       console.error("Failed to create scan report from CSV");
       setLoading(false);
     }
-  }, [uploadedFiles]);
+  }, [uploadedFiles, delimiter]);
 
   const scanDBData = useCallback(async () => {
     try {
@@ -272,10 +278,12 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                   </FormControl>
 
                   <FormControl fullWidth variant="standard" className="scan-data-dialog__form-control">
-                    <InputLabel>Delimiter</InputLabel>
-                    <Select label="Delimiter" value={delimiter} onChange={handleDelimiterChange}>
-                      <MenuItem value=",">,</MenuItem>
-                    </Select>
+                    <TextField
+                      label="Delimiter"
+                      value={delimiter}
+                      onChange={handleDelimiterChange}
+                      variant="standard"
+                    />
                   </FormControl>
                   <Button onClick={handleClear}>Clear all</Button>
                 </>
@@ -344,6 +352,11 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                 </>
               )}
             </div>
+          </div>
+        </div>
+        <div className="scan-data-dialog__container">
+          <div className="container-header">Table to Scan</div>
+          <div className="container-content-scan">
             <div className="button-group-container">
               <div className="button-container">
                 <Button
@@ -351,21 +364,10 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                   variant="outlined"
                   disabled={uploadedFiles.length === 0 && !isFormValid(dbConnectionForm)}
                 >
-                  Test Connection
+                  Scan tables
                 </Button>
               </div>
-              {canConnect && (
-                <div className="success-message-container">
-                  <Check />
-                  <div>Connected</div>
-                </div>
-              )}
             </div>
-          </div>
-        </div>
-        <div className="scan-data-dialog__container">
-          <div className="container-header">Table to Scan</div>
-          <div className="container-content-scan">
             {availableTables.length ? (
               <>
                 <div className="button-container">

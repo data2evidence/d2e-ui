@@ -73,6 +73,10 @@ header.portal__header {
         position: relative;
         top: 6px;
         right: 16px;
+
+        // Avoid overwritten by Job UI css which apply on svg { display: block; vertical-align: middle; }
+        display: inline;
+        vertical-align: baseline;
       }
     }
 

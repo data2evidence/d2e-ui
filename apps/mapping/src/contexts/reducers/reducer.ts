@@ -15,7 +15,7 @@ import {
   setFieldTargetHandles,
 } from "./field";
 import { setScannedSchema } from "./scanned-schema";
-import { setCdmTables } from "./cdm-table";
+import { setCdmTables, setCdmVersion } from "./cdm-table";
 import { openLoadMappingDialog, openSaveMappingDialog } from "./dialog";
 
 export enum ACTION_TYPES {
@@ -37,6 +37,7 @@ export enum ACTION_TYPES {
   SET_FIELD_SOURCE_HANDLES = "SET_FIELD_SOURCE_HANDLES",
   SET_FIELD_TARGET_HANDLES = "SET_FIELD_TARGET_HANDLES",
   SET_SCANNED_SCHEMA = "SET_SCANNED_SCHEMA",
+  SET_CDM_VERSION = "SET_CDM_VERSION",
   SET_CDM_TABLES = "SET_CDM_TABLES",
 }
 
@@ -62,6 +63,7 @@ const actionMap = new Map<ActionType, ActionFunction>([
   [ACTION_TYPES.SET_FIELD_SOURCE_HANDLES, setFieldSourceHandles],
   [ACTION_TYPES.SET_FIELD_TARGET_HANDLES, setFieldTargetHandles],
   [ACTION_TYPES.SET_SCANNED_SCHEMA, setScannedSchema],
+  [ACTION_TYPES.SET_CDM_VERSION, setCdmVersion],
   [ACTION_TYPES.SET_CDM_TABLES, setCdmTables],
 ]);
 
