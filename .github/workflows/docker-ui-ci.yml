@@ -6,12 +6,13 @@ on:
     types: [opened, ready_for_review, reopened, synchronize]
   push:
     branches:
-      - develop
+      - rc-v0.4.0-beta
+
 
 # Run only one job per branch
 concurrency:
   group: ${{ github.head_ref || github.ref_name }}-docker-ui-ci # per branch build
-  cancel-in-progress: ${{ (github.head_ref || github.ref_name) != 'develop' }} # except for develop branch
+  cancel-in-progress: ${{ (github.head_ref || github.ref_name) != 'rc-v0.4.0-beta' }} # except for develop branch
 
 env:
   GIT_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -21,7 +22,7 @@ jobs:
     environment: development
     runs-on:
       group: dockerup # Custom runner 4 CPUs & 14 Gb RAM
-    if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }}) || ( github.event_name == 'pull_request' && !github.event.pull_request.draft ) # runs if PR is not draft /or/ workflow_dispatch /or/ release branch
+    if: github.ref_name == 'rc-v0.4.0-beta' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }}) || ( github.event_name == 'pull_request' && !github.event.pull_request.draft ) # runs if PR is not draft /or/ workflow_dispatch /or/ release branch
     env:
       AZ_REGISTRY_NAME: ${{ vars.AZ_REGISTRY_NAME }}
       AZ_REGISTRY_WHITELIST_REGEX: ${{ vars.AZ_REGISTRY_WHITELIST_REGEX }}
@@ -60,7 +61,7 @@ jobs:
           DOCKER_BUILD_PUSH_BOOL_OVERRIDE: ${{ vars.DOCKER_BUILD_PUSH_BOOL_OVERRIDE || false }}
         run: |
           DOCKER_BUILD_PUSH_BOOL_STR=false
-          if [ $DOCKER_BUILD_PUSH_BOOL_OVERRIDE = "true" ] || [ $GITHUB_EVENT_NAME = "workflow_dispatch" ] || [ $GIT_BRANCH_NAME = 'develop' ]; then
+          if [ $DOCKER_BUILD_PUSH_BOOL_OVERRIDE = "true" ] || [ $GITHUB_EVENT_NAME = "workflow_dispatch" ] || [ $GIT_BRANCH_NAME = 'rc-v0.4.0-beta' ]; then
             DOCKER_BUILD_PUSH_BOOL_STR=true
           fi
 
