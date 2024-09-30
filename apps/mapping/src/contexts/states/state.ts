@@ -10,6 +10,7 @@ export interface AppState {
   table: TableState;
   field: FieldState;
   scannedSchema: ScannedSchemaState | undefined;
+  cdmVersion: string | undefined;
   cdmTables: TableSchemaState[];
 }
 
@@ -72,5 +73,6 @@ export const initialState: AppState = {
     targetHandles: [],
   },
   scannedSchema: undefined,
+  cdmVersion: undefined,
   cdmTables: [],
 };
