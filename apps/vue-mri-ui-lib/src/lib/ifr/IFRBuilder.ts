@@ -146,6 +146,8 @@ class FilterCardBuilder extends BaseBuilder {
       parentInteraction: this.builderParameters.parentInteraction || '',
       attributes: this.container.build(),
       inactive: this.builderParameters.inactive || false,
+      isEntry: this.builderParameters.isEntry || false,
+      isExit: this.builderParameters.isExit || false,
     })
   }
 

@@ -256,7 +256,10 @@ export default class ControlGenerator {
     oSuccessor,
     oAdvanceTimeFilter,
     oParentInteraction,
-    oAttributes
+    oAttributes,
+    oInactive,
+    oIsEntry,
+    oIsExit
   ) {
     const oFilterCard = BoolFilterContainerModel.createFilterCard({
       sName,
@@ -285,6 +288,14 @@ export default class ControlGenerator {
 
     if (oAdvanceTimeFilter) {
       oFilterCard.setAdvancedTimeFilterModel(oAdvanceTimeFilter)
+    }
+
+    if (oIsEntry) {
+      oFilterCard.setIsEntry(oIsEntry)
+    }
+
+    if (oIsExit) {
+      oFilterCard.setIsExit(oIsExit)
     }
 
     this.oCurrent.addFilterCard(oFilterCard)
