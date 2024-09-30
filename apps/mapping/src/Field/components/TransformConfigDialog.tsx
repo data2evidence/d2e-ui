@@ -37,8 +37,8 @@ enum TabChoice {
 }
 
 export const TransformConfigDialog: FC<TransformConfigDialogProps> = ({ handleId, open, onClose }) => {
-  const { targetHandles, setFieldTargetHandles } = useField();
-  const handle = targetHandles.find((h) => h.id === handleId);
+  const { activeTargetHandles, setActiveFieldTargetHandles } = useField();
+  const handle = activeTargetHandles.find((h) => h.id === handleId);
   const columnName = handle?.data.label;
   const columnType = handle?.data.columnType;
 
@@ -78,11 +78,11 @@ export const TransformConfigDialog: FC<TransformConfigDialogProps> = ({ handleId
   }, []);
 
   const handleApply = useCallback(() => {
-    setFieldTargetHandles(
-      targetHandles.map((h) => (h.id === handleId ? { ...h, data: { ...h.data, ...formData } } : h))
+    setActiveFieldTargetHandles(
+      activeTargetHandles.map((h) => (h.id === handleId ? { ...h, data: { ...h.data, ...formData } } : h))
     );
     typeof onClose === "function" && onClose("success");
-  }, [targetHandles, formData]);
+  }, [activeTargetHandles, formData]);
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
