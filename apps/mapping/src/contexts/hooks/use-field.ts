@@ -6,7 +6,7 @@ import { FieldHandleData, FieldTargetHandleData } from "../states/field-state";
 
 export const useField = () => {
   const {
-    field: { nodes, edges, sourceHandles, targetHandles },
+    field: { nodes, edges, sourceHandles, targetHandles, activeSourceTable, activeTargetTable },
   } = useContext(AppContext);
   const dispatch = useContext(AppDispatchContext);
 
@@ -23,7 +23,7 @@ export const useField = () => {
   }, []);
 
   const setFieldSourceHandles = useCallback(
-    (handles: Partial<NodeProps<FieldHandleData>>[]) => {
+    (handles: { tableName: string; data: Partial<NodeProps<FieldHandleData>>[] }) => {
       dispatch({
         type: ACTION_TYPES.SET_FIELD_SOURCE_HANDLES,
         payload: handles,
@@ -32,8 +32,22 @@ export const useField = () => {
     []
   );
 
+  const setActiveSourceTable = useCallback((tableName: string) => {
+    dispatch({
+      type: ACTION_TYPES.SET_ACTIVE_SOURCE_TABLE,
+      payload: tableName,
+    });
+  }, []);
+
+  const setActiveFieldSourceHandles = useCallback((handles: Partial<NodeProps<FieldHandleData>>[]) => {
+    dispatch({
+      type: ACTION_TYPES.SET_ACTIVE_FIELD_SOURCE_HANDLES,
+      payload: handles,
+    });
+  }, []);
+
   const setFieldTargetHandles = useCallback(
-    (handles: Partial<NodeProps<FieldTargetHandleData>>[]) => {
+    (handles: { tableName: string; data: Partial<NodeProps<FieldTargetHandleData>>[] }) => {
       dispatch({
         type: ACTION_TYPES.SET_FIELD_TARGET_HANDLES,
         payload: handles,
@@ -42,15 +56,35 @@ export const useField = () => {
     []
   );
 
+  const setActiveTargetTable = useCallback((tableName: string) => {
+    dispatch({
+      type: ACTION_TYPES.SET_ACTIVE_TARGET_TABLE,
+      payload: tableName,
+    });
+  }, []);
+
+  const setActiveFieldTargetHandles = useCallback((handles: Partial<NodeProps<FieldTargetHandleData>>[]) => {
+    dispatch({
+      type: ACTION_TYPES.SET_ACTIVE_FIELD_TARGET_HANDLES,
+      payload: handles,
+    });
+  }, []);
+
   return {
     nodes,
     edges,
     sourceHandles,
     targetHandles,
+    activeSourceHandles: sourceHandles[activeSourceTable || ""],
+    activeTargetHandles: targetHandles[activeTargetTable || ""],
     setFieldNodes,
     setFieldEdges,
     addFieldConnection,
     setFieldSourceHandles,
     setFieldTargetHandles,
+    setActiveSourceTable,
+    setActiveFieldSourceHandles,
+    setActiveTargetTable,
+    setActiveFieldTargetHandles,
   };
 };

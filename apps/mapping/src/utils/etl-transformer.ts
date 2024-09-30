@@ -1,5 +1,5 @@
 import { Edge } from "reactflow";
-import { ScannedSchemaState, TableSchemaState } from "../contexts";
+import { FieldTargetHandleData, FieldTargetState, ScannedSchemaState, TableSchemaState } from "../contexts";
 
 interface Ref {
   "@ref": number | undefined;
@@ -162,18 +162,20 @@ const getFieldByHandleId = (
   return field;
 };
 
-// const getLogicString = (fieldData: FieldTargetHandleData) => {
-//   if (fieldData.constantValue) {
-//     return `Constant value: "${fieldData.constantValue}"`;
-//   }
-//   if (fieldData.isSqlEnabled && fieldData.sql) {
-//     return `SQL Function: ${fieldData.sql}`;
-//   }
-//   if (fieldData.isLookupEnabled && fieldData.lookupSql) {
-//     return `Lookup: ${fieldData.lookupName} ${fieldData.lookupSql}`;
-//   }
-//   return "";
-// };
+const getLogicString = (fieldData?: FieldTargetHandleData) => {
+  if (!fieldData) return "";
+
+  if (fieldData.constantValue) {
+    return `Constant value: "${fieldData.constantValue}"`;
+  }
+  if (fieldData.isSqlEnabled && fieldData.sql) {
+    return `SQL Function: ${fieldData.sql}`;
+  }
+  if (fieldData.isLookupEnabled && fieldData.lookupSql) {
+    return `Lookup: ${fieldData.lookupName} ${fieldData.lookupSql}`;
+  }
+  return "";
+};
 
 let etlGlobalVar = {
   tableId: 10,
@@ -188,7 +190,10 @@ export const transformEtlModel = (
   targetDbName: string,
   cdmTables: TableSchemaState[],
   tableToTableMaps: Edge[],
-  fieldToFieldMaps: Edge[]
+  fieldToFieldMaps: Edge[],
+  allTargetFields: {
+    [tableName: string]: FieldTargetState[];
+  }
 ): EtlModel => {
   const mappedSourceTables =
     sourceSchema?.source_tables.map((table) => {
@@ -224,11 +229,18 @@ export const transformEtlModel = (
         "@type": "java.util.ArrayList",
         "@items": table.column_list.map((column) => {
           etlGlobalVar.fieldId++;
+
+          const targetField = allTargetFields[table.table_name].find((f) => f.data.label === column.column_name);
+
           return {
             ...createField(etlGlobalVar.fieldId, column.column_name, table.table_name, column.column_type),
             table: {
               "@ref": etlGlobalVar.tableId,
             },
+            comment: targetField?.data?.comment || "",
+
+            // Note: Logic is only applicable for linked fields
+            // logic: getLogicString(targetField?.data),
           };
         }),
       },
@@ -259,10 +271,14 @@ export const transformEtlModel = (
           const mappedSourceField = getFieldByHandleId(mappedSourceTables, table.sourceItem["@ref"], item.sourceHandle);
           const mappedTargetField = getFieldByHandleId(mappedTargetTables, table.cdmItem["@ref"], item.targetHandle);
 
+          const targetField = allTargetFields[mappedTargetField?.tableName || ""].find(
+            (f) => f.data.label === mappedTargetField?.name
+          );
+
           return {
             ...createMap(mappedSourceField?.["@id"], mappedTargetField?.["@id"]),
-            comment: mappedTargetField?.comment || "",
-            logic: mappedTargetField?.logic || "",
+            comment: mappedTargetField?.comment ? "" : targetField?.data?.comment || "",
+            logic: getLogicString(targetField?.data),
           };
         }),
     };
