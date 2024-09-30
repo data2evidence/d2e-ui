@@ -92,6 +92,8 @@ function parseFilterCard(filterBuilder, filterCardJson) {
       name: filterCardJson.name,
       advanceTimeFilter: filterCardParam.advanceTimeFilter,
       parentInteraction: filterCardParam.parentInteraction,
+      isEntry: filterCardParam.isEntry,
+      isExit: filterCardParam.isExit,
     }
   }
 

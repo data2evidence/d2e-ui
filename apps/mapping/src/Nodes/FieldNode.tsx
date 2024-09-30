@@ -9,9 +9,9 @@ import "./FieldNode.scss";
 
 export const FieldNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
-  const { sourceHandles, targetHandles } = useField();
+  const { activeSourceHandles, activeTargetHandles } = useField();
   const isSource = props.data.type === "source";
-  const data = isSource ? sourceHandles : targetHandles;
+  const data = isSource ? activeSourceHandles : activeTargetHandles;
 
   const handleWheel = debounce(() => {
     updateNodeInternals(props.id);
@@ -25,7 +25,7 @@ export const FieldNode = (props: NodeProps) => {
             isSource ? "handle-container scroll-shadow handle-container-source" : "handle-container scroll-shadow"
           }
         >
-          {data.map((node) => (
+          {data?.map((node) => (
             <React.Fragment key={node.id}>
               {node.data.isField && node.data.type === "output" ? (
                 <FieldTargetHandle {...node} />

@@ -159,6 +159,8 @@ export default class FilterCardModel extends EntityBase {
       excludeFilter: false,
       inactive: false,
       advancedTimeFilter: false,
+      isEntry: false,
+      isExit: false,
       descriptionColumnsWidth: 0,
       layout: {},
       model: {
@@ -401,5 +403,13 @@ export default class FilterCardModel extends EntityBase {
 
   public setExcludeFilter(isExcluded: boolean) {
     this.props.excludeFilter = isExcluded
+  }
+
+  public setIsEntry(isEntry: boolean) {
+    this.props.isEntry = isEntry
+  }
+
+  public setIsExit(isExit: boolean) {
+    this.props.isExit = isExit
   }
 }
