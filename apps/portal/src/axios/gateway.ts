@@ -55,14 +55,6 @@ export class Gateway {
     });
   }
 
-  public getDataModels(dialect: string): Promise<any> {
-    return request({
-      baseURL: GATEWAY_BASE_URL,
-      url: `/db/${dialect}/data-models`,
-      method: "GET",
-    });
-  }
-
   public getSchemasVersionInformation(
     schemas: string[],
     dialect: string,
