@@ -42,7 +42,9 @@ class Visitor {
     advanceTimeFilter,
     parentInteraction,
     attributes,
-    inactive
+    inactive,
+    isEntry,
+    isExit
   ) {
     const res = visit(attributes)
 
@@ -69,6 +71,8 @@ class Visitor {
       name,
       parentInteraction,
       inactive,
+      isEntry,
+      isExit,
       type: 'FilterCard',
       attributes: res,
       successor: successorJson,

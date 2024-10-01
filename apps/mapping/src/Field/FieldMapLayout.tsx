@@ -15,8 +15,9 @@ export const FieldMapLayout = () => {
   const {
     nodes,
     edges: fieldEdges,
-    sourceHandles: sourceFields,
-    targetHandles: targetFields,
+    activeSourceHandles: sourceFields,
+    activeTargetHandles: targetFields,
+    targetHandles: allTargetFields,
     setFieldNodes,
     setFieldEdges,
     addFieldConnection,
@@ -37,8 +38,8 @@ export const FieldMapLayout = () => {
     navigate(-1);
   }, [navigate]);
 
-  const sourceTableName = sourceFields?.length ? sourceFields[0].data.tableName : "";
-  const targetTableName = targetFields?.length ? targetFields[0].data.tableName : "";
+  const sourceTableName = sourceFields?.length ? sourceFields[0].data?.tableName : "";
+  const targetTableName = targetFields?.length ? targetFields[0].data?.tableName : "";
 
   const deleteLinks = useCallback(() => {
     const edgeChanges: EdgeChange[] = fieldEdges.map((edge) => ({
@@ -57,8 +58,10 @@ export const FieldMapLayout = () => {
       `CDM ${cdmVersion}`,
       state.cdmTables,
       tableEdges,
-      fieldEdges
+      fieldEdges,
+      allTargetFields
     );
+    console.debug("Model", model);
 
     try {
       const response = await api.whiteRabbit.generateEtlReport("word", model);
@@ -66,7 +69,7 @@ export const FieldMapLayout = () => {
     } catch (error) {
       console.error("Failed to generate ETL report", error);
     }
-  }, [fieldEdges, tableEdges, sourceFields, targetFields, sourceTables, targetTables, cdmVersion]);
+  }, [fieldEdges, tableEdges, sourceFields, targetFields, allTargetFields, sourceTables, targetTables, cdmVersion]);
 
   return (
     <div className="field-map-layout">

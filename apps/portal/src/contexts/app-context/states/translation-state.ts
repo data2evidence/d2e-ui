@@ -67,6 +67,7 @@ export const i18nDefault = {
     ADD_STUDY_DIALOG__CREATE_NEW_SCHEMA: "Create new schema",
     ADD_STUDY_DIALOG__DASHBOARD: "Dashboard",
     ADD_STUDY_DIALOG__DATA_MODEL_OPTION: "Data Model Option",
+    ADD_STUDY_DIALOG__CUSTOM_DATA_MODEL_OPTION: "Custom Data Model Option",
     ADD_STUDY_DIALOG__DATA_VISIBILITY: "Dataset Visibility",
     ADD_STUDY_DIALOG__DATABASES: "Databases",
     ADD_STUDY_DIALOG__DATASET_CODE_ALLOWED_VALUES: "Should only contain letters, numbers, and underscores",
