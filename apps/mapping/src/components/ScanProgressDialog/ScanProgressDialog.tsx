@@ -1,10 +1,11 @@
-import { Button, Dialog, DialogTitle, LinearProgress } from "@mui/material";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
+import { useNavigate } from "react-router-dom";
+import { Button, Dialog, DialogTitle, LinearProgress } from "@mui/material";
 import { api } from "../../axios/api";
-import { TableSourceHandleData, useScannedSchema, useTable } from "../../contexts";
+import { TableSourceHandleData, useField, useScannedSchema, useTable } from "../../contexts";
 import { ScanDataProgressLogs, ScanDataSourceTable } from "../../types/scanDataDialog";
-import { saveBlobAs } from "../../utils/utils";
+import { buildFieldHandle, getColumns, saveBlobAs } from "../../utils/utils";
 import { CloseDialogType } from "../ScanDataDialog/ScanDataDialog";
 import "./ScanProgressDialog.scss";
 
@@ -23,7 +24,9 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({ open, onBack, 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const updateNodeInternals = useUpdateNodeInternals();
   const { setTableSourceHandles } = useTable();
+  const { setFieldSourceHandles } = useField();
   const { setScannedSchema } = useScannedSchema();
+  const navigate = useNavigate();
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
@@ -56,14 +59,27 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({ open, onBack, 
         sourcePosition: Position.Right,
       }));
       setTableSourceHandles(sourceHandles);
+
+      sourceHandles.forEach((table) => {
+        const tableName = table.data?.label;
+        if (!tableName) {
+          console.warn("Invalid handle with empty table name");
+          return;
+        }
+
+        const columns = getColumns(scannedResult.source_tables, tableName);
+        const handles = buildFieldHandle(columns, tableName, true);
+        setFieldSourceHandles({ tableName, data: handles });
+      });
+
       setScannedSchema(scannedResult);
       updateNodeInternals(nodeId);
       handleClose("success");
+      navigate("");
     } catch (error) {
       console.log(`Error creating source schema`);
     }
-    console.log("Tables linked");
-  }, [scanId, nodeId]);
+  }, [scanId, nodeId, navigate]);
 
   const fetchScanProgress = useCallback(async () => {
     try {
