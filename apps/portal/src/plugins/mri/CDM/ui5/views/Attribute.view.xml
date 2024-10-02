@@ -81,6 +81,8 @@
             <Input value="{configEditorModel>domainFilter/value}" />
             <Label text="{hc.hph.cdw.config.ui.i18n>HPH_CDM_CFG_STANDARD_CONCEPT_CODE_FILTER_TITLE}" />
             <Input value="{configEditorModel>standardConceptCodeFilter/value}" />
+            <Label text="{hc.hph.cdw.config.ui.i18n>HPH_CDM_CFG_CONCEPT_IDENTIFIER_TYPE_TITLE}" />
+            <Input value="{configEditorModel>conceptIdentifierType/value}" />
 
             <html:hr class="sapMXVerticalSeparator"></html:hr>
 

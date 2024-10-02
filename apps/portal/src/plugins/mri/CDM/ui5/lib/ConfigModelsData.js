@@ -315,7 +315,8 @@ sap.ui.define([
 			annotations: [],
 			domainFilter: { value: "", validity: { status: "valid", message: "" } },
 			standardConceptCodeFilter: { value: "", validity: { status: "valid", message: "" } },
-			cohortDefinitionKey: { value: "", validity: { status: "valid", message: "" } }
+			cohortDefinitionKey: { value: "", validity: { status: "valid", message: "" } },
+			conceptIdentifierType: { value: "", validity: { status: "valid", message: "" } }
 		};
 
 		return attr;
@@ -353,7 +354,8 @@ sap.ui.define([
 			langName: { value: [], validity: { status: "valid", message: "" } },
 			from: { value: [], validity: { status: "valid", message: "" } },
 			name: { value: cardName, validity: { status: "valid", message: "" } },
-			cohortDefinitionKey: { value: "", validity: { status: "valid", message: "" } }
+			cohortDefinitionKey: { value: "", validity: { status: "valid", message: "" } },
+			conceptIdentifierType: { value: "", validity: { status: "valid", message: "" } }
 		};
 
 		return card;

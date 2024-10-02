@@ -275,7 +275,8 @@ sap.ui.define([
 				parentInteraction: [],
 				parentInteractionLabel: "",
 				allowSameInteraction: "false",
-				cohortDefinitionKey: ""
+				cohortDefinitionKey: "",
+				conceptIdentifierType: ""
 			},
 			attributeSkeleton: {
 				name: [],
@@ -304,7 +305,8 @@ sap.ui.define([
 				annotations: [],
 				domainFilter: "",
 				standardConceptCodeFilter: "",
-				cohortDefinitionKey: ""
+				cohortDefinitionKey: "",
+				conceptIdentifierType: ""
 			},
 			censorSkeleton: {
 				minCohortSize: 0
@@ -571,6 +573,10 @@ sap.ui.define([
 
 		cohortDefinitionKey: function (frontValue, originalContainer, destination) {
 			destination.cohortDefinitionKey = frontValue.value;
+		},
+
+		conceptIdentifierType: function (frontValue, originalContainer, destination) {
+			destination.conceptIdentifierType = frontValue.value;
 		},
 
 		defaultFilterKey: function (frontValue, originalContainer, destination, feConfig) {
@@ -1181,6 +1187,17 @@ sap.ui.define([
 				}
 			};
 			destination.cohortDefinitionKey = frontValue;
+		},
+
+		conceptIdentifierType: function (backValue, destination) {
+			var frontValue = {
+				value: backValue,
+				validity: {
+					message: "",
+					status: "valid"
+				}
+			};
+			destination.conceptIdentifierType = frontValue;
 		},
 
 		parentInteraction: function (backValue, destination) {
