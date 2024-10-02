@@ -24,6 +24,9 @@ COPY ./nx.json ./nx.json
 
 ENV GIT_SSH_COMMAND='ssh -Tvv'
 
+ARG NX_DAEMON_ARG=false
+ENV NX_DAEMON=$NX_DAEMON_ARG
+
 # This is a dummy folder to copy over as its used for different purpose in GHA temporarily
 COPY .github /root/
 
