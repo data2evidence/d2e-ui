@@ -118,6 +118,7 @@ jobs:
           build-args: |
             docker_image_prefix=${{ env.AZ_REG_NAME }}.azurecr.io
             GIT_COMMIT_ARG=${{ github.sha }}
+            NX_DAEMON_ARG=false
 
       - name: Prune tagged images before vars.AZ_REG_PRUNE_DAYS_TAGGED
         if: env.AZ_REG_PRUNE_ENABLE_TAGGED == 'true' && env.DOCKER_BUILD_DEBUG == 'true' || env.GIT_BRANCH_NAME == 'develop' || github.event_name == 'workflow_dispatch'
