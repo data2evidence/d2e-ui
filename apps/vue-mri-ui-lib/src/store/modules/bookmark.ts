@@ -91,7 +91,7 @@ const getters = {
 
         axisInfo.binsize =
           allAxes[i].props.binsize === ''
-            ? rootGetters.getMriFrontendConfig.getAttributeByPath(axisInfo.attributeId).getDefaultBinSize()
+            ? rootGetters.getMriFrontendConfig.getAttributeByPath(axisInfo.attributeId).getDefaultBinSize() ?? 'n/a'
             : allAxes[i].props.binsize
       }
       axisSelection.push(axisInfo)
@@ -125,7 +125,7 @@ const getters = {
     const currentBookmarksAxisSelection = bookmark?.axisSelection
     return (
       !isEqual(newBookmarksFilter, currentBookmarksFilter) ||
-      JSON.stringify(newBookmarksAxisSelection) !== JSON.stringify(currentBookmarksAxisSelection)
+      !isEqual(newBookmarksAxisSelection, currentBookmarksAxisSelection)
     )
   },
 }
@@ -228,10 +228,6 @@ const actions = {
                     filterCardId,
                   },
                 })
-                dispatch('addFilterCardConstraint', {
-                  filterCardId,
-                  key,
-                })
               } else {
                 dispatch('clearAxisValue', i)
               }
@@ -286,6 +282,7 @@ const actions = {
           if (chartType) {
             dispatch('setActiveChart', chartType)
           }
+          dispatch('setFireRequest')
           resolve(null)
         })
         .catch(e => {
