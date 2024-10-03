@@ -65,6 +65,12 @@ const mdeOptions = {
   maxHeight: "150px",
 };
 
+const customDataModelOption: Datamodel = {
+  flowName: "custom-flow",
+  datamodel: "custom",
+  flowId: "",
+};
+
 interface FormData {
   type: string;
   tokenStudyCode: string;
@@ -79,6 +85,8 @@ interface FormData {
   cleansedSchemaOption: boolean;
   description: string;
   dataModel: string;
+  dataModelCustom: string;
+  plugin: string;
   databaseCode: string;
   dialect: string;
   paConfigId: string;
@@ -105,6 +113,9 @@ interface FormError {
   dataModel: {
     required: boolean;
   };
+  dataModelCustom: {
+    required: boolean;
+  };
   databaseCode: {
     required: boolean;
   };
@@ -123,6 +134,7 @@ const EMPTY_FORM_ERROR: FormError = {
   cdmSchemaValue: { required: false },
   vocabSchemaValue: { required: false },
   dataModel: { required: false },
+  dataModelCustom: { required: false },
   databaseCode: { required: false },
   paConfigId: { required: false },
   name: { required: false },
@@ -142,6 +154,8 @@ const EMPTY_FORM_DATA: FormData = {
   cleansedSchemaOption: false,
   description: "",
   dataModel: "", //Optional
+  dataModelCustom: "", //Optional
+  plugin: "",
   databaseCode: "", //Optional
   dialect: "",
   paConfigId: "",
@@ -159,7 +173,7 @@ interface dropdownOption {
 }
 
 interface Datamodel {
-  name: string;
+  flowName: string;
   datamodel: string;
   flowId: string;
 }
@@ -208,7 +222,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
   const [tenant] = useTenant();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [formError, setFormError] = useState<FormError>(EMPTY_FORM_ERROR);
-  const [dataModels, setDataModels] = useState<Datamodel[]>([]);
+  const [dataModelOptions, setDataModelOptions] = useState<string[]>([]);
   const [schemas, setSchemas] = useState<string[]>([]);
   const [paConfigs] = usePaConfigs();
   const [vocabSchemas] = useVocabSchemas(databases, formData.databaseCode);
@@ -251,6 +265,11 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
     [formData.schemaOption, formData.databaseCode]
   );
 
+  const displayCustomDataModelInput = useMemo(
+    () => formData.dataModel.split(" ")[0] === customDataModelOption.datamodel,
+    [formData.dataModel]
+  );
+
   const displaySameCdmVocabSchemaCheckbox = useMemo(
     () => [SchemaTypes.CreateCDM, SchemaTypes.CustomCDM].includes(formData.schemaOption),
     [formData.schemaOption]
@@ -289,12 +308,21 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
 
   const getDataModels = useCallback(async () => {
     try {
-      const dataModelResult = await api.dataflow.getDatamodels();
-      setDataModels(dataModelResult);
+      const dataModelResult: Datamodel[] = await api.dataflow.getDatamodels();
+
+      if (formData.schemaOption === SchemaTypes.ExistingCDM) {
+        dataModelResult.push(customDataModelOption);
+      }
+
+      const dataModelOptions = dataModelResult.map((dataModel: Datamodel) => {
+        return `${dataModel.datamodel} [${dataModel.flowName}]`;
+      });
+
+      setDataModelOptions(dataModelOptions);
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [formData.schemaOption]);
 
   useEffect(() => {
     if (formData.schemaOption !== SchemaTypes.NoCDM && formData.databaseCode) {
@@ -370,6 +398,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       isSameCdmSchemaForVocab,
       vocabSchemaValue,
       dataModel,
+      dataModelCustom,
       databaseCode,
       paConfigId,
       name,
@@ -402,6 +431,10 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
 
     if (schemaOption != SchemaTypes.NoCDM && dataModel == "") {
       formError = { ...formError, dataModel: { required: true } };
+    }
+
+    if (schemaOption === SchemaTypes.ExistingCDM && dataModel === customDataModelOption.datamodel && !dataModelCustom) {
+      formError = { ...formError, dataModelCustom: { required: true } };
     }
 
     if (
@@ -469,7 +502,15 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
 
     setDashboardErrorIndex(formError);
     return hasError;
-  }, [dashboards]);
+  }, [dashboards, allDashboards]);
+
+  const parseDatamodelOption = useCallback((dataModelOption: string) => {
+    const parsedOption = dataModelOption.replace(/[[\]]/g, "").split(" ");
+    return {
+      dataModel: parsedOption[0],
+      plugin: parsedOption[1],
+    };
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     if (isFormError() || isFormMetadataError() || isDashboardError()) {
@@ -492,12 +533,14 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       showRequestAccess,
       description,
       dataModel,
+      dataModelCustom,
       databaseCode,
       dialect,
       paConfigId,
       visibilityStatus,
     } = formData;
 
+    const dataModelDetails = parseDatamodelOption(dataModel);
     let fhirProjectId;
 
     if (createFhirProject) {
@@ -524,7 +567,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       vocabSchemaValue,
       cleansedSchemaOption,
       tenantName: tenant?.name || "",
-      dataModel,
+      dataModel:
+        dataModelDetails.dataModel === customDataModelOption.datamodel ? dataModelCustom : dataModelDetails.dataModel,
+      plugin: dataModelDetails.plugin,
       databaseCode,
       dialect,
       paConfigId,
@@ -559,6 +604,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
     isDashboardError,
     setLoading,
     handleClose,
+    parseDatamodelOption,
   ]);
 
   return (
@@ -854,18 +900,38 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
                 <MenuItem sx={styles} value="">
                   &nbsp;
                 </MenuItem>
-                {dataModels?.map((model) => (
-                  <MenuItem sx={styles} key={model.name} value={model.name}>
-                    {model.name}
+                {dataModelOptions?.map((model) => (
+                  <MenuItem sx={styles} key={model} value={model}>
+                    {model}
                   </MenuItem>
                 ))}
               </Select>
+
               {formError.dataModel.required && (
                 <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
               )}
             </FormControl>
           </Box>
         )}
+
+        {/* Custom Data Model Options */}
+        {displayCustomDataModelInput && (
+          <Box mb={4}>
+            <TextField
+              fullWidth
+              variant="standard"
+              label={getText(i18nKeys.ADD_STUDY_DIALOG__CUSTOM_DATA_MODEL_OPTION)}
+              value={formData.dataModelCustom}
+              onChange={(event) => handleFormDataChange({ dataModelCustom: event.target.value })}
+              error={formError.dataModelCustom.required}
+            />
+
+            {formError.dataModelCustom.required && (
+              <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
+            )}
+          </Box>
+        )}
+
         <Box mb={4}>
           <FormControl
             sx={styles}

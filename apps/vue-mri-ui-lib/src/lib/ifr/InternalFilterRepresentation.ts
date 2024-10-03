@@ -112,6 +112,8 @@ class FilterCard {
   public parentInteraction: any
   public attributes: any
   public inactive: any
+  public isEntry: any
+  public isExit: any
   constructor(params) {
     new ParameterObjectValidator(params)
       .expectProperty('configPath')
@@ -130,6 +132,10 @@ class FilterCard {
       .ofTypeString()
       .optionalProperty('inactive')
       .ofTypeBoolean()
+      .optionalProperty('isEntry')
+      .ofTypeBoolean()
+      .optionalProperty('isExit')
+      .ofTypeBoolean()
       .expectProperty('attributes')
       .ofTypeIn([BooleanContainers.BooleanContainer, Attribute])
 
@@ -142,6 +148,8 @@ class FilterCard {
     this.parentInteraction = params.parentInteraction
     this.attributes = params.attributes
     this.inactive = params.inactive
+    this.isEntry = params.isEntry
+    this.isExit = params.isExit
   }
 
   public accept(visitor) {
@@ -154,7 +162,9 @@ class FilterCard {
       this.advanceTimeFilter,
       this.parentInteraction,
       this.attributes,
-      this.inactive
+      this.inactive,
+      this.isEntry,
+      this.isExit
     )
   }
 }
