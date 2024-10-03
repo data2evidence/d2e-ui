@@ -274,7 +274,9 @@ sap.ui.define([
 				from: {},
 				parentInteraction: [],
 				parentInteractionLabel: "",
-				allowSameInteraction: "false"
+				allowSameInteraction: "false",
+				cohortDefinitionKey: "",
+				conceptIdentifierType: ""
 			},
 			attributeSkeleton: {
 				name: [],
@@ -302,7 +304,9 @@ sap.ui.define([
 				from: {},
 				annotations: [],
 				domainFilter: "",
-				standardConceptCodeFilter: ""
+				standardConceptCodeFilter: "",
+				cohortDefinitionKey: "",
+				conceptIdentifierType: ""
 			},
 			censorSkeleton: {
 				minCohortSize: 0
@@ -565,6 +569,14 @@ sap.ui.define([
 
 		standardConceptCodeFilter: function (frontValue, originalContainer, destination) {
 			destination.standardConceptCodeFilter = frontValue.value;
+		},
+
+		cohortDefinitionKey: function (frontValue, originalContainer, destination) {
+			destination.cohortDefinitionKey = frontValue.value;
+		},
+
+		conceptIdentifierType: function (frontValue, originalContainer, destination) {
+			destination.conceptIdentifierType = frontValue.value;
 		},
 
 		defaultFilterKey: function (frontValue, originalContainer, destination, feConfig) {
@@ -1164,6 +1176,28 @@ sap.ui.define([
 				}
 			};
 			destination.standardConceptCodeFilter = frontValue;
+		},
+
+		cohortDefinitionKey: function (backValue, destination) {
+			var frontValue = {
+				value: backValue,
+				validity: {
+					message: "",
+					status: "valid"
+				}
+			};
+			destination.cohortDefinitionKey = frontValue;
+		},
+
+		conceptIdentifierType: function (backValue, destination) {
+			var frontValue = {
+				value: backValue,
+				validity: {
+					message: "",
+					status: "valid"
+				}
+			};
+			destination.conceptIdentifierType = frontValue;
 		},
 
 		parentInteraction: function (backValue, destination) {
