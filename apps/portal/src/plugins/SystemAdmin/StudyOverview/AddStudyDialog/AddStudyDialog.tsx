@@ -501,12 +501,21 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
     let fhirProjectId;
 
     if (createFhirProject) {
-      const fhirProjectInput: NewFhirProjectInput = {
-        name: name,
-        description: description,
-      };
-      const { id } = await api.gateway.createFhirStaging(fhirProjectInput);
-      fhirProjectId = id;
+      try {
+        const fhirProjectInput: NewFhirProjectInput = {
+          name: name,
+          description: description,
+        };
+        const { id } = await api.gateway.createFhirStaging(fhirProjectInput);
+        fhirProjectId = id;
+      } catch (err: any) {
+        setFeedback({
+          type: "error",
+          message: `[FHIR Project] ${err.data?.message || err.data}`,
+        });
+        console.error(err);
+        return;
+      }
     }
 
     const input: NewStudyInput = {
