@@ -14,7 +14,8 @@ export const useFlowRunState = (flowRunId: string) => {
   );
 
   const isStoppedState =
-    flowRunState?.type && FLOW_RUN_STOPPED_STATES.includes(flowRunState.type);
+    flowRunState?.state_type &&
+    FLOW_RUN_STOPPED_STATES.includes(flowRunState.state_type);
 
   return { flowRunState, isStoppedState };
 };
