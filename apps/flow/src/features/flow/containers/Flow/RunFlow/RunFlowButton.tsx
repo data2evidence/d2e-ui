@@ -50,7 +50,7 @@ export const RunFlowButton: FC = () => {
   const isFlowRunError =
     !isRunning &&
     !isFetchingFlowRunState &&
-    ["FAILED", "CRASHED"].includes(flowRunState?.type);
+    ["FAILED", "CRASHED"].includes(flowRunState?.state_type);
 
   const isWaitingForResult = flowRunState?.id && !isStoppedState;
   const classes = classNames("run-flow-button", {
@@ -113,7 +113,7 @@ export const RunFlowButton: FC = () => {
           isWaitingForResult
             ? "Running"
             : isFlowRunError
-            ? flowRunState.message
+            ? flowRunState.state_name
             : "Run flow"
         }
       >
