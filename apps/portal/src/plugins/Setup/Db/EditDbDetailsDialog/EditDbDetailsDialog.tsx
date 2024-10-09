@@ -14,11 +14,17 @@ interface EditDbDialogProps {
 }
 
 interface FormData {
+  name: string;
+  host: string;
+  port: number;
   vocabSchemas: string[];
   extra: string;
 }
 
 const EMPTY_FORM_DATA: FormData = {
+  name: "",
+  host: "",
+  port: NaN,
   vocabSchemas: [],
   extra: "",
 };
@@ -58,6 +64,9 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
   const [vocabSchemaOptions, setVocabSchemaOptions] = useState<string[]>([]);
   const hasChanges = useMemo(
     () =>
+      !isEqual(db.name, formData.name) ||
+      !isEqual(db.host, formData.host) ||
+      !isEqual(db.port, formData.port) ||
       (!isEqual(db.vocabSchemas, formData.vocabSchemas) && formData.vocabSchemas.length > 0) ||
       originalExtra !== formData.extra,
     [db, formData, originalExtra]
@@ -71,7 +80,7 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
         setVocabSchemaOptions(["cdmvocab"]);
       }
       const extraStr = JSON.stringify(mapExtraToHashmap(db.extra), null, 4);
-      setFormData({ vocabSchemas: db.vocabSchemas, extra: extraStr });
+      setFormData({ name: db.name, host: db.host, port: db.port, vocabSchemas: db.vocabSchemas, extra: extraStr });
       setOriginalExtra(extraStr);
       setFeedback({});
       setLoading(false);
@@ -125,6 +134,8 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
       className="edit-db-dialog"
       title="Edit database details"
       closable
+      fullWidth
+      maxWidth="md"
       open={open}
       onClose={() => handleClose("cancelled")}
       feedback={feedback}
@@ -136,6 +147,48 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
           <label className="database-code-value__label">{db.code}</label>
         </Box>
         <Box mb={4}>
+          <Box mb={2}>
+            <b>Database Name</b>
+          </Box>
+          <Box mb={4}>
+            <TextField
+              fullWidth
+              variant="standard"
+              value={formData.name}
+              onChange={(event) => handleFormDataChange({ name: event.target.value })}
+            />
+          </Box>
+
+          <Box mb={2} display="flex" gap={4}>
+            <Box sx={{ width: "100%" }}>
+              <Box mb={2}>
+                <b>Host</b>
+              </Box>
+              <Box mb={2}>
+                <TextField
+                  fullWidth
+                  variant="standard"
+                  value={formData.host}
+                  onChange={(event) => handleFormDataChange({ host: event.target.value })}
+                />
+              </Box>
+            </Box>
+            <Box>
+              <Box mb={2}>
+                <b>Port</b>
+              </Box>
+              <Box mb={4}>
+                <TextField
+                  variant="standard"
+                  type="number"
+                  sx={{ width: "150px" }}
+                  value={formData.port}
+                  onChange={(event) => handleFormDataChange({ port: event.target.value })}
+                />
+              </Box>
+            </Box>
+          </Box>
+
           <Box mb={2}>
             <b>Vocab schema</b>
           </Box>
