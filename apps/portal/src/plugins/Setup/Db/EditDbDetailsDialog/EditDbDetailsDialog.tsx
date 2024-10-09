@@ -167,7 +167,7 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
               <Box mb={2}>
                 <b>Host</b>
               </Box>
-              <Box mb={2}>
+              <Box mb={4}>
                 <TextField
                   fullWidth
                   variant="standard"
