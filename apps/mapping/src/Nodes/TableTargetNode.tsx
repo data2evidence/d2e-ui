@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
 import { debounce } from "lodash";
 import { Button } from "@mui/material";
-import { TableSchemaState, TableTargetHandleData, useCdmSchema, useTable } from "../contexts";
+import { TableSchemaState, TableTargetHandleData, useCdmSchema, useField, useTable } from "../contexts";
+import { buildFieldHandle, getColumns } from "../utils/utils";
 import { MappingHandle } from "./MappingHandle";
 import { api } from "../axios/api";
 import "./BaseNode.scss";
@@ -10,6 +11,7 @@ import "./BaseNode.scss";
 export const TableTargetNode = (props: NodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const { targetHandles, setTableTargetHandles } = useTable();
+  const { setFieldTargetHandles } = useField();
   const [cdmVersions, setCdmVersions] = useState<string[]>([]);
   const { setCdmVersion, setCdmTables } = useCdmSchema();
 
@@ -21,6 +23,18 @@ export const TableTargetNode = (props: NodeProps) => {
     }));
 
     setTableTargetHandles(targetHandles);
+
+    targetHandles.forEach((table) => {
+      const tableName = table.data?.tableName;
+      if (!tableName) {
+        console.warn("Invalid handle with empty table name");
+        return;
+      }
+
+      const columns = getColumns(data, tableName);
+      const handles = buildFieldHandle(columns, tableName, false);
+      setFieldTargetHandles({ tableName, data: handles });
+    });
 
     updateNodeInternals(props.id);
   }, []);

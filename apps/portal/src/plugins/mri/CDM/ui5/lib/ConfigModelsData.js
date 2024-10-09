@@ -314,7 +314,9 @@ sap.ui.define([
 			otsTermContext: { value: "", validity: { status: "valid", message: "" } },
 			annotations: [],
 			domainFilter: { value: "", validity: { status: "valid", message: "" } },
-			standardConceptCodeFilter: { value: "", validity: { status: "valid", message: "" } }
+			standardConceptCodeFilter: { value: "", validity: { status: "valid", message: "" } },
+			cohortDefinitionKey: { value: "", validity: { status: "valid", message: "" } },
+			conceptIdentifierType: { value: "", validity: { status: "valid", message: "" } }
 		};
 
 		return attr;
@@ -351,7 +353,9 @@ sap.ui.define([
 			parentInteractionLabel: { value: "parent", validity: { status: "valid", message: "" } },
 			langName: { value: [], validity: { status: "valid", message: "" } },
 			from: { value: [], validity: { status: "valid", message: "" } },
-			name: { value: cardName, validity: { status: "valid", message: "" } }
+			name: { value: cardName, validity: { status: "valid", message: "" } },
+			cohortDefinitionKey: { value: "", validity: { status: "valid", message: "" } },
+			conceptIdentifierType: { value: "", validity: { status: "valid", message: "" } }
 		};
 
 		return card;

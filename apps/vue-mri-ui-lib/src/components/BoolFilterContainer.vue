@@ -88,7 +88,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['addFilterCard', 'toggleFilterContainerBooleanCondition', 'updateBoolFilterContainer']),
+    ...mapActions([
+      'addFilterCard',
+      'toggleFilterContainerBooleanCondition',
+      'updateBoolFilterContainer',
+      'resetAllFilterCardEntryExit',
+    ]),
     onAddFilterCardMenuItemSelected(configPath) {
       this.addFilterCard({
         configPath,
@@ -103,6 +108,7 @@ export default {
         filterContainerId: this.id,
         parentId: this.parentId,
       })
+      this.resetAllFilterCardEntryExit({ key: null })
     },
     rearrangeFilterCard(e) {
       if (e.added) {

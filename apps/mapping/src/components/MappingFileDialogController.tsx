@@ -46,7 +46,7 @@ export const MappingFileDialogController: FC = () => {
 
           try {
             const json = JSON.parse(jsonData);
-            console.log("JSON content:", json);
+            console.debug("JSON content:", json);
             load(json);
             navigate("");
             window.location.reload();
