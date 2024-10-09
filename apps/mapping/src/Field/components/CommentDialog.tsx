@@ -1,14 +1,6 @@
 import { FC, useCallback, useEffect, useState } from "react";
 import Divider from "@mui/material/Divider";
-import {
-  Box,
-  Button,
-  Dialog,
-  FormControl,
-  IconButton,
-  TextField,
-  TrashIcon,
-} from "@portal/components";
+import { Box, Button, Dialog, FormControl, IconButton, TextField, TrashIcon } from "@portal/components";
 import { useField } from "../../contexts";
 import "./CommentDialog.scss";
 
@@ -20,14 +12,10 @@ interface CommentDialogProps {
   onClose?: (type: CloseDialogType) => void;
 }
 
-export const CommentDialog: FC<CommentDialogProps> = ({
-  handleId,
-  open,
-  onClose,
-}) => {
+export const CommentDialog: FC<CommentDialogProps> = ({ handleId, open, onClose }) => {
   const [value, setValue] = useState<string>("");
-  const { targetHandles, setFieldTargetHandles } = useField();
-  const handle = targetHandles.find((h) => h.id === handleId);
+  const { activeTargetHandles, setActiveFieldTargetHandles } = useField();
+  const handle = activeTargetHandles.find((h) => h.id === handleId);
   const comment = handle?.data.comment;
 
   useEffect(() => {
@@ -35,24 +23,18 @@ export const CommentDialog: FC<CommentDialogProps> = ({
   }, [comment]);
 
   const handleApply = useCallback(() => {
-    setFieldTargetHandles(
-      targetHandles.map((h) =>
-        h.id === handleId ? { ...h, data: { ...h.data, comment: value } } : h
-      )
+    setActiveFieldTargetHandles(
+      activeTargetHandles.map((h) => (h.id === handleId ? { ...h, data: { ...h.data, comment: value } } : h))
     );
     typeof onClose === "function" && onClose("success");
-  }, [targetHandles, value]);
+  }, [activeTargetHandles, value]);
 
   const handleRemove = useCallback(() => {
-    setFieldTargetHandles(
-      targetHandles.map((h) =>
-        h.id === handleId
-          ? { ...h, data: { ...h.data, comment: undefined } }
-          : h
-      )
+    setActiveFieldTargetHandles(
+      activeTargetHandles.map((h) => (h.id === handleId ? { ...h, data: { ...h.data, comment: undefined } } : h))
     );
     typeof onClose === "function" && onClose("success");
-  }, [targetHandles]);
+  }, [activeTargetHandles]);
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
@@ -87,12 +69,7 @@ export const CommentDialog: FC<CommentDialogProps> = ({
       </div>
       <Divider />
       <div className="button-group-actions">
-        <Button
-          block
-          text="Cancel"
-          variant="outlined"
-          onClick={() => handleClose("cancelled")}
-        />
+        <Button block text="Cancel" variant="outlined" onClick={() => handleClose("cancelled")} />
         <Button block text="Apply" variant="contained" onClick={handleApply} />
       </div>
     </Dialog>

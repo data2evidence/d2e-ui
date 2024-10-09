@@ -26,6 +26,7 @@
                         getText('MRI_PA_FILTERCARD_TITLE_BASIC_DATA')
                       }}</span>
                       <span class="bookmark-headelement" v-else>{{ filterCard.name }}</span>
+                      <b-badge v-if="isDisplayBadge(filterCard)" variant="light" class="ml-2 filter-card-badge">{{ getBadgeText(filterCard) }}</b-badge>
                       <span class="bookmark-headelement" v-if="filterCard.isExcluded"
                         >({{ getText('MRI_PA_LABEL_EXCLUDED') }})</span
                       >
@@ -92,9 +93,9 @@ import messageBox from './MessageBox.vue'
 import downloadCohortDefinitionDialog from './DownloadCohortDefinitionDialog.vue'
 
 export default {
-  compatConfig: {
-    MODE: 3,
-  },
+  // compatConfig: {
+  //   MODE: 3,
+  // },
   name: 'filterCardSummary',
   props: ['unloadBookmarkEv', 'chartBusy'],
   data() {
@@ -135,6 +136,7 @@ export default {
     },
     getCardsFormatted() {
       const boolContainers = this.bookmark.filterCardData
+      
       const returnObj = []
       try {
         for (let i = 0; i < boolContainers.length; i += 1) {
@@ -146,6 +148,8 @@ export default {
               let attributes = boolContainers[i].content[ii].attributes
               let isExcluded = false
               let filterCardName = boolContainers[i].content[ii].name
+              const isEntry = boolContainers[i].content[ii].isEntry
+              const isExit = boolContainers[i].content[ii].isExit
               // Excluded filter cards have attributes one level further down
               if (!attributes) {
                 attributes = boolContainers[i].content[ii].content[0].attributes
@@ -199,6 +203,8 @@ export default {
                 visibleAdvanceTime,
                 visibleAttributes,
                 isExcluded,
+                isEntry,
+                isExit,
                 name: filterCardName,
               }
               content.push(filterCardObj)
@@ -216,6 +222,9 @@ export default {
       }
       return returnObj
     },
+    displayShowCohortEntryExit() {      
+      return this.getMriFrontendConfig._internalConfig.panelOptions.cohortEntryExit
+    }
   },
   methods: {
     ...mapActions(['setActiveChart', 'fireBookmarkQuery', 'fireCohortDefinitionQuery']),
@@ -308,6 +317,12 @@ export default {
       }
       return attributeId
     },
+    isDisplayBadge(filterCard) {
+      return this.displayShowCohortEntryExit && (filterCard.isEntry || filterCard.isExit);
+    },
+    getBadgeText(filterCard) {
+      return filterCard.isEntry ? this.getText('MRI_PA_CHART_ENTRY') : filterCard.isExit ? this.getText('MRI_PA_CHART_EXIT') : ""
+    }
   },
   components: {
     icon,
@@ -318,3 +333,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.filter-card-badge {
+  color: #000080 !important;
+}
+</style>

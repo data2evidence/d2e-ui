@@ -44,6 +44,7 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
   const [selectedTables, setSelectedTables] = useState<string[]>([]);
   const [dataType, setDataType] = useState("");
   const [loading, setLoading] = useState(false);
+  const [testingConnection, setTestingConnection] = useState(false);
   const [delimiter, setDelimiter] = useState(",");
   const [dbConnectionForm, setDbConnectionForm] = useState<ScanDataDBConnectionForm>(EMPTY_DBCONNECTION_FORM_DATA);
   const [canConnect, setCanConnect] = useState(false);
@@ -114,26 +115,32 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
   }, []);
 
   const handleTestConnection = useCallback(async () => {
-    if (dataType === "csv") {
-      setAvailableTables(uploadedFiles.map((file) => file.name));
-    } else {
-      try {
-        const res = await api.whiteRabbit.testDBConnection(dbConnectionForm);
-        if (res.canConnect) {
-          setCanConnect(true);
-          setAvailableTables(res.tableNames);
-        } else {
+    try {
+      setTestingConnection(true);
+
+      if (dataType === "csv") {
+        setAvailableTables(uploadedFiles.map((file) => file.name));
+      } else {
+        try {
+          const res = await api.whiteRabbit.testDBConnection(dbConnectionForm);
+          if (res.canConnect) {
+            setCanConnect(true);
+            setAvailableTables(res.tableNames);
+          } else {
+            setCanConnect(false);
+            setConnectionErrorMesssage(res.message);
+            setConnectionErrorDialogVisible(true);
+            setAvailableTables([]);
+          }
+        } catch (error: any) {
           setCanConnect(false);
-          setConnectionErrorMesssage(res.message);
+          setConnectionErrorMesssage(`[${error.status}] ${error.data}`);
           setConnectionErrorDialogVisible(true);
           setAvailableTables([]);
         }
-      } catch (error: any) {
-        setCanConnect(false);
-        setConnectionErrorMesssage(`[${error.status}] ${error.data}`);
-        setConnectionErrorDialogVisible(true);
-        setAvailableTables([]);
       }
+    } finally {
+      setTestingConnection(false);
     }
   }, [dbConnectionForm, uploadedFiles, dataType]);
 
@@ -362,9 +369,9 @@ export const ScanDataDialog: FC<ScanDataDialogProps> = ({ open, onClose, setScan
                 <Button
                   onClick={handleTestConnection}
                   variant="outlined"
-                  disabled={uploadedFiles.length === 0 && !isFormValid(dbConnectionForm)}
+                  disabled={testingConnection || (uploadedFiles.length === 0 && !isFormValid(dbConnectionForm))}
                 >
-                  Scan tables
+                  {testingConnection ? "Scanning..." : "Scan tables"}
                 </Button>
               </div>
             </div>

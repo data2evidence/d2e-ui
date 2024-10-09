@@ -22,8 +22,8 @@ export interface NodeResultDto {
 
 export interface FlowRunState {
   id: string;
-  type: string;
-  message: string;
+  state_type: string;
+  state_name: string;
 }
 
 export interface FlowRunStateDto extends FlowRunState {}
