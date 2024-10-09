@@ -279,6 +279,7 @@
   "DATASET_SELECTOR__SELECT_STUDY": "Wählen Sie Studie",
   "DB__ADD_DATABASE": "Datenbank hinzufügen",
   "DB__CODE": "Code",
+  "DB__NAME": "Name",
   "DB__DATABASES": "Datenbanken",
   "DB__DELETE": "Löschen",
   "DB__DIALECT": "Dialekt",

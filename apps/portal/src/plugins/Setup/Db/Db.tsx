@@ -178,6 +178,7 @@ export const Db: FC = () => {
           <TableHead>
             <TableRow>
               <TableCell>{getText(i18nKeys.DB__CODE)}</TableCell>
+              <TableCell>{getText(i18nKeys.DB__NAME)}</TableCell>
               <TableCell>{getText(i18nKeys.DB__HOST)}</TableCell>
               <TableCell>{getText(i18nKeys.DB__PORT)}</TableCell>
               <TableCell>{getText(i18nKeys.DB__DIALECT)}</TableCell>
@@ -195,6 +196,7 @@ export const Db: FC = () => {
             {databases?.map((db) => (
               <TableRow key={db.id}>
                 <TableCell>{db.code}</TableCell>
+                <TableCell>{db.name}</TableCell>
                 <TableCell>{db.host}</TableCell>
                 <TableCell>{db.port}</TableCell>
                 <TableCell>{db.dialect}</TableCell>
