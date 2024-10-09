@@ -24,7 +24,7 @@ interface FormData {
 const EMPTY_FORM_DATA: FormData = {
   name: "",
   host: "",
-  port: NaN,
+  port: 5432,
   vocabSchemas: [],
   extra: "",
 };
@@ -186,7 +186,7 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
                   type="number"
                   sx={{ width: "150px" }}
                   value={formData.port}
-                  onChange={(event) => handleFormDataChange({ port: event.target.value })}
+                  onChange={(event) => handleFormDataChange({ port: Number(event.target.value) })}
                 />
               </Box>
             </Box>
