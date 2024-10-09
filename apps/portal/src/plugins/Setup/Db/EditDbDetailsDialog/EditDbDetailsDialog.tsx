@@ -104,6 +104,9 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
       setLoading(true);
       await api.dbCredentialsMgr.updateDbDetails({
         id: db.id,
+        name: formData.name,
+        host: formData.host,
+        port: formData.port,
         vocabSchemas: formData.vocabSchemas,
         extra: formData.extra ? JSON.parse(formData.extra) : {},
       });
