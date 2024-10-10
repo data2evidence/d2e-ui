@@ -188,7 +188,7 @@ export const Db: FC = () => {
           <TableBody>
             {databases?.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} align="center">
+                <TableCell colSpan={7} align="center">
                   {getText(i18nKeys.DB__NO_DATA)}
                 </TableCell>
               </TableRow>
