@@ -279,6 +279,7 @@
   "DATASET_SELECTOR__SELECT_STUDY": "选择研究",
   "DB__ADD_DATABASE": "添加数据库",
   "DB__CODE": "代码",
+  "DB__NAME": "名称",
   "DB__DATABASES": "数据库",
   "DB__DELETE": "删除",
   "DB__DIALECT": "方言",

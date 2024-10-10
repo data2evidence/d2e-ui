@@ -318,6 +318,7 @@ export const i18nDefault = {
     DATASET_SELECTOR__SELECT_STUDY: "Select Study",
     DB__ADD_DATABASE: "Add database",
     DB__CODE: "Code",
+    DB__NAME: "Name",
     DB__DATABASES: "Databases",
     DB__DELETE: "Delete",
     DB__DIALECT: "Dialect",
