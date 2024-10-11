@@ -6,7 +6,6 @@ WORKDIR /usr/src/services/app/alp-ui
 
 COPY ./yarn.lock ./yarn.lock
 COPY ./package.json ./package.json
-COPY ./plugins/sample-superadmin-page/package.json ./plugins/sample-superadmin-page/package.json
 COPY ./plugins/sample-researcher-study/package.json ./plugins/sample-researcher-study/package.json
 COPY ./libs/portal-components/package.json ./libs/portal-components/package.json
 COPY ./libs/portal-plugin/package.json ./libs/portal-plugin/package.json
