@@ -14,7 +14,6 @@ COPY ./apps/mapping/package.json ./apps/mapping/package.json
 COPY ./apps/chp-ps-ui/package.json ./apps/chp-ps-ui/package.json
 COPY ./apps/portal/package.json ./apps/portal/package.json
 COPY ./apps/analysis/package.json ./apps/analysis/package.json
-COPY ./apps/superadmin/package.json ./apps/superadmin/package.json
 COPY ./apps/vue-mri-ui-lib/package.json ./apps/vue-mri-ui-lib/package.json
 COPY ./apps/jobs/package.json ./apps/jobs/package.json
 COPY ./apps/mri-pa-ui/package.json ./apps/mri-pa-ui/package.json
