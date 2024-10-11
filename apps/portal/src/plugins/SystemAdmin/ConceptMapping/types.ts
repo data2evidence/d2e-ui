@@ -7,7 +7,7 @@ export interface ConceptMappingProviderProps {
 export type ConceptMappingStateType = {
   importData: csvDataType;
   csvData: csvDataType;
-  selectedData: Object;
+  selectedData: { [key: string]: string };
   columnMapping: columnMappingType;
   filters: filters;
 };
@@ -15,7 +15,7 @@ export type ConceptMappingStateType = {
 export type csvDataType = {
   name: string;
   columns: string[] | undefined;
-  data: Array<Object>;
+  data: Array<{ [key: string]: string }>;
 };
 
 export type columnMappingType = {
@@ -23,6 +23,7 @@ export type columnMappingType = {
   sourceName: string;
   sourceFrequency: string;
   description: string;
+  domainId?: string;
 };
 
 export type filters = {};

@@ -16,10 +16,7 @@ export const clearData = (state: ConceptMappingStateType): ConceptMappingStateTy
   },
 });
 
-export const updateSingleMapping = (
-  state: ConceptMappingStateType,
-  payload: conceptDataType
-): ConceptMappingStateType => {
+export const setSingleMapping = (state: ConceptMappingStateType, payload: conceptDataType): ConceptMappingStateType => {
   const index = state.csvData.data.findIndex((data) => data === state.selectedData);
   return {
     ...state,
@@ -40,7 +37,7 @@ export const updateSingleMapping = (
   };
 };
 
-export const updateMultipleMapping = (
+export const setMultipleMapping = (
   state: ConceptMappingStateType,
   payload: StandardConcepts[]
 ): ConceptMappingStateType => {
@@ -60,7 +57,7 @@ export const updateMultipleMapping = (
   };
 };
 
-export const setSelectedData = (state: ConceptMappingStateType, payload: Object): ConceptMappingStateType => ({
+export const setSelectedData = (state: ConceptMappingStateType, payload: any): ConceptMappingStateType => ({
   ...state,
   selectedData: payload,
 });
