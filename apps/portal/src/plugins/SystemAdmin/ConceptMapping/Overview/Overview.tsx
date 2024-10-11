@@ -10,7 +10,7 @@ import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context
 import "./Overview.scss";
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "../../../../contexts";
-
+import { csvData } from "../types";
 const Overview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
@@ -26,7 +26,8 @@ const Overview: FC = () => {
   }, [closeImportDialog]);
 
   const handleOnFileLoaded = useCallback(
-    (data: any) => {
+    (data: csvData) => {
+      console.log(data);
       dispatch({ type: "ADD_IMPORT_DATA", data: data });
       openImportDialog();
     },

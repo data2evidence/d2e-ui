@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-
+import { ParseResult } from "papaparse";
 export interface ConceptMappingProviderProps {
   children?: ReactNode;
 }
@@ -14,7 +14,7 @@ export type ConceptMappingStateType = {
 
 export type csvDataType = {
   name: string;
-  columns: [];
+  columns: string[] | undefined;
   data: Array<Object>;
 };
 
@@ -43,3 +43,5 @@ export type RowObject = {
   searchText: string;
   domainId?: string;
 };
+
+export type csvData = { name: string; data: ParseResult<any> };
