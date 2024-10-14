@@ -15,7 +15,7 @@ export type ConceptMappingStateType = {
 export type csvDataType = {
   name: string;
   columns: string[] | undefined;
-  data: Array<{ [key: string]: string }>;
+  data: Array<{ [key: string]: any }>;
 };
 
 export type columnMappingType = {
