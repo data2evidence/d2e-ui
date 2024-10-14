@@ -10,10 +10,12 @@ import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context
 import "./Overview.scss";
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "../../../../contexts";
+import { csvData } from "../types";
+import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 
 const Overview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
-  const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
+  const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
   const conceptMappingState = useContext(ConceptMappingContext);
   const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;
   const [datasets] = useDatasets("systemAdmin");
@@ -26,8 +28,8 @@ const Overview: FC = () => {
   }, [closeImportDialog]);
 
   const handleOnFileLoaded = useCallback(
-    (data: any) => {
-      dispatch({ type: "ADD_IMPORT_DATA", data: data });
+    (data: csvData) => {
+      dispatch({ type: ACTION_TYPES.SET_IMPORT_DATA, payload: data });
       openImportDialog();
     },
     [dispatch, openImportDialog]
@@ -92,7 +94,7 @@ const Overview: FC = () => {
         <>
           <div className="overview-selection__buttons">
             <Button
-              onClick={() => dispatch({ type: "CLEAR_CSV_DATA" })}
+              onClick={() => dispatch({ type: ACTION_TYPES.CLEAR_DATA })}
               text={getText(i18nKeys.OVERVIEW__CLEAR_AND_IMPORT)}
             />
             <Button
