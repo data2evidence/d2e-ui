@@ -94,7 +94,7 @@ const Overview: FC = () => {
         <>
           <div className="overview-selection__buttons">
             <Button
-              onClick={() => dispatch({ type: ACTION_TYPES.CLEAR_IMPORT_DATA })}
+              onClick={() => dispatch({ type: ACTION_TYPES.CLEAR_DATA })}
               text={getText(i18nKeys.OVERVIEW__CLEAR_AND_IMPORT)}
             />
             <Button
