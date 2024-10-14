@@ -78,7 +78,8 @@ const actions = {
     // }, 1000);
 
     // load the complete config to our state
-    dispatch('ajaxAuth', {
+    commit(types.CONFIG_SET_HAS_ASSIGNED, false)
+    return dispatch('ajaxAuth', {
       method: 'get',
       url: `${analyticsEndpoint}?action=getMyConfig${
         rootGetters.getSelectedDataset.id ? `&selectedStudyId=${rootGetters.getSelectedDataset.id}` : ''
@@ -86,6 +87,7 @@ const actions = {
     }).then(response => {
       const aData = response.data
       processData(aData)
+      return aData[0]
     })
   },
   setupFrontendConfig({ dispatch, commit }, config) {
