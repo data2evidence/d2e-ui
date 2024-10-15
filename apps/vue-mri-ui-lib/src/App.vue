@@ -51,9 +51,12 @@ export default {
     this.listener = window.addEventListener('alp-dataset-change', () => {
       this.setDataset()
       this.setDatasetReleaseId()
-      this.setFireRequest()
-      this.requestTotalPatientCount()
-      this.refreshPatientCount()
+      // Update the config in state before doing further queries
+      this.requestMriConfig().then(() => {
+        this.setFireRequest()
+        this.requestTotalPatientCount()
+        this.refreshPatientCount()
+      })
     })
   },
   unmounted() {
