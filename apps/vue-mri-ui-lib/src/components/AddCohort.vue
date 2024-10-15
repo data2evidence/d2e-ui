@@ -192,7 +192,7 @@ export default {
         bookmarkId: this.getActiveBookmark.bmkId,
       })
       const params = {
-        studyId: this.getSelectedDataset.id,
+        datasetId: this.getSelectedDataset.id,
         mriquery: JSON.stringify(this.getPLRequest({ bmkId: this.bookmarkId })),
         name: this.cohortName,
         description: this.cohortDescription,

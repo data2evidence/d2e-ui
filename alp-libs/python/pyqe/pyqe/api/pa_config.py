@@ -37,7 +37,7 @@ class PAConfig(_AuthApi):
             'action': 'getFrontendConfig',
             'configId': config_id,
             'configVersion': config_version,
-            'studyId': selectedStudyId,
+            'datasetId': selectedStudyId,
             'lang': lang
         }
         response = self._get('/analytics-svc/pa/services/analytics.xsjs', params)

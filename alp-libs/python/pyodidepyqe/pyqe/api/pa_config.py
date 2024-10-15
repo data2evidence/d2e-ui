@@ -40,7 +40,7 @@ class PAConfig(_AuthApi):
         params = {
             'action': 'getFrontendConfig',
             'configId': config_id,
-            'studyId': selectedStudyId,
+            'datasetId': selectedStudyId,
             'lang': lang
         }
         response = await self._get('/analytics-svc/pa/services/analytics.xsjs', params)

@@ -30,7 +30,7 @@ const actions = {
     })
 
     const params = {
-      studyId: rootGetters.getSelectedDataset.id,
+      datasetId: rootGetters.getSelectedDataset.id,
       mriquery: StringToBinary(JSON.stringify(rootGetters.getPLRequest({ bmkId: this.bookmarkId }))),
     }
     return dispatch('ajaxAuth', {
