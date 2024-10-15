@@ -19,7 +19,7 @@ class PAConfig(_AuthApi):
     async def _get_my_config(self, selectedStudyId):
         params = {
             'action': 'getMyConfig',
-            'selectedStudyId': selectedStudyId
+            'datasetId': selectedStudyId
         }
         response = await self._get('/analytics-svc/pa/services/analytics.xsjs', params)
         if response.ok:
