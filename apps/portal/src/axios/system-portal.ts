@@ -49,8 +49,9 @@ export class SystemPortal {
   public getDataset(id: string) {
     return request<Study>({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/${id}`,
+      url: `dataset`,
       method: "GET",
+      params: { datasetId: id },
     });
   }
 
@@ -87,8 +88,9 @@ export class SystemPortal {
   public deleteDataset(id: string) {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/${id}`,
+      url: `dataset`,
       method: "DELETE",
+      params: { datasetId: id },
     });
   }
 
