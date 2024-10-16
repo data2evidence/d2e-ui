@@ -16,24 +16,12 @@ export GITHUB_TOKEN=<GITHUB_PERSONAL_ACCESS_TOKEN>
 ### Local development setup
 
 - Copy contents of `.env.example` to a new `.env` file in the `/apps/portal` directory
-- Ensure you have required tenant settings and feature flags
-  - Tenant Settings: `https://localhost:41000/superadmin/config` > `System Overview` > `Tenant Overview` > `Settings` for desired tenant > choose and save the settings
-  - Feature Flags: Ensure `REACT_APP_PLUGINS` in `.env` is uncommented to show plugins on the portal UI
 - Run `nx build vue-mri` to build patient analytics used by portal
 - Run `nx build jobs` to build log viewer used by jobs plugin in portal
 - Run `nx build mapping` to build mapping used by ETL plugin in portal
 - Run `nx build @portal/plugin` to build libs used by portal
 - Run `nx build @portal/components` to build components used by portal
 - Run `nx start portal` to start portal, and visit `https://localhost:4000/portal`
-
-## Superadmin (alp-ui/apps/superadmin)
-
-### Local development setup
-
-- Copy contents of `.env.example` to a new `.env` file in the `/apps/superadmin` directory
-- Run `nx build jobs` to build log viewer used by jobs plugin in portal
-- Run `nx build @portal/plugin` to build libs used by superadmin
-- Run `nx start superadmin` to start superadmin, and visit `https://localhost:4100/superadmin`
 
 ## Patient Analytics (alp-ui/apps/vue-mri-ui-lib)
 

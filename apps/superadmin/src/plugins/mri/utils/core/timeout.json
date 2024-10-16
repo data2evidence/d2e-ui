@@ -1,4 +1,0 @@
-{
-	"sessionTimeout": "{{SESSION_TIMEOUT}}",
-	"warningTime": 30000
-}
