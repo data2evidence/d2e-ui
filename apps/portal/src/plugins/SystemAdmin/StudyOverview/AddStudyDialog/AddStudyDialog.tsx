@@ -205,7 +205,7 @@ const styles: SxProps = {
 };
 
 /**
- * Dialog shown when user is adding a study in superadmin
+ * Dialog shown when user is adding a study in admin portal
  * @param param0 AddStudyDialogProps
  * @returns The dialog object
  */
