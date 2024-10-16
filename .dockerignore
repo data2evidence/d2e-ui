@@ -9,7 +9,6 @@ resources/mri
 resources/mri-ui5
 resources/portal
 resources/ui5
-resources/superadmin
 resources/flow
 resources/jobs
 resources/log-viewer

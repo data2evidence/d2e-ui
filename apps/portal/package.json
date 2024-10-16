@@ -18,7 +18,7 @@
   "dependencies": {
     "@alp-os/alp-starboard-notebook": "git+ssh://git@github.com/alp-os/alp-starboard-notebook-base.git#d4l-0.15.7-develop",
     "@alp-os/alp-starboard-wrap": "git+ssh://git@github.com/alp-os/alp-starboard-wrap.git#develop",
-    "@axa-fr/react-oidc": "^6.10.9",
+    "@axa-fr/react-oidc": "6.10.9",
     "@d4l/web-components-library": "^3.20.2",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
@@ -72,7 +72,7 @@
     "@types/react-dom": "^18.0.0",
     "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
     "grunt": "^1.5.3",

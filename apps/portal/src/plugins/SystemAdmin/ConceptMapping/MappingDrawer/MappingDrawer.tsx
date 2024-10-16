@@ -2,9 +2,10 @@ import React, { useCallback, useContext, useEffect } from "react";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
 import { conceptDataType } from "../types";
 import { TerminologyProps } from "../../../Researcher/Terminology/Terminology";
+import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 
 const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => {
-  const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
+  const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
   const conceptMappingState = useContext(ConceptMappingContext);
   const selectedData = conceptMappingState.selectedData;
   const { sourceName, domainId } = conceptMappingState.columnMapping;
@@ -14,14 +15,14 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
   const handleTerminologySelect = useCallback(
     (conceptData: conceptDataType) => {
       dispatch({
-        type: "UPDATE_CSV_DATA",
-        data: {
+        type: ACTION_TYPES.SET_SINGLE_MAPPING,
+        payload: {
           conceptId: conceptData.conceptId,
           conceptName: conceptData.conceptName,
           domainId: conceptData.domainId,
         },
       });
-      dispatch({ type: "CLEAR_SELECTED_DATA" });
+      dispatch({ type: ACTION_TYPES.CLEAR_SELECTED_DATA });
     },
     [dispatch]
   );
@@ -43,7 +44,7 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
         detail: {
           props: {
             onConceptIdSelect: handleTerminologySelect,
-            onClose: () => dispatch({ type: "CLEAR_SELECTED_DATA" }),
+            onClose: () => dispatch({ type: ACTION_TYPES.CLEAR_SELECTED_DATA }),
             initialInput: selectedData[sourceName],
             mode: "CONCEPT_MAPPING",
             selectedDatasetId,

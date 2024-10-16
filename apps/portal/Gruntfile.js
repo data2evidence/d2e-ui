@@ -61,26 +61,6 @@ module.exports = function (grunt) {
         },
         components: true,
       },
-      ass: {
-        options: {
-          resources: {
-            cwd: `${srcUIDir}/Assignment/ui5`,
-            src: [
-              "./*.js",
-              "**/*.js",
-              "**/*.xml",
-              "**/*.html",
-              "**/*.json",
-              "!**/*-dbg*.js",
-              "!**/Component-preload.js",
-            ],
-            prefix: "hc/hph/config/assignment/ui/",
-          },
-          dest: `${srcUIDir}/Assignment/ui5`,
-          compatVersion: ui5Version,
-        },
-        components: true,
-      },
       pa_config: {
         options: {
           resources: {
@@ -209,7 +189,6 @@ module.exports = function (grunt) {
     "openui5_theme:library",
     "less:style",
     "openui5_preload:cdm",
-    "openui5_preload:ass",
     "openui5_preload:pa_config",
     "openui5_preload:ps_config",
     "openui5_preload:allLibraries",
