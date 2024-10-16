@@ -1,6 +1,6 @@
 import { ConceptMappingStateType } from "../../types";
 import { setColumnMapping } from "./column-mapping";
-import { setImportData, clearImportData } from "./import";
+import { setImportData, clearImportData } from "./import-data";
 import {
   setInitialData,
   clearData,
@@ -8,7 +8,7 @@ import {
   setMultipleMapping,
   setSelectedData,
   clearSelectedData,
-} from "./mappingData";
+} from "./mapping-data";
 
 export enum ACTION_TYPES {
   SET_COLUMN_MAPPING = "SET_COLUMN_MAPPING",
