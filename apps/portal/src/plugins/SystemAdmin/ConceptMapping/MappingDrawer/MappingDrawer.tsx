@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
-import { conceptDataType } from "../types";
+import { conceptData } from "../types";
 import { TerminologyProps } from "../../../Researcher/Terminology/Terminology";
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 
@@ -13,7 +13,7 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
   // get data from terminology
   // passes data to reducer to update list
   const handleTerminologySelect = useCallback(
-    (conceptData: conceptDataType) => {
+    (conceptData: conceptData) => {
       dispatch({
         type: ACTION_TYPES.SET_SINGLE_MAPPING,
         payload: {
