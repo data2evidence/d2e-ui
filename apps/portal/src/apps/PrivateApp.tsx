@@ -48,7 +48,6 @@ export const PrivateApp: FC = () => {
         <Route path="/" element={<Navigate to={defaultRoute} />}>
           <Route path="public" element={<Navigate to={defaultRoute} />} />
           <Route path="login" element={<Navigate to={defaultRoute} />} />
-          <Route path="dashboard" element={<Navigate to={config.ROUTES.dashboard} />} />
         </Route>
       </Routes>
     </div>
