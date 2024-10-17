@@ -3,6 +3,7 @@ import { Title, Button } from "@portal/components";
 import { useDatasets, useDialogHelper } from "../../../../hooks";
 import { CsvReader } from "../../../../components";
 import ImportDialog from "../ImportDialog/ImportDialog";
+import ExportDialog from "../ExportDialog/ExportDialog";
 import MappingTable from "../MappingTable/MappingTable";
 import MappingDrawer from "../MappingDrawer/MappingDrawer";
 import { parseToCsv, downloadFile, DownloadColumn } from "../../../../utils/Export";
@@ -20,12 +21,19 @@ const Overview: FC = () => {
   const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;
   const [datasets] = useDatasets("systemAdmin");
   const [selectedDatasetId, setSelectedDatasetId] = useState<string>();
+
   // local states
   const [loading, setLoading] = useState(false);
   const [showImportDialog, openImportDialog, closeImportDialog] = useDialogHelper(false);
+  const [showExportDialog, openExportDialog, closeExportDialog] = useDialogHelper(false);
+
   const handleCloseImportDialog = useCallback(() => {
     closeImportDialog();
   }, [closeImportDialog]);
+
+  const handleCloseExportDialog = useCallback(() => {
+    closeExportDialog();
+  }, [closeExportDialog]);
 
   const handleOnFileLoaded = useCallback(
     (data: csvData) => {
@@ -89,6 +97,14 @@ const Overview: FC = () => {
       {conceptMappingState.csvData.data.length == 0 && (
         <CsvReader onFileLoaded={handleOnFileLoaded} parseOptions={{ header: true }}></CsvReader>
       )}
+      {showExportDialog && (
+        <ExportDialog
+          open={showExportDialog}
+          onClose={handleCloseExportDialog}
+          loading={loading}
+          setLoading={setLoading}
+        />
+      )}
       <br></br>
       {conceptMappingState.csvData.data.length !== 0 && (
         <>
@@ -97,6 +113,11 @@ const Overview: FC = () => {
               onClick={() => dispatch({ type: ACTION_TYPES.CLEAR_DATA })}
               text={getText(i18nKeys.OVERVIEW__CLEAR_AND_IMPORT)}
             />
+          </div>
+
+          <MappingTable selectedDatasetId={selectedDatasetId} />
+
+          <div className="overview-selection__buttons">
             <Button
               onClick={() =>
                 downloadFile({
@@ -108,9 +129,8 @@ const Overview: FC = () => {
               text={getText(i18nKeys.OVERVIEW__DOWNLOAD_CSV)}
               variant="outlined"
             />
+            <Button onClick={openExportDialog} text={getText(i18nKeys.OVERVIEW__SAVE_MAPPINGS)} variant="outlined" />
           </div>
-
-          <MappingTable selectedDatasetId={selectedDatasetId} />
         </>
       )}
       <MappingDrawer selectedDatasetId={selectedDatasetId} />
