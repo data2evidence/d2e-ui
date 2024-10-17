@@ -20,7 +20,7 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
   const csvData = conceptMappingState.csvData.data;
   const [isLoading, setIsLoading] = useState(false);
 
-  const columns = useMemo<MRT_ColumnDef<MRT_RowData, string>[]>(
+  const columns = useMemo<MRT_ColumnDef<{ [key: string]: any }>[]>(
     () => [
       {
         id: "0",
