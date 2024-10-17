@@ -34,24 +34,27 @@ export class Gateway {
   public getCdmSchemaSnapshotMetadata(sourceDatasetId: string) {
     return request({
       baseURL: GATEWAY_BASE_URL,
-      url: `/dataset/${sourceDatasetId}/cdm-schema/snapshot/metadata`,
+      url: `/dataset/cdm-schema/snapshot/metadata`,
       method: "GET",
+      params: { datasetId: sourceDatasetId },
     });
   }
 
   public getAllCohorts(sourceDatasetId: string): Promise<CohortDefinitionList> {
     return request({
       baseURL: GATEWAY_BASE_URL,
-      url: `/dataset/${sourceDatasetId}/cohorts`,
+      url: `/dataset/cohorts`,
       method: "GET",
+      params: { datasetId: sourceDatasetId },
     });
   }
 
   public getDatasetDashboards(datasetId: string): Promise<any> {
     return request({
       baseURL: GATEWAY_BASE_URL,
-      url: `/dataset/${datasetId}/dashboard/list`,
+      url: `/dataset/dashboard/list`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
