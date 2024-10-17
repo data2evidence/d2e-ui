@@ -153,15 +153,6 @@ export const SaveAttributeDialog: FC<SaveAttributeDialogProps> = ({ open, onClos
               </Select>
             </FormControl>
           </Box>
-          <Box mb={4}>
-            <Checkbox
-              checked={formData.isDisplayed}
-              label={getText(i18nKeys.SAVE_ATTRIBUTE_DIALOG__DISPLAY_IN_OVERVIEW)}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                handleFormDataChange({ isDisplayed: event.target.checked });
-              }}
-            />
-          </Box>
         </div>
         <div className="save-attribute-dialog__footer">
           <Box display="flex" gap={1} className="save-attribute-dialog__footer-actions">
