@@ -3,9 +3,6 @@
 // https://google.github.io/zx/faq#using-github-actions
 // $.verbose = 1; // prints commands only
 $.verbose = 2; // default; prints all output
-import 'zx/globals'
-
-let manifestsAnalyzedFile = "private-manifests-analyzed.yml"
 
 const daysAgo = n => {
 	let d = new Date();
@@ -50,8 +47,9 @@ analyzedManifests = manifests.map(manifest => {
 	return manifest
 })
 
-fs.writeFileSync(manifestsAnalyzedFile, YAML.stringify(analyzedManifests), (err) => {
-	console.log(`ERROR writing ${manifestsAnalyzedFile} with ${err}`);
+const azRegManifestsYml = process.env.AZ_REG_MANIFESTS_YML
+fs.writeFileSync(azRegManifestsYml, YAML.stringify(analyzedManifests), (err) => {
+	console.log(`ERROR writing ${azRegManifestsYml} with ${err}`);
 })
 
-// await $`code ${manifestsAnalyzedFile}`
+// await $`code ${azRegManifestsYml}`
