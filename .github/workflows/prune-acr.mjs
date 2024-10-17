@@ -1,9 +1,9 @@
 #!/usr/bin/env zx
 // https://github.com/marketplace/actions/run-zx
 // https://google.github.io/zx/faq#using-github-actions
-$.verbose = 2; // default; prints all output
 // $.verbose = 1; // prints commands only
-let manifestsListFile = "private-manifests-list.yaml"
+
+$.verbose = 2; // default; prints all output
 let manifestsAnalyzedFile = "private-manifests-analyzed.yml"
 
 const daysAgo = n => {
@@ -14,14 +14,15 @@ const daysAgo = n => {
 
 const includesAny = (arr, values) => values.some(v => arr.includes(v));
 
-azRegPruneTimestamp = daysAgo(process.env.AZ_REG_PRUNE_DAYS).toISOString()
+const azRegPruneTimestamp = daysAgo(process.env.AZ_REG_PRUNE_DAYS).toISOString()
 
 echo(". 1 - GET manifest metadata")
 const manifestsStr = await $`az acr manifest list-metadata --only-show-errors --name $AZ_REG_REPOSITORY --registry $AZ_REG_NAME --username "$AZ_REG_USERNAME" --password "$AZ_REG_PASSWORD" --orderby time_asc --query "[?lastUpdateTime < '${azRegPruneTimestamp}']"`
 
 const manifests = JSON.parse(manifestsStr)
 const manifestsTagged = manifests.filter(e => e.tags)
-console.log(manifests.map(e => e.tags).stringify())
+console.log(YAML.stringify(manifestsTagged))
+// manifests.map(e => e.tags)
 
 const regex = new RegExp(process.env.AZ_REG_WHITELIST_REGEX);
 const whitelistTags = manifestsTagged.flatMap(e => e.tags).filter(e => e.match(regex)).sort()

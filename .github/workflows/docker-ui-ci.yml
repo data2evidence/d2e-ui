@@ -130,7 +130,6 @@ jobs:
         run: |
           npx zx <<'EOF'
             $.verbose = 2; // default; prints all output
-            let manifestsListFile = "private-manifests-list.yaml"
             let manifestsAnalyzedFile = "private-manifests-analyzed.yml"
 
             const daysAgo = n => {
@@ -141,12 +140,12 @@ jobs:
 
             const includesAny = (arr, values) => values.some(v => arr.includes(v));
 
-            azRegPruneTimestamp = daysAgo(process.env.AZ_REG_PRUNE_DAYS).toISOString()
+            const azRegPruneTimestamp = daysAgo(process.env.AZ_REG_PRUNE_DAYS).toISOString()
 
             echo(". 1 - GET manifest metadata")
             const manifestsStr = await $`az acr manifest list-metadata --only-show-errors --name $AZ_REG_REPOSITORY --registry $AZ_REG_NAME --username "$AZ_REG_USERNAME" --password "$AZ_REG_PASSWORD" --orderby time_asc --query "[?lastUpdateTime < '${azRegPruneTimestamp}']"`
 
             const manifests = JSON.parse(manifestsStr)
             const manifestsTagged = manifests.filter(e => e.tags)
-            console.log(manifests.map(e => e.tags).stringify())
+            console.log(YAML.stringify(manifestsTagged))
           EOF
