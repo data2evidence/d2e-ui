@@ -20,6 +20,10 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
           conceptId: conceptData.conceptId,
           conceptName: conceptData.conceptName,
           domainId: conceptData.domainId,
+          system: conceptData.system,
+          validStartDate: conceptData.validStartDate,
+          validEndDate: conceptData.validEndDate,
+          validity: conceptData.validity,
         },
       });
       dispatch({ type: ACTION_TYPES.CLEAR_SELECTED_DATA });
