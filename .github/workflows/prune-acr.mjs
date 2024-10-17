@@ -21,7 +21,7 @@ const manifestsStr = await $`az acr manifest list-metadata --only-show-errors --
 
 const manifests = JSON.parse(manifestsStr)
 const manifestsTagged = manifests.filter(e => e.tags)
-console.log(YAML.stringify(manifestsTagged))
+// console.log(YAML.stringify(manifestsTagged))
 // manifests.map(e => e.tags)
 
 const regex = new RegExp(process.env.AZ_REG_WHITELIST_REGEX);

@@ -122,6 +122,7 @@ jobs:
       - name: Prune images before vars.AZ_REG_PRUNE_DAYS_TAGGED
         if: env.AZ_REG_PRUNE_ANALYZE_ENABLE == 'true' || env.GIT_BRANCH_NAME == 'develop' || github.event_name == 'workflow_dispatch'
         shell: bash
+        id: prune-images
         continue-on-error: true
         env:
           AZ_REG_PASSWORD: ${{ secrets.AZ_REG_PASSWORD }}
@@ -147,5 +148,43 @@ jobs:
 
             const manifests = JSON.parse(manifestsStr)
             const manifestsTagged = manifests.filter(e => e.tags)
-            console.log(YAML.stringify(manifestsTagged))
+            # console.log(YAML.stringify(manifestsTagged))
+
+            const regex = new RegExp(process.env.AZ_REG_WHITELIST_REGEX);
+            const whitelistTags = manifestsTagged.flatMap(e => e.tags).filter(e => e.match(regex)).sort()
+            const whitelistManifests = manifestsTagged.filter(e => includesAny(e.tags, whitelistTags))
+            const whitelistDigests = whitelistManifests.flatMap(whitelistDigest => whitelistDigest.digest)
+
+            const showMetadatas = await Promise.all(whitelistManifests.map(async whitelistManifest => {
+              showMetadata = await $`az acr manifest show-metadata $AZ_REG_FQDN/$AZ_REG_REPOSITORY@${whitelistManifest.digest} --only-show-errors --username "$AZ_REG_USERNAME" --password "$AZ_REG_PASSWORD"`
+              return JSON.parse(showMetadata)
+            }))
+
+
+            const referencedDigests = showMetadatas.flatMap(e => e.references).map(e => e.digest)
+
+            // manifest = manifests[manifests.length - 1] // debug
+            analyzedManifests = manifests.map(manifest => {
+              if (includesAny(manifest.digest, [...referencedDigests, ...whitelistDigests])) {
+                manifest.whitelist = true
+              }
+              showMetadata = showMetadatas.filter(showMetadata => showMetadata.digest === manifest.digest)
+              if (showMetadata.length != 0) {
+                manifest.references = showMetadata[0].references
+              }
+              return manifest
+            })
+
+            fs.writeFileSync(manifestsAnalyzedFile, YAML.stringify(analyzedManifests), (err) => {
+              console.log(`ERROR writing ${manifestsAnalyzedFile} with ${err}`);
+            })
           EOF
+
+      - name: Upload stats.yml artifacts
+        uses: actions/upload-artifact@v4
+        if: steps.prune-images.outcome == 'success'
+        with:
+          name: acr-manifests
+          retention-days: 30
+          path: |
+            "private-manifests-analyzed.yml"
