@@ -4,7 +4,7 @@ export interface ConceptMappingProviderProps {
   children?: ReactNode;
 }
 
-export type ConceptMappingStateType = {
+export type ConceptMappingState = {
   importData: csvDataType;
   csvData: csvDataType;
   selectedData: { [key: string]: string };
@@ -15,7 +15,22 @@ export type ConceptMappingStateType = {
 export type csvDataType = {
   name: string;
   columns: string[] | undefined;
-  data: Array<{ [key: string]: any }>;
+  data: Array<mappingData>;
+};
+
+export type mappingData = conceptData & {
+  status: string;
+  [key: string]: any; // columnn mapping keys
+};
+
+export type conceptData = {
+  conceptId: number;
+  conceptName: string;
+  domainId: string;
+  system: string;
+  validStartDate: string;
+  validEndDate: string;
+  validity: string;
 };
 
 export type columnMappingType = {
@@ -31,16 +46,6 @@ export type filters = {};
 export type actionType = {
   type: string;
   data: any;
-};
-
-export type conceptDataType = {
-  conceptId: number;
-  conceptName: string;
-  domainId: string;
-  system: string;
-  validStartDate: string;
-  validEndDate: string;
-  validity: string;
 };
 
 export type RowObject = {

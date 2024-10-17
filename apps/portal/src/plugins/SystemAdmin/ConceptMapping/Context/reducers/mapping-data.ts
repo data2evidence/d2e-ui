@@ -1,13 +1,13 @@
-import { ConceptMappingStateType, csvDataType, conceptDataType } from "../../types";
-import { csvData } from "../../types";
+import { ConceptMappingState, csvDataType, conceptData } from "../../types";
+import { mappingData } from "../../types";
 import { StandardConcepts } from "../../../../Researcher/Terminology/utils/types";
 
-export const setInitialData = (state: ConceptMappingStateType, payload: csvDataType): ConceptMappingStateType => {
-  const data = payload.data.map((d: Object) => ({ ...d, status: "unchecked" }));
+export const setInitialData = (state: ConceptMappingState, payload: csvDataType): ConceptMappingState => {
+  const data = payload.data.map((d: mappingData) => ({ ...d, status: "unchecked" }));
   return { ...state, csvData: { ...payload, data } };
 };
 
-export const clearData = (state: ConceptMappingStateType): ConceptMappingStateType => ({
+export const clearData = (state: ConceptMappingState): ConceptMappingState => ({
   ...state,
   csvData: {
     name: "",
@@ -16,7 +16,7 @@ export const clearData = (state: ConceptMappingStateType): ConceptMappingStateTy
   },
 });
 
-export const setSingleMapping = (state: ConceptMappingStateType, payload: conceptDataType): ConceptMappingStateType => {
+export const setSingleMapping = (state: ConceptMappingState, payload: conceptData): ConceptMappingState => {
   const index = state.csvData.data.findIndex((data) => data === state.selectedData);
   return {
     ...state,
@@ -41,10 +41,7 @@ export const setSingleMapping = (state: ConceptMappingStateType, payload: concep
   };
 };
 
-export const setMultipleMapping = (
-  state: ConceptMappingStateType,
-  payload: StandardConcepts[]
-): ConceptMappingStateType => {
+export const setMultipleMapping = (state: ConceptMappingState, payload: StandardConcepts[]): ConceptMappingState => {
   return {
     ...state,
     csvData: {
@@ -61,12 +58,12 @@ export const setMultipleMapping = (
   };
 };
 
-export const setSelectedData = (state: ConceptMappingStateType, payload: any): ConceptMappingStateType => ({
+export const setSelectedData = (state: ConceptMappingState, payload: any): ConceptMappingState => ({
   ...state,
   selectedData: payload,
 });
 
-export const clearSelectedData = (state: ConceptMappingStateType): ConceptMappingStateType => ({
+export const clearSelectedData = (state: ConceptMappingState): ConceptMappingState => ({
   ...state,
   selectedData: {},
 });
