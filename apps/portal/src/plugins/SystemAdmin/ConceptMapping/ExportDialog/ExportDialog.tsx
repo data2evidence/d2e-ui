@@ -1,10 +1,12 @@
 import React, { FC, useCallback, useContext, useState } from "react";
-import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
-import { Button, Dialog } from "@portal/components";
-import { DispatchType } from "../Context/reducers/reducer";
-import { CloseDialogType } from "../../../../types";
-import "./ExportDialog.scss";
 import { FormControl, Table, TableHead, TableBody, TableRow, TableCell, TextField, Box, Divider } from "@mui/material";
+import { Button, Dialog } from "@portal/components";
+import { CloseDialogType } from "../../../../types";
+import { useTranslation } from "../../../../contexts";
+import { i18nKeys } from "../../../../contexts/app-context/states";
+import { ConceptMappingContext } from "../Context/ConceptMappingContext";
+import "./ExportDialog.scss";
+import { get } from "lodash";
 
 interface ExportDialogProps {
   open: boolean;
@@ -40,13 +42,12 @@ type conceptMap = {
   invalidReason: string;
 };
 
-const titleString = "Export mappings to database";
 const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoading }) => {
   const conceptMappingState = useContext(ConceptMappingContext);
-  const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
-  const { sourceCode, description } = conceptMappingState.columnMapping;
+  const { getText } = useTranslation();
 
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
+  const { sourceCode, description } = conceptMappingState.columnMapping;
 
   const tableData: conceptMap[] = conceptMappingState.csvData.data
     .filter((data) => data.status === "checked")
@@ -81,7 +82,7 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
       className="export-dialog"
       fullWidth
       maxWidth="lg"
-      title={titleString}
+      title={getText(i18nKeys.EXPORT_MAPPING_DIALOG__TITLE)}
       open={open}
       closable
       onClose={() => handleClose("cancelled")}
@@ -122,12 +123,12 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
           <FormControl fullWidth>
             <TextField
               variant="standard"
-              label={"SOURCE VOCABULARY ID"}
+              label={getText(i18nKeys.EXPORT_MAPPING_DIALOG__SOURCE_VOCABULARY_ID)}
               value={formData.source_vocabulary_id}
               onChange={(event) =>
                 setFormData((formData) => ({ ...formData, source_vocabulary_id: event.target.value }))
               }
-              helperText={"id should be more than 100 so that it can be easily identified as a non-OMOP vocabulary"}
+              helperText={getText(i18nKeys.EXPORT_MAPPING_DIALOG__HELPER_TEXT)}
             />
           </FormControl>
         </div>
