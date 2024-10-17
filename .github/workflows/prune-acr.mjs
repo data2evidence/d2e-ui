@@ -52,6 +52,8 @@ const referencedDigests = showMetadatas.flatMap(e => e.references).map(e => e.di
 const analyzedManifests = manifests.map(manifest => {
 	if (includesAny(manifest.digest, [...referencedDigests, ...whitelistDigests])) {
 		manifest.whitelist = true
+	} else {
+		manifest.whitelist = false
 	}
 	const showMetadata = showMetadatas.filter(showMetadata => showMetadata.digest === manifest.digest)
 	if ((typeof showMetadata !== 'undefined') && (showMetadata.length != 0)) {
@@ -69,4 +71,4 @@ fs.writeFileSync(azRegManifestsYml, analyzedManifestsYAML, (err) => {
 })
 echo(analyzedManifestsYAML)
 
-// await $`code ${azRegManifestsYml}`
+await $`code ${azRegManifestsYml}`
