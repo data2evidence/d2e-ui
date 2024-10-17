@@ -58,8 +58,8 @@ const analyzedManifests = manifests.map(manifest => {
 		if (showMetadata.length != 0) {
 			manifest.references = showMetadata[0].references
 		}
-		return manifest
 	}
+	return manifest
 })
 
 const azRegManifestsYml = process.env.AZ_REG_MANIFESTS_YML
