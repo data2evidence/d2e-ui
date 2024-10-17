@@ -17,7 +17,6 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
   const { sourceCode, sourceName, sourceFrequency, description, domainId } = conceptMappingState.columnMapping;
-  console.log(conceptMappingState);
   const csvData = conceptMappingState.csvData.data;
   const [isLoading, setIsLoading] = useState(false);
 
@@ -69,6 +68,12 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
         id: "7",
         accessorKey: "domainId",
         header: getText(i18nKeys.MAPPING_TABLE__DOMAIN_ID),
+        size: 150,
+      },
+      {
+        id: "8",
+        accessorKey: "system",
+        header: getText(i18nKeys.MAPPING_TABLE__VOCABULARY),
         size: 150,
       },
     ],

@@ -37,6 +37,10 @@ export type conceptDataType = {
   conceptId: number;
   conceptName: string;
   domainId: string;
+  system: string;
+  validStartDate: string;
+  validEndDate: string;
+  validity: string;
 };
 
 export type RowObject = {
