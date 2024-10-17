@@ -43,11 +43,6 @@ export type columnMappingType = {
 
 export type filters = {};
 
-export type actionType = {
-  type: string;
-  data: any;
-};
-
 export type RowObject = {
   index: number;
   searchText: string;

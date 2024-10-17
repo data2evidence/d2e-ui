@@ -1,6 +1,5 @@
 import React, { FC, createContext, useReducer, Dispatch } from "react";
-import { ConceptMappingProviderProps, ConceptMappingState, actionType } from "../types";
-import { StandardConcepts } from "../../../Researcher/Terminology/utils/types";
+import { ConceptMappingProviderProps, ConceptMappingState } from "../types";
 import { reducer, DispatchType } from "./reducers/reducer";
 
 const initialState: ConceptMappingState = {
