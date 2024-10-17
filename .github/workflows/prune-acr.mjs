@@ -2,8 +2,9 @@
 // https://github.com/marketplace/actions/run-zx
 // https://google.github.io/zx/faq#using-github-actions
 // $.verbose = 1; // prints commands only
-
 $.verbose = 2; // default; prints all output
+import 'zx/globals'
+
 let manifestsAnalyzedFile = "private-manifests-analyzed.yml"
 
 const daysAgo = n => {
