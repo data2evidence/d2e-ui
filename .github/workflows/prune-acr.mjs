@@ -71,4 +71,4 @@ fs.writeFileSync(azRegManifestsYml, analyzedManifestsYAML, (err) => {
 })
 echo(analyzedManifestsYAML)
 
-await $`code ${azRegManifestsYml}`
+// await $`code ${azRegManifestsYml}`
