@@ -114,6 +114,7 @@ const Overview: FC = () => {
           onClose={handleCloseExportDialog}
           loading={loading}
           setLoading={setLoading}
+          selectedDataset={selectedDataset}
         />
       )}
       <br></br>

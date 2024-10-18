@@ -5,14 +5,16 @@ import { CloseDialogType } from "../../../../types";
 import { useTranslation } from "../../../../contexts";
 import { i18nKeys } from "../../../../contexts/app-context/states";
 import { ConceptMappingContext } from "../Context/ConceptMappingContext";
+import { dataset } from "../types";
 import "./ExportDialog.scss";
-import { get } from "lodash";
+import { table } from "console";
 
 interface ExportDialogProps {
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedDataset: dataset;
 }
 
 interface FormData {
@@ -42,7 +44,7 @@ type conceptMap = {
   invalidReason: string;
 };
 
-const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoading }) => {
+const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoading, selectedDataset }) => {
   const conceptMappingState = useContext(ConceptMappingContext);
   const { getText } = useTranslation();
 
@@ -65,7 +67,6 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
       };
     });
 
-  console.log(tableData);
   const handleClose = useCallback(
     (type: CloseDialogType) => {
       typeof onClose === "function" && onClose(type);
@@ -75,6 +76,8 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
 
   const handleAdd = useCallback(() => {
     console.log("adding");
+    console.log(selectedDataset);
+    console.log(tableData);
   }, []);
 
   return (
