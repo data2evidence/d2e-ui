@@ -11,7 +11,7 @@ import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context
 import "./Overview.scss";
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "../../../../contexts";
-import { csvData } from "../types";
+import { csvData, dataset } from "../types";
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 
 const Overview: FC = () => {
@@ -20,7 +20,7 @@ const Overview: FC = () => {
   const conceptMappingState = useContext(ConceptMappingContext);
   const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;
   const [datasets] = useDatasets("systemAdmin");
-  const [selectedDatasetId, setSelectedDatasetId] = useState<string>();
+  const [selectedDataset, setSelectedDataset] = useState<dataset>();
 
   // local states
   const [loading, setLoading] = useState(false);
@@ -35,6 +35,17 @@ const Overview: FC = () => {
     closeExportDialog();
   }, [closeExportDialog]);
 
+  const handleSelectDataset = useCallback((datasetId: string) => {
+    const selectDataset = datasets.find((dataset) => dataset.id === datasetId);
+
+    if (!selectDataset) return;
+
+    setSelectedDataset({
+      datasetId: selectDataset.id,
+      dialect: selectDataset.dialect,
+    });
+  }, []);
+
   const handleOnFileLoaded = useCallback(
     (data: csvData) => {
       dispatch({ type: ACTION_TYPES.SET_IMPORT_DATA, payload: data });
@@ -44,11 +55,11 @@ const Overview: FC = () => {
   );
 
   useEffect(() => {
-    if (!datasets || selectedDatasetId) return;
+    if (!datasets || selectedDataset) return;
     if (datasets?.[0]?.id) {
-      setSelectedDatasetId(datasets[0].id);
+      setSelectedDataset({ datasetId: datasets[0].id, dialect: datasets[0].dialect });
     }
-  }, [datasets, selectedDatasetId]);
+  }, [datasets, selectedDataset]);
 
   const downloadColumns: DownloadColumn[] = [
     { header: getText(i18nKeys.OVERVIEW__SOURCE), accessor: sourceCode },
@@ -60,7 +71,7 @@ const Overview: FC = () => {
     { header: getText(i18nKeys.OVERVIEW__DOMAIN), accessor: "domainId" },
   ];
 
-  if (!selectedDatasetId) {
+  if (!selectedDataset) {
     return null;
   }
 
@@ -72,9 +83,9 @@ const Overview: FC = () => {
         <div style={{ marginRight: "10px" }}>{getText(i18nKeys.OVERVIEW__REFERENCE_CONCEPTS)}: </div>
         <FormControl sx={{ marginRight: "20px" }}>
           <Select
-            value={selectedDatasetId}
+            value={selectedDataset.datasetId}
             onChange={(e: SelectChangeEvent) => {
-              setSelectedDatasetId(e.target.value);
+              handleSelectDataset(e.target.value);
             }}
             sx={{ "& .MuiSelect-outlined": { paddingTop: "8px", paddingBottom: "8px" } }}
           >
@@ -115,7 +126,7 @@ const Overview: FC = () => {
             />
           </div>
 
-          <MappingTable selectedDatasetId={selectedDatasetId} />
+          <MappingTable selectedDataset={selectedDataset} />
 
           <div className="overview-selection__buttons">
             <Button
@@ -133,7 +144,7 @@ const Overview: FC = () => {
           </div>
         </>
       )}
-      <MappingDrawer selectedDatasetId={selectedDatasetId} />
+      <MappingDrawer selectedDataset={selectedDataset} />
     </>
   );
 };

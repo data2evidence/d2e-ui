@@ -1,10 +1,14 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { FC, useCallback, useContext, useEffect } from "react";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
-import { conceptData } from "../types";
+import { conceptData, dataset } from "../types";
 import { TerminologyProps } from "../../../Researcher/Terminology/Terminology";
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 
-const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => {
+interface MappingDrawerProps {
+  selectedDataset: dataset;
+}
+
+const MappingDrawer: FC<MappingDrawerProps> = ({ selectedDataset }) => {
   const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
   const conceptMappingState = useContext(ConceptMappingContext);
   const selectedData = conceptMappingState.selectedData;
@@ -51,7 +55,7 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
             onClose: () => dispatch({ type: ACTION_TYPES.CLEAR_SELECTED_DATA }),
             initialInput: selectedData[sourceName],
             mode: "CONCEPT_MAPPING",
-            selectedDatasetId,
+            selectedDatasetId: selectedDataset.datasetId,
             defaultFilters: getDefaultFilters(),
           },
         },

@@ -5,14 +5,14 @@ import "./MappingTable.scss";
 import { useTranslation } from "../../../../contexts";
 import { Box, Button } from "@portal/components";
 import { Terminology } from "../../../../axios/terminology";
-import { RowObject } from "../types";
+import { RowObject, dataset } from "../types";
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 
 interface MappingTableProps {
-  selectedDatasetId: string;
+  selectedDataset: dataset;
 }
 
-const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
+const MappingTable: FC<MappingTableProps> = ({ selectedDataset }) => {
   const { getText, i18nKeys } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
@@ -153,7 +153,7 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
 
     setIsLoading(true);
     const api = new Terminology();
-    const result = await api.getStandardConcepts(formattedRows, selectedDatasetId);
+    const result = await api.getStandardConcepts(formattedRows, selectedDataset.datasetId!);
 
     dispatch({ type: ACTION_TYPES.SET_MULTIPLE_MAPPING, payload: result });
     setIsLoading(false);
