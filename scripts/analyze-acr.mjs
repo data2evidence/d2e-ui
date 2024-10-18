@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
-// https://github.com/marketplace/actions/run-zx
-// https://google.github.io/zx/faq#using-github-actions
+// Analyze Azure Container Registry Image Manifests images created before vars.AZ_REG_PRUNE_DAYS
+// Output YAML file with analysis images matching env.AZ_REG_WHITELIST_REGEX to keep and shell script to
 
 const azRegManifestsOrigYmlFile = "private-manifests-orig.json"
 const azRegManifestsProcessedYmlFile = "private-manifests-analyzed.yml"
@@ -69,24 +69,23 @@ const analyzedManifests = manifests.map(manifest => {
 	return manifest
 })
 
-
 const analyzedManifestsYmlStr = YAML.stringify(analyzedManifests)
 fs.writeFileSync(azRegManifestsProcessedYmlFile, YAML.stringify(analyzedManifests), (err) => {
 	throw new Error(`writing ${azRegManifestsProcessedYmlFile} failed with ${err} `);
 })
 echo(`analyzedManifestsYmlStr: \n${analyzedManifestsYmlStr} `)
 
-// m = analyzedManifests[analyzedManifests.length - 1]
-// m.tags
-
-const commands = analyzedManifests.filter(m => m.keep == false).map(m => {
+let commands = analyzedManifests.filter(m => m.keep == false).map(m => {
 	return `az acr repository delete -u $AZ_REG_USERNAME -p $AZ_REG_PASSWORD --name $AZ_REG_NAME --image $AZ_REG_REPOSITORY@${m.digest} --yes # tags: ${m.tags} `
 })
 
+let commandsStr = ''
 if (commands.length > 0) {
-	const commandsStr = `set -o xtrace\n${commands.slice(0, 1).join("\n")}`
-	fs.writeFileSync(manifestsDeleteShFile, commandsStr, (err) => {
-		throw new Error(`writing ${manifestsDeleteShFile} failed with ${err} `);
-	})
-	echo(`Commands:\n${commandsStr}\n`)
+	commandsStr = `set -o xtrace\n${commands.slice(0, 1).join("\n")}`
+} else {
+	commandsStr = `echo INFO . no deleteable manifests`
 }
+fs.writeFileSync(manifestsDeleteShFile, commandsStr, (err) => {
+	throw new Error(`writing ${manifestsDeleteShFile} failed with ${err} `);
+})
+echo(`Commands:\n${commandsStr}\n`)
