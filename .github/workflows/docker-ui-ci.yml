@@ -20,12 +20,11 @@ jobs:
       group: dockerup # Custom runner 4 CPUs & 14 Gb RAM
     if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }}) || ( github.event_name == 'pull_request' && !github.event.pull_request.draft ) # runs if PR is not draft /or/ workflow_dispatch /or/ release branch
     env:
-      AZ_REG_MANIFESTS_YML: private-manifests-analyzed.yml
       AZ_REG_FQDN: ${{ vars.AZ_REG_NAME }}.azurecr.io
       AZ_REG_NAME: ${{ vars.AZ_REG_NAME }}
-      AZ_REG_PRUNE_ANALYZE_ENABLE: true # ${{ vars.AZ_REG_PRUNE_ENABLE_TAGGED || 'false' }} # debug
-      AZ_REG_PRUNE_DAYS: ${{ vars.AZ_REG_PRUNE_DAYS_TAGGED || '20' }}
-      AZ_REG_PRUNE_DELETE_ENABLE: false # ${{ vars.AZ_REG_PRUNE_DELETE_UNTAGGED || 'false' }} debug
+      AZ_REG_PRUNE_DAYS: ${{ vars.AZ_REG_PRUNE_DAYS || '20' }}
+      AZ_REG_PRUNE_FORCE_ANALYZE: true # ${{ vars.AZ_REG_PRUNE_FORCE_ANALYZE || 'false' }} # debug
+      AZ_REG_PRUNE_ENABLE_DELETE: false # ${{ vars.AZ_REG_PRUNE_ENABLE_DELETE || 'false' }} # debug
       AZ_REG_WHITELIST_REGEX: ${{ vars.AZ_REG_WHITELIST_REGEX }}
       DOCKER_BUILD_DEBUG: true # ${{ vars.DOCKER_BUILD_DEBUG || 'false' }} debug
       DOCKER_BUILD_DISABLE: true # ${{ vars.DOCKER_BUILD_DISABLE || 'false' }} debug
@@ -120,9 +119,8 @@ jobs:
             GIT_COMMIT_ARG=${{ github.sha }}
             NX_DAEMON_ARG=false
 
-      - name: Prune images before vars.AZ_REG_PRUNE_DAYS_TAGGED
-        if: env.AZ_REG_PRUNE_ANALYZE_ENABLE == 'true' || env.GIT_BRANCH_NAME == 'develop' || github.event_name == 'workflow_dispatch'
-        shell: bash
+      - name: Prune ACR Images created before vars.AZ_REG_PRUNE_DAYS_TAGGED
+        if: env.AZ_REG_PRUNE_FORCE_ANALYZE == 'true' || env.GIT_BRANCH_NAME == 'develop'
         id: prune-images
         continue-on-error: true
         env:
@@ -130,13 +128,19 @@ jobs:
           AZ_REG_REPOSITORY: ${{ matrix.name }}
           AZ_REG_USERNAME: ${{ secrets.AZ_REG_USERNAME }}
         run: |
-          npx zx .github/workflows/prune-acr.mjs
+          npx zx scripts/analyze-acr.mjs
+          if [ $AZ_REG_PRUNE_ENABLE_DELETE = true ]; then
+            echo "INFO . manifests delete ..."
+            sh "private-manifests-delete.sh"
+          else
+            echo "INFO . manifests delete skipped"
+          fi
 
-      - name: Upload stats.yml artifacts
+      - name: Upload ACR manifests artifacts
+        if: env.AZ_REG_PRUNE_FORCE_ANALYZE == 'true' || env.GIT_BRANCH_NAME == 'develop'
         uses: actions/upload-artifact@v4
-        if: steps.prune-images.outcome == 'success'
         with:
           name: acr-manifests
           retention-days: 30
           path: |
-            private-manifests-analyzed.yml
+            private-manifests*
