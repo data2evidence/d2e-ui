@@ -29,8 +29,6 @@ if (fs.existsSync(azRegManifestsOrigYmlFile)) {
 
 const manifests = JSON.parse(manifestsStr)
 const manifestsTagged = manifests.filter(e => e.tags)
-// console.log(YAML.stringify(manifestsTagged))
-// manifests.map(e => e.tags)
 
 const regEx = new RegExp(process.env.AZ_REG_WHITELIST_REGEX);
 const keepTags = manifestsTagged.flatMap(e => e.tags).filter(e => e.match(regEx)).sort()
@@ -38,10 +36,9 @@ const keepManifests = manifestsTagged.filter(e => includesAny(e.tags, keepTags))
 const keepDigests = keepManifests.flatMap(keepDigest => keepDigest.digest)
 
 echo(`keepTags:\n${YAML.stringify(keepTags)}\n`)
-echo(`keepDigests: \n${YAML.stringify(keepDigests)}\n`)
+echo(`keepDigests:\n${YAML.stringify(keepDigests)}\n`)
 
 const showMetadatas = await Promise.all(keepManifests.map(async keepManifest => {
-	// showMetadata = await
 	const showMetadata = await $`az acr manifest show-metadata $AZ_REG_FQDN/$AZ_REG_REPOSITORY@${keepManifest.digest} --only-show-errors --username "$AZ_REG_USERNAME" --password "$AZ_REG_PASSWORD"`
 	if (typeof showMetadata == 'undefined') {
 		echo(`az acr manifest show - metadata $AZ_REG_FQDN / $AZ_REG_REPOSITORY@${keepManifest.digest} --only -show- errors --username "$AZ_REG_USERNAME" --password "$AZ_REG_PASSWORD"`)
@@ -81,7 +78,7 @@ let commands = analyzedManifests.filter(m => m.keep == false).map(m => {
 
 let commandsStr = ''
 if (commands.length > 0) {
-	commandsStr = `set -o xtrace\n${commands.slice(0, 1).join("\n")}`
+	commandsStr = `set -o xtrace\n${commands.slice().join("\n")}`
 } else {
 	commandsStr = `echo INFO . no deleteable manifests`
 }
