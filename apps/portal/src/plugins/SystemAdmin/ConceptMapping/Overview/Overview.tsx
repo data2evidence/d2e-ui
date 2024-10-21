@@ -35,16 +35,17 @@ const Overview: FC = () => {
     closeExportDialog();
   }, [closeExportDialog]);
 
-  const handleSelectDataset = useCallback((datasetId: string) => {
-    const selectDataset = datasets.find((dataset) => dataset.id === datasetId);
-
-    if (!selectDataset) return;
-
-    setSelectedDataset({
-      datasetId: selectDataset.id,
-      dialect: selectDataset.dialect,
-    });
-  }, []);
+  const handleSelectDataset = useCallback(
+    (datasetId: string) => {
+      const selectDataset = datasets.find((dataset) => dataset.id === datasetId);
+      if (!selectDataset) return;
+      setSelectedDataset({
+        datasetId: selectDataset.id,
+        dialect: selectDataset.dialect!,
+      });
+    },
+    [datasets, setSelectedDataset]
+  );
 
   const handleOnFileLoaded = useCallback(
     (data: csvData) => {
@@ -57,7 +58,7 @@ const Overview: FC = () => {
   useEffect(() => {
     if (!datasets || selectedDataset) return;
     if (datasets?.[0]?.id) {
-      setSelectedDataset({ datasetId: datasets[0].id, dialect: datasets[0].dialect });
+      setSelectedDataset({ datasetId: datasets[0].id, dialect: datasets[0].dialect! });
     }
   }, [datasets, selectedDataset]);
 

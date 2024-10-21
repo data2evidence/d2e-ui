@@ -13,8 +13,8 @@ export type ConceptMappingState = {
 };
 
 export type dataset = {
-  datasetId?: string;
-  dialect?: string;
+  datasetId: string;
+  dialect: string;
 };
 
 export type csvDataType = {
