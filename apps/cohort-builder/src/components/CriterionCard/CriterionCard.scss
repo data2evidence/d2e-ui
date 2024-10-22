@@ -1,0 +1,35 @@
+.criterion-card {
+  .ant-card-body {
+    min-height: 100px;
+    min-width: 500px;
+    padding-left: 42px;
+    padding-right: 24px;
+  }
+
+  &__actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+  }
+
+  &__occurrence {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0 3px;
+    writing-mode: vertical-rl;
+    text-align: center;
+    transform: rotate(180deg);
+    background-color: #ebf2f9;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  &__content {
+    text-align: left;
+  }
+}

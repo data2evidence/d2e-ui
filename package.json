@@ -24,7 +24,15 @@
   "workspaces": {
     "packages": [
       "libs/*",
-      "apps/*"
+      "apps/analysis",
+      "apps/chp-ps-ui",
+      "apps/flow",
+      "apps/genomics-ui",
+      "apps/jobs",
+      "apps/mapping",
+      "apps/mri-pa-ui",
+      "apps/portal",
+      "apps/vue-mri-ui-lib"
     ],
     "nohoist": [
       "**/@vue",

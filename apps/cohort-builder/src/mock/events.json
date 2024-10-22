@@ -1,0 +1,38 @@
+[
+  {
+    "id": "condition_era",
+    "name": "Condition Era"
+  },
+  {
+    "id": "condition_occurrence",
+    "name": "Condition Occurrence"
+  },
+  {
+    "id": "death",
+    "name": "Death"
+  },
+  {
+    "id": "device",
+    "name": "Device"
+  },
+  {
+    "id": "device_exposure",
+    "name": "Device Exposure"
+  },
+  {
+    "id": "dose_era",
+    "name": "Dose Era"
+  },
+  {
+    "id": "drug_exposure",
+    "name": "Drug Exposure"
+  },
+  {
+    "id": "measurement",
+    "name": "Measurement"
+  },
+  {
+    "id": "observation",
+    "name": "Observation"
+  }
+]
