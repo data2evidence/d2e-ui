@@ -1,13 +1,24 @@
 import React, { FC, useCallback, useContext, useState } from "react";
-import { FormControl, Table, TableHead, TableBody, TableRow, TableCell, TextField, Box, Divider } from "@mui/material";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TextField,
+  Box,
+  Divider,
+  FormHelperText,
+} from "@mui/material";
 import { Button, Dialog } from "@portal/components";
-import { CloseDialogType } from "../../../../types";
+import { Feedback, CloseDialogType } from "../../../../types";
 import { useTranslation } from "../../../../contexts";
 import { i18nKeys } from "../../../../contexts/app-context/states";
 import { ConceptMappingContext } from "../Context/ConceptMappingContext";
 import { dataset } from "../types";
+import { api } from "../axios/api";
+import StringToBinary from "../../../../utils/mri/StringToBinary";
 import "./ExportDialog.scss";
-import { table } from "console";
 
 interface ExportDialogProps {
   open: boolean;
@@ -21,6 +32,15 @@ interface FormData {
   source_vocabulary_id: string;
 }
 
+interface FormError {
+  source_vocabulary_id: {
+    required: boolean;
+  };
+}
+const EMPTY_FORM_ERROR: FormError = {
+  source_vocabulary_id: { required: false },
+};
+
 const EMPTY_FORM_DATA: FormData = { source_vocabulary_id: "" };
 
 const columns = [
@@ -33,15 +53,15 @@ const columns = [
 ];
 
 type conceptMap = {
-  sourceCode: string;
-  sourceConceptId: number;
+  source_code: string;
+  source_concept_id: number;
   // sourceVocaularyId: string;
-  sourceCodeDescription: string;
-  targetConceptId: number;
-  targetVocabularyId: string;
-  validStartDate: string;
-  validEndDate: string;
-  invalidReason: string;
+  source_code_description: string;
+  target_concept_id: number;
+  target_vocabulary_id: string;
+  valid_start_date: string;
+  valid_end_date: string;
+  invalid_reason: string;
 };
 
 const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoading, selectedDataset }) => {
@@ -49,36 +69,81 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
   const { getText } = useTranslation();
 
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
+  const [formError, setFormError] = useState<FormError>(EMPTY_FORM_ERROR);
+  const [feedback, setFeedback] = useState<Feedback>({});
   const { sourceCode, description } = conceptMappingState.columnMapping;
+
+  const isFormError = useCallback(() => {
+    const { source_vocabulary_id } = formData;
+    let formError: FormError | {} = {};
+
+    if (!source_vocabulary_id) {
+      formError = { ...formError, source_vocabulary_id: { required: true } };
+    }
+
+    if (Object.keys(formError).length > 0) {
+      setFormError({ ...EMPTY_FORM_ERROR, ...(formError as FormError) });
+      return true;
+    }
+
+    return false;
+  }, [formData]);
 
   const tableData: conceptMap[] = conceptMappingState.csvData.data
     .filter((data) => data.status === "checked")
     .map((data) => {
       return {
-        sourceCode: data[sourceCode],
-        sourceConceptId: 0,
+        source_code: data[sourceCode],
+        source_concept_id: 0,
         // sourceVocaularyId: "",
-        sourceCodeDescription: data[description],
-        targetConceptId: data.conceptId,
-        targetVocabularyId: data.system,
-        validStartDate: data.validStartDate,
-        validEndDate: data.validEndDate,
-        invalidReason: data.validity,
+        source_code_description: data[description],
+        target_concept_id: data.conceptId,
+        target_vocabulary_id: data.system,
+        valid_start_date: data.validStartDate,
+        valid_end_date: data.validEndDate,
+        invalid_reason: data.validity,
       };
     });
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
       typeof onClose === "function" && onClose(type);
+      setFeedback({});
+      setFormData(EMPTY_FORM_DATA);
+      setFormError(EMPTY_FORM_ERROR);
     },
-    [onClose]
+    [onClose, setFeedback, setFormData, setFormError]
   );
 
-  const handleAdd = useCallback(() => {
-    console.log("adding");
-    console.log(selectedDataset);
-    console.log(tableData);
-  }, []);
+  const handleSubmit = useCallback(async () => {
+    if (isFormError()) {
+      return;
+    }
+
+    setFormError(EMPTY_FORM_ERROR);
+
+    if (!selectedDataset.datasetId && !selectedDataset.dialect) {
+      return;
+    }
+
+    const { source_vocabulary_id } = formData;
+    try {
+      setLoading(true);
+      await api.ConceptMapping.saveConceptMappings(
+        selectedDataset,
+        source_vocabulary_id,
+        StringToBinary(JSON.stringify(tableData))
+      );
+    } catch (error: any) {
+      setFeedback({
+        type: "error",
+        message: `${error.data?.message || error.data}`,
+      });
+      console.error("error", error.data);
+    } finally {
+      setLoading(false);
+    }
+  }, [setFormError, formData, selectedDataset, setLoading, tableData]);
 
   return (
     <Dialog
@@ -89,6 +154,7 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
       open={open}
       closable
       onClose={() => handleClose("cancelled")}
+      feedback={feedback}
     >
       <div className="export-dialog__content">
         <div className="export-dialog__table">
@@ -110,10 +176,10 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
                     },
                   }}
                 >
-                  <TableCell>{dataRow.sourceCode}</TableCell>
-                  <TableCell>{dataRow.sourceCodeDescription}</TableCell>
-                  <TableCell>{dataRow.targetConceptId}</TableCell>
-                  <TableCell>{dataRow.targetVocabularyId}</TableCell>
+                  <TableCell>{dataRow.source_code}</TableCell>
+                  <TableCell>{dataRow.source_code_description}</TableCell>
+                  <TableCell>{dataRow.target_concept_id}</TableCell>
+                  <TableCell>{dataRow.target_vocabulary_id}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -123,8 +189,9 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
           <Box mt={4} fontWeight="bold">
             Concept mapping Configuration
           </Box>
-          <FormControl fullWidth>
+          <Box mb={4}>
             <TextField
+              fullWidth
               variant="standard"
               label={getText(i18nKeys.EXPORT_MAPPING_DIALOG__SOURCE_VOCABULARY_ID)}
               value={formData.source_vocabulary_id}
@@ -132,14 +199,18 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
                 setFormData((formData) => ({ ...formData, source_vocabulary_id: event.target.value }))
               }
               helperText={getText(i18nKeys.EXPORT_MAPPING_DIALOG__HELPER_TEXT)}
+              error={formError.source_vocabulary_id.required}
             />
-          </FormControl>
+            {formError.source_vocabulary_id.required && (
+              <FormHelperText error={true}>{getText(i18nKeys.EXPORT_MAPPING_DIALOG__REQUIRED)}</FormHelperText>
+            )}
+          </Box>
         </div>
       </div>
       <Divider />
       <div className="button-group-actions">
         <Button text={"cancel"} onClick={() => handleClose("cancelled")} variant="outlined" block disabled={loading} />
-        <Button text={"save"} onClick={handleAdd} block loading={loading} />
+        <Button text={"save"} onClick={handleSubmit} block loading={loading} />
       </div>
     </Dialog>
   );
