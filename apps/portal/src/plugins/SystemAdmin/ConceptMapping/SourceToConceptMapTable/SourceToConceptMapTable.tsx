@@ -26,23 +26,26 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
   const [loading, setLoading] = useState(false);
   const [sourceToConceptMaps, setSourceToConceptMaps] = useState<conceptMap[]>([]);
 
-  const fetchSourceToConceptMaps = useCallback(async (withLoading = false) => {
-    try {
-      if (withLoading) setLoading(true);
+  const fetchSourceToConceptMaps = useCallback(
+    async (withLoading = false) => {
+      try {
+        if (withLoading) setLoading(true);
 
-      const maps = await api.ConceptMapping.getConceptMappings(selectedDataset);
-      setSourceToConceptMaps(maps);
-    } catch (error: any) {
-      if (error.data?.message) {
-        setFeedback({ type: "error", message: error.data?.message });
-      } else {
-        setGenericErrorFeedback();
+        const maps = await api.ConceptMapping.getConceptMappings(selectedDataset);
+        setSourceToConceptMaps(maps);
+      } catch (error: any) {
+        if (error.data?.message) {
+          setFeedback({ type: "error", message: error.data?.message });
+        } else {
+          setGenericErrorFeedback();
+        }
+        console.error("err", error);
+      } finally {
+        if (withLoading) setLoading(false);
       }
-      console.error("err", error);
-    } finally {
-      if (withLoading) setLoading(false);
-    }
-  }, []);
+    },
+    [selectedDataset, setFeedback, setGenericErrorFeedback]
+  );
 
   useEffect(() => {
     fetchSourceToConceptMaps(true);
@@ -51,7 +54,7 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
   if (loading) return <Loader />;
 
   return (
-    <div className="source__container">
+    <div className="source-to-concept-map-table__container">
       <div className="source-to-concept-map-table__table">
         <TableContainer
           component={Paper}
@@ -71,22 +74,28 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
                 <TableCell>{getText(i18nKeys.SOURCE_TO_CONCEPT_MAP_TABLE__INVALID_REASON)}</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {sourceToConceptMaps.map((sourceToConceptMap: conceptMap, index: React.Key) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "&:nth-of-type(even)": {
-                      backgroundColor: "#f8f8f8",
-                    },
-                  }}
-                >
-                  {Object.values(sourceToConceptMap).map((data) => (
-                    <TableCell key={data}>{data}</TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
+            {sourceToConceptMaps.length === 0 ? (
+              <TableCell colSpan={9} align="center">
+                {getText(i18nKeys.EXPORT_MAPPING_DIALOG__NO_DATA)}
+              </TableCell>
+            ) : (
+              <TableBody>
+                {sourceToConceptMaps.map((sourceToConceptMap: conceptMap, index: React.Key) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "&:nth-of-type(even)": {
+                        backgroundColor: "#f8f8f8",
+                      },
+                    }}
+                  >
+                    {Object.values(sourceToConceptMap).map((data) => (
+                      <TableCell key={data}>{data}</TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
       </div>

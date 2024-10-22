@@ -83,7 +83,6 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
       return {
         source_code: data[sourceCode],
         source_concept_id: 0,
-        // sourceVocaularyId: "",
         source_code_description: data[description],
         target_concept_id: data.conceptId,
         target_vocabulary_id: data.system,
@@ -122,6 +121,7 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
         source_vocabulary_id,
         StringToBinary(JSON.stringify(tableData))
       );
+      handleClose("success");
     } catch (error: any) {
       setFeedback({
         type: "error",
@@ -131,7 +131,7 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
     } finally {
       setLoading(false);
     }
-  }, [setFormError, formData, selectedDataset, setLoading, tableData, isFormError]);
+  }, [setFormError, formData, selectedDataset, setLoading, tableData, isFormError, handleClose]);
 
   return (
     <Dialog
