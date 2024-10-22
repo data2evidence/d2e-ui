@@ -55,3 +55,15 @@ export type RowObject = {
 };
 
 export type csvData = { name: string; data: ParseResult<any> };
+
+export type conceptMap = {
+  source_code: string;
+  source_concept_id: number;
+  sourceVocaularyId?: string;
+  source_code_description: string;
+  target_concept_id: number;
+  target_vocabulary_id: string;
+  valid_start_date: string;
+  valid_end_date: string;
+  invalid_reason: string | null;
+};
