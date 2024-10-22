@@ -111,7 +111,7 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
     setCurrentPageData(
       tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) as SetStateAction<Array<never>>
     );
-  }, [page, rowsPerPage, tableData]);
+  }, [page, rowsPerPage]);
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {

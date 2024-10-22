@@ -94,9 +94,13 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
               </TableRow>
             </TableHead>
             {sourceToConceptMaps.length === 0 ? (
-              <TableCell colSpan={9} align="center">
-                {getText(i18nKeys.EXPORT_MAPPING_DIALOG__NO_DATA)}
-              </TableCell>
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={9} align="center">
+                    {getText(i18nKeys.EXPORT_MAPPING_DIALOG__NO_DATA)}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             ) : (
               <TableBody>
                 {currentPageData.map((sourceToConceptMap: conceptMap, index: React.Key) => (
@@ -108,8 +112,8 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
                       },
                     }}
                   >
-                    {Object.values(sourceToConceptMap).map((data) => (
-                      <TableCell key={data}>{data}</TableCell>
+                    {Object.values(sourceToConceptMap).map((data, index: React.Key) => (
+                      <TableCell key={index}>{data}</TableCell>
                     ))}
                   </TableRow>
                 ))}
