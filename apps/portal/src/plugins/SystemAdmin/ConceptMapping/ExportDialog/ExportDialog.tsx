@@ -143,7 +143,7 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
     } finally {
       setLoading(false);
     }
-  }, [setFormError, formData, selectedDataset, setLoading, tableData]);
+  }, [setFormError, formData, selectedDataset, setLoading, tableData, isFormError]);
 
   return (
     <Dialog
@@ -166,23 +166,29 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody>
-              {tableData.map((dataRow: conceptMap, index: React.Key) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "&:nth-of-type(even)": {
-                      backgroundColor: "#f8f8f8",
-                    },
-                  }}
-                >
-                  <TableCell>{dataRow.source_code}</TableCell>
-                  <TableCell>{dataRow.source_code_description}</TableCell>
-                  <TableCell>{dataRow.target_concept_id}</TableCell>
-                  <TableCell>{dataRow.target_vocabulary_id}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+            {tableData.length === 0 ? (
+              <TableCell colSpan={4} align="center">
+                {getText(i18nKeys.EXPORT_MAPPING_DIALOG__NO_DATA)}
+              </TableCell>
+            ) : (
+              <TableBody>
+                {tableData.map((dataRow: conceptMap, index: React.Key) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "&:nth-of-type(even)": {
+                        backgroundColor: "#f8f8f8",
+                      },
+                    }}
+                  >
+                    <TableCell>{dataRow.source_code}</TableCell>
+                    <TableCell>{dataRow.source_code_description}</TableCell>
+                    <TableCell>{dataRow.target_concept_id}</TableCell>
+                    <TableCell>{dataRow.target_vocabulary_id}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            )}
           </Table>
         </div>
         <div className="export-dialog__form">
@@ -210,7 +216,13 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
       <Divider />
       <div className="button-group-actions">
         <Button text={"cancel"} onClick={() => handleClose("cancelled")} variant="outlined" block disabled={loading} />
-        <Button text={"save"} onClick={handleSubmit} block loading={loading} />
+        <Button
+          text={"save"}
+          onClick={handleSubmit}
+          block
+          loading={loading}
+          disabled={tableData.length === 0 || loading}
+        />
       </div>
     </Dialog>
   );

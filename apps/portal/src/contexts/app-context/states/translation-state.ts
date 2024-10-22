@@ -507,6 +507,7 @@ export const i18nDefault = {
     EXPORT_MAPPING_DIALOG__HELPER_TEXT:
       "id should be more than 100 so that it can be easily identified as a non-OMOP vocabulary",
     EXPORT_MAPPING_DIALOG__REQUIRED: "This is required",
+    EXPORT_MAPPING_DIALOG__NO_DATA: "No data available",
     FEATURE__CDM_DOWNLOAD: "CDM Download",
     FEATURE__COHORT: "Cohort",
     FEATURE__CONCEPTS: "Concepts",
