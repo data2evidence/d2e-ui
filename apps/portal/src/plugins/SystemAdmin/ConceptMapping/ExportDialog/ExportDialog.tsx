@@ -1,5 +1,7 @@
-import React, { FC, useCallback, useContext, useState } from "react";
+import React, { FC, useCallback, useContext, useState, useEffect, SetStateAction } from "react";
 import {
+  TableContainer,
+  TablePagination,
   Table,
   TableHead,
   TableBody,
@@ -9,8 +11,9 @@ import {
   Box,
   Divider,
   FormHelperText,
+  Paper,
 } from "@mui/material";
-import { Button, Dialog } from "@portal/components";
+import { Button, Dialog, TablePaginationActions } from "@portal/components";
 import { Feedback, CloseDialogType } from "../../../../types";
 import { useTranslation } from "../../../../contexts";
 import { i18nKeys } from "../../../../contexts/app-context/states";
@@ -92,6 +95,24 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
       };
     });
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [currentPageData, setCurrentPageData] = useState([]);
+  const tableDataCount: number = tableData.length;
+  const handleChangePage = useCallback((event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
+    setPage(page);
+  }, []);
+  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(Number(event.target.value) || 10);
+    setPage(0);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPageData(
+      tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) as SetStateAction<Array<never>>
+    );
+  }, [page, rowsPerPage, tableData]);
+
   const handleClose = useCallback(
     (type: CloseDialogType) => {
       typeof onClose === "function" && onClose(type);
@@ -146,38 +167,57 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
     >
       <div className="export-dialog__content">
         <div className="export-dialog__table">
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                {columns.map((name: string, index: React.Key) => (
-                  <TableCell key={index}>{name}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            {tableData.length === 0 ? (
-              <TableCell colSpan={4} align="center">
-                {getText(i18nKeys.EXPORT_MAPPING_DIALOG__NO_DATA)}
-              </TableCell>
-            ) : (
-              <TableBody>
-                {tableData.map((dataRow: conceptMap, index: React.Key) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "&:nth-of-type(even)": {
-                        backgroundColor: "#f8f8f8",
-                      },
-                    }}
-                  >
-                    <TableCell>{dataRow.source_code}</TableCell>
-                    <TableCell>{dataRow.source_code_description}</TableCell>
-                    <TableCell>{dataRow.target_concept_id}</TableCell>
-                    <TableCell>{dataRow.target_vocabulary_id}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            )}
-          </Table>
+          <TableContainer
+            component={Paper}
+            sx={{ "& .MuiTableCell-root": { color: "#000080" }, maxHeight: 320, width: 1, border: "1px solid #dad7d7" }}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  {columns.map((name: string, index: React.Key) => (
+                    <TableCell key={index}>{name}</TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              {tableData.length === 0 ? (
+                <TableCell colSpan={4} align="center">
+                  {getText(i18nKeys.EXPORT_MAPPING_DIALOG__NO_DATA)}
+                </TableCell>
+              ) : (
+                <TableBody>
+                  {currentPageData.map((dataRow: conceptMap, index: React.Key) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        "&:nth-of-type(even)": {
+                          backgroundColor: "#f8f8f8",
+                        },
+                      }}
+                    >
+                      <TableCell>{dataRow.source_code}</TableCell>
+                      <TableCell>{dataRow.source_code_description}</TableCell>
+                      <TableCell>{dataRow.target_concept_id}</TableCell>
+                      <TableCell>{dataRow.target_vocabulary_id}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+          <TablePagination
+            component="div"
+            count={tableDataCount}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            onPageChange={handleChangePage}
+            ActionsComponent={TablePaginationActions}
+            sx={{
+              overflow: "visible",
+              height: "52px",
+              "& .MuiButtonBase-root:not(.Mui-disabled)": { color: "#000080" },
+            }}
+          />
         </div>
         <div className="export-dialog__form">
           <Box mt={4} fontWeight="bold">

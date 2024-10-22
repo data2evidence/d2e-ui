@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState, useEffect } from "react";
+import React, { FC, useCallback, useState, useEffect, SetStateAction } from "react";
 import {
   TableContainer,
   Table,
@@ -9,7 +9,7 @@ import {
   TablePagination,
   Paper,
 } from "@mui/material";
-import { Loader } from "@portal/components";
+import { Loader, TablePaginationActions } from "@portal/components";
 import { useFeedback, useTranslation } from "../../../../contexts";
 import { api } from "../axios/api";
 import { conceptMap } from "../types";
@@ -47,6 +47,25 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
     [selectedDatasetId, setFeedback, setGenericErrorFeedback]
   );
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [currentPageData, setCurrentPageData] = useState([]);
+  const handleChangePage = useCallback((event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
+    setPage(page);
+  }, []);
+  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(Number(event.target.value) || 10);
+    setPage(0);
+  }, []);
+
+  const tableDataCount: number = sourceToConceptMaps.length;
+
+  useEffect(() => {
+    setCurrentPageData(
+      sourceToConceptMaps.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) as SetStateAction<Array<never>>
+    );
+  }, [page, rowsPerPage, sourceToConceptMaps]);
+
   useEffect(() => {
     fetchSourceToConceptMaps(true);
   }, [fetchSourceToConceptMaps, selectedDatasetId]);
@@ -80,7 +99,7 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
               </TableCell>
             ) : (
               <TableBody>
-                {sourceToConceptMaps.map((sourceToConceptMap: conceptMap, index: React.Key) => (
+                {currentPageData.map((sourceToConceptMap: conceptMap, index: React.Key) => (
                   <TableRow
                     key={index}
                     sx={{
@@ -98,6 +117,20 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
             )}
           </Table>
         </TableContainer>
+        <TablePagination
+          component="div"
+          count={tableDataCount}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          ActionsComponent={TablePaginationActions}
+          sx={{
+            overflow: "visible",
+            height: "52px",
+            "& .MuiButtonBase-root:not(.Mui-disabled)": { color: "#000080" },
+          }}
+        />
       </div>
     </div>
   );
