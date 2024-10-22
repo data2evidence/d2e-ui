@@ -1,5 +1,5 @@
 import React, { FC, useState, useContext, useCallback, useEffect } from "react";
-import { Title, Button } from "@portal/components";
+import { Title, Button, Card, Tabs, Tab } from "@portal/components";
 import { useDatasets, useDialogHelper } from "../../../../hooks";
 import { CsvReader } from "../../../../components";
 import ImportDialog from "../ImportDialog/ImportDialog";
@@ -13,6 +13,12 @@ import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 import { useTranslation } from "../../../../contexts";
 import { csvData, dataset } from "../types";
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
+import { SourceToConceptMapTable } from "../SourceToConceptMapTable/SourceToConceptMapTable";
+
+enum ConceptMappingTab {
+  MAP,
+  VIEW,
+}
 
 const Overview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
@@ -20,10 +26,11 @@ const Overview: FC = () => {
   const conceptMappingState = useContext(ConceptMappingContext);
   const { sourceCode, sourceName, sourceFrequency, description } = conceptMappingState.columnMapping;
   const [datasets] = useDatasets("systemAdmin");
-  const [selectedDataset, setSelectedDataset] = useState<dataset>();
 
   // local states
   const [loading, setLoading] = useState(false);
+  const [selectedDataset, setSelectedDataset] = useState<dataset>();
+  const [tabValue, setTabValue] = useState<ConceptMappingTab>(ConceptMappingTab.MAP);
   const [showImportDialog, openImportDialog, closeImportDialog] = useDialogHelper(false);
   const [showExportDialog, openExportDialog, closeExportDialog] = useDialogHelper(false);
 
@@ -55,6 +62,10 @@ const Overview: FC = () => {
     [dispatch, openImportDialog]
   );
 
+  const handleTabSelectionChange = useCallback(async (event: React.SyntheticEvent, newValue: ConceptMappingTab) => {
+    setTabValue(newValue);
+  }, []);
+
   useEffect(() => {
     if (!datasets || selectedDataset) return;
     if (datasets?.[0]?.id) {
@@ -77,7 +88,7 @@ const Overview: FC = () => {
   }
 
   return (
-    <>
+    <div className="concept-mapping__overview">
       <Title>{getText(i18nKeys.OVERVIEW__CONCEPT_MAPPING)}</Title>
 
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -98,56 +109,93 @@ const Overview: FC = () => {
           </Select>
         </FormControl>
       </div>
-      {conceptMappingState.importData.data.length !== 0 && (
-        <ImportDialog
-          open={showImportDialog}
-          onClose={handleCloseImportDialog}
-          loading={loading}
-          setLoading={setLoading}
-        />
-      )}
-      {conceptMappingState.csvData.data.length == 0 && (
-        <CsvReader onFileLoaded={handleOnFileLoaded} parseOptions={{ header: true }}></CsvReader>
-      )}
-      {showExportDialog && (
-        <ExportDialog
-          open={showExportDialog}
-          onClose={handleCloseExportDialog}
-          loading={loading}
-          setLoading={setLoading}
-          selectedDataset={selectedDataset}
-        />
-      )}
-      <br></br>
-      {conceptMappingState.csvData.data.length !== 0 && (
-        <>
-          <div className="overview-selection__buttons">
-            <Button
-              onClick={() => dispatch({ type: ACTION_TYPES.CLEAR_DATA })}
-              text={getText(i18nKeys.OVERVIEW__CLEAR_AND_IMPORT)}
-            />
-          </div>
 
-          <MappingTable selectedDataset={selectedDataset} />
+      <div className="testing">
+        <Tabs value={tabValue} onChange={handleTabSelectionChange} centered>
+          <Tab
+            label={"Map Concepts"}
+            value={ConceptMappingTab.MAP}
+            sx={{
+              "&.MuiTab-root": {
+                width: "180px",
+              },
+            }}
+          />
+          <Tab
+            label={"View Mappings"}
+            value={ConceptMappingTab.VIEW}
+            sx={{
+              "&.MuiTab-root": {
+                width: "180px",
+              },
+            }}
+          />
+        </Tabs>
 
-          <div className="overview-selection__buttons">
-            <Button
-              onClick={() =>
-                downloadFile({
-                  data: parseToCsv(conceptMappingState.csvData.data, downloadColumns),
-                  fileName: "concept_mappings",
-                  fileType: "text/csv",
-                })
-              }
-              text={getText(i18nKeys.OVERVIEW__DOWNLOAD_CSV)}
-              variant="outlined"
-            />
-            <Button onClick={openExportDialog} text={getText(i18nKeys.OVERVIEW__SAVE_MAPPINGS)} variant="outlined" />
-          </div>
-        </>
-      )}
-      <MappingDrawer selectedDataset={selectedDataset} />
-    </>
+        <div>
+          {tabValue === ConceptMappingTab.MAP && (
+            <>
+              {conceptMappingState.importData.data.length !== 0 && (
+                <ImportDialog
+                  open={showImportDialog}
+                  onClose={handleCloseImportDialog}
+                  loading={loading}
+                  setLoading={setLoading}
+                />
+              )}
+              {conceptMappingState.csvData.data.length == 0 && (
+                <CsvReader onFileLoaded={handleOnFileLoaded} parseOptions={{ header: true }}></CsvReader>
+              )}
+              {showExportDialog && (
+                <ExportDialog
+                  open={showExportDialog}
+                  onClose={handleCloseExportDialog}
+                  loading={loading}
+                  setLoading={setLoading}
+                  selectedDataset={selectedDataset}
+                />
+              )}
+              <br></br>
+              {conceptMappingState.csvData.data.length !== 0 && (
+                <>
+                  <div className="overview-selection__buttons">
+                    <Button
+                      onClick={() => dispatch({ type: ACTION_TYPES.CLEAR_DATA })}
+                      text={getText(i18nKeys.OVERVIEW__CLEAR_AND_IMPORT)}
+                    />
+                  </div>
+
+                  <MappingTable selectedDataset={selectedDataset} />
+
+                  <div className="overview-selection__buttons">
+                    <Button
+                      onClick={() =>
+                        downloadFile({
+                          data: parseToCsv(conceptMappingState.csvData.data, downloadColumns),
+                          fileName: "concept_mappings",
+                          fileType: "text/csv",
+                        })
+                      }
+                      text={getText(i18nKeys.OVERVIEW__DOWNLOAD_CSV)}
+                      variant="outlined"
+                    />
+                    <Button
+                      onClick={openExportDialog}
+                      text={getText(i18nKeys.OVERVIEW__SAVE_MAPPINGS)}
+                      variant="outlined"
+                    />
+                  </div>
+                </>
+              )}
+              <MappingDrawer selectedDataset={selectedDataset} />
+            </>
+          )}
+          {tabValue === ConceptMappingTab.VIEW && (
+            <SourceToConceptMapTable selectedDataset={selectedDataset.datasetId} />
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 

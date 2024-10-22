@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useState, useEffect, ChangeEvent, SetStateAction } from "react";
+import React, { FC, useCallback, useState, useEffect } from "react";
 import {
   TableContainer,
   Table,
@@ -46,7 +46,7 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
 
   useEffect(() => {
     fetchSourceToConceptMaps(true);
-  }, [fetchSourceToConceptMaps]);
+  }, [fetchSourceToConceptMaps, selectedDataset]);
 
   if (loading) return <Loader />;
 
