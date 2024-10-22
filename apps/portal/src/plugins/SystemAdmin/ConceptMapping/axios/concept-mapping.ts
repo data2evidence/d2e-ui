@@ -10,7 +10,6 @@ export class ConceptMapping {
       method: "GET",
       params: {
         datasetId: dataset.datasetId,
-        dialect: dataset.dialect,
       },
     });
   };
@@ -21,7 +20,6 @@ export class ConceptMapping {
       method: "POST",
       params: {
         datasetId: dataset.datasetId,
-        dialect: dataset.dialect,
       },
       data: {
         sourceVocabularyId: sourceVocabularyId,
