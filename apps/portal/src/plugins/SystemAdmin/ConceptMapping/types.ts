@@ -12,11 +12,6 @@ export type ConceptMappingState = {
   filters: filters;
 };
 
-export type dataset = {
-  datasetId: string;
-  dialect: string;
-};
-
 export type csvDataType = {
   name: string;
   columns: string[] | undefined;

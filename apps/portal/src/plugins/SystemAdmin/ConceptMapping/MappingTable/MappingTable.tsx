@@ -5,14 +5,14 @@ import "./MappingTable.scss";
 import { useTranslation } from "../../../../contexts";
 import { Box, Button } from "@portal/components";
 import { Terminology } from "../../../../axios/terminology";
-import { RowObject, dataset } from "../types";
+import { RowObject } from "../types";
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 
 interface MappingTableProps {
-  selectedDataset: dataset;
+  selectedDatasetId: string;
 }
 
-const MappingTable: FC<MappingTableProps> = ({ selectedDataset }) => {
+const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
   const { getText, i18nKeys } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
@@ -77,7 +77,22 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDataset }) => {
         size: 150,
       },
     ],
-    [sourceCode, sourceName, sourceFrequency, description, getText]
+    [
+      sourceCode,
+      sourceName,
+      sourceFrequency,
+      description,
+      getText,
+      i18nKeys.MAPPING_TABLE__CONCEPT_ID,
+      i18nKeys.MAPPING_TABLE__CONCEPT_NAME,
+      i18nKeys.MAPPING_TABLE__DESCRIPTION,
+      i18nKeys.MAPPING_TABLE__DOMAIN_ID,
+      i18nKeys.MAPPING_TABLE__FREQUENCY,
+      i18nKeys.MAPPING_TABLE__NAME,
+      i18nKeys.MAPPING_TABLE__STATUS,
+      i18nKeys.MAPPING_TABLE__SOURCE,
+      i18nKeys.MAPPING_TABLE__VOCABULARY,
+    ]
   );
 
   const TableBodyRowProps = ({ row }: { row: MRT_RowData }) => ({
@@ -140,7 +155,7 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDataset }) => {
 
   const getAvailableRows = useCallback(() => {
     return tableInstance.getCenterRows().filter((row: MRT_RowData) => row.original.status !== "checked");
-  }, []);
+  }, [tableInstance]);
 
   const populateConcepts = useCallback(async () => {
     const formattedRows = getAvailableRows().map((row: MRT_RowData) => {
@@ -153,11 +168,11 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDataset }) => {
 
     setIsLoading(true);
     const api = new Terminology();
-    const result = await api.getStandardConcepts(formattedRows, selectedDataset.datasetId!);
+    const result = await api.getStandardConcepts(formattedRows, selectedDatasetId!);
 
     dispatch({ type: ACTION_TYPES.SET_MULTIPLE_MAPPING, payload: result });
     setIsLoading(false);
-  }, []);
+  }, [dispatch, domainId, getAvailableRows, selectedDatasetId, sourceName]);
 
   return <MaterialReactTable table={tableInstance} />;
 };

@@ -15,7 +15,7 @@ import { Feedback, CloseDialogType } from "../../../../types";
 import { useTranslation } from "../../../../contexts";
 import { i18nKeys } from "../../../../contexts/app-context/states";
 import { ConceptMappingContext } from "../Context/ConceptMappingContext";
-import { dataset, conceptMap } from "../types";
+import { conceptMap } from "../types";
 import { api } from "../axios/api";
 import StringToBinary from "../../../../utils/mri/StringToBinary";
 import "./ExportDialog.scss";
@@ -25,7 +25,7 @@ interface ExportDialogProps {
   onClose?: (type: CloseDialogType) => void;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedDataset: dataset;
+  selectedDatasetId: string;
 }
 
 interface FormData {
@@ -52,7 +52,7 @@ const columns = [
   // "Valid End Date",
 ];
 
-const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoading, selectedDataset }) => {
+const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoading, selectedDatasetId }) => {
   const conceptMappingState = useContext(ConceptMappingContext);
   const { getText } = useTranslation();
 
@@ -109,7 +109,7 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
 
     setFormError(EMPTY_FORM_ERROR);
 
-    if (!selectedDataset.datasetId && !selectedDataset.dialect) {
+    if (!selectedDatasetId) {
       return;
     }
 
@@ -117,7 +117,7 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
     try {
       setLoading(true);
       await api.ConceptMapping.saveConceptMappings(
-        selectedDataset,
+        selectedDatasetId,
         source_vocabulary_id,
         StringToBinary(JSON.stringify(tableData))
       );
@@ -131,7 +131,7 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
     } finally {
       setLoading(false);
     }
-  }, [setFormError, formData, selectedDataset, setLoading, tableData, isFormError, handleClose]);
+  }, [setFormError, formData, selectedDatasetId, setLoading, tableData, isFormError, handleClose]);
 
   return (
     <Dialog

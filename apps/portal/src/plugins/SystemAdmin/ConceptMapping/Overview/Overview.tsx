@@ -1,5 +1,5 @@
 import React, { FC, useState, useContext, useCallback, useEffect } from "react";
-import { Title, Button, Card, Tabs, Tab } from "@portal/components";
+import { Title, Button, Tabs, Tab } from "@portal/components";
 import { useDatasets, useDialogHelper } from "../../../../hooks";
 import { CsvReader } from "../../../../components";
 import ImportDialog from "../ImportDialog/ImportDialog";
@@ -11,7 +11,7 @@ import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context
 import "./Overview.scss";
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "../../../../contexts";
-import { csvData, dataset } from "../types";
+import { csvData } from "../types";
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 import { SourceToConceptMapTable } from "../SourceToConceptMapTable/SourceToConceptMapTable";
 
@@ -29,7 +29,7 @@ const Overview: FC = () => {
 
   // local states
   const [loading, setLoading] = useState(false);
-  const [selectedDataset, setSelectedDataset] = useState<dataset>();
+  const [selectedDatasetId, setSelectedDatasetId] = useState<string>();
   const [tabValue, setTabValue] = useState<ConceptMappingTab>(ConceptMappingTab.MAP);
   const [showImportDialog, openImportDialog, closeImportDialog] = useDialogHelper(false);
   const [showExportDialog, openExportDialog, closeExportDialog] = useDialogHelper(false);
@@ -41,18 +41,6 @@ const Overview: FC = () => {
   const handleCloseExportDialog = useCallback(() => {
     closeExportDialog();
   }, [closeExportDialog]);
-
-  const handleSelectDataset = useCallback(
-    (datasetId: string) => {
-      const selectDataset = datasets.find((dataset) => dataset.id === datasetId);
-      if (!selectDataset) return;
-      setSelectedDataset({
-        datasetId: selectDataset.id,
-        dialect: selectDataset.dialect!,
-      });
-    },
-    [datasets, setSelectedDataset]
-  );
 
   const handleOnFileLoaded = useCallback(
     (data: csvData) => {
@@ -67,11 +55,11 @@ const Overview: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!datasets || selectedDataset) return;
+    if (!datasets || selectedDatasetId) return;
     if (datasets?.[0]?.id) {
-      setSelectedDataset({ datasetId: datasets[0].id, dialect: datasets[0].dialect! });
+      setSelectedDatasetId(datasets[0].id);
     }
-  }, [datasets, selectedDataset]);
+  }, [datasets, selectedDatasetId]);
 
   const downloadColumns: DownloadColumn[] = [
     { header: getText(i18nKeys.OVERVIEW__SOURCE), accessor: sourceCode },
@@ -83,7 +71,7 @@ const Overview: FC = () => {
     { header: getText(i18nKeys.OVERVIEW__DOMAIN), accessor: "domainId" },
   ];
 
-  if (!selectedDataset) {
+  if (!selectedDatasetId) {
     return null;
   }
 
@@ -95,9 +83,9 @@ const Overview: FC = () => {
         <div style={{ marginRight: "10px" }}>{getText(i18nKeys.OVERVIEW__REFERENCE_CONCEPTS)}: </div>
         <FormControl sx={{ marginRight: "20px" }}>
           <Select
-            value={selectedDataset.datasetId}
+            value={selectedDatasetId}
             onChange={(e: SelectChangeEvent) => {
-              handleSelectDataset(e.target.value);
+              setSelectedDatasetId(e.target.value);
             }}
             sx={{ "& .MuiSelect-outlined": { paddingTop: "8px", paddingBottom: "8px" } }}
           >
@@ -152,7 +140,7 @@ const Overview: FC = () => {
                   onClose={handleCloseExportDialog}
                   loading={loading}
                   setLoading={setLoading}
-                  selectedDataset={selectedDataset}
+                  selectedDatasetId={selectedDatasetId}
                 />
               )}
               <br></br>
@@ -165,7 +153,7 @@ const Overview: FC = () => {
                     />
                   </div>
 
-                  <MappingTable selectedDataset={selectedDataset} />
+                  <MappingTable selectedDatasetId={selectedDatasetId} />
 
                   <div className="overview-selection__buttons">
                     <Button
@@ -187,12 +175,10 @@ const Overview: FC = () => {
                   </div>
                 </>
               )}
-              <MappingDrawer selectedDataset={selectedDataset} />
+              <MappingDrawer selectedDatasetId={selectedDatasetId} />
             </>
           )}
-          {tabValue === ConceptMappingTab.VIEW && (
-            <SourceToConceptMapTable selectedDataset={selectedDataset.datasetId} />
-          )}
+          {tabValue === ConceptMappingTab.VIEW && <SourceToConceptMapTable selectedDatasetId={selectedDatasetId} />}
         </div>
       </div>
     </div>

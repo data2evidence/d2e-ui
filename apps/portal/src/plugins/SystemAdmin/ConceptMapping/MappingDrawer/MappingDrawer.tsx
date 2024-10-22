@@ -1,14 +1,14 @@
 import React, { FC, useCallback, useContext, useEffect } from "react";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
-import { conceptData, dataset } from "../types";
+import { conceptData } from "../types";
 import { TerminologyProps } from "../../../Researcher/Terminology/Terminology";
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 
 interface MappingDrawerProps {
-  selectedDataset: dataset;
+  selectedDatasetId: string;
 }
 
-const MappingDrawer: FC<MappingDrawerProps> = ({ selectedDataset }) => {
+const MappingDrawer: FC<MappingDrawerProps> = ({ selectedDatasetId }) => {
   const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
   const conceptMappingState = useContext(ConceptMappingContext);
   const selectedData = conceptMappingState.selectedData;
@@ -53,16 +53,16 @@ const MappingDrawer: FC<MappingDrawerProps> = ({ selectedDataset }) => {
           props: {
             onConceptIdSelect: handleTerminologySelect,
             onClose: () => dispatch({ type: ACTION_TYPES.CLEAR_SELECTED_DATA }),
-            initialInput: selectedData[sourceName],
+            // initialInput: selectedData[sourceName],
             mode: "CONCEPT_MAPPING",
-            selectedDatasetId: selectedDataset.datasetId,
-            defaultFilters: getDefaultFilters(),
+            selectedDatasetId: selectedDatasetId,
+            // defaultFilters: getDefaultFilters(),
           },
         },
       });
       window.dispatchEvent(event);
     }
-  }, [selectedData, sourceName]);
+  }, [selectedData, sourceName, dispatch, handleTerminologySelect, selectedDatasetId]);
 
   return null;
 };

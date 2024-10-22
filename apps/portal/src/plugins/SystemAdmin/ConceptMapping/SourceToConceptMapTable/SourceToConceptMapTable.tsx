@@ -17,10 +17,10 @@ import "./SourceToConceptMapTable.scss";
 import { i18nKeys } from "../../../../contexts/app-context/states";
 
 interface SourceToConceptMapTableProps {
-  selectedDataset: string;
+  selectedDatasetId: string;
 }
 
-export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ selectedDataset }) => {
+export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ selectedDatasetId }) => {
   const { getText } = useTranslation();
   const { setFeedback, setGenericErrorFeedback } = useFeedback();
   const [loading, setLoading] = useState(false);
@@ -31,7 +31,7 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
       try {
         if (withLoading) setLoading(true);
 
-        const maps = await api.ConceptMapping.getConceptMappings(selectedDataset);
+        const maps = await api.ConceptMapping.getConceptMappings(selectedDatasetId);
         setSourceToConceptMaps(maps);
       } catch (error: any) {
         if (error.data?.message) {
@@ -44,12 +44,12 @@ export const SourceToConceptMapTable: FC<SourceToConceptMapTableProps> = ({ sele
         if (withLoading) setLoading(false);
       }
     },
-    [selectedDataset, setFeedback, setGenericErrorFeedback]
+    [selectedDatasetId, setFeedback, setGenericErrorFeedback]
   );
 
   useEffect(() => {
     fetchSourceToConceptMaps(true);
-  }, [fetchSourceToConceptMaps, selectedDataset]);
+  }, [fetchSourceToConceptMaps, selectedDatasetId]);
 
   if (loading) return <Loader />;
 
