@@ -35,7 +35,7 @@ export type conceptData = {
   system: string;
   validStartDate: string;
   validEndDate: string;
-  validity: string;
+  validity: string | null;
 };
 
 export type columnMappingType = {

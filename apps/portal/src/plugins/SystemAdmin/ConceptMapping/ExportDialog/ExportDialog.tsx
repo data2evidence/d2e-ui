@@ -61,7 +61,7 @@ type conceptMap = {
   target_vocabulary_id: string;
   valid_start_date: string;
   valid_end_date: string;
-  invalid_reason: string;
+  invalid_reason: string | null;
 };
 
 const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoading, selectedDataset }) => {

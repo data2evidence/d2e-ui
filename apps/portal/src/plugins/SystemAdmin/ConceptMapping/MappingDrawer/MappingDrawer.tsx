@@ -26,8 +26,8 @@ const MappingDrawer: FC<MappingDrawerProps> = ({ selectedDataset }) => {
           domainId: conceptData.domainId,
           system: conceptData.system,
           validStartDate: conceptData.validStartDate,
-          validEndDate: conceptData.validEndDate,
-          validity: conceptData.validity,
+          validEndDate: new Date(),
+          validity: conceptData.validity === "Valid" ? null : "D",
         },
       });
       dispatch({ type: ACTION_TYPES.CLEAR_SELECTED_DATA });
