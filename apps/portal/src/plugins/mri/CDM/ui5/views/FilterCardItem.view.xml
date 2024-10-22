@@ -76,6 +76,12 @@
 
 					<html:hr class="sapMXVerticalSeparator"></html:hr>
 
+
+					<Label text="{hc.hph.cdw.config.ui.i18n>HPH_CDM_CFG_COHORT_DEFINITION_KEY_TITLE}" />
+					<Input value="{configEditorModel>cohortDefinitionKey/value}" />
+
+					<html:hr class="sapMXVerticalSeparator"></html:hr>
+
 				</l:content>
 			</l:VerticalLayout>
 			<m:ValidityVisualElement text="{configEditorModel>queryValidity/validity/message}" 

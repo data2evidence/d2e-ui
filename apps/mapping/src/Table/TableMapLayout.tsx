@@ -1,29 +1,41 @@
 import { useCallback } from "react";
-import ReactFlow, { Controls, Edge, PanOnScrollMode } from "reactflow";
-import { Button } from "@mui/material";
-import { ManageSearch } from "@mui/icons-material";
+import ReactFlow, { Controls, Edge, PanOnScrollMode, Panel } from "reactflow";
 import { useNavigate } from "react-router-dom";
 import { nodeTypes } from "../Nodes";
-import { buildFieldHandles } from "../utils/nodes";
-import { useField, useTable } from "../contexts";
+import { useCdmSchema, useField, useScannedSchema, useTable } from "../contexts";
+import { Box } from "@portal/components";
+import { MenuButton } from "../components/MenuButton/MenuButton";
 import "./TableMapLayout.scss";
 import "reactflow/dist/style.css";
 
 export const TableMapLayout = () => {
-  const { nodes, edges, setTableNodes, setTableEdges, addTableConnection } =
-    useTable();
-  const { setFieldSourceHandles, setFieldTargetHandles } = useField();
+  const { nodes, edges, setTableNodes, setTableEdges, addTableConnection } = useTable();
+  const { setActiveSourceTable, setActiveTargetTable } = useField();
+  const { sourceTables } = useScannedSchema();
+  const { cdmTables } = useCdmSchema();
   const navigate = useNavigate();
 
-  const handleEdgeClick = useCallback((_event: any, edge: Edge) => {
-    const handles = buildFieldHandles(edge);
-    if (!handles) return;
+  const handleEdgeClick = useCallback(
+    (_event: any, edge: Edge) => {
+      const { sourceHandle: sourceTable, targetHandle: targetTable } = edge;
 
-    const { sourceHandles, targetHandles } = handles;
-    setFieldSourceHandles(sourceHandles);
-    setFieldTargetHandles(targetHandles);
-    navigate("link-fields");
-  }, []);
+      if (!sourceTable) {
+        console.warn(`Source table is empty`);
+        return;
+      }
+
+      if (!targetTable) {
+        console.warn(`Target table is empty`);
+        return;
+      }
+
+      setActiveSourceTable(sourceTable);
+      setActiveTargetTable(targetTable);
+
+      navigate("link-fields");
+    },
+    [sourceTables, cdmTables]
+  );
 
   return (
     <div className="table-map-layout">
@@ -47,20 +59,12 @@ export const TableMapLayout = () => {
           onEdgeDoubleClick={handleEdgeClick}
         >
           <Controls showZoom={false} showInteractive={false} />
+          <Panel position="top-left" className="panel">
+            <Box className="flow-panel__custom-controls">
+              <MenuButton />
+            </Box>
+          </Panel>
         </ReactFlow>
-      </div>
-
-      <div className="footer">
-        <Button aria-label="managesearch">
-          <ManageSearch />
-          Vocabulary
-        </Button>
-        <div className="button-group">
-          <Button variant="outlined" color="error">
-            Delete Mapping
-          </Button>
-          <Button variant="contained">Go To Link Fields</Button>
-        </div>
       </div>
     </div>
   );

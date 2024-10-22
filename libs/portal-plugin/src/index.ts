@@ -1,4 +1,3 @@
-export * from './SuperAdminPagePlugin'
 export * from './SystemAdminPagePlugin'
 export * from './ResearcherStudyPlugin'
 export * from './SetupPagePlugin'

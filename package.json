@@ -1,21 +1,25 @@
 {
-  "name": "d2e-ui",
-  "version": "1.0.0",
+  "name": "@alp-os/d2e-ui",
+  "version": "0.0.99",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alp-os/internal.git"
+  },
   "scripts": {
     "build-all": "npx nx run-many --targets=build --projects=@portal/components,@portal/plugin && npx nx run-many --targets=build,build-mri --exclude @portal/components,@portal/plugin && yarn build-ui5",
     "build-all-skip-cache": "npx nx run-many --targets=build --projects=@portal/components,@portal/plugin --skip-nx-cache && npx nx run-many --targets=build,build-mri --exclude @portal/components,@portal/plugin --skip-nx-cache && yarn build-ui5",
     "build-ui5": "yarn ui5 build -a --clean-dest --dest ./resources/ui5",
     "mri-vue": "yarn; nx build vue-mri",
     "portal-ui": "yarn; nx build @portal/plugin; nx build @portal/components; nx build portal; nx build-mri portal",
-    "superadmin-ui": "yarn; nx build @portal/plugin; nx build @portal/components; nx build superadmin",
     "flow": "yarn; nx build @portal/plugin; nx build @portal/components; nx build flow",
     "analysis": "yarn; nx build @portal/plugin; nx build @portal/components; nx build analysis_flow",
     "base:ui": "REPO_RELATIVE_PATH='../../../../../d2e' && GIT_HEAD_COMMIT_ALP_UI_REPO=$(git rev-parse HEAD) docker compose --file ${REPO_RELATIVE_PATH}/docker-compose.yml --file ${REPO_RELATIVE_PATH}/docker-compose-local.yml",
     "az:start:ui": "yarn base:ui up alp-caddy",
     "start:ui": "yarn az:start:ui",
     "build:start:ui": "yarn base:ui --file docker-compose-ui.yml up alp-caddy",
-    "build:ui": "yarn base:ui --file docker-compose-ui.yml build alp-caddy"
+    "build:ui": "yarn base:ui --file docker-compose-ui.yml build alp-caddy",
+    "prepack": "yarn build-all"
   },
   "workspaces": {
     "packages": [
@@ -51,8 +55,8 @@
         "target": "/resources/mapping"
       },
       {
-        "source": "/log-viewer",
-        "target": "/resources/log-viewer"
+        "source": "/jobs",
+        "target": "/resources/jobs"
       },
       {
         "source": "/starboard-jupyter",

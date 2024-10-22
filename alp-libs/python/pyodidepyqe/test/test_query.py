@@ -1279,8 +1279,6 @@ def _get_mock_my_config(setup, selected_study_id):
             }
         }, 
         'meta': {
-            'assignmentId': '3D00794D4078407C9B6F67675E62A26D',
-            'assignmentName': 'first.assignment.name',
             'configId': 'first.pa.config.id',
             'configVersion': 'B',
             'configStatus': '',

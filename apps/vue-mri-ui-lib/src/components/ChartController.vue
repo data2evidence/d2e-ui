@@ -9,6 +9,7 @@
         </template>
         <div class="sort-label" v-if="displaySort">{{ getText('MRI_PA_CHART_SORT_LABEL') }}</div>
         <sortMenuButton v-if="displaySort"></sortMenuButton>
+        <cohortEntryExit v-if="displayShowCohortEntryExit"></cohortEntryExit>
       </div>
       <div class="chartContainer">
         <loadingAnimation v-if="chartBusy"></loadingAnimation>
@@ -39,6 +40,7 @@ import LoadingAnimation from './LoadingAnimation.vue'
 import PatientListContainer from './PatientListContainer.vue'
 import SacChart from './SACChart.vue'
 import SortMenuButton from './SortMenuButton.vue'
+import CohortEntryExit from './CohortEntryExit.vue'
 import StackBarChart from './StackBarChart.vue'
 import VariantBrowser from './VariantBrowser.vue'
 import CohortsAppMenu from './CohortsAppMenu.vue'
@@ -46,10 +48,9 @@ import patientCount from './PatientCount.vue'
 
 export default {
   name: 'chartController',
-  props: ['shouldRerenderChart', 'showLeftPane'],
+  props: ['shouldRerenderChart', 'showLeftPane', 'chartBusy'],
   data() {
     return {
-      chartBusy: false,
       response: {},
       showCensoring: false,
       showErrorLines: false,
@@ -132,11 +133,14 @@ export default {
     chartSelection() {
       return this.getChartSelection()
     },
+    displayShowCohortEntryExit() {      
+      return this.getMriFrontendConfig._internalConfig.panelOptions.cohortEntryExit
+    }
   },
   methods: {
     ...mapActions(['setFireRequest', 'setKMDisplayInfo']),
     setChartBusy(status) {
-      this.chartBusy = status
+      this.$emit('setChartBusy', status)
     },
     updateDisplay() {
       this.setKMDisplayInfo({
@@ -156,6 +160,7 @@ export default {
     DropDownMenu,
     LoadingAnimation,
     SortMenuButton,
+    CohortEntryExit,
     StackBarChart,
     VariantBrowser,
     PatientListContainer,

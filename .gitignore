@@ -1,7 +1,6 @@
 resources/*
 
 !resources/img
-!resources/starboard-jupyter
 !resources/authenticate.js
 !resources/msal-browser.min.js
 
@@ -26,3 +25,5 @@ dist
 **/*private*
 
 .nx
+
+pyqetest

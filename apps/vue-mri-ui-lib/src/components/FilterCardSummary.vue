@@ -26,6 +26,7 @@
                         getText('MRI_PA_FILTERCARD_TITLE_BASIC_DATA')
                       }}</span>
                       <span class="bookmark-headelement" v-else>{{ filterCard.name }}</span>
+                      <b-badge v-if="isDisplayBadge(filterCard)" variant="light" class="ml-2 filter-card-badge">{{ getBadgeText(filterCard) }}</b-badge>
                       <span class="bookmark-headelement" v-if="filterCard.isExcluded"
                         >({{ getText('MRI_PA_LABEL_EXCLUDED') }})</span
                       >
@@ -57,6 +58,28 @@
         </li>
       </ul>
     </div>
+    <div class="download-cohort-definition">
+      <d4l-button
+        @click="onClickDownloadCohortDefinition"
+        :text="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_COHORT_DEFINITION')"
+        :title="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_COHORT_DEFINITION')"
+        classes="button--block"
+        :disabled="chartBusy"
+      />
+    </div>
+    <div class="download-sql">
+      <d4l-button
+        @click="onClickDownloadSql"
+        :text="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL')"
+        :title="getText('MRI_PA_FILTER_SUMMARY_DOWNLOAD_SQL')"
+        classes="button--block"
+        :disabled="chartBusy"
+      />
+    </div>
+    <download-cohort-definition-dialog
+      v-if="showCohortDefinitionDownloadDialog"
+      @closeEv="showCohortDefinitionDownloadDialog = false"
+    ></download-cohort-definition-dialog>
   </div>
 </template>
 
@@ -67,17 +90,30 @@ import icon from '../lib/ui/app-icon.vue'
 import appLabel from '../lib/ui/app-label.vue'
 import Constants from '../utils/Constants'
 import messageBox from './MessageBox.vue'
+import downloadCohortDefinitionDialog from './DownloadCohortDefinitionDialog.vue'
 
 export default {
+  // compatConfig: {
+  //   MODE: 3,
+  // },
   name: 'filterCardSummary',
-  props: ['unloadBookmarkEv'],
+  props: ['unloadBookmarkEv', 'chartBusy'],
   data() {
     return {
       bookmarks: [],
+      showCohortDefinitionDownloadDialog: false,
     }
   },
   computed: {
-    ...mapGetters(['getMriFrontendConfig', 'getBookmarksData', 'getText', 'getAxis', 'getFilterCard']),
+    ...mapGetters([
+      'getMriFrontendConfig',
+      'getBookmarksData',
+      'getText',
+      'getAxis',
+      'getFilterCard',
+      'getActiveBookmark',
+      'getResponse',
+    ]),
     currentBookmark() {
       return this.getBookmarksData
     },
@@ -100,6 +136,7 @@ export default {
     },
     getCardsFormatted() {
       const boolContainers = this.bookmark.filterCardData
+      
       const returnObj = []
       try {
         for (let i = 0; i < boolContainers.length; i += 1) {
@@ -111,6 +148,8 @@ export default {
               let attributes = boolContainers[i].content[ii].attributes
               let isExcluded = false
               let filterCardName = boolContainers[i].content[ii].name
+              const isEntry = boolContainers[i].content[ii].isEntry
+              const isExit = boolContainers[i].content[ii].isExit
               // Excluded filter cards have attributes one level further down
               if (!attributes) {
                 attributes = boolContainers[i].content[ii].content[0].attributes
@@ -164,6 +203,8 @@ export default {
                 visibleAdvanceTime,
                 visibleAttributes,
                 isExcluded,
+                isEntry,
+                isExit,
                 name: filterCardName,
               }
               content.push(filterCardObj)
@@ -181,17 +222,27 @@ export default {
       }
       return returnObj
     },
+    displayShowCohortEntryExit() {      
+      return this.getMriFrontendConfig._internalConfig.panelOptions.cohortEntryExit
+    }
   },
   methods: {
-    ...mapActions(['setActiveChart', 'fireBookmarkQuery']),
+    ...mapActions(['setActiveChart', 'fireBookmarkQuery', 'fireCohortDefinitionQuery']),
     unloadBookmark() {
       this.$emit('unloadFilterCardSummaryEv')
     },
-    getChartInfo(chart, type) {
-      if (Constants.chartInfo[chart]) {
-        return Constants.chartInfo[chart][type]
-      }
-      return ''
+    onClickDownloadSql() {
+      const content = this.getResponse()?.data?.sql || ''
+      const blob = new Blob([content], { type: 'text/sql' })
+      const link = document.createElement('a')
+      link.download = `${this.getActiveBookmark?.bookmarkname || 'Untitled'}.sql`
+      link.href = URL.createObjectURL(blob)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    },
+    onClickDownloadCohortDefinition() {
+      this.showCohortDefinitionDownloadDialog = true
     },
     getAdvanceTimeFilterFormatted(filter) {
       let str = ''
@@ -248,34 +299,6 @@ export default {
       const o = targetSelectionOptions.find(option => option.key === afterBefore + '_' + other)
       return o ? o.text : afterBefore + '_' + other
     },
-    getAxisFormatted(axis, type) {
-      const returnObj = []
-      if (type === 'list') {
-        const tempObject = {}
-        let count = 0
-        Object.keys(axis).forEach(key => {
-          tempObject[axis[key]] = key
-          count += 1
-        })
-        for (let i = 0; i < count; i += 1) {
-          returnObj.push({
-            name: this.getAttributeName(tempObject[i], type),
-          })
-        }
-      } else {
-        for (let i = 0; i < axis.length; i += 1) {
-          if (axis[i].attributeId !== 'n/a') {
-            const axisModel = this.getAxis(i)
-            returnObj.push({
-              name: `= ${this.getAttributeName(axis[i].attributeId, type)}`,
-              icon: axisModel.props.icon,
-              iconGroup: axisModel.props.iconFamily,
-            })
-          }
-        }
-      }
-      return returnObj
-    },
     getAttributeName(attributeId, type) {
       /* Note: This is the current Implementation of Bookmark Rendering. */
       const attributePath = attributeId.split('.')
@@ -294,12 +317,25 @@ export default {
       }
       return attributeId
     },
+    isDisplayBadge(filterCard) {
+      return this.displayShowCohortEntryExit && (filterCard.isEntry || filterCard.isExit);
+    },
+    getBadgeText(filterCard) {
+      return filterCard.isEntry ? this.getText('MRI_PA_CHART_ENTRY') : filterCard.isExit ? this.getText('MRI_PA_CHART_EXIT') : ""
+    }
   },
   components: {
     icon,
     messageBox,
     appButton,
     appLabel,
+    downloadCohortDefinitionDialog,
   },
 }
 </script>
+
+<style scoped>
+.filter-card-badge {
+  color: #000080 !important;
+}
+</style>

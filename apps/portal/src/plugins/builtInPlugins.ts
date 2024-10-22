@@ -1,9 +1,5 @@
-// const superAdminPagePlugin = async () =>
-//   await import(/* webpackChunkName: "super-admin-page-plugin" */ './SuperAdminPage/module')
-
 const moduleNames = [
   "mri/CDM",
-  "mri/Assignment",
   "mri/PatientAnalyticsConfig",
   "mri/PatientAnalytics",
   "mri/PatientSummaryConfig",
@@ -20,6 +16,7 @@ const moduleNames = [
   "SystemAdmin/Terminology",
   "SystemAdmin/Athena",
   "SystemAdmin/FlowOverview",
+  "SystemAdmin/ConceptMapping",
   "Starboard",
   "Cohort",
   "Admin/Permissions",
@@ -29,7 +26,6 @@ const moduleNames = [
   "Setup/Metadata",
   "Setup/Feature",
   "Setup/Db",
-  "Setup/ConceptMapping",
   "Setup/HybridSearch",
   "Setup/OverviewDescription",
   "Setup/PluginTable",
@@ -45,7 +41,6 @@ const modulePaths = moduleNames.reduce(
 
 const builtInPlugins: { [path: string]: any } = {
   ...modulePaths,
-  // 'plugins/SuperAdminPage/module': superAdminPagePlugin
 };
 
 export default builtInPlugins;

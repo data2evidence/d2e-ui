@@ -259,6 +259,8 @@ const getters = {
               })
           ),
           inactive: filterCard.props.inactive,
+          isEntry: filterCard.props.isEntry,
+          isExit: filterCard.props.isExit,
         }
 
         // if (this.getSuccessor()) {
@@ -364,6 +366,9 @@ const getters = {
   getFilterCard: modulestate => filtercardId => {
     const filterCard = modulestate.model.entities.filterCards[filtercardId]
     return { ...filterCard }
+  },
+  getFilterCards: modulestate => () => {
+    return { ...modulestate.model.entities.filterCards }
   },
   getFilterCardCount:
     (modulestate, moduleGetters) =>
@@ -507,6 +512,16 @@ const getters = {
       oInternalConfigAttribute.annotations && oInternalConfigAttribute.annotations.indexOf(genemoicVariantType) !== -1
     )
   },
+  getSelectedEntryExitFilterCard: (modulestate, getters) => key => {
+    const filterCards = getters.getFilterCards()
+
+    for (const card in filterCards) {
+      if (filterCards[card].props[key]) {
+        return filterCards[card].props.name
+      }
+    }
+    return null
+  },
 }
 
 // actions
@@ -605,8 +620,7 @@ const actions = {
   },
   setNewAxisValue({ commit, getters, dispatch }, { id, props }) {
     const attributeConfig = getters.getMriFrontendConfig.getAttributeByPath(props.attributeId)
-
-    if (attributeConfig.isCategory()) {
+    if (attributeConfig.isCategory() && (props.binsize === undefined || props.binsize === null)) {
       props.binsize = attributeConfig.getDefaultBinSize() === undefined ? 0 : attributeConfig.getDefaultBinSize()
     }
 
@@ -977,6 +991,9 @@ const actions = {
           response.data.noDataReason = getters.getText(response.data.noDataReason)
         }
         commit(types.SET_CHART_SELECTION, { selection: [] })
+        if (rootGetters.getActiveChart === 'list') {
+          response.data.sql = response.data.data.map(listItem => listItem.sql).join(';\n')
+        }
         commit(types.RESPONSE_SET, { response: { data: response.data } })
         return response.data
       })
@@ -1186,6 +1203,12 @@ const actions = {
       dispatch('setBoolContainerState', boolContainerModel)
     }
   },
+  updateCohortEntryExit({ commit }, { filterCardId, key, toggle }) {
+    commit(types.FILTERCARD_TOGGLE_IS_ENTRY_EXIT, { filterCardId, key, toggle })
+  },
+  resetAllFilterCardEntryExit({ commit }, { key }) {
+    commit(types.FILTERCARD_RESET_ALL_ENTRY_EXIT, { key })
+  },
 }
 
 // mutations
@@ -1303,6 +1326,20 @@ const mutations = {
   },
   [types.FILTERCARD_TOGGLE_ADVANCE_TIME](moduleState, { filterCardId, advancedTimeFilter }) {
     moduleState.model.entities.filterCards[filterCardId].props.advancedTimeFilter = advancedTimeFilter
+  },
+  [types.FILTERCARD_TOGGLE_IS_ENTRY_EXIT](moduleState, { filterCardId, key, toggle }) {
+    moduleState.model.entities.filterCards[filterCardId].props[key] = toggle
+  },
+  [types.FILTERCARD_RESET_ALL_ENTRY_EXIT](moduleState, { key }) {
+    const filterCards = moduleState.model.entities.filterCards
+    Object.keys(filterCards).forEach(id => {
+      if (key) {
+        filterCards[id].props[key] = false
+      } else {
+        filterCards[id].props.isEntry = false
+        filterCards[id].props.isExit = false
+      }
+    })
   },
   [types.FILTERCARD_SET_PROPS](moduleState, { filterCardId, filterCardProps }) {
     moduleState.model.entities.filterCards[filterCardId].props = {

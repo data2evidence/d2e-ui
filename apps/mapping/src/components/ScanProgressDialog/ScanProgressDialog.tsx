@@ -1,14 +1,12 @@
-import { FC, useEffect, useState, useCallback, useRef } from "react";
-import { Button, Dialog, DialogTitle, LinearProgress } from "@mui/material";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { NodeProps, Position, useUpdateNodeInternals } from "reactflow";
-import { TableSourceHandleData, useTable } from "../../contexts";
-import { CloseDialogType } from "../ScanDataDialog/ScanDataDialog";
+import { useNavigate } from "react-router-dom";
+import { Button, Dialog, DialogTitle, LinearProgress } from "@mui/material";
 import { api } from "../../axios/api";
-import { saveBlobAs } from "../../utils/utils";
-import {
-  ScanDataProgressLogs,
-  ScanDataSourceTable,
-} from "../../types/scanDataDialog";
+import { TableSourceHandleData, useField, useScannedSchema, useTable } from "../../contexts";
+import { ScanDataProgressLogs, ScanDataSourceTable } from "../../types/scanDataDialog";
+import { buildFieldHandle, getColumns, saveBlobAs } from "../../utils/utils";
+import { CloseDialogType } from "../ScanDataDialog/ScanDataDialog";
 import "./ScanProgressDialog.scss";
 
 interface ScanProgressDialogProps {
@@ -19,19 +17,16 @@ interface ScanProgressDialogProps {
   scanId: number;
 }
 
-export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
-  open,
-  onBack,
-  onClose,
-  nodeId,
-  scanId,
-}) => {
+export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({ open, onBack, onClose, nodeId, scanId }) => {
   const [progress, setProgress] = useState(0);
   const [scanCompleted, setScanCompleted] = useState(false);
   const [log, setLog] = useState<string[]>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const updateNodeInternals = useUpdateNodeInternals();
   const { setTableSourceHandles } = useTable();
+  const { setFieldSourceHandles } = useField();
+  const { setScannedSchema } = useScannedSchema();
+  const navigate = useNavigate();
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
@@ -43,18 +38,7 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
 
   const handleSaveReport = useCallback(async () => {
     try {
-      const binaryString = await api.whiteRabbit.getScanReport(scanId);
-      const binaryLength = binaryString.length;
-      const bytes = new Uint8Array(binaryLength);
-
-      for (let i = 0; i < binaryLength; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-
-      // Create a Blob from Uint8Array
-      const blob = new Blob([bytes], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
+      const blob = await api.whiteRabbit.getScanReport(scanId);
       saveBlobAs(blob, "report.xlsx");
     } catch (error) {
       console.error("Failed to save report", error);
@@ -64,28 +48,38 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
   const handleLinkTables = useCallback(async () => {
     try {
       const response = await api.whiteRabbit.getScanResult(scanId);
+      const dataId = response.dataId;
       const fileName = response.fileName;
-      const scannedResult = await api.backend.createSourceSchemaByScanReport(
-        scanId,
-        fileName
-      );
+      const scannedResult = await api.backend.createSourceSchemaByScanReport(dataId, fileName);
 
       let sourceHandles: Partial<NodeProps<TableSourceHandleData>>[];
-      sourceHandles = scannedResult.source_tables.map(
-        (table: ScanDataSourceTable, index: number) => ({
-          id: `C.${index + 1}`,
-          data: { label: table.table_name, type: "input" },
-          sourcePosition: Position.Right,
-        })
-      );
+      sourceHandles = scannedResult.source_tables.map((table: ScanDataSourceTable, index: number) => ({
+        id: `C.${index + 1}`,
+        data: { label: table.table_name, type: "input" },
+        sourcePosition: Position.Right,
+      }));
       setTableSourceHandles(sourceHandles);
+
+      sourceHandles.forEach((table) => {
+        const tableName = table.data?.label;
+        if (!tableName) {
+          console.warn("Invalid handle with empty table name");
+          return;
+        }
+
+        const columns = getColumns(scannedResult.source_tables, tableName);
+        const handles = buildFieldHandle(columns, tableName, true);
+        setFieldSourceHandles({ tableName, data: handles });
+      });
+
+      setScannedSchema(scannedResult);
       updateNodeInternals(nodeId);
       handleClose("success");
+      navigate("");
     } catch (error) {
       console.log(`Error creating source schema`);
     }
-    console.log("Tables linked");
-  }, [scanId, nodeId]);
+  }, [scanId, nodeId, navigate]);
 
   const fetchScanProgress = useCallback(async () => {
     try {
@@ -132,18 +126,10 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
   }, [open, scanId, scanCompleted, fetchScanProgress]);
 
   return (
-    <Dialog
-      className="scan-progress-dialog"
-      open={open}
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
-    >
+    <Dialog className="scan-progress-dialog" open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Scan Data</DialogTitle>
       <div className="scan-progress-dialog__content">
-        <div className="scan-progress-dialog__status">
-          Scanning... Estimated time depends on selected database
-        </div>
+        <div className="scan-progress-dialog__status">Scanning... Estimated time depends on selected database</div>
         <LinearProgress variant="determinate" value={progress} />
         <div className="scan-progress-dialog__log">
           {log.map((entry, index) => (
@@ -152,17 +138,13 @@ export const ScanProgressDialog: FC<ScanProgressDialogProps> = ({
         </div>
       </div>
       <div className="scan-progress-dialog__actions">
-        <Button
-          onClick={handleBack}
-          variant="outlined"
-          disabled={!scanCompleted}
-        >
+        <Button onClick={handleBack} variant="outlined" disabled={!scanCompleted}>
           Back
         </Button>
-        <Button onClick={handleSaveReport} variant="contained" color="primary">
+        <Button onClick={handleSaveReport} variant="contained" color="primary" disabled={!scanCompleted}>
           Save report
         </Button>
-        <Button onClick={handleLinkTables} variant="contained" color="primary">
+        <Button onClick={handleLinkTables} variant="contained" color="primary" disabled={!scanCompleted}>
           Link tables
         </Button>
       </div>

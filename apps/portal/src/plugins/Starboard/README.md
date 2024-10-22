@@ -1,7 +1,7 @@
 # 🌑 Starboard Notebook for ALP Portal using Iframe 
 
 ## Enabling Starboard Notebook for Researchers
-Through the superadmin portal, the Notebooks Feature Flag should be enabled to the researcher user. Notebooks will be shared amongst researcher in the same study. 
+Through the admin portal, the Notebooks Feature Flag should be enabled to the researcher user. Notebooks will be shared amongst researcher in the same study. 
 
 ## Running starboard-notebook-base locally
 `starboard-notebook-base` located in the resources folder, stores the build file of [starboard-notebook](https://github.com/alp/alp-starboard-notebook-base). `starboard-notebook-base` contains the starboard-notebook code that has been modified to accommodate the needs for the ALP portal such as JWT Token and Jupyter Kernels. The source link (index.html) from the modified build files will be imported to `StarboardEmbed` to be run locally.

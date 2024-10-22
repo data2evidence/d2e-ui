@@ -91,7 +91,7 @@ const getters = {
 
         axisInfo.binsize =
           allAxes[i].props.binsize === ''
-            ? rootGetters.getMriFrontendConfig.getAttributeByPath(axisInfo.attributeId).getDefaultBinSize()
+            ? rootGetters.getMriFrontendConfig.getAttributeByPath(axisInfo.attributeId).getDefaultBinSize() ?? 'n/a'
             : allAxes[i].props.binsize
       }
       axisSelection.push(axisInfo)
@@ -118,10 +118,15 @@ const getters = {
     if (modulestate.activeBookmark == null) {
       return false
     }
-
-    const newBookmarksData = moduleGetters.getBookmarksData.filter
-    const currentBookmarksData = JSON.parse(modulestate.activeBookmark?.bookmark)?.filter
-    return !isEqual(newBookmarksData, currentBookmarksData)
+    const bookmark = JSON.parse(modulestate.activeBookmark?.bookmark)
+    const newBookmarksFilter = moduleGetters.getBookmarksData.filter
+    const currentBookmarksFilter = bookmark?.filter
+    const newBookmarksAxisSelection = moduleGetters.getBookmarksData.axisSelection
+    const currentBookmarksAxisSelection = bookmark?.axisSelection
+    return (
+      !isEqual(newBookmarksFilter, currentBookmarksFilter) ||
+      !isEqual(newBookmarksAxisSelection, currentBookmarksAxisSelection)
+    )
   },
 }
 
@@ -214,12 +219,13 @@ const actions = {
                 const path = parsedBookmark.axisSelection[i].attributeId.split('.')
                 const key = path.pop()
                 path.pop()
+                const filterCardId = path.join('.')
                 dispatch('setNewAxisValue', {
                   id: i,
                   props: {
+                    ...parsedBookmark.axisSelection[i],
                     key,
-                    attributeId: parsedBookmark.axisSelection[i].attributeId,
-                    filterCardId: path.join('.'),
+                    filterCardId,
                   },
                 })
               } else {
@@ -276,9 +282,11 @@ const actions = {
           if (chartType) {
             dispatch('setActiveChart', chartType)
           }
+          dispatch('setFireRequest')
           resolve(null)
         })
         .catch(e => {
+          console.log(e)
           reject()
         })
     })

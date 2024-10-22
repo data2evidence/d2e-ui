@@ -14,3 +14,14 @@ export interface ScanDataSourceTable {
   column_list: ScanDataColumn[];
   table_name: string;
 }
+
+export interface ScanDataDBConnectionForm {
+  dbType: string;
+  server: string;
+  port: number;
+  user: string;
+  httppath?: string;
+  password: string;
+  database: string;
+  schema: string;
+}

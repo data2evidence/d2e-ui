@@ -65,29 +65,17 @@ export default {
         this.openCohortCompareDialog()
       }
     },
+    getHasAssignedConfig(val) {
+      if (val) {
+        this.initChartConfig()
+      }
+    }
   },
   mounted() {
-    const chartConfigs = this.getAllChartConfigs
-    const chartTypeData = []
-    const supportedChart = ['stacked', 'boxplot', 'km']
-    // retrieves the icon of each chart button
-    Object.keys(Constants.chartInfo).forEach(key => {
-      if (chartConfigs[key] && chartConfigs[key].visible) {
-        const chartInfo = Constants.chartInfo[key]
-        Object.keys(chartConfigs[key]).forEach(key2 => {
-          chartInfo[key2] = chartConfigs[key][key2]
-        })
-        // check if stack, boxplot or km
-        if (supportedChart.indexOf(key) > -1) {
-          chartTypeData.push(chartInfo)
-        }
-      }
-    })
-
-    this.chartConfig = chartTypeData
+    this.initChartConfig()
   },
   computed: {
-    ...mapGetters(['getText', 'getAllChartConfigs']),
+    ...mapGetters(['getText', 'getAllChartConfigs', 'getHasAssignedConfig']),
   },
   methods: {
     ...mapActions(['setAlertMessage']),
@@ -118,6 +106,26 @@ export default {
         const firstChart = chartTypeData.at(0)
         this.selectedChart = firstChart.name
       }
+    },
+    initChartConfig() {
+      const chartConfigs = this.getAllChartConfigs
+      const chartTypeData = []
+      const supportedChart = ['stacked', 'boxplot', 'km']
+      // retrieves the icon of each chart button
+      Object.keys(Constants.chartInfo).forEach(key => {
+        if (chartConfigs[key] && chartConfigs[key].visible) {
+          const chartInfo = Constants.chartInfo[key]
+          Object.keys(chartConfigs[key]).forEach(key2 => {
+            chartInfo[key2] = chartConfigs[key][key2]
+          })
+          // check if stack, boxplot or km
+          if (supportedChart.indexOf(key) > -1) {
+            chartTypeData.push(chartInfo)
+          }
+        }
+      })
+
+      this.chartConfig = chartTypeData
     },
   },
   components: {

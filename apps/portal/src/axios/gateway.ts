@@ -34,32 +34,27 @@ export class Gateway {
   public getCdmSchemaSnapshotMetadata(sourceDatasetId: string) {
     return request({
       baseURL: GATEWAY_BASE_URL,
-      url: `/dataset/${sourceDatasetId}/cdm-schema/snapshot/metadata`,
+      url: `/dataset/cdm-schema/snapshot/metadata`,
       method: "GET",
+      params: { datasetId: sourceDatasetId },
     });
   }
 
   public getAllCohorts(sourceDatasetId: string): Promise<CohortDefinitionList> {
     return request({
       baseURL: GATEWAY_BASE_URL,
-      url: `/dataset/${sourceDatasetId}/cohorts`,
+      url: `/dataset/cohorts`,
       method: "GET",
+      params: { datasetId: sourceDatasetId },
     });
   }
 
   public getDatasetDashboards(datasetId: string): Promise<any> {
     return request({
       baseURL: GATEWAY_BASE_URL,
-      url: `/dataset/${datasetId}/dashboard/list`,
+      url: `/dataset/dashboard/list`,
       method: "GET",
-    });
-  }
-
-  public getDataModels(dialect: string): Promise<any> {
-    return request({
-      baseURL: GATEWAY_BASE_URL,
-      url: `/db/${dialect}/data-models`,
-      method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
@@ -97,7 +92,7 @@ export class Gateway {
 
   public createFhirStaging(input: NewFhirProjectInput): Promise<any> {
     return request({
-      baseURL: GATEWAY_BASE_URL + "/fhir",
+      baseURL: GATEWAY_BASE_URL + "/fhir/createProject",
       method: "POST",
       data: input,
     });
