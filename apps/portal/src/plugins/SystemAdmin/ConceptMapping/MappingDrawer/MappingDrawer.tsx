@@ -53,10 +53,10 @@ const MappingDrawer: FC<MappingDrawerProps> = ({ selectedDatasetId }) => {
           props: {
             onConceptIdSelect: handleTerminologySelect,
             onClose: () => dispatch({ type: ACTION_TYPES.CLEAR_SELECTED_DATA }),
-            // initialInput: selectedData[sourceName],
+            initialInput: selectedData[sourceName],
             mode: "CONCEPT_MAPPING",
             selectedDatasetId: selectedDatasetId,
-            // defaultFilters: getDefaultFilters(),
+            defaultFilters: getDefaultFilters(),
           },
         },
       });
