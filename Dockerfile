@@ -6,7 +6,6 @@ WORKDIR /usr/src/services/app/alp-ui
 
 COPY ./yarn.lock ./yarn.lock
 COPY ./package.json ./package.json
-COPY ./plugins/sample-superadmin-page/package.json ./plugins/sample-superadmin-page/package.json
 COPY ./plugins/sample-researcher-study/package.json ./plugins/sample-researcher-study/package.json
 COPY ./libs/portal-components/package.json ./libs/portal-components/package.json
 COPY ./libs/portal-plugin/package.json ./libs/portal-plugin/package.json
@@ -14,7 +13,6 @@ COPY ./apps/mapping/package.json ./apps/mapping/package.json
 COPY ./apps/chp-ps-ui/package.json ./apps/chp-ps-ui/package.json
 COPY ./apps/portal/package.json ./apps/portal/package.json
 COPY ./apps/analysis/package.json ./apps/analysis/package.json
-COPY ./apps/superadmin/package.json ./apps/superadmin/package.json
 COPY ./apps/vue-mri-ui-lib/package.json ./apps/vue-mri-ui-lib/package.json
 COPY ./apps/jobs/package.json ./apps/jobs/package.json
 COPY ./apps/mri-pa-ui/package.json ./apps/mri-pa-ui/package.json
@@ -91,15 +89,6 @@ RUN --mount=type=cache,target=build \
 
 RUN cp -r ./apps/genomics-ui /usr/src/services/app/alp-ui/resources/mri-ui5
 
-RUN ls -l /usr/src/services/app/alp-ui/resources/
-
-FROM portal-base-build AS superadmin-ui-build
-
-COPY ./apps/superadmin ./apps/superadmin
-
-RUN --mount=type=cache,target=build \
-    --mount=type=cache,target=dist \
-    npx nx build superadmin
 RUN ls -l /usr/src/services/app/alp-ui/resources/
 
 FROM portal-base-build AS flow-ui-build
@@ -183,7 +172,6 @@ RUN mkdir -p services/app/alp-ui/resources/
 COPY --from=mri-vue-build /usr/src/services/app/alp-ui/resources/mri services/app/alp-ui/resources/mri
 COPY --from=portal-ui-build /usr/src/services/app/alp-ui/resources/portal services/app/alp-ui/resources/portal
 COPY --from=mri-portal-build /usr/src/services/app/alp-ui/resources/mri-ui5 services/app/alp-ui/resources/mri-ui5
-COPY --from=superadmin-ui-build /usr/src/services/app/alp-ui/resources/superadmin services/app/alp-ui/resources/superadmin
 COPY --from=flow-ui-build /usr/src/services/app/alp-ui/resources/flow services/app/alp-ui/resources/flow
 COPY --from=analysis-ui-build /usr/src/services/app/alp-ui/resources/analysis services/app/alp-ui/resources/analysis
 COPY --from=mapping-ui-build /usr/src/services/app/alp-ui/resources/mapping services/app/alp-ui/resources/mapping
@@ -211,7 +199,7 @@ ENV GIT_COMMIT=$GIT_COMMIT_ARG
 COPY --from=final-build /usr/src/services/app/alp-ui/resources/ ui-files/
 
 # Ignore check if its run for http tests
-RUN for NAME in mri mri-ui5 ui5 portal superadmin flow analysis mapping starboard-notebook-base; do \
+RUN for NAME in mri mri-ui5 ui5 portal flow analysis mapping starboard-notebook-base; do \
     DIR=ui-files/${NAME}; \
     echo TEST $DIR created ...; \
     ls -d "${DIR}" || exit 1; \

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-
+import { ParseResult } from "papaparse";
 export interface ConceptMappingProviderProps {
   children?: ReactNode;
 }
@@ -7,15 +7,15 @@ export interface ConceptMappingProviderProps {
 export type ConceptMappingStateType = {
   importData: csvDataType;
   csvData: csvDataType;
-  selectedData: Object;
+  selectedData: { [key: string]: string };
   columnMapping: columnMappingType;
   filters: filters;
 };
 
 export type csvDataType = {
   name: string;
-  columns: [];
-  data: Array<Object>;
+  columns: string[] | undefined;
+  data: Array<{ [key: string]: any }>;
 };
 
 export type columnMappingType = {
@@ -23,6 +23,7 @@ export type columnMappingType = {
   sourceName: string;
   sourceFrequency: string;
   description: string;
+  domainId?: string;
 };
 
 export type filters = {};
@@ -43,3 +44,5 @@ export type RowObject = {
   searchText: string;
   domainId?: string;
 };
+
+export type csvData = { name: string; data: ParseResult<any> };

@@ -69,7 +69,6 @@ const AttributeTable: FC = () => {
                 <TableCell>{getText(i18nKeys.ATTRIBUTE_TABLE__ATTRIBUTE_NAME)}</TableCell>
                 <TableCell>{getText(i18nKeys.ATTRIBUTE_TABLE__CATEGORY)}</TableCell>
                 <TableCell>{getText(i18nKeys.ATTRIBUTE_TABLE__DATATYPE)}</TableCell>
-                <TableCell>{getText(i18nKeys.ATTRIBUTE_TABLE__IS_DISPLAYED)}</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -81,7 +80,6 @@ const AttributeTable: FC = () => {
                     <TableCell>{metadataAttribute.name}</TableCell>
                     <TableCell>{metadataAttribute.category}</TableCell>
                     <TableCell>{metadataAttribute.dataType}</TableCell>
-                    <TableCell>{metadataAttribute.isDisplayed.toString()}</TableCell>
                     <TableCell>
                       <IconButton
                         startIcon={<EditIcon />}

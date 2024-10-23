@@ -205,7 +205,7 @@ const styles: SxProps = {
 };
 
 /**
- * Dialog shown when user is adding a study in superadmin
+ * Dialog shown when user is adding a study in admin portal
  * @param param0 AddStudyDialogProps
  * @returns The dialog object
  */
@@ -989,6 +989,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
             label={getText(i18nKeys.ADD_STUDY_DIALOG__TOKEN_DATASET_CODE)}
             value={formData.tokenStudyCode}
             onChange={(event) => handleFormDataChange({ tokenStudyCode: event.target.value })}
+            inputProps={{ maxLength: 48 }}
             error={formError.tokenStudyCode.required || formError.tokenStudyCode.valid}
           />
           {formError.tokenStudyCode.required && (

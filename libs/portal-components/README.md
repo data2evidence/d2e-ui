@@ -1,6 +1,6 @@
 # Portal Components Library
 
-The library provides the shared components and svg icons for ALP Portal & Superadmin Portal with Storybook setup by doing the following:
+The library provides the shared components and svg icons for ALP Portal with Storybook setup by doing the following:
 
 - Run `svgr` to convert svg images to React components
 - Run `rollup` to bundle the library
