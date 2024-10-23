@@ -1,8 +1,9 @@
-import request from "./request";
 import env from "../env";
-import { Flow, ExecuteFlowRunByDeployment, CreateFlowRunByMetadata, FlowRunFilters } from "../types";
+import { CreateFlowRunByMetadata, ExecuteFlowRunByDeployment, Flow, FlowRunFilters } from "../types";
+import request from "./request";
 
 const DATAFLOW_MGMT_URL = `${env.REACT_APP_DN_BASE_URL}dataflow-mgmt/`;
+const JOBPLUGIN_URL = `${env.REACT_APP_DN_BASE_URL}jobplugins/`;
 
 export class Dataflow {
   public getFlows() {
@@ -90,7 +91,7 @@ export class Dataflow {
 
   public getDataQualityDataflowResults(flowRunId: string) {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
+      baseURL: JOBPLUGIN_URL,
       url: `dqd/data-quality/flow-run/${flowRunId}/results`,
       method: "GET",
     });
@@ -98,7 +99,7 @@ export class Dataflow {
 
   public getDataQualityDataflowOverview(flowRunId: string) {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
+      baseURL: JOBPLUGIN_URL,
       url: `dqd/data-quality/flow-run/${flowRunId}/overview`,
       method: "GET",
     });
@@ -106,31 +107,34 @@ export class Dataflow {
 
   public getDatasetLatestFlowRun(jobType: string, datasetId: string) {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: `dqd/${jobType}/dataset/${datasetId}/flow-run/latest`,
+      baseURL: JOBPLUGIN_URL,
+      url: `dqd/${jobType}/flow-run/latest`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
   public getDatasetReleaseFlowRun(jobType: string, datasetId: string, releaseId: string) {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: `dqd/${jobType}/dataset/${datasetId}/release/${releaseId}/flow-run`,
+      baseURL: JOBPLUGIN_URL,
+      url: `dqd/${jobType}/release/${releaseId}/flow-run`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
   public useDataQualityDatasetLatestCohortFlowRun(datasetId: string, cohortDefinitionId: string) {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: `dqd/data-quality/dataset/${datasetId}/cohort/${cohortDefinitionId}/flow-run/latest`,
+      baseURL: JOBPLUGIN_URL,
+      url: `dqd/data-quality/cohort/${cohortDefinitionId}/flow-run/latest`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
   public getDataCharacterizationResults(flowRunId: string, sourceKey: string): Promise<any> {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
+      baseURL: JOBPLUGIN_URL,
       url: `dqd/data-characterization/flow-run/${flowRunId}/results/${sourceKey}`,
       method: "GET",
     });
@@ -142,7 +146,7 @@ export class Dataflow {
     conceptId: string
   ): Promise<any> {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
+      baseURL: JOBPLUGIN_URL,
       url: `dqd/data-characterization/flow-run/${flowRunId}/results/${sourceKey}/${conceptId}`,
       method: "GET",
     });
@@ -150,33 +154,37 @@ export class Dataflow {
 
   public getHistoricalDataQuality(datasetId: string) {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: `dqd/data-quality/dataset/${datasetId}/history`,
+      baseURL: JOBPLUGIN_URL,
+      url: `dqd/data-quality/history`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
   public getHistoricalDataQualityByCategory(datasetId: string) {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: `dqd/data-quality/dataset/${datasetId}/category/history`,
+      baseURL: JOBPLUGIN_URL,
+      url: `dqd/data-quality/category/history`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
   public getHistoricalDataQualityByDomain(datasetId: string) {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: `dqd/data-quality/dataset/${datasetId}/domain/history`,
+      baseURL: JOBPLUGIN_URL,
+      url: `dqd/data-quality/domain/history`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
   public getDomainContinuity(datasetId: string) {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
-      url: `dqd/data-quality/dataset/${datasetId}/domain/continuity`,
+      baseURL: JOBPLUGIN_URL,
+      url: `dqd/data-quality/domain/continuity`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
