@@ -89,7 +89,7 @@ body {
 }
 
 /* flow run page*/
-.flow-run-work-pool, .flow-run-work-queue, .state-list-item__meta {
+.flow-run-work-pool, .flow-run-work-queue {
   display: none !important;
 }
 
