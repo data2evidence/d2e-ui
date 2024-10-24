@@ -503,6 +503,7 @@ export const i18nDefault = {
     EXECUTE_FLOW_DIALOG__NAME: "Name",
     EXECUTE_FLOW_DIALOG__REQUIRED: "This is required",
     EXPORT_MAPPING_DIALOG__TITLE: "Export mappings to database",
+    EXPORT_MAPPING_DIALOG__FORM_TITLE: "Concept Mapping Configuration",
     EXPORT_MAPPING_DIALOG__SOURCE_VOCABULARY_ID: "SOURCE VOCABULARY ID",
     EXPORT_MAPPING_DIALOG__HELPER_TEXT:
       "id should be more than 100 so that it can be easily identified as a non-OMOP vocabulary",

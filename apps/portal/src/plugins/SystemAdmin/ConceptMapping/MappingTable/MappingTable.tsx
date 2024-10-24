@@ -7,13 +7,14 @@ import { Box, Button } from "@portal/components";
 import { Terminology } from "../../../../axios/terminology";
 import { RowObject } from "../types";
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
+import { i18nKeys } from "../../../../contexts/app-context/states";
 
 interface MappingTableProps {
   selectedDatasetId: string;
 }
 
 const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
-  const { getText, i18nKeys } = useTranslation();
+  const { getText } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
   const { sourceCode, sourceName, sourceFrequency, description, domainId } = conceptMappingState.columnMapping;

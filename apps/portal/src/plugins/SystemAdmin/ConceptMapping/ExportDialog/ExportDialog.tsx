@@ -221,7 +221,7 @@ const ExportDialog: FC<ExportDialogProps> = ({ open, onClose, loading, setLoadin
         </div>
         <div className="export-dialog__form">
           <Box mt={4} fontWeight="bold">
-            Concept mapping Configuration
+            {getText(i18nKeys.EXPORT_MAPPING_DIALOG__FORM_TITLE)}
           </Box>
           <Box mb={4}>
             <TextField
