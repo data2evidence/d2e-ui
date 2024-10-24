@@ -78,22 +78,7 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
         size: 150,
       },
     ],
-    [
-      sourceCode,
-      sourceName,
-      sourceFrequency,
-      description,
-      getText,
-      i18nKeys.MAPPING_TABLE__CONCEPT_ID,
-      i18nKeys.MAPPING_TABLE__CONCEPT_NAME,
-      i18nKeys.MAPPING_TABLE__DESCRIPTION,
-      i18nKeys.MAPPING_TABLE__DOMAIN_ID,
-      i18nKeys.MAPPING_TABLE__FREQUENCY,
-      i18nKeys.MAPPING_TABLE__NAME,
-      i18nKeys.MAPPING_TABLE__STATUS,
-      i18nKeys.MAPPING_TABLE__SOURCE,
-      i18nKeys.MAPPING_TABLE__VOCABULARY,
-    ]
+    [sourceCode, sourceName, sourceFrequency, description, getText]
   );
 
   const TableBodyRowProps = ({ row }: { row: MRT_RowData }) => ({
