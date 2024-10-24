@@ -1,10 +1,7 @@
-import { ConceptMappingStateType } from "../../types";
+import { ConceptMappingState } from "../../types";
 import { ColumnMappingState } from "../state";
 
-export const setColumnMapping = (
-  state: ConceptMappingStateType,
-  payload: ColumnMappingState
-): ConceptMappingStateType => ({
+export const setColumnMapping = (state: ConceptMappingState, payload: ColumnMappingState): ConceptMappingState => ({
   ...state,
   columnMapping: payload,
 });

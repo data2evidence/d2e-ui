@@ -1,9 +1,8 @@
 import React, { FC, createContext, useReducer, Dispatch } from "react";
-import { ConceptMappingProviderProps, ConceptMappingStateType, actionType } from "../types";
-import { StandardConcepts } from "../../../Researcher/Terminology/utils/types";
+import { ConceptMappingProviderProps, ConceptMappingState } from "../types";
 import { reducer, DispatchType } from "./reducers/reducer";
 
-const initialState: ConceptMappingStateType = {
+const initialState: ConceptMappingState = {
   importData: {
     name: "",
     columns: [],
@@ -24,7 +23,7 @@ const initialState: ConceptMappingStateType = {
   filters: {},
 };
 
-export const ConceptMappingContext = createContext<ConceptMappingStateType>(initialState);
+export const ConceptMappingContext = createContext<ConceptMappingState>(initialState);
 export const ConceptMappingDispatchContext = createContext<Dispatch<DispatchType>>(() => undefined);
 
 export const ConceptMappingProvider: FC<ConceptMappingProviderProps> = ({ children }) => {
