@@ -98,6 +98,6 @@ body {
   display: none !important;
 }
 
-.deployment-details > *:nth-child(-n + 2) {
+.deployment-details > *:nth-child(-n + 5) {
   display: none;
 }
