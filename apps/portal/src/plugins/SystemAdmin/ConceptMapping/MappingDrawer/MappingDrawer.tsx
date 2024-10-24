@@ -1,10 +1,14 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { FC, useCallback, useContext, useEffect } from "react";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
-import { conceptDataType } from "../types";
+import { conceptData } from "../types";
 import { TerminologyProps } from "../../../Researcher/Terminology/Terminology";
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 
-const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => {
+interface MappingDrawerProps {
+  selectedDatasetId: string;
+}
+
+const MappingDrawer: FC<MappingDrawerProps> = ({ selectedDatasetId }) => {
   const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
   const conceptMappingState = useContext(ConceptMappingContext);
   const selectedData = conceptMappingState.selectedData;
@@ -13,13 +17,17 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
   // get data from terminology
   // passes data to reducer to update list
   const handleTerminologySelect = useCallback(
-    (conceptData: conceptDataType) => {
+    (conceptData: conceptData) => {
       dispatch({
         type: ACTION_TYPES.SET_SINGLE_MAPPING,
         payload: {
           conceptId: conceptData.conceptId,
           conceptName: conceptData.conceptName,
           domainId: conceptData.domainId,
+          system: conceptData.system,
+          validStartDate: conceptData.validStartDate,
+          validEndDate: new Date(),
+          validity: conceptData.validity === "Valid" ? null : "D",
         },
       });
       dispatch({ type: ACTION_TYPES.CLEAR_SELECTED_DATA });
@@ -47,14 +55,14 @@ const MappingDrawer = ({ selectedDatasetId }: { selectedDatasetId: string }) => 
             onClose: () => dispatch({ type: ACTION_TYPES.CLEAR_SELECTED_DATA }),
             initialInput: selectedData[sourceName],
             mode: "CONCEPT_MAPPING",
-            selectedDatasetId,
+            selectedDatasetId: selectedDatasetId,
             defaultFilters: getDefaultFilters(),
           },
         },
       });
       window.dispatchEvent(event);
     }
-  }, [selectedData, sourceName]);
+  }, [selectedData, sourceName, dispatch, handleTerminologySelect, selectedDatasetId]);
 
   return null;
 };

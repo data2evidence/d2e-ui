@@ -1,6 +1,6 @@
-import { ConceptMappingStateType } from "../../types";
+import { ConceptMappingState } from "../../types";
 import { setColumnMapping } from "./column-mapping";
-import { setImportData, clearImportData } from "./import";
+import { setImportData, clearImportData } from "./import-data";
 import {
   setInitialData,
   clearData,
@@ -8,7 +8,7 @@ import {
   setMultipleMapping,
   setSelectedData,
   clearSelectedData,
-} from "./mappingData";
+} from "./mapping-data";
 
 export enum ACTION_TYPES {
   SET_COLUMN_MAPPING = "SET_COLUMN_MAPPING",
@@ -23,7 +23,7 @@ export enum ACTION_TYPES {
 }
 
 type ActionType = keyof typeof ACTION_TYPES;
-type ActionFunction = (state: ConceptMappingStateType, payload?: any) => ConceptMappingStateType;
+type ActionFunction = (state: ConceptMappingState, payload?: any) => ConceptMappingState;
 
 const actionMap = new Map<ActionType, ActionFunction>([
   [ACTION_TYPES.SET_COLUMN_MAPPING, setColumnMapping],
@@ -42,7 +42,7 @@ export interface DispatchType {
   payload?: any;
 }
 
-export const reducer = (state: ConceptMappingStateType, { type, payload }: DispatchType) => {
+export const reducer = (state: ConceptMappingState, { type, payload }: DispatchType) => {
   const mappedAction = actionMap.get(type);
   return mappedAction ? mappedAction(state, payload) : state;
 };
