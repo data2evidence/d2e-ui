@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>HTML with cohort-builder web component</title>
+    <script src="/portal/cohort-builder/cohort-builder.umd.js"></script>
+    <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', () => {
+        const cohortBuilder = document.querySelector('cohort-builder');
+        
+        const onChangeHandler = window[cohortBuilder.getAttribute('on-change')];
+        
+        if (onChangeHandler) {
+          cohortBuilder.addEventListener('change', onChangeHandler);
+        }
+      });
+
+      function handleChange(event) {
+        console.log('Change event:', event);
+        alert(`Change event: ${JSON.stringify(event.detail.data)}`);
+      }
+    </script>
+  </head>
+  <body>
+    <cohort-builder color-primary="red" on-change="handleChange"></cohort-builder>
+  </body>
+</html>
