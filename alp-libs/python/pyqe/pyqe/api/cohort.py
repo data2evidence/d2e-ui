@@ -32,7 +32,7 @@ class Cohort(_EncodeQueryStringMixin, _AuthApi):
 
     def get_all_cohorts(self, limit: int = 0, offset: int = 0) -> dict:
         params = {
-            "studyId": self.study_id,
+            "datasetId": self.study_id,
             "offset": offset,
             "limit": limit
         }
@@ -41,12 +41,12 @@ class Cohort(_EncodeQueryStringMixin, _AuthApi):
 
     def delete_cohort(self, cohort_id: int) -> bool:
         response = self._delete(
-            f'/analytics-svc/api/services/cohort?cohortId={cohort_id}&studyId={self.study_id}')
+            f'/analytics-svc/api/services/cohort?cohortId={cohort_id}&datasetId={self.study_id}')
         return response.text
 
     def create_cohort(self, cohort_definition: dict) -> str:
 
-        cohort_definition['studyId'] = self.study_id
+        cohort_definition['datasetId'] = self.study_id
         cohort_definition['mriquery'] = str(
             self._encode_query_string(cohort_definition['mriquery']), 'utf-8')
         cohort_definition['owner'] = self.get_id()

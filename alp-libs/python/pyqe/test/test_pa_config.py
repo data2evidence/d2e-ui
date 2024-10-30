@@ -69,7 +69,7 @@ def test_get_frontend_config(setup):
 
 def _get_mock_response(auth_api, path, params):
 
-    if path == FRONTEND_CONFIG_PATH and params == { 'action': 'getFrontendConfig', 'configId': 'some_config_id', 'configVersion': 'A', 'studyId': 'some_dataset_id', 'lang': 'eng' }:
+    if path == FRONTEND_CONFIG_PATH and params == { 'action': 'getFrontendConfig', 'configId': 'some_config_id', 'configVersion': 'A', 'datasetId': 'some_dataset_id', 'lang': 'eng' }:
         return MockResponse(200, mock_frontend_config)
 
     return MockResponse(404, None)

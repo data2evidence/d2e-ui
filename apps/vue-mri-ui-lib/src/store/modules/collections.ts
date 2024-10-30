@@ -168,7 +168,7 @@ const actions = {
 
     return dispatch('ajaxAuth', {
       method: 'get',
-      url: '/analytics-svc/api/services/cohort/SYNTAX/' + syntax + '?studyId=' + rootGetters.getSelectedDataset.id,
+      url: '/analytics-svc/api/services/cohort/SYNTAX/' + syntax + '?datasetId=' + rootGetters.getSelectedDataset.id,
       cancelToken,
     })
       .then(response => {

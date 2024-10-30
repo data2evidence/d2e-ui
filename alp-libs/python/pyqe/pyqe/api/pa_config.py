@@ -19,7 +19,7 @@ class PAConfig(_AuthApi):
     def _get_my_config(self, selectedStudyId):
         params = {
             'action': 'getMyConfig',
-            'selectedStudyId': selectedStudyId
+            'datasetId': selectedStudyId
         }
         response = self._get('/analytics-svc/pa/services/analytics.xsjs', params)
         return json.loads(response.text)
@@ -37,7 +37,7 @@ class PAConfig(_AuthApi):
             'action': 'getFrontendConfig',
             'configId': config_id,
             'configVersion': config_version,
-            'studyId': selectedStudyId,
+            'datasetId': selectedStudyId,
             'lang': lang
         }
         response = self._get('/analytics-svc/pa/services/analytics.xsjs', params)
