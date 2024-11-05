@@ -1,19 +1,19 @@
 import React, { ChangeEvent, FC, useCallback, useState } from "react";
 import { Button, Dialog, TextInput } from "@portal/components";
-import { Feedback, CloseDialogType, TrexPlugin } from "../../../../types";
 import Divider from "@mui/material/Divider";
 import FormHelperText from "@mui/material/FormHelperText";
 import { api } from "../../../../axios/api";
 import { useTranslation } from "../../../../contexts";
-import "./TrexPluginDeleteDialog.scss";
+import { Feedback, CloseDialogType, TrexPlugin } from "../../../../types";
+import "./TrexPluginUninstallDialog.scss";
 
-interface TrexPluginDeleteDialogProps {
+interface TrexPluginUninstallDialogProps {
   plugin?: TrexPlugin;
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
 }
 
-const TrexPluginDeleteDialog: FC<TrexPluginDeleteDialogProps> = ({ plugin, open, onClose }) => {
+const TrexPluginUninstallDialog: FC<TrexPluginUninstallDialogProps> = ({ plugin, open, onClose }) => {
   const { getText, i18nKeys } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [confirmationText, setConfirmationText] = useState("");
@@ -39,16 +39,16 @@ const TrexPluginDeleteDialog: FC<TrexPluginDeleteDialogProps> = ({ plugin, open,
     }
   }, [confirmationText, plugin]);
 
-  const deletePlugin = useCallback(
+  const uninstallPlugin = useCallback(
     async (name: string) => {
       try {
         setLoading(true);
-        await api.trex.deletePlugin(name);
+        await api.trex.uninstallPlugin(name);
       } catch (error: any) {
         console.log(error);
         setFeedback({
           type: "error",
-          message: getText(i18nKeys.TREX_PLUGIN_DELETE_DIALOG__ERROR, [String(plugin?.name)]),
+          message: getText(i18nKeys.TREX_PLUGIN_UNINSTALL_DIALOG__ERROR, [String(plugin?.name)]),
           description: error.data.message,
         });
       } finally {
@@ -58,56 +58,56 @@ const TrexPluginDeleteDialog: FC<TrexPluginDeleteDialogProps> = ({ plugin, open,
     [plugin, getText]
   );
 
-  const handleDelete = useCallback(async () => {
+  const handleUninstall = useCallback(async () => {
     if (plugin == null) return;
     if (isConfirmError()) return;
 
-    await deletePlugin(plugin.name);
+    await uninstallPlugin(plugin.name);
     handleClose("success");
-  }, [plugin, isConfirmError, deletePlugin, handleClose]);
+  }, [plugin, isConfirmError, uninstallPlugin, handleClose]);
 
   return (
     <Dialog
-      className="trex-plugin-delete-dialog"
-      title={getText(i18nKeys.TREX_PLUGIN_DELETE_DIALOG__DELETE)}
+      className="trex-plugin-uninstall-dialog"
+      title={getText(i18nKeys.TREX_PLUGIN_UNINSTALL_DIALOG__UNINSTALL)}
       closable
       open={open}
       onClose={() => handleClose("cancelled")}
       feedback={feedback}
     >
       <Divider />
-      <div className="trex-plugin-delete-dialog__content">
-        <div className="trex-plugin-delete-dialog__content-text">
+      <div className="trex-plugin-uninstall-dialog__content">
+        <div className="trex-plugin-uninstall-dialog__content-text">
           <div>
-            {getText(i18nKeys.TREX_PLUGIN_DELETE_DIALOG__CONFIRM_1)} <br />
-            {getText(i18nKeys.TREX_PLUGIN_DELETE_DIALOG__CONFIRM_2)}: <strong>&quot;{plugin?.name}&quot;</strong>?{" "}
+            {getText(i18nKeys.TREX_PLUGIN_UNINSTALL_DIALOG__CONFIRM_1)} <br />
+            {getText(i18nKeys.TREX_PLUGIN_UNINSTALL_DIALOG__CONFIRM_2)}: <strong>&quot;{plugin?.name}&quot;</strong>?{" "}
             <br />
           </div>
-          <div>{getText(i18nKeys.TREX_PLUGIN_DELETE_DIALOG__CONFIRM_3)}</div>
+          <div>{getText(i18nKeys.TREX_PLUGIN_UNINSTALL_DIALOG__CONFIRM_3)}</div>
         </div>
-        <div className="trex-plugin-delete-dialog__content-input">
+        <div className="trex-plugin-uninstall-dialog__content-input">
           <TextInput
-            label={getText(i18nKeys.TREX_PLUGIN_DELETE_DIALOG__ENTER_FLOW_NAME)}
+            label={getText(i18nKeys.TREX_PLUGIN_UNINSTALL_DIALOG__ENTER_FLOW_NAME)}
             value={confirmationText}
             onChange={(event: ChangeEvent<HTMLInputElement>) => setConfirmationText(event.target.value)}
           />
           {confirmationError && (
-            <FormHelperText>{getText(i18nKeys.TREX_PLUGIN_DELETE_DIALOG__ENTER_EXACT_FLOW_NAME)}</FormHelperText>
+            <FormHelperText>{getText(i18nKeys.TREX_PLUGIN_UNINSTALL_DIALOG__ENTER_EXACT_FLOW_NAME)}</FormHelperText>
           )}
         </div>
       </div>
       <Divider />
       <div className="button-group-actions">
         <Button
-          text={getText(i18nKeys.TREX_PLUGIN_DELETE_DIALOG__CANCEL)}
+          text={getText(i18nKeys.TREX_PLUGIN_UNINSTALL_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
           variant="outlined"
           block
           disabled={loading}
         />
         <Button
-          text={getText(i18nKeys.TREX_PLUGIN_DELETE_DIALOG__CONFIRM_DELETION)}
-          onClick={handleDelete}
+          text={getText(i18nKeys.TREX_PLUGIN_UNINSTALL_DIALOG__CONFIRM_UNINSTALL)}
+          onClick={handleUninstall}
           block
           loading={loading}
         />
@@ -116,4 +116,4 @@ const TrexPluginDeleteDialog: FC<TrexPluginDeleteDialogProps> = ({ plugin, open,
   );
 };
 
-export default TrexPluginDeleteDialog;
+export default TrexPluginUninstallDialog;

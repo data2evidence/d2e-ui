@@ -13,7 +13,7 @@ export class Trex {
     });
   }
 
-  public addPlugin(name: string) {
+  public installPlugin(name: string) {
     return request<TrexPlugin>({
       baseURL: TREX_URL,
       url: `plugins/${name}`,
@@ -29,7 +29,7 @@ export class Trex {
     });
   }
 
-  public deletePlugin(name: string) {
+  public uninstallPlugin(name: string) {
     return request<{ message: string }>({
       baseURL: TREX_URL,
       url: `plugins/${name}`,

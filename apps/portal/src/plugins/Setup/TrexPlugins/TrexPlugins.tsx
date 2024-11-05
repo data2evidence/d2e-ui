@@ -18,7 +18,7 @@ import { i18nKeys } from "../../../contexts/app-context/states";
 import { useDialogHelper } from "../../../hooks";
 import { ChipEllipsis } from "./ChipEllipsis";
 import TrexPluginInstallDialog from "./TrexPluginInstallDialog/TrexPluginInstallDialog";
-import TrexPluginDeleteDialog from "./TrexPluginDeleteDialog/TrexPluginDeleteDialog";
+import TrexPluginUninstallDialog from "./TrexPluginUninstallDialog/TrexPluginUninstallDialog";
 import "./TrexPlugins.scss";
 
 export const TrexPlugins: FC = () => {
@@ -36,7 +36,7 @@ export const TrexPlugins: FC = () => {
   const [showInstallDialog, openInstallDialog, closeInstallDialog] = useDialogHelper(false);
 
   const [activePlugin, setActivePlugin] = useState<TrexPlugin | undefined>();
-  const [showDeleteDialog, openDeleteDialog, closeDeleteDialog] = useDialogHelper(false);
+  const [showUninstallDialog, openUninstallDialog, closeUninstallDialog] = useDialogHelper(false);
 
   const fetchTrexPlugins = useCallback(async () => {
     try {
@@ -90,7 +90,7 @@ export const TrexPlugins: FC = () => {
   const handleInstall = useCallback(async (name: string) => {
     try {
       setInstalling(name);
-      await api.trex.addPlugin(name);
+      await api.trex.installPlugin(name);
 
       setFeedback({
         type: "success",
@@ -121,14 +121,14 @@ export const TrexPlugins: FC = () => {
     [closeInstallDialog]
   );
 
-  const handleDelete = useCallback((plugin: TrexPlugin) => {
-    openDeleteDialog();
+  const handleUninstall = useCallback((plugin: TrexPlugin) => {
+    openUninstallDialog();
     setActivePlugin(plugin);
   }, []);
 
   const handleCloseDeleteDialog = useCallback(
     (type: CloseDialogType) => {
-      closeDeleteDialog();
+      closeUninstallDialog();
       if (type === "success") {
         setRefetch((refetch) => refetch + 1);
       }
@@ -144,7 +144,7 @@ export const TrexPlugins: FC = () => {
         <Box flex="1">
           <Title>{getText(i18nKeys.TREX_PLUGINS__TITLE)}</Title>
         </Box>
-        <Button text="Add new plugin" onClick={openInstallDialog} />
+        <Button text={getText(i18nKeys.TREX_PLUGINS__INSTALL_NEW_PLUGIN)} onClick={openInstallDialog} />
       </Box>
       <TableContainer className="trex-plugins__table">
         <Table>
@@ -197,8 +197,8 @@ export const TrexPlugins: FC = () => {
                   {row.installed && (
                     <IconButton
                       startIcon={<TrashIcon />}
-                      title={getText(i18nKeys.TREX_PLUGINS__DELETE)}
-                      onClick={() => handleDelete(row)}
+                      title={getText(i18nKeys.TREX_PLUGINS__UNINSTALL)}
+                      onClick={() => handleUninstall(row)}
                     />
                   )}
                 </TableCell>
@@ -226,7 +226,7 @@ export const TrexPlugins: FC = () => {
         />
       )}
       <TrexPluginInstallDialog open={showInstallDialog} onClose={handleCloseInstallDialog} />
-      <TrexPluginDeleteDialog plugin={activePlugin} open={showDeleteDialog} onClose={handleCloseDeleteDialog} />
+      <TrexPluginUninstallDialog plugin={activePlugin} open={showUninstallDialog} onClose={handleCloseDeleteDialog} />
     </div>
   );
 };

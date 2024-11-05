@@ -63,7 +63,7 @@ const TrexPluginInstallDialog: FC<TrexPluginInstallDialogProps> = ({ open, onClo
 
     try {
       setLoading(true);
-      await api.trex.addPlugin(name);
+      await api.trex.installPlugin(name);
       handleClose("success");
     } catch (err: any) {
       console.error("err", err);
