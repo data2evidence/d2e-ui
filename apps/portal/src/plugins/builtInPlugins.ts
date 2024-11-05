@@ -28,7 +28,6 @@ const moduleNames = [
   "Setup/Db",
   "Setup/HybridSearch",
   "Setup/OverviewDescription",
-  "Setup/PluginTable",
   "Setup/TrexPlugins",
 ];
 
