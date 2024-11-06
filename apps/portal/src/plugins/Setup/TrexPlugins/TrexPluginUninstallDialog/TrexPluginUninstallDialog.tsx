@@ -26,7 +26,7 @@ const TrexPluginUninstallDialog: FC<TrexPluginUninstallDialogProps> = ({ plugin,
       setConfirmationText("");
       typeof onClose === "function" && onClose(type);
     },
-    [onClose, setFeedback]
+    [onClose]
   );
 
   const isConfirmError = useCallback(() => {
