@@ -5,6 +5,6 @@ import { CohortBuilder } from './CohortBuilder.tsx'
 const root = document.getElementById('root')
 createRoot(root!).render(
   <StrictMode>
-    <CohortBuilder />
+    <CohortBuilder container={root as Element} />
   </StrictMode>
 )

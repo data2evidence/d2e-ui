@@ -6,7 +6,7 @@ import path from 'path'
 export default defineConfig(({ command, mode }) => {
   const isProduction = mode === 'production'
   const isBuild = command === 'build'
-  const entryFile = 'main.tsx'
+  const entryFile = isBuild ? 'index.ts' : 'main.tsx'
 
   console.log('Production :', isProduction)
   console.log('Build      :', isBuild)
