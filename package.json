@@ -262,14 +262,6 @@
             "route": "ps-config"
           },
           {
-            "description": "Map codes from a source system into terminologies stored in OMOP Vocabulary",
-            "enabled": true,
-            "name": "Concept Mapping",
-            "notes": "",
-            "pluginPath": "plugins/Setup/ConceptMapping/module",
-            "route": "concept-mapping"
-          },
-          {
             "description": "Configure hybrid search for concepts",
             "enabled": true,
             "name": "Hybrid Search",
@@ -284,6 +276,14 @@
             "notes": "",
             "pluginPath": "plugins/Setup/OverviewDescription/module",
             "route": "overview-description"
+          },
+          {
+            "description": "Manage trex plugins",
+            "enabled": true,
+            "name": "Trex Plugins",
+            "notes": "",
+            "pluginPath": "plugins/Setup/TrexPlugins/module",
+            "route": "trex-plugins"
           }
         ],
         "systemadmin": [
@@ -303,28 +303,31 @@
             "route": "jobs"
           },
           {
-            "data": {
-              "dnBaseUrl": "https://$$FQDN$$/"
-            },
-            "pluginPath": "https://$$FQDN$$/mapping/module.js",
             "name": "ETL",
-            "route": "etl"
-          },
-          {
-            "name": "Sql Editor",
-            "pluginPath": "plugins/SystemAdmin/Sqleditor/module",
-            "route": "sqleditor"
-          },
-          {
-            "data": {
-              "dnBaseUrl": "https://$$FQDN$$/"
-            },
-            "name": "Dataflow",
-            "pluginPath": "https://$$FQDN$$/flow/module.js",
-            "route": "dataflow",
-            "type": "hidden",
-            "featureFlag": "dataflow",
-            "enabled": "true"
+            "route": "etl",
+            "children": [
+              {
+                "name": "Concept mapping",
+                "pluginPath": "plugins/SystemAdmin/ConceptMapping/module",
+                "route": "concept-mapping"
+              },
+              {
+                "data": {
+                  "dnBaseUrl": "https://$$FQDN$$/"
+                },
+                "name": "Data mapping",
+                "pluginPath": "https://$$FQDN$$/mapping/module.js",
+                "route": "data-mapping"
+              },
+              {
+                "data": {
+                  "dnBaseUrl": "https://$$FQDN$$/"
+                },
+                "name": "Data transformation",
+                "pluginPath": "https://$$FQDN$$/flow/module.js",
+                "route": "dataflow"
+              }
+            ]
           },
           {
             "name": "Setup",
