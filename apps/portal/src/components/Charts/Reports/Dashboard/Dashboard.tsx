@@ -64,7 +64,10 @@ const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
         <>
           <div className="summary__container">
             <CDMSummary data={dashboardData.population}></CDMSummary>
-            <PieChart data={parsePieChartData(dashboardData.gender)} title={getText(i18nKeys.DASHBOARD__LOADER)} />
+            <PieChart
+              data={parsePieChartData(dashboardData.gender)}
+              title={getText(i18nKeys.DASHBOARD__PIE_CHART_TITLE)}
+            />
           </div>
           <BarChart
             barChartData={parseBarChartData(dashboardData.ageAtFirst)}
