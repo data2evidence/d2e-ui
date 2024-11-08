@@ -32,7 +32,7 @@ export interface NewStudyInput {
   dataModel?: string;
   databaseCode: string;
   dialect: string;
-  paConfigId: string;
+  paConfigId: string | null;
   visibilityStatus: string;
   detail: DatasetDetail;
   dashboards: DatasetDashboard[];
