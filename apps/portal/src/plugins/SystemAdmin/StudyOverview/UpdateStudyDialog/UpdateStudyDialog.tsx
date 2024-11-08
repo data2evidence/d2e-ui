@@ -196,9 +196,9 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
       formError = { ...formError, tokenStudyCode: { valid: true } };
     }
 
-    if (!paConfigId) {
-      formError = { ...formError, paConfigId: { required: true } };
-    }
+    // if (!paConfigId) {
+    //   formError = { ...formError, paConfigId: { required: true } };
+    // }
 
     if (!name) {
       formError = { ...formError, name: { required: true } };
@@ -416,7 +416,7 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
           <FormHelperText>{getText(i18nKeys.UPDATE_STUDY_DIALOG__CODE_REQUIREMENT)}</FormHelperText>
         </Box>
 
-        <Box mb={4}>
+        {/* <Box mb={4}>
           <FormControl
             sx={styles}
             className="select"
@@ -447,7 +447,7 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
               <FormHelperText>{getText(i18nKeys.UPDATE_STUDY_DIALOG__REQUIRED)}</FormHelperText>
             )}
           </FormControl>
-        </Box>
+        </Box> */}
 
         <Box mb={4}>
           <Box fontWeight="bold">{getText(i18nKeys.UPDATE_STUDY_DIALOG__METADATA)}</Box>

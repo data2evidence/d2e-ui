@@ -81,7 +81,7 @@ interface FormData {
   dataModel: string;
   databaseCode: string;
   dialect: string;
-  paConfigId: string;
+  paConfigId: string | null;
   visibilityStatus: string;
 }
 
@@ -144,7 +144,7 @@ const EMPTY_FORM_DATA: FormData = {
   dataModel: "", //Optional
   databaseCode: "", //Optional
   dialect: "",
-  paConfigId: "",
+  paConfigId: null,
   visibilityStatus: "DEFAULT",
 };
 
@@ -416,9 +416,9 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
       formError = { ...formError, vocabSchemaValue: { required: true } };
     }
 
-    if (!paConfigId) {
-      formError = { ...formError, paConfigId: { required: true } };
-    }
+    // if (!paConfigId) {
+    //   formError = { ...formError, paConfigId: { required: true } };
+    // }
 
     if (!name) {
       formError = { ...formError, name: { required: true } };
@@ -861,7 +861,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
             </FormControl>
           </Box>
         )}
-        <Box mb={4}>
+        {/* <Box mb={4}>
           <FormControl
             sx={styles}
             className="select"
@@ -892,7 +892,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
               <FormHelperText>{getText(i18nKeys.ADD_STUDY_DIALOG__REQUIRED)}</FormHelperText>
             )}
           </FormControl>
-        </Box>
+        </Box> */}
         <Box mb={4}>
           <TextField
             fullWidth
