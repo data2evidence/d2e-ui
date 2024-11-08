@@ -1,13 +1,9 @@
-.plugin-table {
-  &__flows__list {
+.trex-plugins {
+  &__table {
     .MuiTable-root {
       border: 1px solid #dad7d7;
     }
     padding-left: 50px;
     padding-right: 50px;
-  }
-  &__table__title {
-    padding-left: 50px;
-    padding-bottom: 10px;
   }
 }

@@ -1,9 +1,7 @@
-.trigger-upload-dialog {
-  .trigger-upload-dialog__content {
-    min-height: 100px;
-    margin: 40px 25px 0;
-    text-align: center;
-    color: var(--color-primary);
+.trex-plugin-install-dialog {
+  .trex-plugin-install-dialog__content {
+    padding: 0 25px;
+    overflow: auto;
   }
 
   .button-group-actions {
