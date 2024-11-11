@@ -113,6 +113,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
       handlePermissions,
       handleUpdate,
       handleRelease,
+      handleAnalysis,
       study,
     ]
   );
