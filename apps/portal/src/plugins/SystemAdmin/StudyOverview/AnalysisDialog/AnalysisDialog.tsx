@@ -53,9 +53,12 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
           comment: formData.comment,
         },
       };
-      console.log(metaData);
+
       await api.dataflow.createFlowRunByMetadata(metaData);
-      setFeedback({ type: "success", message: "success" });
+      setFeedback({
+        type: "success",
+        message: getText(i18nKeys.ANALYSIS_DIALOG__RUN_SUCCESS, [String(formData.type), String(study?.id)]),
+      });
       setTimeout(() => handleClose("success"), 6000);
     } catch (err: any) {
       setFeedback({
@@ -66,7 +69,7 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
     } finally {
       setUpdating(false);
     }
-  }, [formData, handleClose, study?.id, study?.vocabSchemaName]);
+  }, [formData, handleClose, study?.id, study?.vocabSchemaName, getText]);
 
   const handleFormDataChange = useCallback((updates: { [field: string]: any }) => {
     setFormData((formData) => {
@@ -78,7 +81,7 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
   return (
     <Dialog
       className="analysis-dialog"
-      title="Run analysis"
+      title={getText(i18nKeys.ANALYSIS_DIALOG__TITLE, [String(study?.id)])}
       open={open}
       onClose={() => handleClose("cancelled")}
       feedback={feedback}
@@ -90,7 +93,7 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
 
       <div className="analysis-dialog__content">
         <Box mt={4} mb={4} fontWeight="bold">
-          Dataset Analysis Configuration
+          {getText(i18nKeys.ANALYSIS_DIALOG__FORM_TITLE)}
         </Box>
 
         <Box mb={4}>
@@ -100,8 +103,10 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
               value={formData.type}
               onChange={(event: SelectChangeEvent<string>) => handleFormDataChange({ type: event.target.value })}
             >
-              <MenuItem value={JobRunTypes.DQD}>Data Quality Analysis</MenuItem>
-              <MenuItem value={JobRunTypes.DataCharacterization}>Data Characterization</MenuItem>
+              <MenuItem value={JobRunTypes.DQD}>{getText(i18nKeys.ANALYSIS_DIALOG__DATA_QUALITY_ANALYSIS)}</MenuItem>
+              <MenuItem value={JobRunTypes.DataCharacterization}>
+                {getText(i18nKeys.ANALYSIS_DIALOG__DATA_CHARACTERIZATION)}
+              </MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -121,13 +126,13 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
 
       <div className="button-group-actions">
         <Button
-          text={getText(i18nKeys.UPDATE_STUDY_DIALOG__CANCEL)}
+          text={getText(i18nKeys.ANALYSIS_DIALOG__CANCEL)}
           onClick={() => handleClose("cancelled")}
           variant="outlined"
           block
           disabled={updating}
         />
-        <Button text={getText(i18nKeys.UPDATE_STUDY_DIALOG__SAVE)} block loading={updating} onClick={handleSubmit} />
+        <Button text={getText(i18nKeys.ANALYSIS_DIALOG__RUN)} block loading={updating} onClick={handleSubmit} />
       </div>
     </Dialog>
   );
