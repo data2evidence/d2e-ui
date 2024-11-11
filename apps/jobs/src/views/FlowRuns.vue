@@ -55,7 +55,7 @@
               <FlowRunList
                 v-model:selected="selectedFlowRuns"
                 :selectable="flowRunsAreSelectable"
-                :flow-runs
+                :flow-runs="flowRuns"
               />
               <p-pager v-model:limit="limit" v-model:page="flowRunsPage" :pages="flowRunPages" />
             </template>

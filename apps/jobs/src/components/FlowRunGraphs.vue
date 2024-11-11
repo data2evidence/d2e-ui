@@ -6,8 +6,8 @@
           v-model:fullscreen="fullscreen"
           v-model:viewport="dateRange"
           v-model:selected="selection"
-          :flow-run
-          :fetch-events
+          :flow-run="FlowRun"
+          :fetch-events="fetchEvents"
           class="flow-run-graphs__flow-run"
         />
       </div>

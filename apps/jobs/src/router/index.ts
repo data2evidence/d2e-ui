@@ -30,7 +30,7 @@ const routeRecords: AppRouteRecord[] = [
     name: 'root',
     path: '/',
     components: { default: AppRouterView, sidebar: Sidebar },
-    children: workspaceRoutes
+    children: workspaceRoutes as AppRouteRecord[]
   }
 ]
 
