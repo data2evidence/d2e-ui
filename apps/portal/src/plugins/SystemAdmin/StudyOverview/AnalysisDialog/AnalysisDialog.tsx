@@ -3,8 +3,10 @@ import { TextField, Divider, Select, MenuItem, InputLabel, SelectChangeEvent, Fo
 import { Button, Dialog, Box } from "@portal/components";
 import { useTranslation } from "../../../../contexts";
 import { i18nKeys } from "../../../../contexts/app-context/states";
-import { Study, Feedback, CloseDialogType } from "../../../../types";
+import { Study, Feedback, CloseDialogType, CreateFlowRunByMetadata } from "../../../../types";
 import { JobRunTypes } from "../../DQD/types";
+import { api } from "../../../../axios/api";
+
 import "./AnalysisDialog.scss";
 
 interface AnalysisDialogProps {
@@ -27,10 +29,7 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
   const { getText } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
-
-  const handleSubmit = useCallback(async () => {
-    console.log(formData);
-  }, [formData]);
+  const [updating, setUpdating] = useState(false);
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
@@ -39,6 +38,35 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
     },
     [onClose, setFeedback]
   );
+
+  const handleSubmit = useCallback(async () => {
+    setFeedback({});
+
+    try {
+      setUpdating(true);
+      const metaData: CreateFlowRunByMetadata = {
+        type: formData.type,
+        options: {
+          datasetId: study?.id,
+          vocabSchemaName: study?.vocabSchemaName,
+          releaseId: "",
+          comment: formData.comment,
+        },
+      };
+      console.log(metaData);
+      await api.dataflow.createFlowRunByMetadata(metaData);
+      setFeedback({ type: "success", message: "success" });
+      setTimeout(() => handleClose("success"), 6000);
+    } catch (err: any) {
+      setFeedback({
+        type: "error",
+        message: err.data?.message || err.data,
+      });
+      console.error("err", err.data);
+    } finally {
+      setUpdating(false);
+    }
+  }, [formData, handleClose, study?.id, study?.vocabSchemaName]);
 
   const handleFormDataChange = useCallback((updates: { [field: string]: any }) => {
     setFormData((formData) => {
@@ -53,6 +81,7 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
       title="Run analysis"
       open={open}
       onClose={() => handleClose("cancelled")}
+      feedback={feedback}
       closable
       fullWidth
       maxWidth="md"
@@ -96,9 +125,9 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
           onClick={() => handleClose("cancelled")}
           variant="outlined"
           block
-          //   disabled={updating}
+          disabled={updating}
         />
-        <Button text={getText(i18nKeys.UPDATE_STUDY_DIALOG__SAVE)} block onClick={handleSubmit} />
+        <Button text={getText(i18nKeys.UPDATE_STUDY_DIALOG__SAVE)} block loading={updating} onClick={handleSubmit} />
       </div>
     </Dialog>
   );
