@@ -38,6 +38,7 @@ export const i18nDefault = {
     ACTION_SELECTOR__SELECT_ACTION: "Select action",
     ACTION_SELECTOR__UPDATE_DATASET: "Update dataset",
     ACTION_SELECTOR__UPDATE_SCHEMA: "Update schema",
+    ACTION_SELECTOR__RUN_ANALYSIS: "Run Analysis",
     ADD_FLOW_DIALOG__ACTION: "Action",
     ADD_FLOW_DIALOG__ADD_FLOW: "Add flow",
     ADD_FLOW_DIALOG__BYTES: "bytes",

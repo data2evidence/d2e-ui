@@ -17,6 +17,7 @@ interface ActionSelectorProps {
   handlePermissions: (study: Study) => void;
   handleUpdate: (study: Study) => void;
   handleRelease: (study: Study) => void;
+  handleAnalysis: (study: Study) => void;
 }
 
 interface Action {
@@ -56,6 +57,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
   handlePermissions,
   handleUpdate,
   handleRelease,
+  handleAnalysis,
 }) => {
   const { getText, i18nKeys } = useTranslation();
   const { user } = useUser();
@@ -69,6 +71,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
     { name: getText(i18nKeys.ACTION_SELECTOR__UPDATE_SCHEMA), value: "update" },
     { name: getText(i18nKeys.ACTION_SELECTOR__DELETE_DATASET), value: "delete" },
     { name: getText(i18nKeys.ACTION_SELECTOR__CREATE_RELEASE), value: "release" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__RUN_ANALYSIS), value: "analysis" },
   ];
 
   const handleActionChange = useCallback(
@@ -94,6 +97,9 @@ const ActionSelector: FC<ActionSelectorProps> = ({
           break;
         case "release":
           handleRelease(study);
+          break;
+        case "analysis":
+          handleAnalysis(study);
           break;
         default:
           break;

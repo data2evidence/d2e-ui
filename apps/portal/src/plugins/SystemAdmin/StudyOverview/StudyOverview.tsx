@@ -25,6 +25,7 @@ import ActionSelector from "./ActionSelector/ActionSelector";
 import PermissionsDialog from "./PermissionsDialog/PermissionsDialog";
 import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
 import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
+import AnalysisDialog from "./AnalysisDialog/AnalysisDialog";
 import "./StudyOverview.scss";
 import { api } from "../../../axios/api";
 import { FlowRunJobStateTypes } from "../Jobs/types";
@@ -60,6 +61,7 @@ const StudyOverview: FC = () => {
   const [showPermissionsDialog, openPermissionsDialog, closePermissionsDialog] = useDialogHelper(false);
   const [showUpdateDialog, openUpdateDialog, closeUpdateDialog] = useDialogHelper(false);
   const [showReleaseDialog, openReleaseDialog, closeReleaseDialog] = useDialogHelper(false);
+  const [showAnalysisDialog, openAnalysisDialog, closeAnalysisDialog] = useDialogHelper(false);
 
   const [activeStudy, setActiveStudy] = useState<Study>();
   const [loading, setLoading] = useState(false);
@@ -157,6 +159,15 @@ const StudyOverview: FC = () => {
       openUpdateDialog();
     },
     [getDbDialect, openUpdateDialog]
+  );
+
+  const handleAnalysis = useCallback(
+    (study: Study) => {
+      study.dialect = getDbDialect(study.databaseCode);
+      setActiveStudy(study);
+      openAnalysisDialog();
+    },
+    [getDbDialect, openAnalysisDialog]
   );
 
   const visibilityImgAlt = useCallback((value?: string) => {
@@ -421,6 +432,7 @@ const StudyOverview: FC = () => {
                         handlePermissions={handlePermissions}
                         handleUpdate={handleUpdate}
                         handleRelease={handleRelease}
+                        handleAnalysis={handleAnalysis}
                       />
                     </TableCell>
                   </TableRow>
@@ -472,6 +484,10 @@ const StudyOverview: FC = () => {
               loading={loading}
               setLoading={setLoading}
             />
+          )}
+
+          {showAnalysisDialog && (
+            <AnalysisDialog study={activeStudy} open={showAnalysisDialog} onClose={closeAnalysisDialog} />
           )}
         </div>
       </div>
