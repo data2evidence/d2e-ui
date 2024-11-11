@@ -11,7 +11,7 @@ const workspaceRoutes = createWorkspaceRouteRecords({
   deploymentFlowRunCreate: () => import('@/views/FlowRunCreate.vue'),
   flows: () => import('@/views/Flows.vue'),
   flow: () => import('@/views/Flow.vue'),
-  flowRuns: () => import('@/views/FlowRuns.vue'),
+  runs: () => import('@/views/FlowRuns.vue'),
   flowRun: () => import('@/views/FlowRun.vue')
 })
 
@@ -30,7 +30,7 @@ const routeRecords: AppRouteRecord[] = [
     name: 'root',
     path: '/',
     components: { default: AppRouterView, sidebar: Sidebar },
-    children: workspaceRoutes
+    children: workspaceRoutes as AppRouteRecord[]
   }
 ]
 

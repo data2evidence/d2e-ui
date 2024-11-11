@@ -35,7 +35,7 @@ const deployment = computed(() => deploymentSubscription.response)
 
 async function submit(deployment: DeploymentUpdate): Promise<void> {
   try {
-    await api.deployments.updateDeployment(deploymentId.value, deployment)
+    await api.deployments.updateDeploymentV2(deploymentId.value, deployment)
     showToast('Deployment updated', 'success')
     router.back()
   } catch (error) {
