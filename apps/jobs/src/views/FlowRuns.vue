@@ -124,7 +124,6 @@ const api = useWorkspaceApi()
 const can = useCan()
 
 const tab = useRouteQueryParam('tab', 'flow-runs')
-const tabs = ['flow-runs', 'task-runs']
 
 const flowRunsCountAllSubscription = useSubscription(api.flowRuns.getFlowRunsCount)
 
@@ -177,30 +176,6 @@ const isCustomFilter = computed(
 )
 
 const interval = 30000
-
-const flowRunsHistoryFilter: Getter<FlowRunsFilter> = () => {
-  const filter = mapper.map('SavedSearchFilter', dashboardFilter, 'FlowRunsFilter')
-
-  return merge({}, filter, {
-    flowRuns: {
-      nameLike: flowRunNameLikeDebounced.value ?? undefined,
-      parentTaskRunIdNull: hideSubflows.value ? true : undefined
-    },
-    sort: flowRunsSort.value
-  })
-}
-
-const flowRunsHistoryFilterRef = toRef(flowRunsHistoryFilter)
-
-const flowRunHistorySubscription = useSubscription(
-  api.ui.getFlowRunHistory,
-  [flowRunsHistoryFilterRef],
-  {
-    interval
-  }
-)
-
-const flowRunHistory = computed(() => flowRunHistorySubscription.response ?? [])
 
 const {
   flowRuns,
