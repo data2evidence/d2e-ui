@@ -1,7 +1,6 @@
 <template>
   <div class="side-bar">
-    <p-context-nav-item title="Data Quality Analysis" to="/" />
-    <p-context-nav-item title="Upload Job" to="/upload" />
+    <p-context-nav-item title="Upload Job" to="/" />
     <p-context-nav-item title="Jobs" to="/deployments" />
     <p-context-nav-item title="Job Runs" to="/flow-runs" />
   </div>

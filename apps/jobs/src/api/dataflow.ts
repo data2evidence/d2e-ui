@@ -1,6 +1,5 @@
 import request from './request'
 import { getPortalAPI } from '@/utils/portalApi'
-import { CreateFlowRunByMetadata } from '@/types/runs'
 
 export class Dataflow {
   public async addFlowFromGitUrlDeployment(url: string) {
@@ -29,19 +28,6 @@ export class Dataflow {
       data: { file },
       headers: { 'Content-Type': 'multipart/form-data' },
       timeout: 600000
-    })
-  }
-
-  public async createFlowRunByMetadata(metadata: CreateFlowRunByMetadata) {
-    const { baseUrl } = getPortalAPI()
-
-    const path = 'dataflow-mgmt/prefect/flow-run/metadata'
-
-    return request({
-      baseURL: baseUrl,
-      url: path,
-      data: metadata,
-      method: 'POST'
     })
   }
 }
