@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from "react";
-import { TextField, Divider, Select, MenuItem, InputLabel, SelectChangeEvent, FormControl } from "@mui/material";
+import { TextField, Divider } from "@mui/material";
 import { Button, Dialog, Box } from "@portal/components";
 import { useTranslation } from "../../../../contexts";
 import { i18nKeys } from "../../../../contexts/app-context/states";
@@ -11,21 +11,20 @@ import "./AnalysisDialog.scss";
 
 interface AnalysisDialogProps {
   study?: Study;
+  runType: JobRunTypes;
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
 }
 
 interface FormData {
-  type: JobRunTypes;
   comment: string;
 }
 
 const INITIAL_FORM_DATA: FormData = {
-  type: JobRunTypes.DQD,
   comment: "",
 };
 
-const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
+const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, runType, open, onClose }) => {
   const { getText } = useTranslation();
   const [feedback, setFeedback] = useState<Feedback>({});
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
@@ -45,7 +44,7 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
     try {
       setUpdating(true);
       const metaData: CreateFlowRunByMetadata = {
-        type: formData.type,
+        type: runType,
         options: {
           datasetId: study?.id,
           vocabSchemaName: study?.vocabSchemaName,
@@ -57,7 +56,7 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
       await api.dataflow.createFlowRunByMetadata(metaData);
       setFeedback({
         type: "success",
-        message: getText(i18nKeys.ANALYSIS_DIALOG__RUN_SUCCESS, [String(formData.type), String(study?.id)]),
+        message: getText(i18nKeys.ANALYSIS_DIALOG__RUN_SUCCESS, [String(runType), String(study?.id)]),
       });
       setTimeout(() => handleClose("success"), 6000);
     } catch (err: any) {
@@ -69,7 +68,7 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
     } finally {
       setUpdating(false);
     }
-  }, [formData, handleClose, study?.id, study?.vocabSchemaName, getText]);
+  }, [formData, handleClose, study?.id, study?.vocabSchemaName, getText, runType]);
 
   const handleFormDataChange = useCallback((updates: { [field: string]: any }) => {
     setFormData((formData) => {
@@ -78,10 +77,22 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
     });
   }, []);
 
+  const getRunName = useCallback(
+    (runType: JobRunTypes) => {
+      switch (runType) {
+        case JobRunTypes.DQD:
+          return getText(i18nKeys.ANALYSIS_DIALOG__DATA_QUALITY);
+        case JobRunTypes.DataCharacterization:
+          return getText(i18nKeys.ANALYSIS_DIALOG__DATA_CHARACTERIZATION);
+      }
+    },
+    [getText]
+  );
+
   return (
     <Dialog
       className="analysis-dialog"
-      title={getText(i18nKeys.ANALYSIS_DIALOG__TITLE, [String(study?.id)])}
+      title={getText(i18nKeys.ANALYSIS_DIALOG__TITLE, [getRunName(runType), String(study?.id)])}
       open={open}
       onClose={() => handleClose("cancelled")}
       feedback={feedback}
@@ -94,21 +105,6 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, open, onClose }) => {
       <div className="analysis-dialog__content">
         <Box mt={4} mb={4} fontWeight="bold">
           {getText(i18nKeys.ANALYSIS_DIALOG__FORM_TITLE)}
-        </Box>
-
-        <Box mb={4}>
-          <FormControl className="select" variant="standard" fullWidth>
-            <InputLabel htmlFor="run-type-option">Run type:</InputLabel>
-            <Select
-              value={formData.type}
-              onChange={(event: SelectChangeEvent<string>) => handleFormDataChange({ type: event.target.value })}
-            >
-              <MenuItem value={JobRunTypes.DQD}>{getText(i18nKeys.ANALYSIS_DIALOG__DATA_QUALITY_ANALYSIS)}</MenuItem>
-              <MenuItem value={JobRunTypes.DataCharacterization}>
-                {getText(i18nKeys.ANALYSIS_DIALOG__DATA_CHARACTERIZATION)}
-              </MenuItem>
-            </Select>
-          </FormControl>
         </Box>
 
         <Box mb={4}>
