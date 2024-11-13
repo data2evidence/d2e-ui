@@ -39,7 +39,7 @@ const MappingDrawer: FC<MappingDrawerProps> = ({ selectedDatasetId }) => {
     if (domainId) {
       return [
         { id: "concept", value: ["Standard"] },
-        { id: "domainId", value: [selectedData[domainId]] },
+        { id: "domainId", value: [domainId] },
       ];
     } else {
       return [{ id: "concept", value: ["Standard"] }];
