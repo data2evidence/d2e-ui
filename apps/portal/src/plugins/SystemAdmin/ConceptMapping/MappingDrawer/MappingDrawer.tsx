@@ -44,7 +44,7 @@ const MappingDrawer: FC<MappingDrawerProps> = ({ selectedDatasetId }) => {
     } else {
       return [{ id: "concept", value: ["Standard"] }];
     }
-  }, [domainId, selectedData]);
+  }, [domainId]);
 
   useEffect(() => {
     if (Object.keys(selectedData).length > 0) {
@@ -62,7 +62,7 @@ const MappingDrawer: FC<MappingDrawerProps> = ({ selectedDatasetId }) => {
       });
       window.dispatchEvent(event);
     }
-  }, [selectedData, sourceName, dispatch, handleTerminologySelect, selectedDatasetId]);
+  }, [selectedData, sourceName, dispatch, handleTerminologySelect, selectedDatasetId, getDefaultFilters]);
 
   return null;
 };
