@@ -22,12 +22,14 @@ import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context
 import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 import "./ImportDialog.scss";
 import { useTranslation } from "../../../../contexts";
+import { api } from "../axios/api";
 
 interface ImportDialogProps {
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedDatasetId: string;
 }
 
 interface ColumnMappingState {
@@ -38,7 +40,7 @@ interface ColumnMappingState {
   domainId?: string;
 }
 
-const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoading }) => {
+const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, selectedDatasetId, loading, setLoading }) => {
   const { getText, i18nKeys } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
   const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
@@ -52,6 +54,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPageData, setCurrentPageData] = useState([]);
   const [showDomainMapping, setShowDomainMapping] = useState(false);
+  const [domainFilterOptions, setDomainFilterOptions] = useState<string[]>([]);
   const importDataCount: number = conceptMappingState.importData.data.length;
 
   const handleClose = useCallback(
@@ -124,6 +127,22 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
       >
     );
   }, [page, rowsPerPage, conceptMappingState.importData.data]);
+
+  const getDomainFilterOptions = useCallback(async () => {
+    try {
+      const filterOptions = await api.Terminology.getAllFilterOptions(selectedDatasetId);
+      const domainFilterOptions = Object.keys(filterOptions.filterOptions.domainId);
+      setDomainFilterOptions(domainFilterOptions);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showDomainMapping) {
+      getDomainFilterOptions();
+    }
+  }, [showDomainMapping, getDomainFilterOptions]);
 
   return (
     <Dialog fullWidth maxWidth="lg" title={titleString} open={open} closable onClose={() => handleClose("cancelled")}>
@@ -250,6 +269,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
                 ))}
               </Select>
             </FormControl>
+
             {showDomainMapping && (
               <FormControl component="fieldset" className="import-dialog__selector">
                 <Typography minWidth={200}>{getText(i18nKeys.IMPORT_DIALOG__SOURCE_DOMAIN_COLUMN)}</Typography>
@@ -258,9 +278,9 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
                   onChange={(e) => handleColumnMappingChange(e, "domainId")}
                   fullWidth
                 >
-                  {conceptMappingState.importData?.columns?.map((d: any) => (
-                    <MenuItem value={d} key={d}>
-                      {d}
+                  {domainFilterOptions.map((option: string) => (
+                    <MenuItem value={option} key={option}>
+                      {option}
                     </MenuItem>
                   ))}
                 </Select>
