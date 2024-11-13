@@ -104,7 +104,7 @@ const getters = {
       chartType,
       axisSelection,
       metadata,
-      selectedStudyEntityValue: rootGetters.getSelectedDataset.id,
+      datasetId: rootGetters.getSelectedDataset.id,
     }
   },
   getBookmarkById: modulestate => bmkId =>
