@@ -151,6 +151,7 @@ const actions = {
         mriquery: JSON.stringify(additionalParameter),
         dataFormat: 'csv',
         ...(hasReleaseDate && { releaseDate: rootGetters.getSelectedDatasetVersion.releaseDate }),
+        datasetId: rootGetters.getSelectedDataset.id,
       },
       compress: ['mriquery'],
     })
@@ -261,6 +262,7 @@ const actions = {
               mriquery: JSON.stringify(entityParams),
               dataFormat: 'csv',
               ...(hasReleaseDate && { releaseDate: rootGetters.getSelectedDatasetVersion.releaseDate }),
+              datasetId: rootGetters.getSelectedDataset.id,
             },
             compress: ['mriquery'],
           }),

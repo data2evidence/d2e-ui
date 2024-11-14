@@ -972,13 +972,15 @@ const actions = {
 
     const hasReleaseDate = !!rootGetters.getSelectedDatasetVersion?.releaseDate
 
+    // Compress all keys except datasetId
+    const compress = Object.keys(params).filter(e => e !== 'datasetId')
     const urlWithQuerystring = QueryString({
       url,
       queryString: {
         ...params,
         ...(hasReleaseDate && { releaseDate: rootGetters.getSelectedDatasetVersion.releaseDate }),
       },
-      compress: Object.keys(params),
+      compress,
     })
 
     return dispatch('ajaxAuth', {
