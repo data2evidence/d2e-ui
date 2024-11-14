@@ -8,7 +8,7 @@ import {
   NewFhirProjectInput,
 } from "../types";
 import env from "../env";
-import request from "./request";
+import { request } from "./request";
 
 const GATEWAY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}gateway/api`;
 
