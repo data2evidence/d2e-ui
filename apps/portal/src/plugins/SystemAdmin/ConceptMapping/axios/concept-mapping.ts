@@ -1,4 +1,4 @@
-import request from "../../../../axios/request";
+import { request } from "../../../../axios/request";
 import env from "../../../../env";
 const CONCEPT_MAPPING_URL = `${env.REACT_APP_DN_BASE_URL}concept-mapping`;
 
