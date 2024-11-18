@@ -17,13 +17,9 @@ const workspaceRoutes = createWorkspaceRouteRecords({
 
 const routeRecords: AppRouteRecord[] = [
   {
-    name: 'upload',
-    path: '/',
-    components: { default: () => import('@/views/Upload.vue'), sidebar: Sidebar }
-  },
-  {
     name: 'root',
     path: '/',
+    redirect: routes.deployments(),
     components: { default: AppRouterView, sidebar: Sidebar },
     children: workspaceRoutes as AppRouteRecord[]
   }
