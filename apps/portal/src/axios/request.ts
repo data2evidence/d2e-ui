@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import memoize from "memoizee";
 import { getAuthToken } from "../containers/auth/auth";
 
 const PUBLIC_URLS = ["dataset/public/list", "config/public/overview-description"];
@@ -19,7 +20,7 @@ client.interceptors.request.use(
   }
 );
 
-const request = <T = any>(options: AxiosRequestConfig): Promise<T> => {
+const requestNoCache = async <T = any>(options: AxiosRequestConfig): Promise<T> => {
   const onSuccess = function (response: any) {
     console.debug("Request Successful!", response);
     return response.data;
@@ -41,7 +42,16 @@ const request = <T = any>(options: AxiosRequestConfig): Promise<T> => {
     return Promise.reject(error.response || error.message);
   };
 
-  return client(options).then(onSuccess).catch(onError);
+  try {
+    const response = await client(options);
+    return onSuccess(response);
+  } catch (error) {
+    return onError(error);
+  }
 };
 
-export default request;
+export const request = memoize(requestNoCache, {
+  maxAge: 3000,
+  promise: true,
+  normalizer: (args) => JSON.stringify(args),
+});

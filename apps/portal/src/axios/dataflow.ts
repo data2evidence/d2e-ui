@@ -1,6 +1,6 @@
 import env from "../env";
 import { CreateFlowRunByMetadata, ExecuteFlowRunByDeployment, Flow, FlowRunFilters } from "../types";
-import request from "./request";
+import { request } from "./request";
 
 const DATAFLOW_MGMT_URL = `${env.REACT_APP_DN_BASE_URL}dataflow-mgmt/`;
 const JOBPLUGIN_URL = `${env.REACT_APP_DN_BASE_URL}jobplugins/`;
@@ -199,7 +199,7 @@ export class Dataflow {
 
   public getDatamodels() {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
+      baseURL: JOBPLUGIN_URL,
       url: "prefect/flow/datamodels/list",
       method: "GET",
     });

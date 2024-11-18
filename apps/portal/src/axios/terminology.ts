@@ -1,5 +1,5 @@
 import env from "../env";
-import request from "./request";
+import { request } from "./request";
 import {
   ConceptSet,
   ConceptSetWithConceptDetails,
