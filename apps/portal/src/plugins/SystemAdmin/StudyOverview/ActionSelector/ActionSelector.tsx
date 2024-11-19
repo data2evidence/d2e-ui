@@ -17,6 +17,8 @@ interface ActionSelectorProps {
   handlePermissions: (study: Study) => void;
   handleUpdate: (study: Study) => void;
   handleRelease: (study: Study) => void;
+  handleDataQuality: (study: Study) => void;
+  handleDataCharacterization: (study: Study) => void;
 }
 
 interface Action {
@@ -56,6 +58,8 @@ const ActionSelector: FC<ActionSelectorProps> = ({
   handlePermissions,
   handleUpdate,
   handleRelease,
+  handleDataQuality,
+  handleDataCharacterization,
 }) => {
   const { getText, i18nKeys } = useTranslation();
   const { user } = useUser();
@@ -69,6 +73,8 @@ const ActionSelector: FC<ActionSelectorProps> = ({
     { name: getText(i18nKeys.ACTION_SELECTOR__UPDATE_SCHEMA), value: "update" },
     { name: getText(i18nKeys.ACTION_SELECTOR__DELETE_DATASET), value: "delete" },
     { name: getText(i18nKeys.ACTION_SELECTOR__CREATE_RELEASE), value: "release" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__RUN_DATA_QUALITY), value: "data-quality" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__RUN_DATA_CHARACTERIZATION), value: "data-characterization" },
   ];
 
   const handleActionChange = useCallback(
@@ -95,6 +101,12 @@ const ActionSelector: FC<ActionSelectorProps> = ({
         case "release":
           handleRelease(study);
           break;
+        case "data-quality":
+          handleDataQuality(study);
+          break;
+        case "data-characterization":
+          handleDataCharacterization(study);
+          break;
         default:
           break;
       }
@@ -107,6 +119,8 @@ const ActionSelector: FC<ActionSelectorProps> = ({
       handlePermissions,
       handleUpdate,
       handleRelease,
+      handleDataQuality,
+      handleDataCharacterization,
       study,
     ]
   );
