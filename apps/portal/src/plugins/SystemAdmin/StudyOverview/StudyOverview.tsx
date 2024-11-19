@@ -243,13 +243,6 @@ const StudyOverview: FC = () => {
   );
 
   const fetchDatamodelUpdates = useCallback(async () => {
-    const flowMetadata = await api.dataflow.getFlowMetadata();
-
-    function getFlowId(flowName: string) {
-      const foundFlow = flowMetadata.find((flow: Record<string, any>) => flow.name === flowName);
-      return foundFlow.flowId;
-    }
-
     const datasetsByFlow: Record<string, Study[]> = {};
     const apiRequests = [];
     datasets.forEach((item: Study) => {
@@ -276,7 +269,6 @@ const StudyOverview: FC = () => {
               datasets: datasetsByFlow[flow],
             },
           },
-          flowId: getFlowId(flow),
         })
       );
     }
@@ -295,7 +287,7 @@ const StudyOverview: FC = () => {
             ),
           },
         },
-        flowId: getFlowId("datamart-plugin"),
+
       })
     );
 
