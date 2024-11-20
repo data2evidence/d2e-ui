@@ -11,11 +11,12 @@ import { PublicDatasetCard } from "../PublicDatasetCard/PublicDatasetCard";
 import { SearchBarDataset } from "../../researcher/Overview/components/SearchBarDatasets";
 import { HomeHeader } from "../../researcher/Overview/components/HomeHeader";
 import { AccountButton } from "../../researcher/Overview/components/AccountButton";
+import { i18nKeys } from "../../../contexts/app-context/states";
 import env from "../../../env";
 import "./PublicOverview.scss";
 
 export const PublicOverview: FC = () => {
-  const { getText, i18nKeys } = useTranslation();
+  const { getText } = useTranslation();
   const [searchString, setSearchString] = useState<string>();
   const [searchText, setSearchText] = useState<string>();
   const navigate = useNavigate();

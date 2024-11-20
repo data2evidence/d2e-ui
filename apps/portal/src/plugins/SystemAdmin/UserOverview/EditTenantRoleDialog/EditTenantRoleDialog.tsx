@@ -1,8 +1,8 @@
-import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
 import Divider from "@mui/material/Divider";
 import { Button, Dialog, Checkbox } from "@portal/components";
 import { UserWithRolesInfoExt, Feedback, CloseDialogType } from "../../../../types";
-import { Roles, TENANT_ROLES, DATA_ADMIN_ROLES, ALP_ROLES } from "../../../../config";
+import { TENANT_ROLES, DATA_ADMIN_ROLES, ALP_ROLES } from "../../../../config";
 import { getRoleChanges } from "../../../../utils";
 import { api } from "../../../../axios/api";
 import { useTranslation, useUser } from "../../../../contexts";
@@ -45,14 +45,6 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
     setNewAlpRoles(alpUserRoles || []);
   }, [alpUserRoles]);
 
-  const availableTenantRoles = useMemo(() => {
-    return TENANT_ROLES;
-  }, [TENANT_ROLES]);
-
-  const availableDataAdminRoles = useMemo(() => {
-    return DATA_ADMIN_ROLES;
-  }, [DATA_ADMIN_ROLES]);
-
   const handleClose = useCallback(
     (type: CloseDialogType) => {
       setFeedback({});
@@ -63,7 +55,7 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
 
   const saveDataAdminRoles = useCallback(
     async (user: UserWithRolesInfoExt) => {
-      const changes = getRoleChanges(Object.keys(availableDataAdminRoles), dataAdminUserRoles, newDataAdminRoles);
+      const changes = getRoleChanges(Object.keys(DATA_ADMIN_ROLES), dataAdminUserRoles, newDataAdminRoles);
 
       if (changes.grantRoles.length > 0) {
         await api.userMgmt.registerAlpDataAdminRoles(user.userId, user.system, changes.grantRoles);
@@ -94,7 +86,7 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
   const saveTenantRoles = useCallback(
     async (user: UserWithRolesInfoExt) => {
       const { userId, tenantId, roles } = user;
-      const changes = getRoleChanges(Object.keys(availableTenantRoles), roles, newTenantRoles);
+      const changes = getRoleChanges(Object.keys(TENANT_ROLES), roles, newTenantRoles);
 
       if (changes.grantRoles.length > 0) {
         await api.userMgmt.registerTenantRoles(userId, tenantId, changes.grantRoles);
@@ -161,10 +153,10 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
   }, []);
 
   const hasChanges = useCallback((): boolean => {
-    const changes1 = getRoleChanges(Object.keys(availableTenantRoles), user?.roles || [], newTenantRoles);
+    const changes1 = getRoleChanges(Object.keys(TENANT_ROLES), user?.roles || [], newTenantRoles);
 
     const changes2 = getRoleChanges(Object.keys(ALP_ROLES), alpUserRoles, newAlpRoles);
-    const changes3 = getRoleChanges(Object.keys(availableDataAdminRoles), dataAdminUserRoles, newDataAdminRoles);
+    const changes3 = getRoleChanges(Object.keys(DATA_ADMIN_ROLES), dataAdminUserRoles, newDataAdminRoles);
 
     return (
       changes1.grantRoles.length > 0 ||
@@ -190,22 +182,22 @@ const EditTenantRoleDialog: FC<EditTenantRoleDialogProps> = ({
         <div className="roles__title">{getText(i18nKeys.EDIT_TENANT_ROLE_DIALOG__ROLES)}</div>
         {ctxUser.isUserAdmin && (
           <>
-            {Object.keys(availableTenantRoles).map((role) => (
+            {Object.keys(TENANT_ROLES).map((role) => (
               <Checkbox
                 key={role}
                 checked={newTenantRoles?.includes(role)}
-                checkbox-id={availableTenantRoles[role]}
-                label={availableTenantRoles[role]}
+                checkbox-id={TENANT_ROLES[role]}
+                label={TENANT_ROLES[role]}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => handleRoleChange(event, role)}
               />
             ))}
             <>
-              {Object.keys(availableDataAdminRoles).map((role) => (
+              {Object.keys(DATA_ADMIN_ROLES).map((role) => (
                 <Checkbox
                   key={role}
                   checked={newDataAdminRoles?.includes(role)}
-                  checkbox-id={availableDataAdminRoles[role]}
-                  label={availableDataAdminRoles[role]}
+                  checkbox-id={DATA_ADMIN_ROLES[role]}
+                  label={DATA_ADMIN_ROLES[role]}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => handleDataAdminRoleChange(event, role)}
                 />
               ))}
