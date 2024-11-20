@@ -199,7 +199,7 @@ export class Dataflow {
 
   public getDatamodels() {
     return request({
-      baseURL: DATAFLOW_MGMT_URL,
+      baseURL: JOBPLUGIN_URL,
       url: "prefect/flow/datamodels/list",
       method: "GET",
     });

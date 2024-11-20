@@ -25,9 +25,11 @@ import ActionSelector from "./ActionSelector/ActionSelector";
 import PermissionsDialog from "./PermissionsDialog/PermissionsDialog";
 import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
 import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
+import AnalysisDialog from "./AnalysisDialog/AnalysisDialog";
 import "./StudyOverview.scss";
 import { api } from "../../../axios/api";
 import { FlowRunJobStateTypes } from "../Jobs/types";
+import { JobRunTypes } from "../DQD/types";
 
 const enum StudyAttributeConfigIds {
   LATEST_SCHEMA_VERSION = "latest_schema_version",
@@ -60,6 +62,9 @@ const StudyOverview: FC = () => {
   const [showPermissionsDialog, openPermissionsDialog, closePermissionsDialog] = useDialogHelper(false);
   const [showUpdateDialog, openUpdateDialog, closeUpdateDialog] = useDialogHelper(false);
   const [showReleaseDialog, openReleaseDialog, closeReleaseDialog] = useDialogHelper(false);
+  const [showDataQualityDialog, openDataQualityDialog, closeDataQualityDialog] = useDialogHelper(false);
+  const [showDataCharacterizationDialog, openDataCharacterizationDialog, closeDataCharacterizationDialog] =
+    useDialogHelper(false);
 
   const [activeStudy, setActiveStudy] = useState<Study>();
   const [loading, setLoading] = useState(false);
@@ -157,6 +162,24 @@ const StudyOverview: FC = () => {
       openUpdateDialog();
     },
     [getDbDialect, openUpdateDialog]
+  );
+
+  const handleDataQuality = useCallback(
+    (study: Study) => {
+      study.dialect = getDbDialect(study.databaseCode);
+      setActiveStudy(study);
+      openDataQualityDialog();
+    },
+    [getDbDialect, openDataQualityDialog]
+  );
+
+  const handleDataCharacterization = useCallback(
+    (study: Study) => {
+      study.dialect = getDbDialect(study.databaseCode);
+      setActiveStudy(study);
+      openDataCharacterizationDialog();
+    },
+    [getDbDialect, openDataCharacterizationDialog]
   );
 
   const visibilityImgAlt = useCallback((value?: string) => {
@@ -421,6 +444,8 @@ const StudyOverview: FC = () => {
                         handlePermissions={handlePermissions}
                         handleUpdate={handleUpdate}
                         handleRelease={handleRelease}
+                        handleDataQuality={handleDataQuality}
+                        handleDataCharacterization={handleDataCharacterization}
                       />
                     </TableCell>
                   </TableRow>
@@ -471,6 +496,24 @@ const StudyOverview: FC = () => {
               onClose={closeReleaseDialog}
               loading={loading}
               setLoading={setLoading}
+            />
+          )}
+
+          {showDataQualityDialog && (
+            <AnalysisDialog
+              study={activeStudy}
+              runType={JobRunTypes.DQD}
+              open={showDataQualityDialog}
+              onClose={closeDataQualityDialog}
+            />
+          )}
+
+          {showDataCharacterizationDialog && (
+            <AnalysisDialog
+              study={activeStudy}
+              runType={JobRunTypes.DataCharacterization}
+              open={showDataCharacterizationDialog}
+              onClose={closeDataCharacterizationDialog}
             />
           )}
         </div>

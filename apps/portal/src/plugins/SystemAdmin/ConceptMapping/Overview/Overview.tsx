@@ -129,6 +129,7 @@ const Overview: FC = () => {
                   onClose={handleCloseImportDialog}
                   loading={loading}
                   setLoading={setLoading}
+                  selectedDatasetId={selectedDatasetId}
                 />
               )}
               {conceptMappingState.csvData.data.length == 0 && (
