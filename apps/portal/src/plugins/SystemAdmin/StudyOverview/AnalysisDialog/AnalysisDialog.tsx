@@ -1,12 +1,11 @@
+import { Divider, TextField } from "@mui/material";
+import { Box, Button, Dialog } from "@portal/components";
 import React, { FC, useCallback, useState } from "react";
-import { TextField, Divider } from "@mui/material";
-import { Button, Dialog, Box } from "@portal/components";
+import { api } from "../../../../axios/api";
 import { useTranslation } from "../../../../contexts";
 import { i18nKeys } from "../../../../contexts/app-context/states";
-import { Study, Feedback, CloseDialogType, CreateFlowRunByMetadata } from "../../../../types";
+import { CloseDialogType, CreateDcFlowRun, CreateDqdFlowRun, Feedback, Study } from "../../../../types";
 import { JobRunTypes } from "../../DQD/types";
-import { api } from "../../../../axios/api";
-
 import "./AnalysisDialog.scss";
 
 interface AnalysisDialogProps {
@@ -43,17 +42,24 @@ const AnalysisDialog: FC<AnalysisDialogProps> = ({ study, runType, open, onClose
 
     try {
       setUpdating(true);
-      const metaData: CreateFlowRunByMetadata = {
-        type: runType,
-        options: {
+
+      if (runType === JobRunTypes.DQD) {
+        const dqdRunData: CreateDqdFlowRun = {
           datasetId: study?.id,
           vocabSchemaName: study?.vocabSchemaName,
           releaseId: "",
           comment: formData.comment,
-        },
-      };
-
-      await api.dataflow.createFlowRunByMetadata(metaData);
+        };
+        await api.dataflow.createDqdFlowRun(dqdRunData);
+      } else if (runType === JobRunTypes.DataCharacterization) {
+        const dcRunData: CreateDcFlowRun = {
+          datasetId: study?.id,
+          releaseId: "",
+          comment: formData.comment,
+          excludeAnalysisIds: "",
+        };
+        await api.dataflow.createDcFlowRun(dcRunData);
+      }
       setFeedback({
         type: "success",
         message: getText(i18nKeys.ANALYSIS_DIALOG__RUN_SUCCESS, [String(runType), String(study?.id)]),

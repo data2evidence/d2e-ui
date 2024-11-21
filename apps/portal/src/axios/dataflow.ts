@@ -1,5 +1,12 @@
 import env from "../env";
-import { CreateFlowRunByMetadata, ExecuteFlowRunByDeployment, Flow, FlowRunFilters } from "../types";
+import {
+  CreateDcFlowRun,
+  CreateDqdFlowRun,
+  CreateFlowRunByMetadata,
+  ExecuteFlowRunByDeployment,
+  Flow,
+  FlowRunFilters,
+} from "../types";
 import { request } from "./request";
 
 const DATAFLOW_MGMT_URL = `${env.REACT_APP_DN_BASE_URL}dataflow-mgmt/`;
@@ -192,6 +199,24 @@ export class Dataflow {
     return request({
       baseURL: DATAFLOW_MGMT_URL,
       url: "prefect/flow-run/metadata",
+      method: "POST",
+      data: data,
+    });
+  }
+
+  public createDqdFlowRun(data: CreateDqdFlowRun) {
+    return request({
+      baseURL: JOBPLUGIN_URL,
+      url: "dqd/data-quality/flow-run",
+      method: "POST",
+      data: data,
+    });
+  }
+
+  public createDcFlowRun(data: CreateDcFlowRun) {
+    return request({
+      baseURL: JOBPLUGIN_URL,
+      url: "dqd/data-characterization/flow-run",
       method: "POST",
       data: data,
     });
