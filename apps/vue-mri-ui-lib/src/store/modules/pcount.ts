@@ -53,7 +53,7 @@ const actions = {
       metadata: {
         version: 3,
       },
-      selectedStudyEntityValue: rootGetters.getSelectedDataset.id,
+      datasetId: rootGetters.getSelectedDataset.id,
     }
 
     dispatch('firePatientCountQuery', {
@@ -85,7 +85,7 @@ const actions = {
           configId: configMetadata.configId,
           configVersion: configMetadata.configVersion,
         },
-        selectedStudyEntityValue: rootGetters.getSelectedDataset.id,
+        datasetId: rootGetters.getSelectedDataset.id,
       }
       dispatch('firePatientListCountQuery', {
         type: 'total',

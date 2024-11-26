@@ -1,8 +1,7 @@
 import React, { FC } from "react";
-import env from "../../../env";
 import "./NifiRegistry.scss";
 
-const NIFI_REGISTRY_URL = `${env.REACT_APP_DN_BASE_URL}nifi-registry/`;
+const NIFI_REGISTRY_URL = "nifi-registry/";
 
 const NifiRegistry: FC = () => {
   return (

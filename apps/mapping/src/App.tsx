@@ -7,16 +7,9 @@ import { theme } from "./theme/theme";
 import { MappingLayout } from "./MappingLayout";
 import "./App.css";
 
-export interface AppMetadataParams {
-  dnBaseUrl: string;
-}
+export interface AppProps extends PageProps<SystemAdminPageMetadata<void>> {}
 
-export interface AppProps
-  extends PageProps<SystemAdminPageMetadata<AppMetadataParams>> {}
-
-export let pluginMetadata:
-  | SystemAdminPageMetadata<AppMetadataParams>
-  | undefined;
+export let pluginMetadata: SystemAdminPageMetadata<void> | undefined;
 
 export const App: FC<AppProps> = ({ metadata }) => {
   pluginMetadata = metadata;

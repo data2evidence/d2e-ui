@@ -309,9 +309,6 @@
                 "route": "concept-mapping"
               },
               {
-                "data": {
-                  "dnBaseUrl": "https://$$FQDN$$/"
-                },
                 "name": "Data mapping",
                 "pluginPath": "https://$$FQDN$$/mapping/module.js",
                 "route": "data-mapping"

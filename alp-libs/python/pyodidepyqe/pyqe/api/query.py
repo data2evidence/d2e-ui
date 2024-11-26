@@ -312,7 +312,7 @@ class Query(_AuthApi):
                 'offset': 0,
                 'columns': columns
             },
-            'selectedStudyEntityValue': self._selectedStudyId
+            'datasetId': self._selectedStudyId
         }
 
     async def get_dataframe_cohort(self, column_config_paths=[], selected_entity_name=None):
@@ -381,7 +381,7 @@ class Query(_AuthApi):
                 "offset": 0,
                 'columns': columns
             },
-            'selectedStudyEntityValue': self._selectedStudyId
+            'datasetId': self._selectedStudyId
         }
 
     async def get_entities_dataframe_cohort(self, column_config_paths=[]):
@@ -427,7 +427,7 @@ class Query(_AuthApi):
             },
             'axisSelection': [],
             'metadata': {'version': 3},
-            'selectedStudyEntityValue': self._selectedStudyId
+            'datasetId': self._selectedStudyId
         }
 
     def get_entities_from_config_paths(self, column_config_paths=[]):

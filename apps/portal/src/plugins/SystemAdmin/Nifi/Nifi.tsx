@@ -1,8 +1,7 @@
 import React, { FC } from "react";
-import env from "../../../env";
 import "./Nifi.scss";
 
-const NIFI_URL = `${env.REACT_APP_DN_BASE_URL}nifi/`;
+const NIFI_URL = "nifi/";
 
 export const Nifi: FC = () => {
   return (
