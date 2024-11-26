@@ -51,7 +51,7 @@ const actions = {
     }: { attributePathUid: string; searchQuery: string; attributeType?: string }
   ) {
     const mriConfig = rootGetters.getMriConfig
-    const selectedStudyEntityValue = rootGetters.getSelectedDataset.id
+    const datasetId = rootGetters.getSelectedDataset.id
 
     const requestTime = Date.now()
     latestRequestTimes[attributePathUid] = requestTime
@@ -76,7 +76,7 @@ const actions = {
           attributePath: attributePathUid.split('__')[0],
           configId: mriConfig.meta.configId,
           configVersion: mriConfig.meta.configVersion,
-          selectedStudyEntityValue,
+          datasetId,
           searchQuery,
           attributeType,
         },
