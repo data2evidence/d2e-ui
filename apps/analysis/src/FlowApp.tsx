@@ -6,19 +6,15 @@ import { PageProps, SystemAdminPageMetadata } from "@portal/plugin";
 import { store } from "./store";
 import { theme } from "./theme/theme";
 import { FlowLayout } from "./features/flow/containers/FlowLayout";
-import { FlowMetadataParams } from ".";
 import "./monaco";
 import "./theme/main.scss";
 import "reactflow/dist/style.css";
 
-export interface FlowAppProps
-  extends PageProps<SystemAdminPageMetadata<FlowMetadataParams>> {
+export interface FlowAppProps extends PageProps<SystemAdminPageMetadata<void>> {
   isStandalone: boolean;
 }
 
-export let pluginMetadata:
-  | SystemAdminPageMetadata<FlowMetadataParams>
-  | undefined;
+export let pluginMetadata: SystemAdminPageMetadata<void> | undefined;
 
 export const FlowApp: FC<FlowAppProps> = ({
   metadata,

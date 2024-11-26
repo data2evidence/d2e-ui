@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "homepage": "/portal",
+  "proxy": "https://localhost:41100",
   "scripts": {
     "start": "react-scripts start",
     "build": "PUBLIC_URL=/portal BUILD_PATH='../../resources/portal' react-scripts build",
