@@ -4,17 +4,10 @@ import { SystemAdminPageMetadata } from "@portal/plugin";
 import { plugin } from "./module";
 import { FlowAppProps } from "./FlowApp";
 
-export interface FlowMetadataParams {
-  dnBaseUrl: string;
-}
-
-const mockMetadata: SystemAdminPageMetadata<FlowMetadataParams> = {
+const mockMetadata: SystemAdminPageMetadata<void> = {
   system: "Local",
   userId: "Mock user",
   getToken: () => Promise.resolve("MockToken"),
-  data: {
-    dnBaseUrl: "https://localhost:41100/",
-  },
 };
 
 const pageProps: FlowAppProps = {

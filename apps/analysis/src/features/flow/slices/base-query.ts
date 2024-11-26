@@ -12,7 +12,7 @@ export const baseQueryFn: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, WebApi, extraOptions) => {
   const rawBaseQuery = fetchBaseQuery({
-    baseUrl: `${pluginMetadata?.data?.dnBaseUrl}dataflow-mgmt/`,
+    baseUrl: "dataflow-mgmt/",
     prepareHeaders: async (headers) => {
       if (!pluginMetadata) return headers;
 

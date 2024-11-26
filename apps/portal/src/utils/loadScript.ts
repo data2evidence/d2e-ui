@@ -2,7 +2,7 @@ import env from "../env";
 
 type Callback = () => void;
 
-const PA_SAP_CORE_UI_URL = `${env.REACT_APP_DN_BASE_URL}ui/sap-ui-core.js`;
+const PA_SAP_CORE_UI_URL = "ui/sap-ui-core.js";
 
 const _loadScript = (
   src: string,

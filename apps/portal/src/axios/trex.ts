@@ -1,8 +1,7 @@
 import { request } from "./request";
-import env from "../env";
 import { TrexPlugin } from "../types";
 
-const TREX_URL = `${env.REACT_APP_DN_BASE_URL}trex/`;
+const TREX_URL = "trex/";
 
 export class Trex {
   public getPlugins() {
