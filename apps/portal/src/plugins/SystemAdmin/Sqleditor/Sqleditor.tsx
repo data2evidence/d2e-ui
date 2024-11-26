@@ -1,11 +1,10 @@
-import React, { DOMElement, FC, createRef, useEffect, useState } from "react";
+import React, { FC, createRef, useEffect, useState } from "react";
 import "./Sqleditor.scss";
-import env from "../../../env";
 import "gethue/lib/components/SqlScratchpadWebComponent";
 import { getAuthToken } from "../../../containers/auth";
 import { Loader } from "@portal/components";
 
-const SQLEDITOR__BASE_URL = `${env.REACT_APP_DN_BASE_URL}alp-sqleditor`;
+const SQLEDITOR__BASE_URL = "alp-sqleditor";
 const SQLEDITOR__DB_DIALECT = "postgresql";
 const SQLEDITOR__STYLESHEET_PATH = "/portal/assets/sqleditor.css";
 

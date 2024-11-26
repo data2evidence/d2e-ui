@@ -4,7 +4,7 @@ import { loadStyleSheet, loadEsModuleScript } from "../../../../utils/loadScript
 import { getAuthToken } from "../../../../containers/auth";
 import "./JobsViewer.scss";
 
-const LOG_VIEWER_ASSETS_URL = `${env.REACT_APP_DN_BASE_URL}jobs/assets.json`;
+const LOG_VIEWER_ASSETS_URL = "jobs/assets.json";
 const APPROUTER_ORIGIN = new URL(LOG_VIEWER_ASSETS_URL).origin;
 
 const JobsViewer: FC<{

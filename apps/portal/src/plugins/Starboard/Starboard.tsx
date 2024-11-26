@@ -12,7 +12,7 @@ import { i18nKeys } from "../../contexts/app-context/states";
 import env from "../../env";
 import "./Starboard.scss";
 
-const MRI_ROOT_URL = `${env.REACT_APP_DN_BASE_URL}analytics-svc`;
+const MRI_ROOT_URL = "analytics-svc";
 const uiFilesUrl = env.REACT_APP_DN_BASE_URL;
 const zipUrl = `${uiFilesUrl}starboard-notebook-base/alp-starboard-notebook-base.zip`;
 interface StarboardProps extends PageProps<ResearcherStudyMetadata> {}
