@@ -1,8 +1,7 @@
-import env from "../env";
 import { CohortMapping } from "../types";
 import { request } from "./request";
 
-const MRI_BASE_URL = `${env.REACT_APP_DN_BASE_URL}analytics-svc`;
+const MRI_BASE_URL = "analytics-svc";
 
 export class CohortSurvival {
   constructor(public datasetId: string) {}

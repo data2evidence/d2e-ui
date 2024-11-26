@@ -7,10 +7,9 @@ import {
   SchemasVersionInfoResponse,
   NewFhirProjectInput,
 } from "../types";
-import env from "../env";
 import { request } from "./request";
 
-const GATEWAY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}gateway/api`;
+const GATEWAY_BASE_URL = "gateway/api";
 
 export class Gateway {
   public createDataset(input: NewStudyInput): Promise<Study> {
@@ -84,7 +83,6 @@ export class Gateway {
 
   public registerDashboardRoutes() {
     return request({
-      baseURL: env.REACT_APP_DN_BASE_URL,
       url: "/dashboard-gate/register",
       method: "POST",
     });
@@ -92,7 +90,7 @@ export class Gateway {
 
   public createFhirStaging(input: NewFhirProjectInput): Promise<any> {
     return request({
-      baseURL: GATEWAY_BASE_URL + "/fhir/createProject",
+      url: "/fhir/createProject",
       method: "POST",
       data: input,
     });

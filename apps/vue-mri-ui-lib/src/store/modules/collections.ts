@@ -90,7 +90,7 @@ const actions = {
     })
     return dispatch('ajaxAuth', {
       url,
-      params: { ...params, mriquery: StringToBinary(params.mriquery) },
+      params: { ...params, mriquery: StringToBinary(params.mriquery), datasetId: rootGetters.getSelectedDataset.id },
       cancelToken,
     })
       .then(response => {

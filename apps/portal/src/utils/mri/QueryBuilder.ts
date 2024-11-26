@@ -88,7 +88,7 @@ export default class QueryBuilder {
       offset: number;
       columns: Column[];
     };
-    selectedStudyEntityValue: string;
+    datasetId: string;
   } {
     const content: Array<any> = [];
     this.filters.forEach((filterContent) => {
@@ -107,7 +107,7 @@ export default class QueryBuilder {
         offset: 0,
         columns: columns,
       },
-      selectedStudyEntityValue: studyEntityValue ? studyEntityValue : "",
+      datasetId: studyEntityValue ? studyEntityValue : "",
     };
   }
 
@@ -121,7 +121,7 @@ export default class QueryBuilder {
       };
     };
     axisSelection: never[];
-    selectedStudyEntityValue: string;
+    datasetId: string;
     studies: Array<string>;
   } {
     const content: Array<any> = [{ type: BOOLEAN_CONTAINER, op: LogicalOperator.OR, content: [] }];
@@ -135,7 +135,7 @@ export default class QueryBuilder {
         },
       },
       axisSelection: [],
-      selectedStudyEntityValue: "",
+      datasetId: "",
       studies: studyEntityValue,
     };
   }
@@ -150,7 +150,7 @@ export default class QueryBuilder {
       };
     };
     axisSelection: never[];
-    selectedStudyEntityValue: string;
+    datasetId: string;
   } {
     const content: Array<any> = [{ type: BOOLEAN_CONTAINER, op: LogicalOperator.OR, content: [] }];
     return {
@@ -163,7 +163,7 @@ export default class QueryBuilder {
         },
       },
       axisSelection: [],
-      selectedStudyEntityValue: studyEntityValue ? studyEntityValue : "",
+      datasetId: studyEntityValue ? studyEntityValue : "",
     };
   }
 }

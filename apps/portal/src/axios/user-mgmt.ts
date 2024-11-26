@@ -1,10 +1,9 @@
 import { STUDY_ROLES } from "../config";
 import { UserGroup, UserWithRoles, UserWithRolesInfo } from "../types";
-import env from "../env";
 import { request } from "./request";
 import { UserGroupMetadata } from "../contexts/app-context/states";
 
-const USER_MGMT_BASE_URL = `${env.REACT_APP_DN_BASE_URL}usermgmt/api/`;
+const USER_MGMT_BASE_URL = "usermgmt/api/";
 
 export class UserMgmt {
   public getUserGroupList(userId: string): Promise<UserGroupMetadata> {

@@ -108,7 +108,7 @@ export default {
           configMetadata.configId +
           '&configVersion=' +
           configMetadata.configVersion +
-          '&selectedStudyEntityValue=' +
+          '&datasetId=' +
           this.getSelectedDataset.id,
         cancelToken,
       })
