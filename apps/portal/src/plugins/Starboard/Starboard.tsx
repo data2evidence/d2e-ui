@@ -8,6 +8,7 @@ import { useFeedback, useTranslation } from "../../contexts";
 import { EmptyNotebook } from "./components/EmptyNotebook";
 import { Header } from "./components/NotebookHeader/NotebookHeader";
 import { convertJupyterToStarboard, notebookContentToText } from "./utils/jupystar";
+import { i18nKeys } from "../../contexts/app-context/states";
 import env from "../../env";
 import "./Starboard.scss";
 
@@ -17,7 +18,7 @@ const zipUrl = `${uiFilesUrl}starboard-notebook-base/alp-starboard-notebook-base
 interface StarboardProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const Starboard: FC<StarboardProps> = ({ metadata }) => {
-  const { getText, i18nKeys } = useTranslation();
+  const { getText } = useTranslation();
   const { setFeedback } = useFeedback();
   const [loading, setLoading] = useState(true);
 
@@ -55,7 +56,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
         setLoading(false);
       }
     },
-    [setFeedback, getText]
+    [setFeedback, getText, updateActiveNotebook]
   );
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
         message: getText(i18nKeys.STARBOARD__ERROR_CREATE),
       });
     }
-  }, [fetchNotebooks, setFeedback, getText]);
+  }, [fetchNotebooks, updateActiveNotebook, setFeedback, getText]);
 
   // Check Jupyter Notebook Name if it exist in the database
   const checkNotebookName = async (name: string) => {
