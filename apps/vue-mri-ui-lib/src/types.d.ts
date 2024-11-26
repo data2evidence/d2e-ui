@@ -172,5 +172,5 @@ interface ChartZipParameters {
       seq: number
     }[]
   }
-  selectedStudyEntityValue: string
+  datasetId: string
 }
