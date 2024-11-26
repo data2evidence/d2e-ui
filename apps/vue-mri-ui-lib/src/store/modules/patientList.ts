@@ -110,7 +110,7 @@ const getters = {
       }
       return {
         ...request,
-        selectedStudyEntityValue: getters.getSelectedDataset.id,
+        datasetId: getters.getSelectedDataset.id,
       }
     },
   getPLRequestZIP: (state, getters) => {
@@ -360,6 +360,7 @@ const actions = {
         queryString: {
           mriquery: JSON.stringify(params),
           ...(hasReleaseDate && { releaseDate: rootGetters.getSelectedDatasetVersion.releaseDate }),
+          datasetId: rootGetters.getSelectedDataset.id,
         },
         compress: ['mriquery'],
       }),
