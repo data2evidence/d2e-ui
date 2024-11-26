@@ -142,7 +142,7 @@ export default {
       if (Object.keys(request).length !== 0 && request) {
         this.fireQuery({
           url: '/analytics-svc/api/services/population/json/barchart',
-          params: { mriquery: JSON.stringify(this.getBookmarksData) },
+          params: { mriquery: JSON.stringify(this.getBookmarksData), datasetId: this.getBookmarksData.datasetId, },
         })
           .then(response => {
             const postProcessedData = postProcessBarChartData(response)

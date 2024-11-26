@@ -1,4 +1,4 @@
-import request from "../../../../axios/request";
+import { request } from "../../../../axios/request";
 import env from "../../../../env";
 import { FilterOptions } from "../../../Researcher/Terminology/utils/types";
 
