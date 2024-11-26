@@ -1,35 +1,35 @@
-import React, { FC, useCallback, useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
 import {
+  Button,
   Loader,
   TableCell,
   TableRow,
   Text,
-  VisibilityPublicIcon,
-  VisibilityOnIcon,
   VisibilityOffIcon,
-  Button,
+  VisibilityOnIcon,
+  VisibilityPublicIcon,
 } from "@portal/components";
-import { CloseDialogType, Study, StudyAttribute } from "../../../types";
-import { useDialogHelper, useDatasets, useDatabases, useDashboards } from "../../../hooks";
-import { useTranslation } from "../../../contexts";
-import AddStudyDialog from "./AddStudyDialog/AddStudyDialog";
-import UpdateStudyDialog from "./UpdateStudyDialog/UpdateStudyDialog";
-import DatasetResourcesDialog from "./DatasetResourcesDialog/DatasetResourcesDialog";
-import CopyStudyDialog from "./CopyStudyDialog/CopyStudyDialog";
-import DeleteStudyDialog from "./DeleteStudyDialog/DeleteStudyDialog";
-import ActionSelector from "./ActionSelector/ActionSelector";
-import PermissionsDialog from "./PermissionsDialog/PermissionsDialog";
-import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
-import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
-import AnalysisDialog from "./AnalysisDialog/AnalysisDialog";
-import "./StudyOverview.scss";
+import { FC, useCallback, useEffect, useState } from "react";
 import { api } from "../../../axios/api";
-import { FlowRunJobStateTypes } from "../Jobs/types";
+import { useTranslation } from "../../../contexts";
+import { useDashboards, useDatabases, useDatasets, useDialogHelper } from "../../../hooks";
+import { CloseDialogType, Study, StudyAttribute } from "../../../types";
 import { JobRunTypes } from "../DQD/types";
+import { FlowRunJobStateTypes } from "../Jobs/types";
+import ActionSelector from "./ActionSelector/ActionSelector";
+import AddStudyDialog from "./AddStudyDialog/AddStudyDialog";
+import AnalysisDialog from "./AnalysisDialog/AnalysisDialog";
+import CopyStudyDialog from "./CopyStudyDialog/CopyStudyDialog";
+import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
+import DatasetResourcesDialog from "./DatasetResourcesDialog/DatasetResourcesDialog";
+import DeleteStudyDialog from "./DeleteStudyDialog/DeleteStudyDialog";
+import PermissionsDialog from "./PermissionsDialog/PermissionsDialog";
+import "./StudyOverview.scss";
+import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
+import UpdateStudyDialog from "./UpdateStudyDialog/UpdateStudyDialog";
 
 const enum StudyAttributeConfigIds {
   LATEST_SCHEMA_VERSION = "latest_schema_version",
@@ -257,8 +257,7 @@ const StudyOverview: FC = () => {
 
     for (const flow in datasetsByFlow) {
       apiRequests.push(
-        api.dataflow.createFlowRunByMetadata({
-          type: "datamodel",
+        api.dataflow.createGetVersionInfoFlowRun({
           flowRunName: `${flow}-get_version_info`,
           options: {
             options: {
@@ -273,8 +272,7 @@ const StudyOverview: FC = () => {
       );
     }
     apiRequests.push(
-      api.dataflow.createFlowRunByMetadata({
-        type: "datamart",
+      api.dataflow.createGetVersionInfoFlowRun({
         flowRunName: "datamart-get_version_info",
         options: {
           options: {

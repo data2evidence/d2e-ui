@@ -203,7 +203,7 @@ export class Dataflow {
     });
   }
 
-  public createFetVersionInfoFlowRun(data: CreateGetVersionInfoFlowRun) {
+  public createGetVersionInfoFlowRun(data: CreateGetVersionInfoFlowRun) {
     return request({
       baseURL: JOBPLUGIN_URL,
       url: "datamodel/get_version_info",
