@@ -11,21 +11,14 @@ interface PAPluginProps {
   getToken?: () => Promise<string>;
 }
 
-const PA_ASSETS_URL = `${env.REACT_APP_DN_BASE_URL}mri/assets.json`;
+const PA_ASSETS_URL = "mri/assets.json";
 const VUE_APP_HOST = env.REACT_APP_DN_BASE_URL.endsWith("/")
   ? env.REACT_APP_DN_BASE_URL.slice(0, -1)
   : env.REACT_APP_DN_BASE_URL;
-const APPROUTER_ORIGIN = new URL(PA_ASSETS_URL).origin;
 
 const PAPlugin: FC<PAPluginProps> = ({ studyId, releaseId, getToken }) => {
   const [isLoading, setIsLoading] = useState(false);
   const isLocalDev = window.location.hostname === "localhost";
-
-  const addOrigin = (arr: string[]) => {
-    return arr.map((path) =>
-      path.startsWith("http://") || path.startsWith("https://") ? path : `${APPROUTER_ORIGIN}${path}`
-    );
-  };
 
   const hideLogoutButton = () => {
     const logoutButton: HTMLButtonElement | null = document.querySelector('button[id="mriBtnLogout"]');
@@ -41,8 +34,8 @@ const PAPlugin: FC<PAPluginProps> = ({ studyId, releaseId, getToken }) => {
       .then((response) => response.json())
       .then(({ css, js }) => {
         loadSapScript(() => {
-          const styleSheetCallbacks = addOrigin(css).map(loadStyleSheet);
-          const scriptCallbacks = addOrigin(js).map(loadScript);
+          const styleSheetCallbacks = css.map(loadStyleSheet);
+          const scriptCallbacks = js.map(loadScript);
           hideLogoutButton();
           callbacks = [...scriptCallbacks, ...styleSheetCallbacks];
         });
