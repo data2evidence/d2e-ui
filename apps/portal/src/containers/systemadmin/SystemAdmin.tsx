@@ -17,8 +17,6 @@ const ROUTES = {
   logout: "/logout",
 };
 
-const NIFI_URL = `${env.REACT_APP_DN_BASE_URL}nifi/`;
-
 const plugins = loadPlugins();
 const releaseVersion = env.REACT_APP_ALP_RELEASE_VERSION;
 const gitCommit = env.GIT_COMMIT;
@@ -28,16 +26,6 @@ const SystemAdmin: FC = () => {
   const { clearFeedback, getFeedback } = useFeedback();
   const feedback = getFeedback();
   const [systemFeatures] = useSystemFeatures();
-  /**
-   * For Conditional Plugins
-   */
-  const pluginEnv: { [key: string]: boolean } = useMemo(
-    () => ({
-      nifi: !!NIFI_URL,
-    }),
-    []
-  );
-
   const [systemAdminPlugins, setSystemAdminPlugins] = useState<Plugins[]>([]);
 
   const defaultRoute = useMemo(() => {
@@ -70,7 +58,7 @@ const SystemAdmin: FC = () => {
     const updateSystemAdminPlugins = () => {
       const displayedSystemAdminPlugins = plugins.systemadmin.reduce<Plugins[]>((acc, item) => {
         const route = item.route;
-
+        const pluginEnv: { [key: string]: boolean } = {};
         if (item.featureFlag) {
           pluginEnv[route] = systemFeatures.includes(item.featureFlag);
         }
@@ -84,7 +72,7 @@ const SystemAdmin: FC = () => {
       setSystemAdminPlugins(displayedSystemAdminPlugins);
     };
     updateSystemAdminPlugins();
-  }, [pluginEnv, systemFeatures]);
+  }, [systemFeatures]);
 
   useEffect(() => {
     if ((feedback?.autoClose || 0) > 0) setTimeout(() => clearFeedback(), feedback?.autoClose);

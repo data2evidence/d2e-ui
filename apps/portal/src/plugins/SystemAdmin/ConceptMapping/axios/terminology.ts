@@ -1,8 +1,7 @@
 import { request } from "../../../../axios/request";
-import env from "../../../../env";
 import { FilterOptions } from "../../../Researcher/Terminology/utils/types";
 
-const TERMINOLOGY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}terminology`;
+const TERMINOLOGY_BASE_URL = "terminology";
 
 export class Terminology {
   public async getAllFilterOptions(datasetId: string): Promise<{ filterOptions: FilterOptions }> {

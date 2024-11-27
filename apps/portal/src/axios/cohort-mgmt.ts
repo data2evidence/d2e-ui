@@ -1,7 +1,6 @@
-import env from "../env";
 import { request } from "./request";
 
-const MRI_BASE_URL = `${env.REACT_APP_DN_BASE_URL}analytics-svc`;
+const MRI_BASE_URL = "analytics-svc";
 
 export class CohortMgmt {
   constructor(public datasetId: string) {}
@@ -9,7 +8,7 @@ export class CohortMgmt {
   public getCohorts(offset?: number, limit?: number): Promise<any> {
     return request({
       baseURL: MRI_BASE_URL,
-      url: `/api/services/cohort`,
+      url: "/api/services/cohort",
       method: "GET",
       params: { datasetId: this.datasetId, offset, limit },
     });

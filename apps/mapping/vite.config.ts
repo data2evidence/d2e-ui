@@ -60,5 +60,21 @@ export default defineConfig(({ command, mode }) => {
           : {}),
       },
     },
+    server: {
+      proxy: {
+        "/backend": {
+          target: "https://localhost:41100",
+          secure: false,
+        },
+        "/system-portal": {
+          target: "https://localhost:41100",
+          secure: false,
+        },
+        "/white-rabbit": {
+          target: "https://localhost:41100",
+          secure: false,
+        },
+      },
+    },
   };
 });

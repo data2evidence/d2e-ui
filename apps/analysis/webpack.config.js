@@ -25,7 +25,14 @@ module.exports = (env, argv) => {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
         "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-      }
+      },
+      proxy: [
+        {
+          context: ['/dataflow-mgmt'],
+          target: 'https://localhost:41100',
+          secure: false
+        }
+      ]
     },
     entry: {
       module: path.join(__dirname, 'src', entryFile)
