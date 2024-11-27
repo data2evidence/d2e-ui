@@ -57,6 +57,11 @@ export interface CreateFlowRunByMetadata {
   options?: object;
 }
 
+export interface CreateGetVersionInfoFlowRun {
+  flowRunName: string;
+  options?: object;
+}
+
 export interface FlowRunFilters {
   startDate?: Date | null;
   endDate?: Date | null;

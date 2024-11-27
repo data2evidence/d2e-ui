@@ -1,4 +1,10 @@
-import { CreateFlowRunByMetadata, ExecuteFlowRunByDeployment, Flow, FlowRunFilters } from "../types";
+import {
+  CreateFlowRunByMetadata,
+  CreateGetVersionInfoFlowRun,
+  ExecuteFlowRunByDeployment,
+  Flow,
+  FlowRunFilters,
+} from "../types";
 import { request } from "./request";
 
 const DATAFLOW_MGMT_URL = "dataflow-mgmt/";
@@ -196,10 +202,19 @@ export class Dataflow {
     });
   }
 
+  public createGetVersionInfoFlowRun(data: CreateGetVersionInfoFlowRun) {
+    return request({
+      baseURL: JOBPLUGIN_URL,
+      url: "datamodel/get_version_info",
+      method: "POST",
+      data: data,
+    });
+  }
+
   public getDatamodels() {
     return request({
       baseURL: JOBPLUGIN_URL,
-      url: "prefect/flow/datamodels/list",
+      url: "datamodel/list",
       method: "GET",
     });
   }
