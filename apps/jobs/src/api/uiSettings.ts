@@ -10,13 +10,13 @@ export type Settings = {
   flags: FeatureFlag[]
 }
 
-const { baseUrl, getAuthToken } = getPortalAPI()
+const { getAuthToken } = getPortalAPI()
 
 export class UiSettings {
   public static settings: Settings | null = null
 
   private static promise: Promise<Settings> | null = null
-  private static readonly baseUrl = `${baseUrl}prefect`
+  private static readonly baseUrl = '/prefect'
 
   public static async load(): Promise<Settings> {
     if (this.settings !== null) {

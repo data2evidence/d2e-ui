@@ -45,7 +45,6 @@ const JobsViewer: FC<{
         if (node) {
           setJobsViewerDivLoaded(true);
           node.portalAPI = {
-            baseUrl: env.REACT_APP_DN_BASE_URL,
             getAuthToken,
             browserBaseUrl,
           };
