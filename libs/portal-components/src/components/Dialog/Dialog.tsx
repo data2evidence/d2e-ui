@@ -44,16 +44,18 @@ export const Dialog: FC<DialogProps> = ({
       data-testid="dialog"
       {...props}
     >
-      <div className="alp-dialog__title">
-        <div className="alp-dialog__title-text" data-testid="dialog-title">
-          {title}
+      {title && (
+        <div className="alp-dialog__title">
+          <div className="alp-dialog__title-text" data-testid="dialog-title">
+            {title}
+          </div>
+          {closable && (
+            <MuiIconButton onClick={onClose} aria-label="close" data-testid="dialog-close">
+              <CloseIcon />
+            </MuiIconButton>
+          )}
         </div>
-        {closable && (
-          <MuiIconButton onClick={onClose} aria-label="close" data-testid="dialog-close">
-            <CloseIcon />
-          </MuiIconButton>
-        )}
-      </div>
+      )}
       {feedback && feedback.message && (
         <div className="alp-dialog__snackbar">
           <Snackbar
