@@ -104,7 +104,7 @@ const getters = {
       chartType,
       axisSelection,
       metadata,
-      selectedStudyEntityValue: rootGetters.getSelectedDataset.id,
+      datasetId: rootGetters.getSelectedDataset.id,
     }
   },
   getBookmarkById: modulestate => bmkId =>
@@ -146,13 +146,14 @@ const actions = {
     if (params.cmd === 'loadAll') {
       url = `${bookmarkURL}?paConfigId=${rootGetters.getMriFrontendConfig.getPaConfigId()}&r=${Math.random()}&username=${
         getPortalAPI().username
-      }`
+      }&datasetId=${rootGetters.getSelectedDataset.id}`
     } else {
       url = `${bookmarkURL}/${bookmarkId || ''}`
       params.paConfigId = rootGetters.getMriFrontendConfig.getPaConfigId()
       params.cdmConfigId = rootGetters.getMriFrontendConfig.getDatamodelConfigId()
       params.cdmConfigVersion = rootGetters.getMriFrontendConfig.getVersion()
       params.username = getPortalAPI().username
+      params.datasetId = rootGetters.getSelectedDataset.id
     }
 
     return dispatch('ajaxAuth', { url, method, params, cancelToken })

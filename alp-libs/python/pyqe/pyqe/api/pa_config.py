@@ -27,7 +27,7 @@ class PAConfig(_AuthApi):
     def _get_study_config_list(self, study):
         params = {
             'action': 'getMyStudyConfigList',
-            'selectedStudyEntityValue': study
+            'datasetId': study
         }
         response = self._get('/analytics-svc/pa/services/analytics.xsjs', params)
         return json.loads(response.text)

@@ -398,7 +398,7 @@ def test_get_cohort_with_config_selection(setup, monkeypatch):
     # Then
     assert cohort == {
         'name': 'cohortName',
-        'selectedStudyEntityValue': '9f0c44f1-8de9-4d4c-80c0-abcde134799b',
+        'datasetId': '9f0c44f1-8de9-4d4c-80c0-abcde134799b',
         'cohortDefinition': {
             'cards': {
                 'content': [{
@@ -457,7 +457,7 @@ def test_get_cohort_with_selected_config(setup, monkeypatch):
     # Then
     assert cohort == {
         'name': 'cohortName',
-        'selectedStudyEntityValue': '9f0c44f1-8de9-4d4c-80c0-abcde134799b',
+        'datasetId': '9f0c44f1-8de9-4d4c-80c0-abcde134799b',
         'cohortDefinition': {
             'cards': {
                 'content': [{
@@ -536,7 +536,7 @@ def test_get_patient_count_filter_with_config_selection(setup, monkeypatch):
         },
         'axisSelection': [],
         'metadata': {'version': 3},
-        'selectedStudyEntityValue': '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
+        'datasetId': '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
     }
 
     # Teardown
@@ -587,7 +587,7 @@ def test_get_patient_count_filter_with_selected_config(setup, monkeypatch):
         },
         'axisSelection': [],
         'metadata': {'version': 3},
-        'selectedStudyEntityValue': '7eb1fc8d-5091-4b88-be49-bb1ba014cc99'
+        'datasetId': '7eb1fc8d-5091-4b88-be49-bb1ba014cc99'
     }
 
     # Teardown
@@ -684,7 +684,7 @@ def test_get_cohort_with_all_columns(setup, monkeypatch):
     # Then
     assert cohort == {
         'name': 'cohortName',
-        'selectedStudyEntityValue': '9f0c44f1-8de9-4d4c-80c0-abcde134799b',
+        'datasetId': '9f0c44f1-8de9-4d4c-80c0-abcde134799b',
         'cohortDefinition': {
             'cards': {
                 'content': [{
@@ -755,7 +755,7 @@ def test_get_cohort_with_provided_columns(setup, monkeypatch):
     # Then
     assert cohort == {
         'name': 'cohortName',
-        'selectedStudyEntityValue': '9f0c44f1-8de9-4d4c-80c0-abcde134799b',
+        'datasetId': '9f0c44f1-8de9-4d4c-80c0-abcde134799b',
         'cohortDefinition': {
             'cards': {
                 'content': [{
@@ -868,7 +868,7 @@ def test_get_dataframe_cohort_with_selected_filter_card_columns(setup, monkeypat
                 }
             ]
         },
-        'selectedStudyEntityValue': '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
+        'datasetId': '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
     }
     # Teardown
     query._clear_selected_study()
@@ -961,7 +961,7 @@ def test_get_dataframe_cohort_with_multiple_filter_cards_and_single_selected_fil
                 }
             ]
         },
-        'selectedStudyEntityValue': '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
+        'datasetId': '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
     }
 
     # Teardown
@@ -1022,7 +1022,7 @@ def test_get_dataframe_cohort_with_provided_columns(setup, monkeypatch):
                 }
             ]
         },
-        'selectedStudyEntityValue': '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
+        'datasetId': '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
     }
 
     # Teardown
@@ -1099,7 +1099,7 @@ def test_get_dataframe_cohort_with_provided_columns_and_multiple_filter_cards_of
                 'configPath': 'patient.attributes.age', 'order': '', 'seq': 1
             }]
         },
-        'selectedStudyEntityValue': '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
+        'datasetId': '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
     }
 
     # Teardown
@@ -1168,7 +1168,7 @@ def test_only_valid_columns_returned_while_getting_dataframe_cohort_with_multipl
                 }
             ]
         },
-        "selectedStudyEntityValue": '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
+        "datasetId": '9f0c44f1-8de9-4d4c-80c0-abcde134799b'
     }
 
     # Teardown
