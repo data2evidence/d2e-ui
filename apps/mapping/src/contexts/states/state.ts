@@ -26,6 +26,7 @@ export const initialState: AppState = {
         position: { x: 0, y: 0 },
         style: {
           width: "30vw",
+          maxWidth: "600px",
           height: "100vh",
         },
         data: null,
@@ -36,6 +37,7 @@ export const initialState: AppState = {
         position: { x: 700, y: 0 },
         style: {
           width: "30vw",
+          maxWidth: "600px",
           height: "100vh",
         },
         data: null,
@@ -53,6 +55,7 @@ export const initialState: AppState = {
         position: { x: 0, y: 0 },
         style: {
           width: "30vw",
+          maxWidth: "600px",
           height: "100vh",
         },
         data: { type: "source" },
@@ -63,6 +66,7 @@ export const initialState: AppState = {
         position: { x: 700, y: 0 },
         style: {
           width: "30vw",
+          maxWidth: "600px",
           height: "100vh",
         },
         data: { type: "target" },
