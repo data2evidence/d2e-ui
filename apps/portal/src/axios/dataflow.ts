@@ -1,8 +1,8 @@
-import env from "../env";
 import {
   CreateDcFlowRun,
   CreateDqdFlowRun,
   CreateFlowRunByMetadata,
+  CreateGetVersionInfoFlowRun,
   ExecuteFlowRunByDeployment,
   Flow,
   FlowRunFilters,
@@ -222,10 +222,19 @@ export class Dataflow {
     });
   }
 
+  public createGetVersionInfoFlowRun(data: CreateGetVersionInfoFlowRun) {
+    return request({
+      baseURL: JOBPLUGIN_URL,
+      url: "datamodel/get_version_info",
+      method: "POST",
+      data: data,
+    });
+  }
+
   public getDatamodels() {
     return request({
       baseURL: JOBPLUGIN_URL,
-      url: "prefect/flow/datamodels/list",
+      url: "datamodel/list",
       method: "GET",
     });
   }

@@ -243,13 +243,6 @@ const StudyOverview: FC = () => {
   );
 
   const fetchDatamodelUpdates = useCallback(async () => {
-    const flowMetadata = await api.dataflow.getFlowMetadata();
-
-    function getFlowId(flowName: string) {
-      const foundFlow = flowMetadata.find((flow: Record<string, any>) => flow.name === flowName);
-      return foundFlow.flowId;
-    }
-
     const datasetsByFlow: Record<string, Study[]> = {};
     const apiRequests = [];
     datasets.forEach((item: Study) => {
@@ -264,8 +257,7 @@ const StudyOverview: FC = () => {
 
     for (const flow in datasetsByFlow) {
       apiRequests.push(
-        api.dataflow.createFlowRunByMetadata({
-          type: "datamodel",
+        api.dataflow.createGetVersionInfoFlowRun({
           flowRunName: `${flow}-get_version_info`,
           options: {
             options: {
@@ -276,13 +268,11 @@ const StudyOverview: FC = () => {
               datasets: datasetsByFlow[flow],
             },
           },
-          flowId: getFlowId(flow),
         })
       );
     }
     apiRequests.push(
-      api.dataflow.createFlowRunByMetadata({
-        type: "datamart",
+      api.dataflow.createGetVersionInfoFlowRun({
         flowRunName: "datamart-get_version_info",
         options: {
           options: {
@@ -295,7 +285,6 @@ const StudyOverview: FC = () => {
             ),
           },
         },
-        flowId: getFlowId("datamart-plugin"),
       })
     );
 

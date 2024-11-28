@@ -7,7 +7,7 @@ export default class AdvancedTimeFilterModel {
       if (timeFilterArray[i].this === 'overlap') {
         timeFilters.push({
           originSelection: timeFilterArray[i].this,
-          targetSelection: 'before_start',
+          targetSelection: 'before_startdate',
           targetInteraction: timeFilterArray[i].value,
           days: '',
         })
@@ -60,11 +60,13 @@ export default class AdvancedTimeFilterModel {
             value: data.targetInteraction,
             this: data.originSelection,
             other:
-              data.targetSelection === 'before_start' || data.targetSelection === 'after_start'
+              data.targetSelection === 'before_startdate' || data.targetSelection === 'after_startdate'
                 ? 'startdate'
                 : 'enddate',
             after_before:
-              data.targetSelection === 'before_start' || data.targetSelection === 'before_end' ? 'before' : 'after',
+              data.targetSelection === 'before_startdate' || data.targetSelection === 'before_enddate'
+                ? 'before'
+                : 'after',
             operator: data.days,
           })
         }
@@ -229,7 +231,7 @@ export default class AdvancedTimeFilterModel {
           const filterObj = {
             this: data.originSelection,
             other:
-              data.targetSelection === 'before_start' || data.targetSelection === 'after_start'
+              data.targetSelection === 'before_startdate' || data.targetSelection === 'after_startdate'
                 ? 'startdate'
                 : 'enddate',
             and: [],
@@ -246,7 +248,7 @@ export default class AdvancedTimeFilterModel {
             let value1 = parseInt(rangeOp[2], 10)
             let operator2 = rangeOp[4] === '[' ? '<' : '<='
             let value2 = parseInt(rangeOp[3], 10)
-            if (data.targetSelection === 'after_start' || data.targetSelection === 'after_end') {
+            if (data.targetSelection === 'after_startdate' || data.targetSelection === 'after_enddate') {
               operator1 = operator1.replace('>', '<')
               operator2 = operator2.replace('<', '>')
               value1 *= -1
@@ -265,7 +267,7 @@ export default class AdvancedTimeFilterModel {
             const opOp = operatorRegex.exec(data.days)
             let operator1 = opOp[1]
             let value1 = parseInt(opOp[2], 10)
-            if (data.targetSelection === 'after_start' || data.targetSelection === 'after_end') {
+            if (data.targetSelection === 'after_startdate' || data.targetSelection === 'after_enddate') {
               operator1 = operator1.replace('>', '*')
               operator1 = operator1.replace('<', '>')
               operator1 = operator1.replace('*', '<')
@@ -281,7 +283,7 @@ export default class AdvancedTimeFilterModel {
             const operator1 = '>='
             const operator2 = '<='
 
-            if (data.targetSelection === 'after_start' || data.targetSelection === 'after_end') {
+            if (data.targetSelection === 'after_startdate' || data.targetSelection === 'after_enddate') {
               value1 *= -1
             }
             filterObj.and.push({
@@ -294,7 +296,7 @@ export default class AdvancedTimeFilterModel {
             })
           } else {
             filterObj.and.push({
-              op: data.targetSelection === 'before_start' || data.targetSelection === 'before_end' ? '>' : '<',
+              op: data.targetSelection === 'before_startdate' || data.targetSelection === 'before_enddate' ? '>' : '<',
               value: 0,
             })
           }

@@ -55,5 +55,13 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, '../../resources/jobs'),
     sourcemap: true
+  },
+  server: {
+    proxy: {
+      '/prefect': {
+        target: 'https://localhost:41100',
+        secure: false
+      }
+    }
   }
 })

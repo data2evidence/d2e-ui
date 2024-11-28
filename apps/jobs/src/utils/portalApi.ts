@@ -1,5 +1,4 @@
 export const getPortalAPI = (): {
-  baseUrl: string
   getAuthToken: () => Promise<string | void>
   browserBaseUrl: string
   backToJobs: () => void
