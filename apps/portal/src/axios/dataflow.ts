@@ -9,8 +9,8 @@ import {
 } from "../types";
 import { request } from "./request";
 
-const DATAFLOW_MGMT_URL = `${env.REACT_APP_DN_BASE_URL}dataflow-mgmt/`;
-const JOBPLUGIN_URL = `${env.REACT_APP_DN_BASE_URL}jobplugins/`;
+const DATAFLOW_MGMT_URL = "dataflow-mgmt/";
+const JOBPLUGIN_URL = "jobplugins/";
 
 export class Dataflow {
   public getFlows() {

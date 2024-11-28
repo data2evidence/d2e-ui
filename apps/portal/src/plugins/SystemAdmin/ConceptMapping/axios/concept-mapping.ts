@@ -1,6 +1,5 @@
 import { request } from "../../../../axios/request";
-import env from "../../../../env";
-const CONCEPT_MAPPING_URL = `${env.REACT_APP_DN_BASE_URL}concept-mapping`;
+const CONCEPT_MAPPING_URL = "concept-mapping";
 
 export class ConceptMapping {
   public getConceptMappings = (datasetId: string) => {

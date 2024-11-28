@@ -1,5 +1,4 @@
 import { request } from "./request";
-import env from "../env";
 import {
   NewStudyDetailInput,
   Study,
@@ -18,7 +17,7 @@ import {
   Config,
 } from "../types";
 
-const SYSTEM_PORTAL_URL = `${env.REACT_APP_DN_BASE_URL}system-portal/`;
+const SYSTEM_PORTAL_URL = "system-portal/";
 
 export class SystemPortal {
   public getTenants() {
