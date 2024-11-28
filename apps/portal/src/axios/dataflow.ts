@@ -1,4 +1,6 @@
 import {
+  CreateDcFlowRun,
+  CreateDqdFlowRun,
   CreateFlowRunByMetadata,
   CreateGetVersionInfoFlowRun,
   ExecuteFlowRunByDeployment,
@@ -197,6 +199,24 @@ export class Dataflow {
     return request({
       baseURL: DATAFLOW_MGMT_URL,
       url: "prefect/flow-run/metadata",
+      method: "POST",
+      data: data,
+    });
+  }
+
+  public createDqdFlowRun(data: CreateDqdFlowRun) {
+    return request({
+      baseURL: JOBPLUGIN_URL,
+      url: "dqd/data-quality/flow-run",
+      method: "POST",
+      data: data,
+    });
+  }
+
+  public createDcFlowRun(data: CreateDcFlowRun) {
+    return request({
+      baseURL: JOBPLUGIN_URL,
+      url: "dqd/data-characterization/flow-run",
       method: "POST",
       data: data,
     });
