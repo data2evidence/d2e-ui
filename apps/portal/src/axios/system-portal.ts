@@ -1,5 +1,4 @@
-import request from "./request";
-import env from "../env";
+import { request } from "./request";
 import {
   NewStudyDetailInput,
   Study,
@@ -18,7 +17,7 @@ import {
   Config,
 } from "../types";
 
-const SYSTEM_PORTAL_URL = `${env.REACT_APP_DN_BASE_URL}system-portal/`;
+const SYSTEM_PORTAL_URL = "system-portal/";
 
 export class SystemPortal {
   public getTenants() {
@@ -49,8 +48,9 @@ export class SystemPortal {
   public getDataset(id: string) {
     return request<Study>({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/${id}`,
+      url: `dataset`,
       method: "GET",
+      params: { datasetId: id },
     });
   }
 
@@ -87,8 +87,9 @@ export class SystemPortal {
   public deleteDataset(id: string) {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/${id}`,
+      url: `dataset`,
       method: "DELETE",
+      params: { datasetId: id },
     });
   }
 
@@ -120,8 +121,9 @@ export class SystemPortal {
   public getResources(datasetId: string) {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/${datasetId}/resource/list`,
+      url: `dataset/resource/list`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
@@ -131,8 +133,9 @@ export class SystemPortal {
 
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/${datasetId}/resource`,
+      url: `dataset/resource`,
       method: "POST",
+      params: { datasetId: datasetId },
       data: formData,
     });
   }
@@ -140,17 +143,19 @@ export class SystemPortal {
   public deleteResource(datasetId: string, filename: string) {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/${datasetId}/resource/${filename}`,
+      url: `dataset/resource/${filename}`,
       method: "DELETE",
+      params: { datasetId: datasetId },
     });
   }
 
   public downloadResource(datasetId: string, filename: string) {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/${datasetId}/resource/${filename}/download`,
+      url: `dataset/resource/${filename}/download`,
       method: "GET",
       responseType: "blob",
+      params: { datasetId: datasetId },
     });
   }
 
@@ -186,8 +191,9 @@ export class SystemPortal {
   public getDatasetReleases(datasetId: string) {
     return request({
       baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/${datasetId}/release/list`,
+      url: `dataset/release/list`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 

@@ -17,10 +17,6 @@
         <FlowRunLogs :flow-run="flowRun" />
       </template>
 
-      <template #results>
-        <FlowRunResults v-if="flowRun" :flow-run="flowRun" />
-      </template>
-
       <template #artifacts>
         <FlowRunArtifacts :flow-run="flowRun" />
       </template>
@@ -38,6 +34,12 @@
           <p-code-highlight lang="json" :text="parameters" class="flow-run__parameters" />
         </CopyableWrapper>
       </template>
+
+      <template #job-variables>
+        <CopyableWrapper :text-to-copy="jobVariables">
+          <p-code-highlight lang="json" :text="jobVariables" class="flow-run__job-variables" />
+        </CopyableWrapper>
+      </template>
     </p-tabs>
   </p-layout-default>
 </template>
@@ -49,7 +51,6 @@ import {
   FlowRunDetails,
   FlowRunLogs,
   FlowRunTaskRuns,
-  FlowRunResults,
   FlowRunFilteredList,
   useFavicon,
   CopyableWrapper,
@@ -71,7 +72,7 @@ import { mapFlowRunResults } from '@/utils/mapFlowRunResults'
 const router = useRouter()
 const flowRunId = useRouteParam('flowRunId')
 
-const { flowRun, subscription: flowRunSubscription } = useFlowRun(flowRunId, { interval: 5000 })
+const { flowRun, subscription: flowRunSubscription } = useFlowRun(flowRunId, { interval: 20000 })
 
 const tags = computed(() => flowRun.value?.tags ?? [])
 const showResultButton = computed(
@@ -98,11 +99,12 @@ const isPending = computed(() => {
   return flowRun.value?.stateType ? isPendingStateType(flowRun.value.stateType) : true
 })
 
+const jobVariables = computed(() => stringify(flowRun.value?.jobVariables ?? {}))
+
 const computedTabs = computed(() => [
   { label: 'Logs' },
   { label: 'Task Runs', hidden: isPending.value },
   { label: 'Subflow Runs', hidden: isPending.value },
-  { label: 'Results', hidden: isPending.value },
   { label: 'Artifacts', hidden: isPending.value },
   { label: 'Details' },
   { label: 'Parameters' },

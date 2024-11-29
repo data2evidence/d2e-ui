@@ -1,8 +1,7 @@
-import env from "../env";
 import { StarboardNotebook } from "../plugins/Starboard/utils/notebook";
-import request from "./request";
+import { request } from "./request";
 
-const STUDY_NOTEBOOK_BASE_URL = `${env.REACT_APP_DN_BASE_URL}system-portal/notebook`;
+const STUDY_NOTEBOOK_BASE_URL = "system-portal/notebook";
 
 export class StudyNotebook {
   public getNotebookList(): Promise<StarboardNotebook[]> {

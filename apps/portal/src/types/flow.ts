@@ -49,11 +49,31 @@ export interface ExecuteFlowRunByDeployment {
   schedule: string | null;
 }
 
+export interface CreateDqdFlowRun {
+  datasetId: string | undefined;
+  comment?: string;
+  vocabSchemaName?: string;
+  cohortDefinitionId?: string;
+  releaseId?: string;
+}
+
+export interface CreateDcFlowRun {
+  datasetId: string | undefined;
+  comment?: string;
+  releaseId?: string;
+  excludeAnalysisIds?: string;
+}
+
 export interface CreateFlowRunByMetadata {
   type: string;
   flowRunName?: string;
   datamodels?: string[];
   flowId?: string;
+  options?: object;
+}
+
+export interface CreateGetVersionInfoFlowRun {
+  flowRunName: string;
   options?: object;
 }
 

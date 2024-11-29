@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useState, useEffect, ChangeEvent } from "react";
+import React, { FC, useCallback, useContext, useState, useEffect, ChangeEvent, SetStateAction } from "react";
 import { Button, Dialog, TablePaginationActions, Checkbox } from "@portal/components";
 import {
   TableContainer,
@@ -19,14 +19,17 @@ import {
 
 import { CloseDialogType } from "../../../../types";
 import { ConceptMappingContext, ConceptMappingDispatchContext } from "../Context/ConceptMappingContext";
+import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
 import "./ImportDialog.scss";
 import { useTranslation } from "../../../../contexts";
+import { api } from "../axios/api";
 
 interface ImportDialogProps {
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedDatasetId: string;
 }
 
 interface ColumnMappingState {
@@ -37,10 +40,10 @@ interface ColumnMappingState {
   domainId?: string;
 }
 
-const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoading }) => {
+const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, selectedDatasetId, loading, setLoading }) => {
   const { getText, i18nKeys } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
-  const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
+  const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
   const [columnMappingState, setColumnMappingState] = useState<ColumnMappingState>({
     sourceCode: "",
     sourceName: "",
@@ -51,6 +54,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPageData, setCurrentPageData] = useState([]);
   const [showDomainMapping, setShowDomainMapping] = useState(false);
+  const [domainFilterOptions, setDomainFilterOptions] = useState<string[]>([]);
   const importDataCount: number = conceptMappingState.importData.data.length;
 
   const handleClose = useCallback(
@@ -63,7 +67,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
   const handleCancel = useCallback(
     (type: CloseDialogType) => {
       typeof onClose === "function" && onClose(type);
-      dispatch({ type: "CLEAR_CSV_DATA" });
+      dispatch({ type: ACTION_TYPES.CLEAR_IMPORT_DATA });
     },
     [onClose, dispatch]
   );
@@ -98,16 +102,16 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
   );
 
   const handleImport = useCallback(() => {
-    dispatch({ type: "UPDATE_COLUMN_MAPPING", data: columnMappingState });
-    dispatch({ type: "ADD_CSV_DATA", data: conceptMappingState.importData });
-    dispatch({ type: "CLEAR_IMPORT_DATA" });
+    dispatch({ type: ACTION_TYPES.SET_COLUMN_MAPPING, payload: columnMappingState });
+    dispatch({ type: ACTION_TYPES.SET_INITAL_DATA, payload: conceptMappingState.importData });
+    dispatch({ type: ACTION_TYPES.CLEAR_IMPORT_DATA });
     typeof onClose === "function" && onClose("success");
   }, [columnMappingState, dispatch, onClose, conceptMappingState.importData]);
 
   const titleString = `Import file - ${conceptMappingState.importData.name}`;
 
   useEffect(() => {
-    const initalColumn: string = conceptMappingState.importData.columns[0];
+    const initalColumn: string = conceptMappingState?.importData?.columns?.[0] ?? "";
     setColumnMappingState({
       sourceCode: initalColumn,
       sourceName: initalColumn,
@@ -117,8 +121,28 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
   }, [conceptMappingState.importData.columns]);
 
   useEffect(() => {
-    setCurrentPageData(conceptMappingState.importData.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
+    setCurrentPageData(
+      conceptMappingState.importData.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) as SetStateAction<
+        Array<never>
+      >
+    );
   }, [page, rowsPerPage, conceptMappingState.importData.data]);
+
+  const getDomainFilterOptions = useCallback(async () => {
+    try {
+      const filterOptions = await api.Terminology.getAllFilterOptions(selectedDatasetId);
+      const domainFilterOptions = Object.keys(filterOptions.filterOptions.domainId);
+      setDomainFilterOptions(domainFilterOptions);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showDomainMapping) {
+      getDomainFilterOptions();
+    }
+  }, [showDomainMapping, getDomainFilterOptions]);
 
   return (
     <Dialog fullWidth maxWidth="lg" title={titleString} open={open} closable onClose={() => handleClose("cancelled")}>
@@ -132,7 +156,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {conceptMappingState.importData.columns.map((data: any, index: React.Key) => (
+                  {conceptMappingState.importData?.columns?.map((data: any, index: React.Key) => (
                     <TableCell key={index}>{data}</TableCell>
                   ))}
                 </TableRow>
@@ -195,7 +219,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
                 onChange={(e) => handleColumnMappingChange(e, "sourceCode")}
                 fullWidth
               >
-                {conceptMappingState.importData.columns.map((d: any) => (
+                {conceptMappingState.importData?.columns?.map((d: any) => (
                   <MenuItem value={d} key={d}>
                     {d}
                   </MenuItem>
@@ -209,7 +233,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
                 onChange={(e) => handleColumnMappingChange(e, "sourceName")}
                 fullWidth
               >
-                {conceptMappingState.importData.columns.map((d: any) => (
+                {conceptMappingState.importData?.columns?.map((d: any) => (
                   <MenuItem value={d} key={d}>
                     {d}
                   </MenuItem>
@@ -224,7 +248,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
                 onChange={(e) => handleColumnMappingChange(e, "sourceFrequency")}
                 fullWidth
               >
-                {conceptMappingState.importData.columns.map((d: any) => (
+                {conceptMappingState.importData?.columns?.map((d: any) => (
                   <MenuItem value={d} key={d}>
                     {d}
                   </MenuItem>
@@ -238,13 +262,14 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
                 onChange={(e) => handleColumnMappingChange(e, "description")}
                 fullWidth
               >
-                {conceptMappingState.importData.columns.map((d: any) => (
+                {conceptMappingState.importData?.columns?.map((d: any) => (
                   <MenuItem value={d} key={d}>
                     {d}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
+
             {showDomainMapping && (
               <FormControl component="fieldset" className="import-dialog__selector">
                 <Typography minWidth={200}>{getText(i18nKeys.IMPORT_DIALOG__SOURCE_DOMAIN_COLUMN)}</Typography>
@@ -253,9 +278,9 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose, loading, setLoadin
                   onChange={(e) => handleColumnMappingChange(e, "domainId")}
                   fullWidth
                 >
-                  {conceptMappingState.importData.columns.map((d: any) => (
-                    <MenuItem value={d} key={d}>
-                      {d}
+                  {domainFilterOptions.map((option: string) => (
+                    <MenuItem value={option} key={option}>
+                      {option}
                     </MenuItem>
                   ))}
                 </Select>

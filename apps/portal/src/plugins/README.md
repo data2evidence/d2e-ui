@@ -8,8 +8,6 @@ Type of plugins:
   sample boilerplate code: ./boilerplates/ResearcherStudy
 - SystemAdminPagePlugin
   sample boilerplate code: ./boilerplates/SystemAdminPage
-- SuperAdminPagePlugin
-  sample boilerplate code: ./boilerplates/SuperAdminPage
 
 ## Steps to create built-in plugin:
 

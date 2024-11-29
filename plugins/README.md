@@ -10,8 +10,6 @@ Type of plugins:
   sample boilerplate code: ./sample-researcher-study
 - SystemAdminPagePlugin
   sample boilerplate code: Not available yet
-- SuperAdminPagePlugin
-  sample boilerplate code: ./sample-superadmin-page
 
 ## Steps to create remote plugin:
 
@@ -58,4 +56,4 @@ Troubleshooting:
 - Why my plugin is not showing up?
   There are some factors for the plugin to be shown as stated here:
   1.  For researcher plugin, the user must fulfilled the `requiredRoles`. E.g. If the requiredRoles is `RESEARCHER`, the logged-on user must be a researcher of the selected dataset.
-  2.  Tenant feature flag must be enabled in the backend. For proxy mode, it is controlled in the Superadmin portal.
+  2.  Tenant feature flag must be enabled in the backend. For proxy mode, it is controlled in the admin portal.

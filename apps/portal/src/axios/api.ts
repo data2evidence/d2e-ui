@@ -6,6 +6,7 @@ import { Terminology } from "./terminology";
 import { DbCredentialsMgr } from "./db-credentials-mgr";
 import { Gateway } from "./gateway";
 import { Translation } from "./translation";
+import { Trex } from "./trex";
 
 export const api = {
   userMgmt: new UserMgmt(),
@@ -16,4 +17,5 @@ export const api = {
   dbCredentialsMgr: new DbCredentialsMgr(),
   gateway: new Gateway(),
   translation: new Translation(),
+  trex: new Trex(),
 };

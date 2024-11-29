@@ -1,18 +1,17 @@
-import env from "../env";
 import { CohortMapping } from "../types";
-import request from "./request";
+import { request } from "./request";
 
-const MRI_BASE_URL = `${env.REACT_APP_DN_BASE_URL}analytics-svc`;
+const MRI_BASE_URL = "analytics-svc";
 
 export class CohortSurvival {
-  constructor(public studyId: string) {}
+  constructor(public datasetId: string) {}
 
   public getCohorts(offset?: number, limit?: number): Promise<{ data: CohortMapping[] }> {
     return request({
       baseURL: MRI_BASE_URL,
       url: `/api/services/cohort`,
       method: "GET",
-      params: { studyId: this.studyId, offset, limit },
+      params: { datasetId: this.datasetId, offset, limit },
     });
   }
 
@@ -22,7 +21,7 @@ export class CohortSurvival {
       url: `/api/services/kaplan-meier`,
       method: "POST",
       data: { targetCohortId, outcomeCohortId },
-      params: { studyId: this.studyId },
+      params: { datasetId: this.datasetId },
     });
   }
 
@@ -31,7 +30,7 @@ export class CohortSurvival {
       baseURL: MRI_BASE_URL,
       url: `/api/services/kaplan-meier`,
       method: "GET",
-      params: { studyId: this.studyId, flowRunId },
+      params: { datasetId: this.datasetId, flowRunId },
     });
   }
 }

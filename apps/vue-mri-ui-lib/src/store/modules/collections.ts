@@ -90,7 +90,7 @@ const actions = {
     })
     return dispatch('ajaxAuth', {
       url,
-      params: { ...params, mriquery: StringToBinary(params.mriquery) },
+      params: { ...params, mriquery: StringToBinary(params.mriquery), datasetId: rootGetters.getSelectedDataset.id },
       cancelToken,
     })
       .then(response => {
@@ -168,7 +168,7 @@ const actions = {
 
     return dispatch('ajaxAuth', {
       method: 'get',
-      url: '/analytics-svc/api/services/cohort/SYNTAX/' + syntax + '?studyId=' + rootGetters.getSelectedDataset.id,
+      url: '/analytics-svc/api/services/cohort/SYNTAX/' + syntax + '?datasetId=' + rootGetters.getSelectedDataset.id,
       cancelToken,
     })
       .then(response => {

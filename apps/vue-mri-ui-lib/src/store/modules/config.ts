@@ -82,7 +82,7 @@ const actions = {
     return dispatch('ajaxAuth', {
       method: 'get',
       url: `${analyticsEndpoint}?action=getMyConfig${
-        rootGetters.getSelectedDataset.id ? `&selectedStudyId=${rootGetters.getSelectedDataset.id}` : ''
+        rootGetters.getSelectedDataset.id ? `&datasetId=${rootGetters.getSelectedDataset.id}` : ''
       }`,
     }).then(response => {
       const aData = response.data
@@ -99,10 +99,10 @@ const actions = {
       chartConfigServiceInstance,
     })
   },
-  requestConfigList({ dispatch, commit }, selectedStudyId) {
+  requestConfigList({ dispatch, commit }, datasetId) {
     return dispatch('ajaxAuth', {
       method: 'get',
-      url: `${analyticsEndpoint}?action=getMyConfigList${selectedStudyId ? `&selectedStudyId=${selectedStudyId}` : ''}`,
+      url: `${analyticsEndpoint}?action=getMyConfigList${datasetId ? `&datasetId=${datasetId}` : ''}`,
     }).then(response => {
       commit(types.CONFIG_SET_LIST, response.data)
     })

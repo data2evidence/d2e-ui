@@ -4,7 +4,6 @@ import { RouteLocationRaw, RouteRecordName, RouteRecordRaw } from 'vue-router'
 export const routes = {
   root: () => ({ name: 'root' }) as const,
   upload: () => ({ name: 'upload' }) as const,
-  dataQualityAnalysis: () => ({ name: 'dataQualityAnalysis' }) as const,
   404: () => ({ name: '404' }) as const,
   ...createWorkspaceRoutes()
 }

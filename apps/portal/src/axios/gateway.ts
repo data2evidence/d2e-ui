@@ -7,10 +7,9 @@ import {
   SchemasVersionInfoResponse,
   NewFhirProjectInput,
 } from "../types";
-import env from "../env";
-import request from "./request";
+import { request } from "./request";
 
-const GATEWAY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}gateway/api`;
+const GATEWAY_BASE_URL = "gateway/api";
 
 export class Gateway {
   public createDataset(input: NewStudyInput): Promise<Study> {
@@ -34,24 +33,27 @@ export class Gateway {
   public getCdmSchemaSnapshotMetadata(sourceDatasetId: string) {
     return request({
       baseURL: GATEWAY_BASE_URL,
-      url: `/dataset/${sourceDatasetId}/cdm-schema/snapshot/metadata`,
+      url: `/dataset/cdm-schema/snapshot/metadata`,
       method: "GET",
+      params: { datasetId: sourceDatasetId },
     });
   }
 
   public getAllCohorts(sourceDatasetId: string): Promise<CohortDefinitionList> {
     return request({
       baseURL: GATEWAY_BASE_URL,
-      url: `/dataset/${sourceDatasetId}/cohorts`,
+      url: `/dataset/cohorts`,
       method: "GET",
+      params: { datasetId: sourceDatasetId },
     });
   }
 
   public getDatasetDashboards(datasetId: string): Promise<any> {
     return request({
       baseURL: GATEWAY_BASE_URL,
-      url: `/dataset/${datasetId}/dashboard/list`,
+      url: `/dataset/dashboard/list`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
@@ -81,7 +83,6 @@ export class Gateway {
 
   public registerDashboardRoutes() {
     return request({
-      baseURL: env.REACT_APP_DN_BASE_URL,
       url: "/dashboard-gate/register",
       method: "POST",
     });
@@ -89,7 +90,7 @@ export class Gateway {
 
   public createFhirStaging(input: NewFhirProjectInput): Promise<any> {
     return request({
-      baseURL: GATEWAY_BASE_URL + "/fhir/createProject",
+      url: "/fhir/createProject",
       method: "POST",
       data: input,
     });

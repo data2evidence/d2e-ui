@@ -89,7 +89,7 @@ body {
 }
 
 /* flow run page*/
-.flow-run-work-pool, .flow-run-work-queue, .state-list-item__meta {
+.flow-run-work-pool, .flow-run-work-queue {
   display: none !important;
 }
 
@@ -98,6 +98,6 @@ body {
   display: none !important;
 }
 
-.deployment-details > *:nth-child(-n + 2) {
+.deployment-details > *:nth-child(-n + 5) {
   display: none;
 }

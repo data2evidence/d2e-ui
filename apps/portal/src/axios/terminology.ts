@@ -1,5 +1,4 @@
-import env from "../env";
-import request from "./request";
+import { request } from "./request";
 import {
   ConceptSet,
   ConceptSetWithConceptDetails,
@@ -14,7 +13,7 @@ import {
 
 import { RowObject } from "../plugins/SystemAdmin/ConceptMapping/types";
 
-const TERMINOLOGY_BASE_URL = `${env.REACT_APP_DN_BASE_URL}terminology`;
+const TERMINOLOGY_BASE_URL = "terminology";
 
 export class Terminology {
   public getTerminologies(

@@ -6,20 +6,22 @@ import { useTranslation } from "../../../../contexts";
 import { Box, Button } from "@portal/components";
 import { Terminology } from "../../../../axios/terminology";
 import { RowObject } from "../types";
+import { DispatchType, ACTION_TYPES } from "../Context/reducers/reducer";
+import { i18nKeys } from "../../../../contexts/app-context/states";
 
 interface MappingTableProps {
   selectedDatasetId: string;
 }
 
 const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
-  const { getText, i18nKeys } = useTranslation();
+  const { getText } = useTranslation();
   const conceptMappingState = useContext(ConceptMappingContext);
-  const dispatch: React.Dispatch<any> = useContext(ConceptMappingDispatchContext);
+  const dispatch: React.Dispatch<DispatchType> = useContext(ConceptMappingDispatchContext);
   const { sourceCode, sourceName, sourceFrequency, description, domainId } = conceptMappingState.columnMapping;
   const csvData = conceptMappingState.csvData.data;
   const [isLoading, setIsLoading] = useState(false);
 
-  const columns = useMemo<MRT_ColumnDef<MRT_RowData, any>[]>(
+  const columns = useMemo<MRT_ColumnDef<{ [key: string]: any }>[]>(
     () => [
       {
         id: "0",
@@ -69,13 +71,19 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
         header: getText(i18nKeys.MAPPING_TABLE__DOMAIN_ID),
         size: 150,
       },
+      {
+        id: "8",
+        accessorKey: "system",
+        header: getText(i18nKeys.MAPPING_TABLE__VOCABULARY),
+        size: 150,
+      },
     ],
     [sourceCode, sourceName, sourceFrequency, description, getText]
   );
 
-  const TableBodyRowProps = ({ row }: { row: any }) => ({
+  const TableBodyRowProps = ({ row }: { row: MRT_RowData }) => ({
     onClick: () => {
-      dispatch({ type: "ADD_SELECTED_DATA", data: row.original });
+      dispatch({ type: ACTION_TYPES.SET_SELECTED_DATA, payload: row.original });
     },
     sx: {
       cursor: "pointer",
@@ -132,11 +140,11 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
   });
 
   const getAvailableRows = useCallback(() => {
-    return tableInstance.getCenterRows().filter((row) => row.original.status !== "checked");
-  }, []);
+    return tableInstance.getCenterRows().filter((row: MRT_RowData) => row.original.status !== "checked");
+  }, [tableInstance]);
 
   const populateConcepts = useCallback(async () => {
-    const formattedRows = getAvailableRows().map((row) => {
+    const formattedRows = getAvailableRows().map((row: MRT_RowData) => {
       const formattedRow: RowObject = { index: row.index, searchText: row.original[sourceName] };
       if (domainId) {
         formattedRow["domainId"] = row.original[domainId];
@@ -146,11 +154,11 @@ const MappingTable: FC<MappingTableProps> = ({ selectedDatasetId }) => {
 
     setIsLoading(true);
     const api = new Terminology();
-    const result = await api.getStandardConcepts(formattedRows, selectedDatasetId);
+    const result = await api.getStandardConcepts(formattedRows, selectedDatasetId!);
 
-    dispatch({ type: "UPDATE_MULTIPLE_ROWS", data: result });
+    dispatch({ type: ACTION_TYPES.SET_MULTIPLE_MAPPING, payload: result });
     setIsLoading(false);
-  }, []);
+  }, [dispatch, domainId, getAvailableRows, selectedDatasetId, sourceName]);
 
   return <MaterialReactTable table={tableInstance} />;
 };

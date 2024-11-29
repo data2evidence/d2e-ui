@@ -4,9 +4,9 @@ export type UseWorkspaceApiConfig = {
   config: PrefectConfig
 }
 export async function useApiConfig(): Promise<UseWorkspaceApiConfig> {
-  const { baseUrl, getAuthToken } = getPortalAPI()
+  const { getAuthToken } = getPortalAPI()
 
-  const baseURL = `${baseUrl}prefect/api`
+  const baseURL = 'prefect/api'
   const token = await getAuthToken()
 
   if (!token) {

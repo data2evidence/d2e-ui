@@ -62,14 +62,14 @@ def test_create_cohort(setup):
 
 GET_ALL_COHORTS_PATH = "api/services/cohort"
 
-DELETE_COHORT_PATH = "api/services/cohort?cohortId=1&studyId=studyId"
+DELETE_COHORT_PATH = "api/services/cohort?cohortId=1&datasetId=datasetId"
 
 CREATE_COHORT_PATH = "api/services/cohort"
 
-STUDY_ID = "studyId"
+STUDY_ID = "datasetId"
 
 PARAMS = {
-    "studyId": STUDY_ID,
+    "datasetId": STUDY_ID,
     "offset": 0,
     "limit": 0
 }
@@ -93,7 +93,7 @@ ALL_COHORTS = {'data': [{'id': 1,
 COHORT_DEFINITION = {'mriquery': 'eJxTSs7PyC8qCUotLE0tLlECAC2ABb0=',
                      'name': 'my test cohort',
                      'description': 'hello',
-                     'studyId': 'studyId',
+                     'datasetId': 'datasetId',
                      'owner': '1234567890'}
 
 

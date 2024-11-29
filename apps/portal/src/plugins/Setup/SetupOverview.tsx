@@ -7,9 +7,8 @@ import { SetupMenuItem } from "./SetupMenuItem/SetupMenuItem";
 import { loadPlugins } from "../../utils";
 import { IPluginItem, LocationState } from "../../types";
 import { SetupPluginRenderer } from "../core/SetupPluginRenderer";
-import "./SetupOverview.scss";
 import { useTranslation } from "../../contexts";
-import { PluginMenuItem } from "./PluginMenuItem/PluginMenuItem";
+import "./SetupOverview.scss";
 
 const plugins = loadPlugins();
 
@@ -68,7 +67,6 @@ export const SetupOverview: FC = () => {
                   />
                 );
               })}
-              <PluginMenuItem key={"default-plugin"} />
             </div>
           </>
         )}
