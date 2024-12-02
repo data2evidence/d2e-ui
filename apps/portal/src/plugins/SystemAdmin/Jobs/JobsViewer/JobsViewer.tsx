@@ -1,11 +1,9 @@
 import React, { FC, useEffect } from "react";
-import env from "../../../../env";
 import { loadStyleSheet, loadEsModuleScript } from "../../../../utils/loadScript";
 import { getAuthToken } from "../../../../containers/auth";
 import "./JobsViewer.scss";
 
 const LOG_VIEWER_ASSETS_URL = "jobs/assets.json";
-const APPROUTER_ORIGIN = new URL(LOG_VIEWER_ASSETS_URL).origin;
 
 const JobsViewer: FC<{
   setJobsViewerScriptsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,18 +11,14 @@ const JobsViewer: FC<{
 }> = ({ setJobsViewerScriptsLoaded, setJobsViewerDivLoaded }) => {
   const isLocalDev = window.location.hostname === "localhost";
 
-  const addOrigin = (arr: string[]) => {
-    return arr.map((path) =>
-      path.startsWith("http://") || path.startsWith("https://") ? `jobs/${path}` : `${APPROUTER_ORIGIN}/jobs/${path}`
-    );
-  };
+  const addPrefix = (arr: string[]) => arr.map((path) => `jobs/${path}`);
   useEffect(() => {
     let callbacks: (() => void)[] = [];
     fetch(LOG_VIEWER_ASSETS_URL)
       .then((response) => response.json())
       .then(({ css, js }): void => {
-        const styleSheetCallbacks = addOrigin(css).map((url) => loadStyleSheet(url));
-        const scriptCallbacks = addOrigin(js).map((url) =>
+        const styleSheetCallbacks = addPrefix(css).map((url: string) => loadStyleSheet(url));
+        const scriptCallbacks = addPrefix(js).map((url: string) =>
           loadEsModuleScript(url, () => {
             setJobsViewerScriptsLoaded(true);
           })
