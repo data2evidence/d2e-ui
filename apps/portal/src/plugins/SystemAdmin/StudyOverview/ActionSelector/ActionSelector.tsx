@@ -8,17 +8,18 @@ import { SxProps } from "@mui/system";
 import { useTranslation, useUser } from "../../../../contexts";
 
 interface ActionSelectorProps {
-  study: Study;
+  dataset: Study;
   isSchemaUpdatable: boolean | undefined;
-  handleCopyStudy: (study: Study) => void;
-  handleDeleteStudy: (study: Study) => void;
-  handleMetadata: (study: Study) => void;
-  handleResources: (study: Study) => void;
-  handlePermissions: (study: Study) => void;
-  handleUpdate: (study: Study) => void;
-  handleRelease: (study: Study) => void;
-  handleDataQuality: (study: Study) => void;
-  handleDataCharacterization: (study: Study) => void;
+  handleCopyStudy: (dataset: Study) => void;
+  handleDeleteStudy: (dataset: Study) => void;
+  handleMetadata: (dataset: Study) => void;
+  handleResources: (dataset: Study) => void;
+  handlePermissions: (dataset: Study) => void;
+  handleUpdate: (dataset: Study) => void;
+  handleRelease: (dataset: Study) => void;
+  handleDataQuality: (dataset: Study) => void;
+  handleDataCharacterization: (dataset: Study) => void;
+  handleCreateCache: (dataset: Study) => void;
 }
 
 interface Action {
@@ -49,7 +50,7 @@ const styles: SxProps = {
 };
 
 const ActionSelector: FC<ActionSelectorProps> = ({
-  study,
+  dataset,
   isSchemaUpdatable,
   handleDeleteStudy,
   handleCopyStudy,
@@ -60,6 +61,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
   handleRelease,
   handleDataQuality,
   handleDataCharacterization,
+  handleCreateCache,
 }) => {
   const { getText, i18nKeys } = useTranslation();
   const { user } = useUser();
@@ -75,37 +77,41 @@ const ActionSelector: FC<ActionSelectorProps> = ({
     { name: getText(i18nKeys.ACTION_SELECTOR__CREATE_RELEASE), value: "release" },
     { name: getText(i18nKeys.ACTION_SELECTOR__RUN_DATA_QUALITY), value: "data-quality" },
     { name: getText(i18nKeys.ACTION_SELECTOR__RUN_DATA_CHARACTERIZATION), value: "data-characterization" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__CREATE_CACHE), value: "create-cache" },
   ];
 
   const handleActionChange = useCallback(
     (event: SelectChangeEvent<string>) => {
       switch (event.target.value) {
         case "version":
-          handleCopyStudy(study);
+          handleCopyStudy(dataset);
           break;
         case "permissions":
-          handlePermissions(study);
+          handlePermissions(dataset);
           break;
         case "metadata":
-          handleMetadata(study);
+          handleMetadata(dataset);
           break;
         case "resources":
-          handleResources(study);
+          handleResources(dataset);
           break;
         case "delete":
-          handleDeleteStudy(study);
+          handleDeleteStudy(dataset);
           break;
         case "update":
-          handleUpdate(study);
+          handleUpdate(dataset);
           break;
         case "release":
-          handleRelease(study);
+          handleRelease(dataset);
           break;
         case "data-quality":
-          handleDataQuality(study);
+          handleDataQuality(dataset);
           break;
         case "data-characterization":
-          handleDataCharacterization(study);
+          handleDataCharacterization(dataset);
+          break;
+        case "create-cache":
+          handleCreateCache(dataset);
           break;
         default:
           break;
@@ -121,7 +127,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
       handleRelease,
       handleDataQuality,
       handleDataCharacterization,
-      study,
+      dataset,
     ]
   );
 
@@ -131,17 +137,17 @@ const ActionSelector: FC<ActionSelectorProps> = ({
         if (actionVal === "permissions" && !isUserAdmin) {
           return true;
         }
-        if (study.dialect === "postgres" && actionVal === "release") {
+        if (dataset.dialect === "postgres" && actionVal === "release") {
           return true;
         }
-        if (actionVal === "version" && !study.schemaName) {
+        if (actionVal === "version" && !dataset.schemaName) {
           return true;
         }
         return false;
       }
       return true;
     },
-    [isSchemaUpdatable, isUserAdmin, study]
+    [isSchemaUpdatable, isUserAdmin, dataset]
   );
 
   return (
