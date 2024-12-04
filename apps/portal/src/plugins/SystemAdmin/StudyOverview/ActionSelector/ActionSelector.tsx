@@ -140,6 +140,9 @@ const ActionSelector: FC<ActionSelectorProps> = ({
         if (dataset.dialect === "postgres" && actionVal === "release") {
           return true;
         }
+        if (dataset.dialect === "hana" && actionVal === "create-cache") {
+          return true;
+        }
         if (actionVal === "version" && !dataset.schemaName) {
           return true;
         }
