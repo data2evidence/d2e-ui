@@ -40,8 +40,6 @@ jobs:
           echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
           echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> ~/.bashrc
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          
-          brew --version
       - name: Build
         run: yarn
         env:
@@ -51,7 +49,13 @@ jobs:
       - name: Update version
         run: jq --arg v "-$(date +%s)-$GITHUB_SHA" '.version+=$v' package.json > tmppkg; mv tmppkg package.json
       - name: Publish
-        run: yarn publish
+        run: |
+          echo "Ensuring Homebrew environment is available..."
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          
+          brew --version
+
+          yarn publish
         env:
           CI: false
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
