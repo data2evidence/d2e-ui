@@ -35,29 +35,21 @@ jobs:
         run: yarn
         env:
          CI: false
-      - name: List Directory Contents
-        run: |
-          echo "Listing the root directory:"
-          ls -la
-          echo "Listing the 'dist' directory (if exists):"
-          ls -la resources || echo "No 'dist' directory found"
-          echo "Listing the sb dir"
-          ls -la resources/starboard-notebook-base || echo "No 'dist' directory found"
-      # - name: Patch Package
-      #   run: jq '.private=false' package.json > tmppkg; mv tmppkg package.json
-      # - name: Update version
-      #   run: jq --arg v "-$(date +%s)-$GITHUB_SHA" '.version+=$v' package.json > tmppkg; mv tmppkg package.json
-      # - name: Publish
-      #   run: yarn publish
-      #   env:
-      #     CI: false
-      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # - uses: actions/delete-package-versions@v5
-      #   with: 
-      #     package-name: 'd2e-ui'
-      #     package-type: 'npm'
-      #     min-versions-to-keep: 3
-      #     delete-only-pre-release-versions: 'true'
+      - name: Patch Package
+        run: jq '.private=false' package.json > tmppkg; mv tmppkg package.json
+      - name: Update version
+        run: jq --arg v "-$(date +%s)-$GITHUB_SHA" '.version+=$v' package.json > tmppkg; mv tmppkg package.json
+      - name: Publish
+        run: yarn publish
+        env:
+          CI: false
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/delete-package-versions@v5
+        with: 
+          package-name: 'd2e-ui'
+          package-type: 'npm'
+          min-versions-to-keep: 3
+          delete-only-pre-release-versions: 'true'
       # - name: Pack
       #   run: yarn pack --ignore-scripts
       #   env:
