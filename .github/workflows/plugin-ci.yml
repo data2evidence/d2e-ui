@@ -27,25 +27,39 @@ jobs:
           scope: '@alp-os'
       - name: Setup yarn
         run: npm install -g yarn
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
       - name: Build
         run: yarn
         env:
          CI: false
-      - name: Patch Package
-        run: jq '.private=false' package.json > tmppkg; mv tmppkg package.json
-      - name: Update version
-        run: jq --arg v "-$(date +%s)-$GITHUB_SHA" '.version+=$v' package.json > tmppkg; mv tmppkg package.json
-      - name: Publish
-        run: yarn publish
-        env:
-          CI: false
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/delete-package-versions@v5
-        with: 
-          package-name: 'd2e-ui'
-          package-type: 'npm'
-          min-versions-to-keep: 3
-          delete-only-pre-release-versions: 'true'
+      - name: List Directory Contents
+        run: |
+          echo "Listing the root directory:"
+          ls -la
+          echo "Listing the 'dist' directory (if exists):"
+          ls -la dist || echo "No 'dist' directory found"
+      # - name: Patch Package
+      #   run: jq '.private=false' package.json > tmppkg; mv tmppkg package.json
+      # - name: Update version
+      #   run: jq --arg v "-$(date +%s)-$GITHUB_SHA" '.version+=$v' package.json > tmppkg; mv tmppkg package.json
+      # - name: Publish
+      #   run: yarn publish
+      #   env:
+      #     CI: false
+      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - uses: actions/delete-package-versions@v5
+      #   with: 
+      #     package-name: 'd2e-ui'
+      #     package-type: 'npm'
+      #     min-versions-to-keep: 3
+      #     delete-only-pre-release-versions: 'true'
       # - name: Pack
       #   run: yarn pack --ignore-scripts
       #   env:
