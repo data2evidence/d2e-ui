@@ -40,7 +40,9 @@ jobs:
           echo "Listing the root directory:"
           ls -la
           echo "Listing the 'dist' directory (if exists):"
-          ls -la dist || echo "No 'dist' directory found"
+          ls -la resources || echo "No 'dist' directory found"
+          echo "Listing the sb dir"
+          ls -la resources/starboard-notebook-base || echo "No 'dist' directory found"
       # - name: Patch Package
       #   run: jq '.private=false' package.json > tmppkg; mv tmppkg package.json
       # - name: Update version
