@@ -18,6 +18,7 @@ import Constants from '../../utils/Constants'
 import DateUtils from '../../utils/DateUtils'
 import QueryString from '../../utils/QueryString'
 import * as types from '../mutation-types'
+import Plotly from '../../lib/CustomPlotly'
 
 const omit = (obj, ...keysToOmit) =>
   Object.keys(obj)
@@ -118,6 +119,7 @@ const state = {
   variantFilterCards: [],
   currentPatientCount: 0,
   totalPatientCount: 0,
+  plotlyElement: null,
 }
 /*
 function backendFormatter(obj) {
@@ -522,6 +524,7 @@ const getters = {
     }
     return null
   },
+  getPlotlyElement: modulestate => modulestate.plotlyElement,
 }
 
 // actions
@@ -1022,123 +1025,132 @@ const actions = {
     commit(types.SET_CURRENT_PATIENT_COUNT, { currentPatientCount })
   },
   drilldown({ rootGetters, getters, dispatch }, { aSelectedData }) {
-    const collectedConstraints = {}
-    let collectedDateConstraints = {}
-    let fromDate
-    let toDate
-    aSelectedData.forEach(oData => {
-      collectedConstraints[oData.id] = collectedConstraints[oData.id] || {
-        filterValues: [],
-      }
-
-      // Range Constraint
-      if (
-        rootGetters.getMriFrontendConfig.getAttributeByPath(oData.id).getType() === 'num' &&
-        typeof oData.value === 'string'
-      ) {
-        // get expressions operator
-        const sOperator = '>='
-        const matchIntervals = oData.value.match(/[-]?[0-9]+([,.][0-9]+)?/g) || []
-        // for matching intervals
-        if (matchIntervals.length === 2) {
-          //
-          // remove whitespaces and add the interval notation
-          const andContainer = []
-          const filterVal1 = {
-            op: '>',
-            value: matchIntervals[0],
-          }
-          const filterVal2 = {
-            op: '<',
-            value: matchIntervals[1],
-          }
-
-          andContainer.push(filterVal1)
-          andContainer.push(filterVal2)
-
-          collectedConstraints[oData.id].filterValues.push({
-            and: andContainer,
-          })
-          collectedConstraints[oData.id].type = 'range'
+    try {
+      const collectedConstraints = {}
+      let collectedDateConstraints = {}
+      let fromDate
+      let toDate
+      aSelectedData.forEach(oData => {
+        collectedConstraints[oData.id] = collectedConstraints[oData.id] || {
+          filterValues: [],
         }
-        if (matchIntervals.length === 1) {
-          //
+
+        // Range Constraint
+        if (
+          rootGetters.getMriFrontendConfig.getAttributeByPath(oData.id).getType() === 'num' &&
+          typeof oData.value === 'string'
+        ) {
+          // get expressions operator
+          const sOperator = '>='
+          const matchIntervals = oData.value.match(/[-]?[0-9]+([,.][0-9]+)?/g) || []
+          // for matching intervals
+          if (matchIntervals.length === 2) {
+            //
+            // remove whitespaces and add the interval notation
+            const andContainer = []
+            const filterVal1 = {
+              op: '>',
+              value: matchIntervals[0],
+            }
+            const filterVal2 = {
+              op: '<',
+              value: matchIntervals[1],
+            }
+
+            andContainer.push(filterVal1)
+            andContainer.push(filterVal2)
+
+            collectedConstraints[oData.id].filterValues.push({
+              and: andContainer,
+            })
+            collectedConstraints[oData.id].type = 'range'
+          }
+          if (matchIntervals.length === 1) {
+            //
+            // remove whitespaces and add the interval notation
+            const andContainer = []
+            const filterVal1 = {
+              op: '=',
+              value: matchIntervals[0],
+            }
+            collectedConstraints[oData.id].filterValues.push(filterVal1)
+          }
+        } else if (
+          rootGetters.getMriFrontendConfig.getAttributeByPath(oData.id).getType() === 'num' &&
+          typeof oData.value === 'number'
+        ) {
+          // Range Contraint with number
           // remove whitespaces and add the interval notation
           const andContainer = []
           const filterVal1 = {
             op: '=',
-            value: matchIntervals[0],
+            value: oData.value,
           }
           collectedConstraints[oData.id].filterValues.push(filterVal1)
-        }
-      } else if (
-        rootGetters.getMriFrontendConfig.getAttributeByPath(oData.id).getType() === 'num' &&
-        typeof oData.value === 'number'
-      ) {
-        // Range Contraint with number
-        // remove whitespaces and add the interval notation
-        const andContainer = []
-        const filterVal1 = {
-          op: '=',
-          value: oData.value,
-        }
-        collectedConstraints[oData.id].filterValues.push(filterVal1)
-      } else if (rootGetters.getMriFrontendConfig.getAttributeByPath(oData.id).getType() === 'text') {
-        // Domain Constraint
-        const filterValue = {
-          display_value: oData.value,
-          score: 1,
-          text: '',
-          value: oData.value,
-        }
+        } else if (rootGetters.getMriFrontendConfig.getAttributeByPath(oData.id).getType() === 'text') {
+          // Domain Constraint
+          const filterValue = {
+            display_value: oData.value,
+            score: 1,
+            text: '',
+            value: oData.value,
+          }
 
-        collectedConstraints[oData.id].filterValues.push(filterValue)
+          collectedConstraints[oData.id].filterValues.push(filterValue)
 
-        oData = oData.id
-      } else if (
-        rootGetters.getMriFrontendConfig.getAttributeByPath(oData.id).getType() === 'time' ||
-        rootGetters.getMriFrontendConfig.getAttributeByPath(oData.id).getType() === 'datetime'
-      ) {
-        if (DateUtils.isDate(oData.value)) {
-          const temp = oData.value
+          oData = oData.id
+        } else if (
+          rootGetters.getMriFrontendConfig.getAttributeByPath(oData.id).getType() === 'time' ||
+          rootGetters.getMriFrontendConfig.getAttributeByPath(oData.id).getType() === 'datetime'
+        ) {
+          if (DateUtils.isDate(oData.value)) {
+            const temp = oData.value
 
-          if (!fromDate) {
-            fromDate = oData.value
-            toDate = oData.value
-          } else {
-            if (fromDate > temp) {
-              fromDate = temp
-            } else if (temp > toDate) {
-              toDate = temp
+            if (!fromDate) {
+              fromDate = oData.value
+              toDate = oData.value
+            } else {
+              if (fromDate > temp) {
+                fromDate = temp
+              } else if (temp > toDate) {
+                toDate = temp
+              }
+            }
+
+            collectedDateConstraints = {
+              constraintId: oData.id,
+              fromDateValue: new Date(fromDate),
+              toDateValue: new Date(toDate),
             }
           }
-
-          collectedDateConstraints = {
-            constraintId: oData.id,
-            fromDateValue: new Date(fromDate),
-            toDateValue: new Date(toDate),
-          }
         }
-      }
-    })
-    if (Object.keys(collectedDateConstraints).length !== 0) {
-      dispatch('updateDateConstraintValue', collectedDateConstraints)
-    }
-
-    Object.keys(collectedConstraints).forEach(sAttrPath => {
-      let filterVals: any[] = []
-      if (!collectedConstraints[sAttrPath].type) {
-        filterVals = Array.from(
-          collectedConstraints[sAttrPath].filterValues.reduce((m, t) => m.set(t.value, t), new Map()).values()
-        )
-      } else {
-        filterVals = collectedConstraints[sAttrPath].filterValues
-      }
-      dispatch('updateConstraintValue', {
-        constraintId: sAttrPath,
-        value: filterVals,
       })
-    })
+      if (Object.keys(collectedDateConstraints).length !== 0) {
+        dispatch('updateDateConstraintValue', collectedDateConstraints)
+      }
+
+      Object.keys(collectedConstraints).forEach(sAttrPath => {
+        let filterVals: any[] = []
+        if (!collectedConstraints[sAttrPath].type) {
+          filterVals = Array.from(
+            collectedConstraints[sAttrPath].filterValues.reduce((m, t) => m.set(t.value, t), new Map()).values()
+          )
+        } else {
+          filterVals = collectedConstraints[sAttrPath].filterValues
+        }
+        dispatch('updateConstraintValue', {
+          constraintId: sAttrPath,
+          value: filterVals,
+        })
+      })
+      const plotlyElement = getters.getPlotlyElement
+      if (plotlyElement) {
+        getters.getPlotlyElement.dispatchEvent?.(new CustomEvent('plotly_deselect'))
+        Plotly.update(plotlyElement, {}, { selections: [] })
+      }
+    } catch (e) {
+      console.log('Error in query.ts, drilldown', e)
+    }
   },
   toggleFilterBooleanCondition({ commit, getters, dispatch, rootGetters }, { filterCardId, operator, parentId }) {
     let newFilterCardModels = []
@@ -1210,6 +1222,9 @@ const actions = {
   },
   resetAllFilterCardEntryExit({ commit }, { key }) {
     commit(types.FILTERCARD_RESET_ALL_ENTRY_EXIT, { key })
+  },
+  setPlotlyElement({ commit }, { element }) {
+    commit(types.PLOTLY_SET_ELEMENT, element)
   },
 }
 
@@ -1377,6 +1392,9 @@ const mutations = {
   },
   [types.QUERY_SET_CHARTABLEFILTERCARDS](modulestate, filtercards) {
     modulestate.chartableFilterCards = filtercards
+  },
+  [types.PLOTLY_SET_ELEMENT](modulestate, element) {
+    modulestate.plotlyElement = element
   },
 }
 
