@@ -20,23 +20,25 @@ jobs:
       group: dockerup # Custom runner 4 CPUs & 14 Gb RAM
     if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch' || contains('release', ${{ github.head_ref || github.ref_name }}) || ( github.event_name == 'pull_request' && !github.event.pull_request.draft ) # runs if PR is not draft /or/ workflow_dispatch /or/ release branch
     env:
-      AZ_REG_FQDN: ${{ vars.AZ_REG_NAME }}.azurecr.io
-      AZ_REG_NAME: ${{ vars.AZ_REG_NAME }}
+      AZ_REG_FQDN: ${{ vars.AZ_REGISTRY_NAME }}.azurecr.io
+      AZ_REG_NAME: ${{ vars.AZ_REGISTRY_NAME }}
+      AZ_REG_PASSWORD: ${{ secrets.AZ_REGISTRY_PASSWORD }}
       AZ_REG_PRUNE_DAYS: ${{ vars.AZ_REG_PRUNE_DAYS || '20' }}
-      AZ_REG_PRUNE_ENABLE_DELETE: ${{ vars.AZ_REG_PRUNE_ENABLE_DELETE || 'false' }} # debug
+      AZ_REG_PRUNE_ENABLE_DELETE: ${{ vars.AZ_REG_PRUNE_ENABLE_DELETE || 'false' }}
       AZ_REG_PRUNE_FORCE_ANALYZE: ${{ vars.AZ_REG_PRUNE_FORCE_ANALYZE || 'false' }}
       AZ_REG_PRUNE_KEEP_REGEX: ${{ vars.AZ_REG_PRUNE_KEEP_REGEX }}
+      AZ_REG_USERNAME: ${{ vars.AZ_REGISTRY_USERNAME }}
+      DOCKER_BUILD_DEBUG: ${{ vars.DOCKER_BUILD_DEBUG || 'false' }}
       DOCKER_BUILD_DISABLE: ${{ vars.DOCKER_BUILD_DISABLE || 'false' }}
       DOCKER_BUILD_PUSH_BOOL_OVERRIDE: ${{ vars.DOCKER_BUILD_PUSH_BOOL_OVERRIDE || 'false' }}
       GIT_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
     strategy:
       matrix:
         include:
-          - name: alp-data-node/alp-caddy
-            directory: .
-            context: .
-            fileName: Dockerfile
-            platforms: linux/amd64
+          - AZ_REG_REPOSITORY: alp-data-node/alp-caddy
+            DOCKER_BUILD_CONTEXT_PATH: .
+            DOCKER_BUILD_FILE_PATH: ./Dockerfile
 
     steps:
       - name: Free Disk Space (Ubuntu)
@@ -60,14 +62,20 @@ jobs:
 
       - name: Setup
         id: setup
+        env:
+          DOCKER_BUILD_PUSH_BOOL_OVERRIDE: ${{ vars.DOCKER_BUILD_PUSH_BOOL_OVERRIDE || false }}
         run: |
           DOCKER_BUILD_PUSH_BOOL_STR=false
           if [ $DOCKER_BUILD_PUSH_BOOL_OVERRIDE = "true" ] || [ $GITHUB_EVENT_NAME = "workflow_dispatch" ] || [ $GIT_BRANCH_NAME = 'develop' ]; then
             DOCKER_BUILD_PUSH_BOOL_STR=true
             echo push to registry | tee -a $GITHUB_STEP_SUMMARY
           fi
-          echo "DOCKER_BUILD_PLATFORMS=linux/amd64" | tee -a $GITHUB_OUTPUT
-          echo "DOCKER_BUILD_PUSH_BOOL_STR=$DOCKER_BUILD_PUSH_BOOL_STR" | tee -a $GITHUB_OUTPUT
+          echo "DOCKER_BUILD_PLATFORMS=linux/amd64" | tee -a $GITHUB_ENV | tee -a $GITHUB_OUTPUT | tee -a $GITHUB_STEP_SUMMARY
+          echo "DOCKER_BUILD_PUSH_BOOL_STR=$DOCKER_BUILD_PUSH_BOOL_STR" | tee -a $GITHUB_ENV | tee -a $GITHUB_OUTPUT | tee -a $GITHUB_STEP_SUMMARY
+
+          echo AZ_REG_REPOSITORY=${{ matrix.AZ_REG_REPOSITORY }} | tee -a $GITHUB_ENV | tee -a $GITHUB_OUTPUT | tee -a $GITHUB_STEP_SUMMARY
+          echo DOCKER_BUILD_CONTEXT_PATH=${{ matrix.DOCKER_BUILD_CONTEXT_PATH }} | tee -a $GITHUB_ENV | tee -a $GITHUB_OUTPUT | tee -a $GITHUB_STEP_SUMMARY
+          echo DOCKER_BUILD_FILE_PATH=${{ matrix.DOCKER_BUILD_FILE_PATH }} | tee -a $GITHUB_ENV | tee -a $GITHUB_OUTPUT | tee -a $GITHUB_STEP_SUMMARY
 
       - uses: webfactory/ssh-agent@v0.9.0
         if: env.DOCKER_BUILD_DISABLE == 'false'
@@ -76,20 +84,19 @@ jobs:
             ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
             ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
 
-      - name: Login to ACR
-        if: env.DOCKER_BUILD_DISABLE == 'false'
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.AZ_REG_FQDN }}
-          username: ${{ secrets.AZ_REG_USERNAME }}
-          password: ${{ secrets.AZ_REG_PASSWORD }}
-
-      - name: Collect Git and SSH config files in a directory that is part of the Docker build context
+      - name: Process Git & SSH config for Docker build context
         if: env.DOCKER_BUILD_DISABLE == 'false'
         run: |
           cp -r ~/.gitconfig  ~/.ssh .github/
           cd .github/
-          sed 's|/home/runner|/root|g' -i.bak .ssh/config
+          sed "s|$HOME|/root|g" -i.bak .ssh/config
+
+      - name: Login to ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.AZ_REG_FQDN }}
+          username: ${{ env.AZ_REG_USERNAME }}
+          password: ${{ env.AZ_REG_PASSWORD }}
 
       - name: Set up Docker Buildx
         if: env.DOCKER_BUILD_DISABLE == 'false'
@@ -106,11 +113,11 @@ jobs:
           # cache-from: type=gha
           # cache-to: type=gha,mode=max
           # ulimit: nofile=1048576:1048576
-          platforms: ${{ matrix.platforms || 'linux/amd64,linux/arm64' }}
-          context: ${{ matrix.context }}
-          file: ${{ matrix.directory }}/${{ matrix.fileName }}
-          push: ${{ steps.setup.outputs.DOCKER_BUILD_PUSH_BOOL_STR == 'true' }}
-          tags: ${{ env.AZ_REG_FQDN }}/${{ matrix.name }}:${{ env.GIT_BRANCH_NAME }},${{ env.AZ_REG_FQDN }}/${{ matrix.name }}:${{ github.sha }}
+          context: ${{ env.DOCKER_BUILD_CONTEXT_PATH }}
+          file: ${{ env.DOCKER_BUILD_FILE_PATH }}
+          platforms: ${{ env.DOCKER_BUILD_PLATFORMS }}
+          push: ${{ env.DOCKER_BUILD_PUSH_BOOL_STR }}
+          tags: ${{ env.AZ_REG_FQDN }}/${{ env.AZ_REG_REPOSITORY }}:${{ env.GIT_BRANCH_NAME }},${{ env.AZ_REG_FQDN }}/${{ env.AZ_REG_REPOSITORY }}:${{ github.sha }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
           build-args: |
@@ -120,12 +127,8 @@ jobs:
 
       - name: Prune ACR Images created before vars.AZ_REG_PRUNE_DAYS_TAGGED
         if: env.AZ_REG_PRUNE_FORCE_ANALYZE == 'true' || env.GIT_BRANCH_NAME == 'develop'
-        id: prune-images
+        id: prune
         continue-on-error: true
-        env:
-          AZ_REG_PASSWORD: ${{ secrets.AZ_REG_PASSWORD }}
-          AZ_REG_REPOSITORY: ${{ matrix.name }}
-          AZ_REG_USERNAME: ${{ secrets.AZ_REG_USERNAME }}
         run: |
           npx --suppess-warnings zx scripts/analyze-acr.mjs
           if [ $AZ_REG_PRUNE_ENABLE_DELETE = true ]; then
@@ -134,12 +137,13 @@ jobs:
           else
             echo "INFO . manifests delete skipped"
           fi
+          echo AZ_REG_ARTIFACTS_NAME=${AZ_REG_REPOSITORY/\//--} | tee -a $GITHUB_ENV | tee -a $GITHUB_OUTPUT | tee -a $GITHUB_STEP_SUMMARY
 
       - name: Upload ACR manifests artifacts
-        if: env.AZ_REG_PRUNE_FORCE_ANALYZE == 'true' || env.GIT_BRANCH_NAME == 'develop'
+        if: steps.prune.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: acr-manifests
+          name: ${{ env.AZ_REG_ARTIFACTS_NAME }}
           retention-days: 30
           path: |
-            private-manifests*
+            private*manifests*
