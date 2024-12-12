@@ -86,17 +86,6 @@ jobs:
 
       - name: Process Git & SSH config for Docker build context
         if: env.DOCKER_BUILD_DISABLE == 'false'
-
-      - name: Login to ACR
-        if: env.DOCKER_BUILD_DISABLE == 'false'
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.AZ_REG_NAME }}.azurecr.io
-          username: ${{ secrets.AZ_REG_USERNAME }}
-          password: ${{ secrets.AZ_REG_PASSWORD }}
-
-      - name: Collect Git and SSH config files in a directory that is part of the Docker build context
-        if: env.DOCKER_BUILD_DISABLE == 'false'
         run: |
           cp -r ~/.gitconfig  ~/.ssh .github/
           cd .github/
