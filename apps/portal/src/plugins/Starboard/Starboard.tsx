@@ -24,7 +24,13 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
 
   // JWT Token and Jupyter Kernel Extraction
   const [jwtToken, setJWTToken] = useState("");
-  const setupPYQE = `\nimport micropip\nawait micropip.install('requests==2.27.1')\nawait micropip.install('pyjwt==2.5.0')\nawait micropip.install('${uiFilesUrl}starboard-notebook-base/pyodidepyqe-0.0.2-py3-none-any.whl', keep_going=True)\nos.environ['PYQE_URL'] = '${MRI_ROOT_URL}/'\nos.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
+
+  const setupPYQE = `
+import micropip
+await micropip.install('pyjwt==2.9.0', keep_going=True)
+await micropip.install('${uiFilesUrl}starboard-notebook-base/pyodidepyqe-0.0.2-py3-none-any.whl', keep_going=True)
+os.environ['PYQE_URL'] = '${MRI_ROOT_URL}/'
+os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
 
   const [runtime, setRuntime] = useState<StarboardEmbed>();
   const [unsaved, setUnsaved] = useState(false);
