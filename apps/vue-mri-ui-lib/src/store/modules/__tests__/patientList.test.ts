@@ -19,6 +19,9 @@ describe('store - patientList', () => {
         )
 
         const rootGetters = {
+          getSelectedDataset: {
+            id: 'mock-id',
+          },
           getSelectedDatasetVersion: {
             id: 'mock-id',
           },

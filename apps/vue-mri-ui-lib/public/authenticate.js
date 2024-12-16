@@ -6,13 +6,13 @@ const config = {
   redirect_uri: REDIRECT_URL,
   authority: 'https://localhost:41100',
   metadata: {
-    issuer: 'https://localhost:41100/oidc',
-    authorization_endpoint: 'https://localhost:41100/oidc/auth',
-    token_endpoint: 'https://localhost:41100/oauth/token',
+    issuer: 'https://localhost:8081/oidc',
+    authorization_endpoint: 'https://localhost:8081/oidc/auth',
+    token_endpoint: 'https://localhost:8081/oauth/token',
     end_session_endpoint:
       // Update client_id to your LOGTO__ALP_APP__CLIENT_ID
-      'https://localhost:41100/oidc/session/end?client_id=1d6wuydanyaiypbkchxzu&redirect={window.location.origin}/portal',
-    revocation_endpoint: 'https://localhost:41100/oidc/token/revocation',
+      'https://localhost:8081/oidc/session/end?client_id=1d6wuydanyaiypbkchxzu&redirect={window.location.origin}/portal',
+    revocation_endpoint: 'https://localhost:8081/oidc/token/revocation',
   },
   scope: 'openid offline',
 }
