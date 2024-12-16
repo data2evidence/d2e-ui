@@ -1,19 +1,16 @@
 const REDIRECT_URL = 'https://localhost:8081'
 
 const config = {
-  // Update client_id to your LOGTO__ALP_APP__CLIENT_ID
-  client_id: '1d6wuydanyaiypbkchxzu',
+  client_id: '1d6wuydanyaiypbkchxzu', // Update client_id to your LOGTO__ALP_APP__CLIENT_ID
   redirect_uri: REDIRECT_URL,
   post_logout_redirect_uri: REDIRECT_URL,
   authority: 'https://localhost:41100',
   metadata: {
-    issuer: 'https://localhost:8081/oidc',
-    authorization_endpoint: 'https://localhost:8081/oidc/auth',
-    token_endpoint: 'https://localhost:8081/oauth/token',
-    end_session_endpoint:
-      // Update client_id to your LOGTO__ALP_APP__CLIENT_ID
-      `https://localhost:8081/oidc/session/end?client_id=1d6wuydanyaiypbkchxzu&redirect=${window.location.origin}`,
-    revocation_endpoint: 'https://localhost:8081/oidc/token/revocation',
+    issuer: `${REDIRECT_URL}/oidc`,
+    authorization_endpoint: `${REDIRECT_URL}/oidc/auth`,
+    token_endpoint: `${REDIRECT_URL}/oauth/token`,
+    end_session_endpoint: `${REDIRECT_URL}/oidc/session/end`,
+    revocation_endpoint: `${REDIRECT_URL}/oidc/token/revocation`,
   },
   scope: 'openid offline',
 }
@@ -45,9 +42,12 @@ const initializeAuth = async () => {
 
 const logoutfn = async () => {
   localStorage.removeItem('msaltoken')
-  await userManager.signoutRedirect({
-    id_token_hint: userManager.getUser()?.access_token,
-  })
+  const user = await userManager.getUser()
+  if (user) {
+    await userManager.signoutRedirect({
+      id_token_hint: user.id_token,
+    })
+  }
 }
 
 initializeAuth()
