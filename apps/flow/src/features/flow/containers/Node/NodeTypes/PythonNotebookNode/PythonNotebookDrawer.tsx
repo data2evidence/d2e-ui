@@ -60,6 +60,7 @@ export const PythonDrawer: FC<PythonDrawerProps> = ({
 import os
 os.environ['TOKEN'] = '${jwtToken}'
 import micropip
+await micropip.install('ssl')
 await micropip.install('pyjwt==2.9.0', keep_going=True)
 await micropip.install('${STARBOARD_URL}/pyodidepyqe-0.0.2-py3-none-any.whl', keep_going=True)
 os.environ['PYQE_URL'] = '${MRI_ROOT_URL}/mri/'

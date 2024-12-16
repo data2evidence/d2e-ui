@@ -27,6 +27,7 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
 
   const setupPYQE = `
 import micropip
+await micropip.install('ssl')
 await micropip.install('pyjwt==2.9.0', keep_going=True)
 await micropip.install('${uiFilesUrl}starboard-notebook-base/pyodidepyqe-0.0.2-py3-none-any.whl', keep_going=True)
 os.environ['PYQE_URL'] = '${MRI_ROOT_URL}/'
