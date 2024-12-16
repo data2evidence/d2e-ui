@@ -12,7 +12,7 @@ const config = {
     token_endpoint: 'https://localhost:8081/oauth/token',
     end_session_endpoint:
       // Update client_id to your LOGTO__ALP_APP__CLIENT_ID
-      `https://localhost:8081/oidc/session/end?client_id=1d6wuydanyaiypbkchxzu&redirect=${window.location.origin}/portal`,
+      `https://localhost:8081/oidc/session/end?client_id=1d6wuydanyaiypbkchxzu&redirect=${window.location.origin}`,
     revocation_endpoint: 'https://localhost:8081/oidc/token/revocation',
   },
   scope: 'openid offline',
@@ -46,7 +46,7 @@ const initializeAuth = async () => {
 const logoutfn = async () => {
   localStorage.removeItem('msaltoken')
   await userManager.signoutRedirect({
-    id_token_hint: userManager.getUser()?.id_token,
+    id_token_hint: userManager.getUser()?.access_token,
   })
 }
 
