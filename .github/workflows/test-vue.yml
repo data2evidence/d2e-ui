@@ -9,7 +9,7 @@ on:
       - develop
 jobs:
   test-mri-frontend:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - uses: webfactory/ssh-agent@v0.9.0

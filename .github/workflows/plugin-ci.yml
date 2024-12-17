@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - develop
-      - trex
 
 jobs:
   build:
@@ -55,26 +54,17 @@ jobs:
           
           brew --version
 
-          yarn publish
+          if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then 
+              yarn publish
+            else 
+              yarn publish --dry-run
+            fi
         env:
-          CI: false
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/delete-package-versions@v5
         with: 
           package-name: 'd2e-ui'
           package-type: 'npm'
           min-versions-to-keep: 3
           delete-only-pre-release-versions: 'true'
-      # - name: Pack
-      #   run: yarn pack --ignore-scripts
-      #   env:
-      #    CI: false
-      # - name: Push
-      #   uses: svenstaro/upload-release-action@v2
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: alp-os-d2e-ui-v1.0.0.tgz
-      #     tag: trex-latest
-      #     target_commit: trex
-      #     prerelease: true
-      #     overwrite: true
