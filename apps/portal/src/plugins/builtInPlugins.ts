@@ -26,7 +26,6 @@ const moduleNames = [
   "Setup/Metadata",
   "Setup/Feature",
   "Setup/Db",
-  "Setup/HybridSearch",
   "Setup/OverviewDescription",
   "Setup/TrexPlugins",
 ];
