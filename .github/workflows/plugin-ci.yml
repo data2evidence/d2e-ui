@@ -58,9 +58,9 @@ jobs:
           brew --version
 
           if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then 
-              npm publish
+              npm publish --provenance
           else 
-              npm publish --dry-run
+              npm publish --provenance --dry-run
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
