@@ -4,7 +4,9 @@ import { useBooleanHelper } from "~/features/flow/hooks";
 import { NodeDataState } from "../../../../types";
 import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
+import { HandleIOType } from "../type";
 import { DbWriterDrawer } from "./DbWriterDrawer";
+import { TargetHandle } from "../../CustomHandle/CustomHandle";
 import "./DbWriterNode.scss";
 
 export interface DbWriterNodeData extends NodeDataState {
@@ -27,6 +29,10 @@ export const DbWriterNode = (node: NodeProps<DbWriterNodeData>) => {
         resultType={data.error ? "error" : "success"}
         onResultClick={data.result ? openResult : null}
         node={node}
+        LeftHandle={
+          <TargetHandle ioType={HandleIOType.Table} nodeId={node.id} />
+        }
+        RightHandle={null}
       >
         {data.description}
       </NodeLayout>

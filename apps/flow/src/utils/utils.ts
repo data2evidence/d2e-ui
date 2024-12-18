@@ -1,3 +1,5 @@
+import { Node } from "reactflow";
+
 export const isValidJson = (json: string) => {
   try {
     JSON.parse(json);
@@ -35,15 +37,19 @@ export const isCircular = (routes, source, target): boolean => {
 };
 
 // prevent subflow from connecting to its children
-export const isNested = (nodes, source, target): boolean => {
+export const isNested = (
+  nodes: Node[],
+  source: string,
+  target: string
+): boolean => {
   let isNested = false;
   const node = nodes.find((n) => n.id === source);
-  if (node.parentNode) {
-    isNested = node.parentNode === target;
+  if (node.parentId) {
+    isNested = node.parentId === target;
   } else {
     if (node.type === "subflow") {
       // find all children
-      const children = nodes.filter((n) => n.parentNode === source);
+      const children = nodes.filter((n) => n.parentId === source);
       for (var child of children) {
         if (child.id === target) {
           isNested = true;
