@@ -44,7 +44,6 @@ Note:
 - Ensure node modules are installed
 - Copy contents of `node_modules/@alp-os/alp-starboard-notebook/packages/starboard-notebook/dist` to `resources/starboard-notebook-base`
 - Copy newly created PYQE package to `resources/starboard-notebook-base`
-- In `docker-compose-ui`, uncomment `volumes:` and `- ../alp-ui/resources/starboard-notebook-base:/home/docker/ui-files/starboard-notebook-base`
 
 ## Plugins
 
