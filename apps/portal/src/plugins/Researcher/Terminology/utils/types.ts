@@ -171,16 +171,9 @@ export interface FhirValueSetExpansionContainsWithExt extends Concept {
   useMapped?: boolean;
 }
 
-export interface HybridSearchConfig {
-  id: number;
-  isEnabled: boolean;
-  semanticRatio: number;
-  model: string;
-}
 export interface StandardConcepts {
   index: number;
   conceptId: number;
   conceptName: string;
   domainId: string;
 }
-
