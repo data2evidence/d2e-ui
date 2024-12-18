@@ -7,9 +7,10 @@
     "url": "git+https://github.com/alp-os/internal.git"
   },
   "scripts": {
-    "build-all": "npx nx run-many --targets=build --projects=@portal/components,@portal/plugin && npx nx run-many --targets=build,build-mri --exclude @portal/components,@portal/plugin && yarn build-ui5",
+    "build-all": "npx nx run-many --targets=build --projects=@portal/components,@portal/plugin && npx nx run-many --targets=build,build-mri --exclude @portal/components,@portal/plugin && yarn build-ui5 && yarn build-starboard",
     "build-all-skip-cache": "npx nx run-many --targets=build --projects=@portal/components,@portal/plugin --skip-nx-cache && npx nx run-many --targets=build,build-mri --exclude @portal/components,@portal/plugin --skip-nx-cache && yarn build-ui5",
     "build-ui5": "yarn ui5 build -a --clean-dest --dest ./resources/ui5",
+    "build-starboard": "node scripts/build-starboard.js",
     "mri-vue": "yarn; nx build vue-mri",
     "portal-ui": "yarn; nx build @portal/plugin; nx build @portal/components; nx build portal; nx build-mri portal",
     "flow": "yarn; nx build @portal/plugin; nx build @portal/components; nx build flow",
@@ -61,6 +62,10 @@
         {
           "source": "/starboard-jupyter",
           "target": "/resources/starboard-jupyter"
+        },
+        {
+          "source": "/starboard-notebook-base",
+          "target": "/resources/starboard-notebook-base"
         },
         {
           "source": "/mri",
@@ -257,14 +262,6 @@
             "notes": "",
             "pluginPath": "plugins/mri/PatientSummaryConfig/module",
             "route": "ps-config"
-          },
-          {
-            "description": "Configure hybrid search for concepts",
-            "enabled": true,
-            "name": "Hybrid Search",
-            "notes": "",
-            "pluginPath": "plugins/Setup/HybridSearch/module",
-            "route": "hybrid-search"
           },
           {
             "description": "Configure overview description text",

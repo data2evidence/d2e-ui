@@ -5,7 +5,6 @@ import {
   FhirConceptMap,
   FhirValueSet,
   FilterOptions,
-  HybridSearchConfig,
   Concept,
   ConceptHierarchyResponse,
   StandardConcepts,
@@ -146,24 +145,6 @@ export class Terminology {
       url: `/concept-set/${conceptSetId}`,
       method: "PUT",
       data: conceptSet,
-    });
-  }
-
-  // Hybrid Search
-  public getHybridSearchConfig() {
-    return request<HybridSearchConfig>({
-      baseURL: TERMINOLOGY_BASE_URL,
-      url: `/hybrid-search-config`,
-      method: "GET",
-    });
-  }
-
-  public updateHybridSearchConfig(config: HybridSearchConfig) {
-    return request<HybridSearchConfig>({
-      baseURL: TERMINOLOGY_BASE_URL,
-      url: `/hybrid-search-config`,
-      method: "POST",
-      data: config,
     });
   }
 }
