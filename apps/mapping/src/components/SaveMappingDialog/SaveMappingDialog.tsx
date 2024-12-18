@@ -19,7 +19,7 @@ export const SaveMappingDialog: FC<SaveMappingDialogProps> = ({ open, nextAction
   const hasNextAction = Boolean(nextAction);
 
   useEffect(() => {
-    if (open) setFileName("scan-report");
+    if (open) setFileName("scan-report.json");
   }, [open]);
 
   useEffect(() => {
