@@ -63,7 +63,7 @@ jobs:
               npm publish --provenance --dry-run
           fi
         env:
-          CI: false # For portal build to ignore warnings and not tream them as errors
+          CI: false # For portal build to ignore warnings and not treat them as errors
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/delete-package-versions@v5
