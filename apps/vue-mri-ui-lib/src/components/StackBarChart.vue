@@ -95,7 +95,7 @@ export default {
           }
           this.setupPlotly()
           this.$emit('busyEv', false)
-          
+
           if (this.chartData.hasOwnProperty('noDataReason')) {
             this.setCurrentPatientCount({
               currentPatientCount: '--',
@@ -181,6 +181,7 @@ export default {
       'setFireRequest',
       'completeDownloadCSV',
       'setAlertMessage',
+      'setPlotlyElement',
     ]),
     setupAxes() {
       this.disableAllAxesandProperties()
@@ -302,6 +303,7 @@ export default {
 
       stackBarChart.on('plotly_selected', selectionUpdate)
       stackBarChart.on('plotly_deselect', selectionUpdate)
+      this.setPlotlyElement({ element: stackBarChart })
     },
   },
 }
