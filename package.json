@@ -15,11 +15,6 @@
     "portal-ui": "yarn; nx build @portal/plugin; nx build @portal/components; nx build portal; nx build-mri portal",
     "flow": "yarn; nx build @portal/plugin; nx build @portal/components; nx build flow",
     "analysis": "yarn; nx build @portal/plugin; nx build @portal/components; nx build analysis_flow",
-    "base:ui": "REPO_RELATIVE_PATH='../../../../../d2e' && GIT_HEAD_COMMIT_ALP_UI_REPO=$(git rev-parse HEAD) docker compose --file ${REPO_RELATIVE_PATH}/docker-compose.yml --file ${REPO_RELATIVE_PATH}/docker-compose-local.yml",
-    "az:start:ui": "yarn base:ui up alp-caddy",
-    "start:ui": "yarn az:start:ui",
-    "build:start:ui": "yarn base:ui --file docker-compose-ui.yml up alp-caddy",
-    "build:ui": "yarn base:ui --file docker-compose-ui.yml build alp-caddy",
     "prepack": "yarn build-all"
   },
   "workspaces": {
