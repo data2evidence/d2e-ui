@@ -1,4 +1,5 @@
 import {
+  CreateCacheFlowRun,
   CreateDcFlowRun,
   CreateDqdFlowRun,
   CreateFlowRunByMetadata,
@@ -236,6 +237,15 @@ export class Dataflow {
       baseURL: JOBPLUGIN_URL,
       url: "datamodel/list",
       method: "GET",
+    });
+  }
+
+  public createCacheFlowRun(data: CreateCacheFlowRun) {
+    return request({
+      baseURL: JOBPLUGIN_URL,
+      url: "cachedb/create-file",
+      method: "POST",
+      data,
     });
   }
 

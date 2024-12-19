@@ -84,3 +84,7 @@ export interface FlowRunFilters {
   flowIds?: string[];
   tags?: string[];
 }
+
+export interface CreateCacheFlowRun {
+  datasetId: string | undefined;
+}
