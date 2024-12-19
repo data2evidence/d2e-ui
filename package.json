@@ -267,12 +267,12 @@
             "route": "overview-description"
           },
           {
-            "description": "Manage trex plugins",
+            "description": "Manage plugins",
             "enabled": true,
-            "name": "Trex Plugins",
+            "name": "Plugins",
             "notes": "",
             "pluginPath": "plugins/Setup/TrexPlugins/module",
-            "route": "trex-plugins"
+            "route": "plugins"
           }
         ],
         "systemadmin": [

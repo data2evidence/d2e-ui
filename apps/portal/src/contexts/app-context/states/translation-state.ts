@@ -974,7 +974,7 @@ export const i18nDefault = {
     TREX_PLUGINS__NO_DATA: "No plugins",
     TREX_PLUGINS__REGISTRY_VERSION: "Registry version",
     TREX_PLUGINS__STATUS: "Status",
-    TREX_PLUGINS__TITLE: "Trex Plugins",
+    TREX_PLUGINS__TITLE: "Plugins",
     TREX_PLUGINS__UNINSTALL: "Uninstall",
     TREX_PLUGINS__UPDATE_FAILED_ERROR_MESSAGE: "Update failed",
     TREX_PLUGINS__UPDATE_FAILED_ERROR_DESCRIPTION:
@@ -983,7 +983,7 @@ export const i18nDefault = {
     TREX_PLUGINS__URL: "URL",
     TREX_PLUGINS__VERSION: "Version",
     TREX_PLUGIN_INSTALL_DIALOG__CANCEL: "Cancel",
-    TREX_PLUGIN_INSTALL_DIALOG__ERROR: "Error while installing trex plugin",
+    TREX_PLUGIN_INSTALL_DIALOG__ERROR: "Error while installing plugin",
     TREX_PLUGIN_INSTALL_DIALOG__ERROR_DESCRIPTION:
       "Please try again. To report the error, please send an email to help@data4life.care.",
     TREX_PLUGIN_INSTALL_DIALOG__INSTALL: "Install",
