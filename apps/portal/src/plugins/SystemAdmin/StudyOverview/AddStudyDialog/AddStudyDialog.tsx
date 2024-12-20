@@ -37,7 +37,7 @@ import {
   useDatasetTagConfigs,
   usePaConfigs,
   useTenant,
-  useVocabSchemas,
+  useDbVocabSchemas,
 } from "../../../../hooks";
 import MetadataForm from "../UpdateStudyDialog/MetadataForm/MetadataForm";
 import {
@@ -225,7 +225,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({
   const [dataModelOptions, setDataModelOptions] = useState<string[]>([]);
   const [schemas, setSchemas] = useState<string[]>([]);
   const [paConfigs] = usePaConfigs();
-  const [vocabSchemas] = useVocabSchemas(databases, formData.databaseCode);
+  const [vocabSchemas] = useDbVocabSchemas(formData.dialect);
   const [tagConfigs] = useDatasetTagConfigs();
   const [attributeConfigs] = useDatasetAttributeConfigs();
   const [studyMetadata, setStudyMetadata] = useState<NewStudyMetadataInput[]>([EMPTY_STUDY_METADATA]);
