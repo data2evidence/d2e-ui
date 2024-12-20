@@ -58,7 +58,7 @@ jobs:
           brew --version
 
           if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then 
-              npm publish
+              yarn publish
           else 
               npm publish --dry-run
           fi
