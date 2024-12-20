@@ -58,9 +58,9 @@ jobs:
           brew --version
 
           if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then 
-              npm publish --provenance
+              yarn publish
           else 
-              npm publish --provenance --dry-run
+              npm publish --dry-run
           fi
         env:
           CI: false # For portal build to ignore warnings and not treat them as errors
