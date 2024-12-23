@@ -282,7 +282,6 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
       };
       setUpdating(true);
       await api.systemPortal.updateDataset(data);
-      await api.gateway.registerDashboardRoutes();
       handleClose("success");
     } catch (err: any) {
       setFeedback({

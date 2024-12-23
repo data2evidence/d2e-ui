@@ -81,13 +81,6 @@ export class Gateway {
     });
   }
 
-  public registerDashboardRoutes() {
-    return request({
-      url: "/dashboard-gate/register",
-      method: "POST",
-    });
-  }
-
   public createFhirStaging(input: NewFhirProjectInput): Promise<any> {
     return request({
       url: "/fhir/createProject",
