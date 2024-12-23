@@ -23,6 +23,4 @@ export * from "./dataflow/useDataQualityOverviewFromId";
 export * from "./dataflow/useDatasetLatestFlowRun";
 export * from "./useVocabSchemas";
 export * from "./useDatasetReleases";
-export * from "./useDashboard";
 export * from "./useOverviewDescription";
-export * from "./useDashboards";

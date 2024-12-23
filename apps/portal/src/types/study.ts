@@ -17,7 +17,6 @@ export interface Study {
   studyDetail?: StudyDetail;
   attributes?: StudyAttribute[];
   tags?: StudyTag[];
-  dashboards: DatasetDashboard[];
 }
 
 export interface NewStudyInput {
@@ -37,7 +36,6 @@ export interface NewStudyInput {
   fhirProjectId: string | undefined;
   visibilityStatus: string;
   detail: DatasetDetail;
-  dashboards: DatasetDashboard[];
   attributes: {
     attributeId: string;
     value: string;
@@ -167,14 +165,6 @@ export interface UpdateStudyMetadataInput {
   paConfigId: string;
   attributes: NewStudyMetadataInput[];
   tags: string[];
-  dashboards: DatasetDashboard[];
-}
-
-export interface DatasetDashboard {
-  name: string;
-  url: string;
-  basePath: string;
-  id?: string;
 }
 
 export interface TokenMapping {

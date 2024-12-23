@@ -256,22 +256,6 @@ export class SystemPortal {
     });
   }
 
-  public getDashboardByName(name: string) {
-    return request({
-      baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/dashboard/${name}`,
-      method: "GET",
-    });
-  }
-
-  public getDashboards() {
-    return request({
-      baseURL: SYSTEM_PORTAL_URL,
-      url: `dataset/dashboards/list`,
-      method: "GET",
-    });
-  }
-
   public getPublicOverviewDescription() {
     return request({
       baseURL: SYSTEM_PORTAL_URL,

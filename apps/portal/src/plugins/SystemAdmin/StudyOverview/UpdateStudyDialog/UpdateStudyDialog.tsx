@@ -16,27 +16,14 @@ import { SxProps } from "@mui/system";
 import SimpleMdeReact from "react-simplemde-editor";
 import { AddSquareIcon, Box, Button, Checkbox, Dialog, Feedback, IconButton } from "@portal/components";
 import { api } from "../../../../axios/api";
-import {
-  NewStudyMetadataInput,
-  CloseDialogType,
-  UpdateStudyMetadataInput,
-  DatasetDashboard,
-  Study,
-} from "../../../../types";
+import { NewStudyMetadataInput, CloseDialogType, UpdateStudyMetadataInput, Study } from "../../../../types";
 import { usePaConfigs, useDatasetTagConfigs, useDatasetAttributeConfigs } from "../../../../hooks";
 import MetadataForm from "./MetadataForm/MetadataForm";
-import {
-  DashboardForm,
-  DashboardFormError,
-  EMPTY_DASHBOARD_FORM_DATA,
-  EMPTY_DASHBOARD_FORM_ERROR,
-} from "./DashboardForm/DashboardForm";
 import "./UpdateStudyDialog.scss";
 import { useTranslation } from "../../../../contexts";
 
 interface UpdateStudyDialogProps {
   dataset: Study;
-  allDashboards: DatasetDashboard[];
   open: boolean;
   onClose?: (type: CloseDialogType) => void;
 }
@@ -110,7 +97,7 @@ const styles: SxProps = {
 
 const EMPTY_STUDY_METADATA: NewStudyMetadataInput = { attributeId: "", value: "" };
 
-const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards, open, onClose }) => {
+const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose }) => {
   const { getText, i18nKeys } = useTranslation();
   const datasetId = dataset.id;
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
@@ -120,16 +107,13 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
   const [attributeConfigs] = useDatasetAttributeConfigs();
   const [studyMetadata, setStudyMetadata] = useState<NewStudyMetadataInput[]>([EMPTY_STUDY_METADATA]);
   const [studyTagsData, setStudyTagsData] = useState<Array<string>>([]);
-  const [dashboards, setDashboards] = useState<DatasetDashboard[]>([]);
   const [updating, setUpdating] = useState(false);
 
   const [feedback, setFeedback] = useState<Feedback>({});
   const [formMetadataErrorIndex, setFormMetadataErrorIndex] = useState<Array<Number>>([]);
-  const [dashboardErrorIndex, setDashboardErrorIndex] = useState<Record<number, DashboardFormError>>({});
 
   useEffect(() => {
     setFormMetadataErrorIndex([]);
-    setDashboardErrorIndex([]);
 
     if (dataset) {
       setFormData({
@@ -157,7 +141,6 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
     } else {
       setStudyMetadata([EMPTY_STUDY_METADATA]);
     }
-    setDashboards(dataset?.dashboards || []);
   }, [dataset, open]);
 
   const handleClose = useCallback(
@@ -166,7 +149,6 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
       setFormData(EMPTY_FORM_DATA);
       setFormError(EMPTY_FORM_ERROR);
       setStudyMetadata([]);
-      setDashboards([]);
 
       typeof onClose === "function" && onClose(type);
     },
@@ -223,37 +205,8 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
     return indexError.length > 0;
   }, [studyMetadata]);
 
-  const isDashboardError = useCallback(() => {
-    const formError: Record<number, DashboardFormError> = {};
-
-    let hasError = false;
-    dashboards.forEach((dashboard, index) => {
-      formError[index] = EMPTY_DASHBOARD_FORM_ERROR;
-      if (!dashboard.name && dashboard.url) {
-        formError[index] = { ...formError[index], name: { required: true, invalid: false, duplicate: false } };
-        hasError = true;
-      }
-      if (!dashboard.url && dashboard.name) {
-        formError[index] = { ...formError[index], url: { required: true } };
-        hasError = true;
-      }
-      if (dashboard.name.includes("-")) {
-        formError[index] = { ...formError[index], name: { required: false, invalid: true, duplicate: false } };
-        hasError = true;
-      }
-      const duplicateName = allDashboards.some((dash) => dash.name === dashboard.name && dash.id !== dashboard.id);
-      if (duplicateName) {
-        formError[index] = { ...formError[index], name: { required: false, invalid: false, duplicate: true } };
-        hasError = true;
-      }
-    });
-
-    setDashboardErrorIndex(formError);
-    return hasError;
-  }, [dashboards]);
-
   const handleSubmit = useCallback(async () => {
-    if (isFormError() || isFormMetadataError() || isDashboardError()) {
+    if (isFormError() || isFormMetadataError()) {
       return;
     }
 
@@ -278,7 +231,6 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
         visibilityStatus,
         attributes: studyMetadata.filter((info) => info.attributeId !== ""),
         tags: studyTagsData?.map((tagName) => tagName),
-        dashboards: dashboards.filter((dashboard) => dashboard.name !== ""),
       };
       setUpdating(true);
       await api.systemPortal.updateDataset(data);
@@ -292,17 +244,7 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
     } finally {
       setUpdating(false);
     }
-  }, [
-    formData,
-    datasetId,
-    studyTagsData,
-    studyMetadata,
-    dashboards,
-    isFormMetadataError,
-    isDashboardError,
-    isFormError,
-    handleClose,
-  ]);
+  }, [formData, datasetId, studyTagsData, studyMetadata, isFormMetadataError, isFormError, handleClose]);
 
   const handleRemoveLine = useCallback(
     <T extends {}>(index: number, state: Array<T>, setState: (value: SetStateAction<T[]>) => void) => {
@@ -516,43 +458,6 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, allDashboards,
               />
             </RadioGroup>
           </FormControl>
-        </Box>
-
-        <Box mb={4}>
-          <Box fontWeight="bold" mb={1}>
-            {getText(i18nKeys.UPDATE_STUDY_DIALOG__DASHBOARD)}
-          </Box>
-          {dashboards.length !== 0 &&
-            dashboards.map((data, index) => (
-              <DashboardForm
-                key={index}
-                index={index}
-                dashboard={data}
-                onRemove={() =>
-                  setDashboards([...dashboards.slice(0, index), ...dashboards.slice(index + 1, dashboards.length)])
-                }
-                onChange={(name: string, url: string, basePath: string) =>
-                  setDashboards([
-                    ...dashboards.slice(0, index),
-                    {
-                      ...dashboards[index],
-                      name,
-                      url,
-                      basePath,
-                    },
-                    ...dashboards.slice(index + 1, dashboards.length),
-                  ])
-                }
-                error={dashboardErrorIndex[index]}
-              />
-            ))}
-          <Box mt={2}>
-            <IconButton
-              startIcon={<AddSquareIcon />}
-              title={getText(i18nKeys.UPDATE_STUDY_DIALOG__ADD_DASHBOARD)}
-              onClick={() => setDashboards([...dashboards, EMPTY_DASHBOARD_FORM_DATA])}
-            />
-          </Box>
         </Box>
       </div>
 
