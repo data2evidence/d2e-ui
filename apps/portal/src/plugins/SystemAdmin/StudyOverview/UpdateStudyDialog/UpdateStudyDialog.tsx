@@ -231,6 +231,7 @@ const UpdateStudyDialog: FC<UpdateStudyDialogProps> = ({ dataset, open, onClose 
         visibilityStatus,
         attributes: studyMetadata.filter((info) => info.attributeId !== ""),
         tags: studyTagsData?.map((tagName) => tagName),
+        dashboards: [],
       };
       setUpdating(true);
       await api.systemPortal.updateDataset(data);

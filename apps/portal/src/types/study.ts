@@ -165,6 +165,15 @@ export interface UpdateStudyMetadataInput {
   paConfigId: string;
   attributes: NewStudyMetadataInput[];
   tags: string[];
+  dashboards: DatasetDashboard[];
+}
+
+// remove once backend is deprecated
+export interface DatasetDashboard {
+  name: string;
+  url: string;
+  basePath: string;
+  id?: string;
 }
 
 export interface TokenMapping {
