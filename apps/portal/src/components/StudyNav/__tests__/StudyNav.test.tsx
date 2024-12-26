@@ -21,7 +21,7 @@ const studies: Study[] = [
     dataModel: "",
     databaseCode: "",
     paConfigId: "",
-    dashboards: [],
+    plugin: "",
   },
   {
     id: "2",
@@ -38,7 +38,7 @@ const studies: Study[] = [
     dataModel: "",
     databaseCode: "",
     paConfigId: "",
-    dashboards: [],
+    plugin: "",
   },
 ];
 

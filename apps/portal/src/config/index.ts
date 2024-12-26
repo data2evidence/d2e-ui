@@ -6,7 +6,6 @@ interface Config {
     login: string;
     logout: string;
     noAccess: string;
-    dashboard: string;
   };
 }
 
@@ -22,7 +21,6 @@ export const config: Config = {
     login: "/login",
     logout: "/logout",
     noAccess: "/no-access",
-    dashboard: "/dashboard/:name",
   },
 };
 
