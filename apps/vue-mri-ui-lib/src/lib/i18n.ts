@@ -423,7 +423,6 @@ export const i18n = {
     MRI_PA_BUTTON_DRILL_DOWN: 'Filter by Selection',
     MRI_PA_VIEW_COHORT_TITLE: 'Cohorts',
     MRI_PA_BUTTON_COHORT_BUTTON_TOOLTIP: 'Cohorts',
-    MRI_PA_BUTTON_SHOW_COLLECTION: 'Show materialized cohorts',
     MRI_PA_BUTTON_ADD_TO_COLLECTION: 'Materialize cohort',
     MRI_PA_BUTTON_VIEW_COHORT: 'View Cohort',
     MRI_PA_BUTTON_IMPORT_COHORT: 'Import Cohort',

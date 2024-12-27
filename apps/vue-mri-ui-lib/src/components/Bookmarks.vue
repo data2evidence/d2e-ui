@@ -243,16 +243,12 @@
                               <span class="bookmark-headelement bookmark-element">Cohort ID:</span>
                               10
                             </div>
-                            <div style="display: block margin-right: 16px">
-                              <span class="bookmark-headelement bookmark-element">Cohort Name:</span>
-                              MyCohort
-                            </div>
                             <div style="display: block">
                               <span class="bookmark-headelement bookmark-element">Patient Count:</span>
                               123322
                             </div>
                             <div style="display: block margin-right: 16px">
-                              <span class="bookmark-headelement bookmark-element">Created On:</span>
+                              <span class="bookmark-headelement bookmark-element">Materialized On:</span>
                               8 Apr 2024
                             </div>
                           </td>
@@ -266,15 +262,6 @@
                 <div class="bookmark-item-footer__break" />
                 <table class="bookmark-item-buttons">
                   <tr>
-                    <td>
-                      <button
-                        :title="getText('MRI_PA_BUTTON_SHOW_COLLECTION')"
-                        class="bookmark-button"
-                        v-on:click.stop="this.openCohortListDialog(bookmark)"
-                      >
-                        <CohortIcon />
-                      </button>
-                    </td>
                     <td v-if="!bookmark.disableUpdate">
                       <button
                         v-on:click.stop="renameBookmark(bookmark)"
@@ -283,6 +270,23 @@
                       >
                         <EditIcon />
                         <!-- <span class="icon"></span> -->
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
+                        class="bookmark-button"
+                        v-on:click.stop="this.openCohortListDialog(bookmark)"
+                      >
+                        <CohortIcon />
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        :title="getText('MRI_PA_BUTTON_RUN_DQD')"
+                        class="bookmark-button"
+                      >
+                        <CohortIcon />
                       </button>
                     </td>
                     <td v-if="!bookmark.disableUpdate">
@@ -295,7 +299,6 @@
                         <!-- <span class="icon"></span> -->
                       </button>
                     </td>
-                    <!-- add new icon here -->
                   </tr>
                 </table>
               </div>
