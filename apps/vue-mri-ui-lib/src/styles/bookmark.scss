@@ -225,9 +225,9 @@
           .bookmark-item-table {
             color: $UiLightText;
             width: 100%;
-            margin-bottom: 1em;
             .bookmark-item-cards {
               width: 100%;
+              margin-bottom: 20px;
               td.bookmark-item-cards-icon {
                 vertical-align: top;
               }
@@ -239,7 +239,7 @@
               display: flex;
               column-gap: 32px;
               align-items: baseline;
-              margin-bottom: 8px;
+              margin-bottom: 20px;
             }
             .bookmark-item-header {
               font-size: 16px;
@@ -285,7 +285,7 @@
             bottom: 5px;
             &__break {
               opacity: 0.5;
-              margin: 10px -10px;
+              margin: 5px -5px;
               border-bottom: solid 1px #acaba8;
             }
             .bookmark-item-buttons {
