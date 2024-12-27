@@ -18,14 +18,7 @@
         <span class="icon" style="font-family: app-icons">{{ unHideIcon }}</span>
       </button>
     </div>
-    <div class="d-flex align-items-stretch">
-      <template v-if="displayAddToCohort">
-        <button class="actionButton" @click="openAddCohort" :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')">
-          <AddPatientsIcon />
-        </button>
-        <span class="separator" />
-      </template>
-      
+    <div class="d-flex">
       <template v-for="chart in chartConfig" :key="chart.name">
         <chartButton
           @clickEv="switchChart(chart)"
@@ -91,11 +84,10 @@ import Constants from '../utils/Constants'
 import icon from '../lib/ui/app-icon.vue'
 import appIcon from '../lib/ui/app-icon.vue'
 import DownloadMenu from './DownloadMenu.vue'
-import AddPatientsIcon from './icons/AddPatientsIcon.vue'
 
 export default {
   name: 'chartToolbar',
-  props: ['hideEv', 'config', 'collectionEv', 'showUnHideFilters', 'showAddCohortDialog'],
+  props: ['hideEv', 'config', 'collectionEv', 'showUnHideFilters'],
   data() {
     return {
       chartConfig: [],
@@ -106,7 +98,6 @@ export default {
       hideIcon: '',
       hideIconToolTip: '',
       toggleFilterCardSummary: false,
-      enableAddToCohort: false
     }
   },
   watch: {
@@ -136,7 +127,6 @@ export default {
       searchQuery: '',
       attributeType: 'conceptSet',
     })
-    this.enableAddToCohort = this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts    
   },
   beforeDestroy() {
     window.removeEventListener('click', this.closeSubMenu)
@@ -147,10 +137,10 @@ export default {
       'getChartSelection',
       'getHasAssignedConfig',
       'getAllChartConfigs',
+      'getMriFrontendConfig',
       'getText',
       'getSelectedDataset',
       'getMriFrontendConfig',
-      'getActiveBookmark',
     ]),
     chartSelection() {
       return this.getChartSelection()
@@ -165,12 +155,9 @@ export default {
       }
       return false
     },
-    getSelectedDatasetText() {
-      return this.getSelectedDataset.name == '' ? 'Untitled' : this.getSelectedDataset.name
-    },
-    displayAddToCohort() {      
-      return this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts && this.getActiveBookmark
-    },
+    getSelectedDatasetText(){
+      return this.getSelectedDataset.name == "" ? "Untitled" : this.getSelectedDataset.name
+    }
   },
   methods: {
     ...mapActions([
@@ -186,7 +173,7 @@ export default {
       'setPatientListTotalRequested',
       'setPatientTotalRequested',
       'requestTotalPatientCount',
-      'refreshPatientCount',
+      'refreshPatientCount'
     ]),
     openSettingsConfig() {
       const eventBus = sap.ui.getCore().getEventBus()
@@ -288,9 +275,6 @@ export default {
     drillDownClicked() {
       this.$emit('drilldown')
     },
-    openAddCohort() {
-      this.$emit('openAddCohort')
-    },
   },
   components: {
     ChartButton,
@@ -299,7 +283,6 @@ export default {
     patientCount,
     appIcon,
     DownloadMenu,
-    AddPatientsIcon,
   },
 }
 </script>

@@ -1,11 +1,8 @@
 <template>
   <messageBox v-if="showAddCohortDialog" dim="true" :busy="cohortBusy" messageType="custom" @close="closeWindow">
-    <template v-slot:header
-      >{{
-        getText('MRI_PA_COLL_ADD_PATIENTS_TO_COLLECTION') +
-        ` (${this.isSaveAsBookmark ? this.getUniqueName : this.bookmarkName})`
-      }}
-    </template>
+    <template v-slot:header>{{
+      getText('MRI_PA_COLL_ADD_PATIENTS_TO_COLLECTION') + ` (${this.bookmarkName})`
+    }}</template>
     <template v-slot:body>
       <div class="cohort-dialog">
         <appMessageStrip
@@ -67,7 +64,6 @@ import appSkinnyDropdown from '../lib/ui/app-skinny-dropdown.vue'
 import * as types from '../store/mutation-types'
 import { getPortalAPI } from '../utils/PortalUtils'
 import messageBox from './MessageBox.vue'
-import { generateUniqueName } from '../utils/BookmarkUtils'
 
 export default {
   name: 'addCohort',
@@ -109,27 +105,7 @@ export default {
       'getSelectedDataset',
       'getJwtTokenValue',
       'getCurrentPatientCount',
-      'getActiveBookmark',
-      'getCurrentBookmarkHasChanges',
-      'getBookmarks',
-      'getBookmarksData',
-      'getBookmarkByNameAndUsername',
     ]),
-    getUniqueName() {
-      return generateUniqueName(this.getBookmarks)
-    },
-    isNewBookmark() {
-      return this.getActiveBookmark.isNew || this.isSaveAsBookmark
-    },
-    isNotUserSharedBookmark() {
-      return this.getActiveBookmark.shared && this.username !== this.getActiveBookmark.user_id
-    },
-    isSaveAsBookmark() {
-      return this.isNotUserSharedBookmark && this.getCurrentBookmarkHasChanges
-    },
-    username() {
-      return getPortalAPI().username
-    },
     patientCount() {
       return this.getCurrentPatientCount
     },
@@ -169,37 +145,25 @@ export default {
     },
   },
   methods: {
-    ...mapActions([
-      'onAddCohortOkButtonPress',
-      'loadOldCollections',
-      'fireQuery',
-      'getPLRequest',
-      'saveNewBookmark',
-      'updateBookmark',
-      'setActiveBookmark',
-      'loadAllBookmarks',
-      'loadbookmarkToState',
-    ]),
+    ...mapActions(['onAddCohortOkButtonPress', 'loadOldCollections', 'fireQuery', 'getPLRequest']),
     ...mapMutations([types.SET_COHORT_TYPE, types.SET_COLLECTION_TYPE, types.COLLECTIONS_SET_HASEXISTINGCOLLECTION]),
     openAddCohortDialog() {
       this.showAddCohortDialog = true
     },
-    async onOkButtonPress() {
-      await this.checkBookmark()
-
+    onOkButtonPress() {
+      const portalAPI = getPortalAPI()
       const syntax = JSON.stringify({
         datasetId: this.getSelectedDataset.id,
-        bookmarkId: this.getActiveBookmark.bmkId,
+        bookmarkId: this.bookmarkId,
       })
       const params = {
         datasetId: this.getSelectedDataset.id,
         mriquery: JSON.stringify(this.getPLRequest({ bmkId: this.bookmarkId })),
         name: this.cohortName,
         description: this.cohortDescription,
-        owner: this.username,
+        owner: portalAPI.username,
         syntax: syntax,
       }
-
       this.resetMessageStrip()
       this.cohortBusy = true
       this.onAddCohortOkButtonPress({
@@ -224,40 +188,6 @@ export default {
           }
           return err
         })
-    },
-    async setNewActiveBookmark(bookmarkName) {
-      await this.loadAllBookmarks()
-      const savedBookmark = this.getBookmarkByNameAndUsername(bookmarkName, this.username)
-      this.setActiveBookmark(savedBookmark)
-      this.loadbookmarkToState({ bmkId: this.getActiveBookmark.bmkId, chartType: this.getActiveBookmark.chartType })
-    },
-    async checkBookmark() {
-      if (this.isNewBookmark) {
-        if (this.isNotUserSharedBookmark) {
-          await this.saveNewBookmark({
-            cmd: 'insert',
-            bookmarkname: this.getUniqueName,
-            bookmark: JSON.stringify(this.getBookmarksData),
-            shareBookmark: false,
-          })
-          return await this.setNewActiveBookmark(this.getUniqueName)
-        } else {
-          await this.saveNewBookmark({
-            cmd: 'insert',
-            bookmarkname: this.bookmarkName,
-            bookmark: JSON.stringify(this.getBookmarksData),
-            shareBookmark: false,
-          })
-          return await this.setNewActiveBookmark(this.bookmarkName)
-        }
-      } else if (this.getCurrentBookmarkHasChanges) {
-        await this.updateBookmark({
-          cmd: 'update',
-          bookmark: JSON.stringify(this.getBookmarksData),
-          shareBookmark: this.getActiveBookmark.shared,
-        })
-        return await this.setNewActiveBookmark(this.bookmarkName)
-      }
     },
     closeWindow() {
       this.resetMessageStrip()

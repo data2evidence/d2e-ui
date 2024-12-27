@@ -40,15 +40,6 @@
               v-if="displayCohorts"
             ></bookmarks>
 
-            <addCohort
-              v-if="getActiveBookmark"
-              :openAddDialog="showAddCohortDialog"
-              :bookmarkId="getActiveBookmarkId()"
-              :bookmarkName="getActiveBookmarkName()"
-              @closeEv="showAddCohortDialog = false"
-            >
-            </addCohort>
-
             <filters v-bind:class="{ hidden: displayCohorts || displaySharedBookmarks }"></filters>
           </div>
         </pane>
@@ -60,8 +51,6 @@
               @unhideEv="togglePanel(PANEL.LEFT)"
               @drilldown="onDrilldown"
               @open-filtersummary="toggleFilterCardSummary(...arguments)"
-              @openAddCohort="showAddCohortDialog = true"
-              v-if="getMriFrontendConfig"
             ></chartToolbar>
             <!-- "ref" used in solution from similar issue: https://github.com/antoniandre/splitpanes/issues/157 -->
             <div class="d-flex pane-right-content" ref="pane-right-content">
@@ -179,7 +168,6 @@ import SharedBookmarks from './SharedBookmarks.vue'
 import SharedChartDialog from './SharedChartDialog.vue'
 import SplashScreen from './SplashScreen.vue'
 import ResizeObserver from './ResizeObserver.vue'
-import addCohort from './AddCohort.vue'
 import { getPortalAPI } from '../utils/PortalUtils'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
@@ -214,9 +202,7 @@ export default {
       showChartAndListModal: false,
       paneSize: PANE_SIZE.FULL,
       PANE_SIZE,
-      PANEL,
-      showAddCohortDialog: false,
-      chartBusy: false,
+      PANEL
     }
   },
   created() {
@@ -385,9 +371,6 @@ export default {
         return ''
       }
     },
-    getActiveBookmarkId() {
-      return this.getActiveBookmark.bmkId
-    },
     getTranslationList() {
       return this.getMriFrontendConfig
         .getAttributeList()
@@ -456,7 +439,6 @@ export default {
     SplashScreen,
     ResizeObserver,
     appIcon,
-    addCohort,
     Splitpanes,
     Pane,
   },

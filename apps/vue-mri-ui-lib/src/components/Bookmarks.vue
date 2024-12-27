@@ -152,21 +152,42 @@
                           :key="container.content"
                         >
                           <tr>
-                            <td class="bookmark-item-cards-items" colspan="2">
-                              <div>
-                                <template v-for="filterCard in container.content" :key="filterCard.name">
-                                  <div class="bookmark-filtercard">
-                                    <span class="bookmark-headelement bookmark-element">{{ filterCard.name }}</span>
-                                    <template v-for="attribute in filterCard.visibleAttributes" :key="attribute.name">
-                                      <span class="bookmark-element">{{ attribute.name }}</span>
+                            <td colspan="2">
+                              <div class="bookmark-row-separator"></div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <span
+                                class="icon"
+                                v-bind:style="'font-family:' + getChartInfo(bookmark.chartType, 'iconGroup')"
+                                >{{ getChartInfo(bookmark.chartType, 'icon') }}</span
+                              >
+                            </td>
+                            <td>
+                              <div>{{ getText(getChartInfo(bookmark.chartType, 'tooltip')) }}</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="vertical-align: top">
+                              <span class="icon" style="font-family: app-icons"></span>
+                            </td>
+                            <td>
+                              <div class="bookmark-item-axes">
+                                <template
+                                  v-for="axis in getAxisFormatted(bookmark.axisInfo, bookmark.chartType)"
+                                  :key="axis.name"
+                                >
+                                  <div>
+                                    <label style="display: flex; align-items: top">
                                       <span
-                                        class="bookmark-element bookmark-constraint"
-                                        :key="constraint"
-                                        v-for="constraint in attribute.visibleConstraints"
-                                        >{{ getConstraint(constraint) }}</span
+                                        v-if="bookmark.chartType !== 'list'"
+                                        class="icon"
+                                        :style="`font-family: ${axis.iconGroup}; margin-top: 0`"
+                                        >{{ axis.icon }}</span
                                       >
-                                      <span class="bookmark-element">;</span>
-                                    </template>
+                                      <span>{{ axis.name }}</span>
+                                    </label>
                                   </div>
                                 </template>
                               </div>
@@ -272,15 +293,16 @@
                         <!-- <span class="icon"></span> -->
                       </button>
                     </td>
-                    <td>
-                      <button
-                        :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
-                        class="bookmark-button"
-                        v-on:click.stop="this.openCohortListDialog(bookmark)"
-                      >
-                        <CohortIcon />
-                      </button>
-                    </td>
+                    <td v-if="enableAddToCohort">
+                        <button
+                          v-on:click.stop="addCohort(bookmark)"
+                          :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
+                          class="bookmark-button"
+                        >
+                          <!-- <span class="icon" style="font-family: app-icons"> </span> -->
+                          <AddPatientsIcon />
+                        </button>
+                      </td>
                     <td>
                       <button
                         :title="getText('MRI_PA_BUTTON_RUN_DQD')"
@@ -302,7 +324,8 @@
                   </tr>
                 </table>
               </div>
-            </div>
+            </div >
+
           </template>
         </div>
       </div>
@@ -333,6 +356,14 @@
       @closeEv="showCohortListDialog = false"
     >
     </cohortListDialog>
+
+    <addCohort
+      :openAddDialog="showAddCohortDialog"
+      :bookmarkId="this.selectedBookmark.id"
+      :bookmarkName="this.selectedBookmark.name"
+      @closeEv="showAddCohortDialog = false"
+    >
+    </addCohort>
 
     <messageBox
       dim="true"
@@ -366,6 +397,7 @@ import appLink from '../lib/ui/app-link.vue'
 import Constants from '../utils/Constants'
 import cohortComparisonDialog from './CohortComparisonDialog.vue'
 import messageBox from './MessageBox.vue'
+import addCohort from './AddCohort.vue'
 import cohortListDialog from './CohortListDialog.vue'
 import { getPortalAPI } from '../utils/PortalUtils'
 import formatBookmarkDisplay from '../utils/BookmarkUtils'
@@ -393,7 +425,9 @@ export default {
       initBookmarkId: this.initBookmarkId,
       showCohortCompareDialog: false,
       showCohortListDialog: false,
+      showAddCohortDialog: false,
       showIncompatibleMessage: false,
+      enableAddToCohort: false,
       cohortName: 'New cohort',
       isInvalidName: false,
       showSaveOrDiscardDialog: false,
@@ -401,6 +435,9 @@ export default {
       selectedBmkId: '',
       selectedChartType: '',
     }
+  },
+  created() {
+    this.enableAddToCohort = this.getMriFrontendConfig._internalConfig.panelOptions.addToCohorts
   },
   watch: {
     initBookmarkId() {
@@ -688,6 +725,10 @@ export default {
         this.closeRenameBookmark()
       })
     },
+    addCohort(bookmark) {
+      this.selectedBookmark = bookmark
+      this.showAddCohortDialog = true
+    },
     closeDeleteBookmark() {
       this.showDeleteDialog = false
     },
@@ -708,15 +749,15 @@ export default {
           params,
           method: 'delete',
           bookmarkId: bookmark.id,
-        })
-        await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
-        this.closeDeleteBookmark()
+        });
+        await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } });
+        this.closeDeleteBookmark();
         if (activeBookmark && activeBookmark.bookmarkname === bookmark.name) {
-          this[types.SET_ACTIVE_BOOKMARK](null)
-          this.reset()
+          this[types.SET_ACTIVE_BOOKMARK](null);
+          this.reset();
         }
       } catch (error) {
-        console.error('Error deleting bookmark:', error)
+        console.error('Error deleting bookmark:', error);
       }
     },
     closeIncompatibleMessage() {
@@ -777,6 +818,8 @@ export default {
       return uniqueName
     },
     reset() {
+      console.log('reset');
+      
       this[types.CONFIG_SET_HAS_ASSIGNED](false)
       this.$nextTick(() => {
         this.resetChartProperties()
@@ -792,6 +835,7 @@ export default {
     icon,
     appLink,
     cohortComparisonDialog,
+    addCohort,
     cohortListDialog,
     CohortIcon,
     AddPatientsIcon,
