@@ -109,8 +109,9 @@
                         :text="`${bookmark.name} ${bookmark.shared ? '(Shared)' : ''}`"
                         :labelClass="'font-color-red'"
                       ></appCheckbox>
-                    <!-- add the new icons here -->
-
+                    <div class="bookmark-item-header__status_icons">
+                      icons
+                    </div>
                     </div>
                   </td>
                 </tr>
