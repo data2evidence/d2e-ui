@@ -109,6 +109,8 @@
                         :text="`${bookmark.name} ${bookmark.shared ? '(Shared)' : ''}`"
                         :labelClass="'font-color-red'"
                       ></appCheckbox>
+                    <!-- add the new icons here -->
+
                     </div>
                   </td>
                 </tr>
@@ -144,10 +146,6 @@
                   <td>
                     <div class="bookmark-item-content" v-on:click="loadBookmarkCheck(bookmark.id, bookmark.chartType)">
                       <table class="bookmark-item-cards">
-                        <thead>
-                          <th style="width: 25px"></th>
-                          <th></th>
-                        </thead>
                         <template
                           v-for="container in getCardsFormatted(bookmark.filterCardData)"
                           :key="container.content"
@@ -174,11 +172,7 @@
                             </td>
                           </tr>
                         </template>
-                        <tr>
-                          <td colspan="2">
-                            <div class="bookmark-row-separator"></div>
-                          </td>
-                        </tr>
+
                         <tr>
                           <td>
                             <span
@@ -231,6 +225,41 @@
                     </div>
                   </td>
                 </tr>
+
+                
+                <tr>
+                  <td>
+                    <div class="bookmark-item-content">
+                      <table>
+                        <!-- <tr>
+                          <td colspan="2">
+                            <div class="bookmark-row-separator"></div>
+                          </td>
+                        </tr> -->
+                        <tr class="bookmark-item-info">
+                          <td class="bookmark-filtercard">
+                            <div style="display: block">
+                              <span class="bookmark-headelement bookmark-element">Cohort ID:</span>
+                              10
+                            </div>
+                            <div style="display: block margin-right: 16px">
+                              <span class="bookmark-headelement bookmark-element">Cohort Name:</span>
+                              MyCohort
+                            </div>
+                            <div style="display: block">
+                              <span class="bookmark-headelement bookmark-element">Patient Count:</span>
+                              123322
+                            </div>
+                            <div style="display: block margin-right: 16px">
+                              <span class="bookmark-headelement bookmark-element">Created On:</span>
+                              8 Apr 2024
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
               </table>
               <div class="bookmark-item-footer">
                 <div class="bookmark-item-footer__break" />
@@ -265,6 +294,7 @@
                         <!-- <span class="icon"></span> -->
                       </button>
                     </td>
+                    <!-- add new icon here -->
                   </tr>
                 </table>
               </div>
