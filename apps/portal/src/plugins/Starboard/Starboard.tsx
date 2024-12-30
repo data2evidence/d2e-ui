@@ -11,11 +11,14 @@ import { convertJupyterToStarboard, notebookContentToText } from "./utils/jupyst
 import { i18nKeys } from "../../contexts/app-context/states";
 import env from "../../env";
 import "./Starboard.scss";
+import { getAuthToken } from "../../containers/auth/auth";
+
 
 const MRI_ROOT_URL = "analytics-svc";
 const uiFilesUrl = env.REACT_APP_DN_BASE_URL;
 const zipUrl = `${uiFilesUrl}starboard-notebook-base/alp-starboard-notebook-base.zip`;
-interface StarboardProps extends PageProps<ResearcherStudyMetadata> {}
+const awsLambdaUrl = "aws-lambda/api/me";
+interface StarboardProps extends PageProps<ResearcherStudyMetadata> {};
 
 export const Starboard: FC<StarboardProps> = ({ metadata }) => {
   const { getText } = useTranslation();
@@ -39,6 +42,17 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
   const [notebooks, setNotebooks] = useState<StarboardNotebook[]>();
   const [activeNotebook, setActiveNotebook] = useState<StarboardNotebook | undefined>();
   const [isShared, setIsShared] = useState<boolean | undefined>();
+
+  // Get Bearer Token from d2e portal
+  const [access_token, setToken] = useState("");
+  const getBearerToken = useCallback(async () => { 
+    const token = await getAuthToken(false); 
+    return `Bearer ${token}`; }, []);
+  useEffect(() => { 
+    const fetchToken = async () => {
+    const bearerToken = await getBearerToken();
+    setToken(bearerToken); };
+    fetchToken(); }, []);
 
   const updateActiveNotebook = useCallback((notebook?: StarboardNotebook) => {
     setActiveNotebook(notebook);
@@ -89,6 +103,8 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
         notebookContent: notebookContent || "",
         src: `${uiFilesUrl}starboard-notebook-base/index.html`,
         preventNavigationWithUnsavedChanges: true,
+        suggestionUrl: `${uiFilesUrl}${awsLambdaUrl}`,
+        bearerToken: access_token,
         onUnsavedChangesStatusChange: () => setUnsaved(true),
       });
 
