@@ -1,7 +1,6 @@
 export * from "./useAzureAdConfigs";
 export * from "./useDatasets";
 export * from "./useDataset";
-export * from "./useDatasetDashboards";
 export * from "./useDatasetFilterScopes";
 export * from "./useDatasetResources";
 export * from "./useDatasetTagConfigs";
@@ -24,6 +23,4 @@ export * from "./dataflow/useDataQualityOverviewFromId";
 export * from "./dataflow/useDatasetLatestFlowRun";
 export * from "./useVocabSchemas";
 export * from "./useDatasetReleases";
-export * from "./useDashboard";
 export * from "./useOverviewDescription";
-export * from "./useDashboards";

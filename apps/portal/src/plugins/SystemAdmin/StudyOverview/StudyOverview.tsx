@@ -14,7 +14,7 @@ import {
   Button,
 } from "@portal/components";
 import { CloseDialogType, Study, StudyAttribute } from "../../../types";
-import { useDialogHelper, useDatasets, useDatabases, useDashboards } from "../../../hooks";
+import { useDialogHelper, useDatasets, useDatabases } from "../../../hooks";
 import { useTranslation } from "../../../contexts";
 import AddStudyDialog from "./AddStudyDialog/AddStudyDialog";
 import UpdateStudyDialog from "./UpdateStudyDialog/UpdateStudyDialog";
@@ -45,7 +45,6 @@ const StudyOverview: FC = () => {
   const [fetchUpdatesFlowIds, setFetchUpdatesFlowIds] = useState<string[]>([]);
   const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, undefined, refetch);
   const [databases] = useDatabases();
-  const [dashboards] = useDashboards();
 
   const getDbDialect = useCallback(
     (dbName: string) => {
@@ -360,7 +359,6 @@ const StudyOverview: FC = () => {
             setLoading={setLoading}
             studies={datasets}
             databases={databases}
-            allDashboards={dashboards}
           />
         </div>
 
@@ -457,7 +455,6 @@ const StudyOverview: FC = () => {
           {activeDataset && (
             <UpdateStudyDialog
               dataset={activeDataset}
-              allDashboards={dashboards}
               open={showUpdateStudyDialog}
               onClose={handleCloseUpdateStudyDialog}
             />

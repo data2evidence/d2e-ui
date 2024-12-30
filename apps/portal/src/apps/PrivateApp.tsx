@@ -5,7 +5,6 @@ import SystemAdmin from "../containers/systemadmin/SystemAdmin";
 import NoAccess from "../containers/shared/NoAccess/NoAccess";
 import { Logout } from "../containers/auth/Logout";
 import { LoginSilent } from "../containers/auth/LoginSilent";
-import { Dashboard } from "../containers/dashboard/Dashboard";
 import { config } from "../config";
 import { usePostLoginRedirectUri, useUser } from "../contexts";
 import { TerminologyWithEventListener } from "../plugins/Researcher/Terminology/TerminologyWithEventListener";
@@ -44,7 +43,6 @@ export const PrivateApp: FC = () => {
         {user?.canAccessResearcherPortal && <Route path={`${config.ROUTES.researcher}/*`} element={<Researcher />} />}
         <Route path={config.ROUTES.logout} element={<Logout />} />
         <Route path={config.ROUTES.noAccess} element={<NoAccess />} />
-        <Route path={config.ROUTES.dashboard} element={<Dashboard />} />
         <Route path="/" element={<Navigate to={defaultRoute} />}>
           <Route path="public" element={<Navigate to={defaultRoute} />} />
           <Route path="login" element={<Navigate to={defaultRoute} />} />
