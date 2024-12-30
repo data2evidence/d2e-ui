@@ -16,9 +16,9 @@ import { getAuthToken } from "../../containers/auth/auth";
 
 const MRI_ROOT_URL = "analytics-svc";
 const uiFilesUrl = env.REACT_APP_DN_BASE_URL;
-const awsLambda = env.AWS_LAMBDA
 const zipUrl = `${uiFilesUrl}starboard-notebook-base/alp-starboard-notebook-base.zip`;
-interface StarboardProps extends PageProps<ResearcherStudyMetadata> {}
+const awsLambdaUrl = "aws-lambda/api/me";
+interface StarboardProps extends PageProps<ResearcherStudyMetadata> {};
 
 export const Starboard: FC<StarboardProps> = ({ metadata }) => {
   const { getText } = useTranslation();
@@ -103,7 +103,7 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
         notebookContent: notebookContent || "",
         src: `${uiFilesUrl}starboard-notebook-base/index.html`,
         preventNavigationWithUnsavedChanges: true,
-        suggestionUrl: `${uiFilesUrl}${awsLambda}`,
+        suggestionUrl: `${uiFilesUrl}${awsLambdaUrl}`,
         bearerToken: access_token,
         onUnsavedChangesStatusChange: () => setUnsaved(true),
       });
