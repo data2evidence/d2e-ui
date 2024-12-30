@@ -44,7 +44,7 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
   const [isShared, setIsShared] = useState<boolean | undefined>();
 
   // Get Bearer Token from d2e portal
-  const [access_token, setToken] = useState("");
+  const [accessToken, setToken] = useState("");
   const getBearerToken = useCallback(async () => { 
     const token = await getAuthToken(false); 
     return `Bearer ${token}`; }, []);
@@ -104,7 +104,7 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
         src: `${uiFilesUrl}starboard-notebook-base/index.html`,
         preventNavigationWithUnsavedChanges: true,
         suggestionUrl: `${uiFilesUrl}${awsLambdaUrl}`,
-        bearerToken: access_token,
+        bearerToken: accessToken,
         onUnsavedChangesStatusChange: () => setUnsaved(true),
       });
 
