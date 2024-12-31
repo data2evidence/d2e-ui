@@ -19,7 +19,10 @@ const CustomHandle: FC<CustomHandleProps> = ({
       type={type}
       id={`${type}_${nodeId}_${ioType}`}
       position={type === "source" ? Position.Right : Position.Left}
-      style={{ background: HandleIODict[ioType].color }}
+      style={{
+        background: HandleIODict[ioType].color,
+        border: HandleIODict[ioType].border,
+      }}
       {...props}
     />
   </Tooltip>
