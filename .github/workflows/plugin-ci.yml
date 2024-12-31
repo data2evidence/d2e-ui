@@ -72,3 +72,19 @@ jobs:
           package-type: "npm"
           min-versions-to-keep: 3
           delete-only-pre-release-versions: "true"
+
+      - name: Pack
+        run: |
+          if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then
+            npm pack
+          fi
+      - name: Push
+        uses: svenstaro/upload-release-action@v2
+        if: ${{ env.GIT_CI_BRANCH_NAME == 'develop' }}
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: 'alp-os/d2e-ui-0.0.99.tgz'
+          tag: latest
+          target_commit: develop
+          prerelease: true
+          overwrite: true
