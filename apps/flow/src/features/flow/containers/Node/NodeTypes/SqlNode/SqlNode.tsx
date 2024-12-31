@@ -1,9 +1,11 @@
 import React from "react";
 import { NodeProps } from "reactflow";
 import { useBooleanHelper } from "~/features/flow/hooks";
+import { HandleIOType } from "../type";
 import { NodeDataState } from "../../../../types";
 import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
+import { SourceHandle, TargetHandle } from "../../CustomHandle/CustomHandle";
 import { SqlDrawer } from "./SqlDrawer";
 import "./SqlNode.scss";
 
@@ -33,6 +35,12 @@ export const SqlNode = (node: NodeProps<SqlNodeData>) => {
         resultType={data.error ? "error" : "success"}
         onResultClick={data.result ? openResult : null}
         node={node}
+        LeftHandle={
+          <TargetHandle nodeId={node.id} ioType={HandleIOType.Table} />
+        }
+        RightHandle={
+          <SourceHandle nodeId={node.id} ioType={HandleIOType.Table} />
+        }
       >
         {data.description}
       </NodeLayout>
