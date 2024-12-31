@@ -32,8 +32,9 @@ import { api } from "../../../../axios/api";
 import { validateCredentials } from "../CredentialValidator";
 import { DbCredentialProcessor } from "../CredentialProcessor";
 import { isValidJson } from "../../../../utils";
-import "./SaveDbDialog.scss";
 import { useTranslation } from "../../../../contexts";
+import { useVocabSchemas } from "../../../../hooks";
+import "./SaveDbDialog.scss";
 
 interface SaveDbDialogProps {
   open: boolean;
@@ -114,7 +115,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
   const [feedback, setFeedback] = useState<Feedback>({});
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
-  const [vocabSchemaOptions, setVocabSchemaOptions] = useState<string[]>([]);
+  const [vocabSchemas] = useVocabSchemas(formData.dialect);
 
   useEffect(() => {
     if (open) {
@@ -138,11 +139,6 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
 
   const handleDialectChange = useCallback(
     (dialect: string) => {
-      if (dialect === "hana") {
-        setVocabSchemaOptions(["CDMVOCAB"]);
-      } else {
-        setVocabSchemaOptions(["cdmvocab"]);
-      }
       handleFormDataChange({ dialect, vocabSchemas: [] });
     },
     [handleFormDataChange]
@@ -287,7 +283,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         <Box mb={4}>
           <Autocomplete
             multiple
-            options={vocabSchemaOptions}
+            options={vocabSchemas || []}
             sx={styles}
             id="autocomplete-vocab-schemas"
             renderTags={(value: string[], getTagProps) =>
