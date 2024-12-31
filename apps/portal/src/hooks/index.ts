@@ -6,6 +6,7 @@ export * from "./useDatasetResources";
 export * from "./useDatasetTagConfigs";
 export * from "./useDatasetAttributeConfigs";
 export * from "./useDbs";
+export * from "./useDbVocabSchemas";
 export * from "./useDialogHelper";
 export * from "./useEnabledFeatures";
 export * from "./useFeatures";

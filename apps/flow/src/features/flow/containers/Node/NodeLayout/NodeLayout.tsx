@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { Connection, Handle, NodeProps, Position } from "reactflow";
+import React, { ReactNode } from "react";
+import { NodeProps } from "reactflow";
 import classNames from "classnames";
 import {
   Box,
@@ -8,6 +8,8 @@ import {
   Button,
 } from "@portal/components";
 import { NodeDataState } from "../../../types";
+import { HandleIOType } from "../NodeTypes";
+import { SourceHandle, TargetHandle } from "../CustomHandle/CustomHandle";
 import "./NodeLayout.scss";
 
 export interface NodeLayoutProps<T> {
@@ -18,6 +20,8 @@ export interface NodeLayoutProps<T> {
   className?: string;
   children: React.ReactNode;
   node: NodeProps<T>;
+  RightHandle?: ReactNode | "default" | null;
+  LeftHandle?: ReactNode | "default" | null;
 }
 
 export const NodeLayout = <T extends NodeDataState>({
@@ -28,40 +32,25 @@ export const NodeLayout = <T extends NodeDataState>({
   className,
   children,
   node,
+  RightHandle = "default",
+  LeftHandle = "default",
 }: NodeLayoutProps<T>) => {
   const classes = classNames("node", className, {
     "node--has-setting": typeof onSettingClick === "function",
     "node--has-error": resultType === "error",
   });
-  const [sourceConnected, setSourceConnected] = useState<string | null>(null);
-  const [targetConnected, setTargetConnected] = useState<string | null>(null);
-  const INPUT_NODES = ["db_writer_node"];
-  const OUTPUT_NODES = ["csv_node", "db_reader_node", "sql_query_node"];
-
-  const handleConnectSource = useCallback((connection: Connection) => {
-    setSourceConnected(connection.source);
-  }, []);
-
-  const handleConnectTarget = useCallback((connection: Connection) => {
-    setTargetConnected(connection.target);
-  }, []);
 
   return (
     <div className={classes}>
-      {!INPUT_NODES.includes(node.type) && (
-        <Handle
-          type="source"
-          position={node.sourcePosition || Position.Right}
-          onConnect={handleConnectSource}
-        />
+      {RightHandle === "default" ? (
+        <SourceHandle ioType={HandleIOType.Any} nodeId={node.id} />
+      ) : (
+        RightHandle
       )}
-
-      {!OUTPUT_NODES.includes(node.type) && (
-        <Handle
-          type="target"
-          position={node.targetPosition || Position.Left}
-          onConnect={handleConnectTarget}
-        />
+      {LeftHandle === "default" ? (
+        <TargetHandle ioType={HandleIOType.Any} nodeId={node.id} />
+      ) : (
+        LeftHandle
       )}
 
       <div className="node__header">

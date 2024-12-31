@@ -4,7 +4,9 @@ import { useBooleanHelper } from "~/features/flow/hooks";
 import { NodeDataState } from "../../../../types";
 import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
+import { HandleIOType } from "../type";
 import { DbReaderDrawer } from "./DbReaderDrawer";
+import { SourceHandle } from "../../CustomHandle/CustomHandle";
 import "./DbReaderNode.scss";
 
 export interface DbReaderNodeData extends NodeDataState {
@@ -28,6 +30,10 @@ export const DbReaderNode = (node: NodeProps<DbReaderNodeData>) => {
         resultType={data.error ? "error" : "success"}
         onResultClick={data.result ? openResult : null}
         node={node}
+        LeftHandle={null}
+        RightHandle={
+          <SourceHandle ioType={HandleIOType.Table} nodeId={node.id} />
+        }
       >
         {data.description}
       </NodeLayout>
