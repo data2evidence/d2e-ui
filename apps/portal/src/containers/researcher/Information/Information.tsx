@@ -21,10 +21,9 @@ import {
 } from "@portal/components";
 import { StudyAttribute, StudyTag, DatasetResource } from "../../../types";
 import { useActiveDataset, useFeedback, useTranslation, useUser } from "../../../contexts";
-import { useDatasetResources, useDataset, useDatasetDashboards, useDatasetReleases } from "../../../hooks";
+import { useDatasetResources, useDataset, useDatasetReleases } from "../../../hooks";
 import { DQDJobResults } from "../../../plugins/SystemAdmin/DQD/DQDJobResults/DQDJobResults";
 import DataQualityHistory from "./DataQualityHistory/DataQualityHistory";
-import { DatasetDashboards } from "./DatasetDashboards/DatasetDashboards";
 import { Roles } from "../../../config";
 import { saveBlobAs } from "../../../utils";
 import { api } from "../../../axios/api";
@@ -69,7 +68,6 @@ export const Information: FC = () => {
   const [accessRequests, setAccessRequests] = useState<StudyAccessRequest[]>([]);
 
   const [dataset, loading, error] = useDataset(activeDatasetId);
-  const [dashboards] = useDatasetDashboards(activeDatasetId);
   const [resources, resourcesLoading, resourcesError] = useDatasetResources(activeDatasetId);
   const [releases] = useDatasetReleases(activeDatasetId);
 
@@ -193,19 +191,6 @@ export const Information: FC = () => {
               label={getText(i18nKeys.INFORMATION__TAB_HISTORY)}
               id="tab-4"
               value="history"
-            />
-          )}
-          {(dashboards.length || 0) > 0 && (
-            <Tab
-              disableRipple
-              sx={{
-                "&.MuiTab-root": {
-                  width: "200px",
-                },
-              }}
-              label={getText(i18nKeys.INFORMATION__TAB_DASHBOARD)}
-              id="tab-3"
-              value="dashboard"
             />
           )}
         </Tabs>
@@ -378,7 +363,6 @@ export const Information: FC = () => {
             </>
           )}
           {tabValue === DatasetInfoTab.History && <DataQualityHistory activeDatasetId={activeDatasetId} />}
-          {tabValue === DatasetInfoTab.Dashboard && <DatasetDashboards dashboards={dashboards} />}
         </div>
       </div>
     </Card>

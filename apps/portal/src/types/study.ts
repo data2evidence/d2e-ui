@@ -17,7 +17,6 @@ export interface Study {
   studyDetail?: StudyDetail;
   attributes?: StudyAttribute[];
   tags?: StudyTag[];
-  dashboards: DatasetDashboard[];
 }
 
 export interface NewStudyInput {
@@ -37,7 +36,6 @@ export interface NewStudyInput {
   fhirProjectId: string | undefined;
   visibilityStatus: string;
   detail: DatasetDetail;
-  dashboards: DatasetDashboard[];
   attributes: {
     attributeId: string;
     value: string;
@@ -170,6 +168,7 @@ export interface UpdateStudyMetadataInput {
   dashboards: DatasetDashboard[];
 }
 
+// remove once backend is deprecated
 export interface DatasetDashboard {
   name: string;
   url: string;

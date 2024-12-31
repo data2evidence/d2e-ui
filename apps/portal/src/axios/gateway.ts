@@ -48,15 +48,6 @@ export class Gateway {
     });
   }
 
-  public getDatasetDashboards(datasetId: string): Promise<any> {
-    return request({
-      baseURL: GATEWAY_BASE_URL,
-      url: `/dataset/dashboard/list`,
-      method: "GET",
-      params: { datasetId: datasetId },
-    });
-  }
-
   public getSchemasVersionInformation(
     schemas: string[],
     dialect: string,
@@ -78,13 +69,6 @@ export class Gateway {
       url: `/db/schema`,
       method: "PUT",
       data: input,
-    });
-  }
-
-  public registerDashboardRoutes() {
-    return request({
-      url: "/dashboard-gate/register",
-      method: "POST",
     });
   }
 
