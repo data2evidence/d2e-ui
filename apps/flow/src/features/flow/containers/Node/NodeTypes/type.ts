@@ -26,18 +26,19 @@ export enum HandleIOType {
 }
 
 export const HandleIODict: {
-  [key in HandleIOType]: { color: string; text: string };
+  [key in HandleIOType]: { color: string; text: string; border?: string };
 } = {
   [HandleIOType.Any]: {
-    color: "#000080",
+    color: "#ffffff",
     text: "Any",
+    border: "2px solid #000000",
   },
   [HandleIOType.Table]: {
-    color: "#ff5e59",
+    color: "#000080",
     text: "Table",
   },
   [HandleIOType.Object]: {
-    color: "#00855f",
+    color: "#ff5f5a",
     text: "Object",
   },
 };
