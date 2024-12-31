@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
-import { IDatabase } from "../types";
 import { DbCredentialsMgr } from "../axios/db-credentials-mgr";
 
-export const useVocabSchemas = (databases: IDatabase[], databaseCode: string): [{ [key: string]: string[] }] => {
-  const [vocabSchemas, setVocabSchemas] = useState<{ [key: string]: string[] }>({});
+export const useVocabSchemas = (dialect: string): [string[]] => {
+  const [vocabSchemas, setVocabSchemas] = useState<string[]>([]);
 
   const getVocabSchemas = useCallback(
     async (dialect: string) => {
       try {
         const dbCredentialsMgr = new DbCredentialsMgr();
-        const vocabSchemas = await dbCredentialsMgr.getDbVocabSchemas(dialect);
+        const vocabSchemas = await dbCredentialsMgr.getVocabSchemas(dialect);
         setVocabSchemas(vocabSchemas);
       } catch (error) {
         console.error(error);
@@ -19,13 +18,8 @@ export const useVocabSchemas = (databases: IDatabase[], databaseCode: string): [
   );
 
   useEffect(() => {
-    const db = databases.find((db) => {
-      return db.code === databaseCode;
-    });
-    if (db) {
-      getVocabSchemas(db.dialect);
-    }
-  }, [databases, databaseCode, getVocabSchemas]);
+    getVocabSchemas(dialect);
+  }, [dialect, getVocabSchemas]);
 
   return [vocabSchemas];
 };

@@ -28,6 +28,7 @@ export const CsvNode = (node: NodeProps<CsvNodeData>) => {
         resultType={data.error ? "error" : "success"}
         onResultClick={data.result ? openResult : null}
         node={node}
+        LeftHandle={null}
       >
         {data.description}
       </NodeLayout>
