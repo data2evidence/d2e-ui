@@ -83,7 +83,7 @@ jobs:
         if: ${{ env.GIT_CI_BRANCH_NAME == 'develop' }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: 'alp-os/d2e-ui-0.0.99.tgz'
+          file: alp-os-d2e-ui-0.0.99.tgz
           tag: latest
           target_commit: develop
           prerelease: true
