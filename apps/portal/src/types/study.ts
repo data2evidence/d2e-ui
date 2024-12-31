@@ -36,6 +36,7 @@ export interface NewStudyInput {
   fhirProjectId: string | undefined;
   visibilityStatus: string;
   detail: DatasetDetail;
+  dashboards: DatasetDashboard[];
   attributes: {
     attributeId: string;
     value: string;

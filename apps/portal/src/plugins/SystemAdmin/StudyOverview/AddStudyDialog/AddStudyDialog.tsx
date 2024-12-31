@@ -539,6 +539,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
       visibilityStatus,
       attributes: studyMetadata.filter((info) => info.attributeId !== ""),
       tags: studyTagsData?.map((tagName) => tagName),
+      dashboards: [],
     };
 
     try {
