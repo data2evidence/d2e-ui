@@ -14,7 +14,7 @@ import {
   Button,
 } from "@portal/components";
 import { CloseDialogType, Study, StudyAttribute } from "../../../types";
-import { useDialogHelper, useDatasets, useDatabases, useDashboards } from "../../../hooks";
+import { useDialogHelper, useDatasets, useDatabases } from "../../../hooks";
 import { useTranslation } from "../../../contexts";
 import AddStudyDialog from "./AddStudyDialog/AddStudyDialog";
 import UpdateStudyDialog from "./UpdateStudyDialog/UpdateStudyDialog";
@@ -26,10 +26,11 @@ import PermissionsDialog from "./PermissionsDialog/PermissionsDialog";
 import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
 import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
 import AnalysisDialog from "./AnalysisDialog/AnalysisDialog";
-import "./StudyOverview.scss";
 import { api } from "../../../axios/api";
 import { FlowRunJobStateTypes } from "../Jobs/types";
 import { JobRunTypes } from "../DQD/types";
+import CreateCacheDialog from "./CreateCacheDialog/CreateCacheDialog";
+import "./StudyOverview.scss";
 
 const enum StudyAttributeConfigIds {
   LATEST_SCHEMA_VERSION = "latest_schema_version",
@@ -44,7 +45,6 @@ const StudyOverview: FC = () => {
   const [fetchUpdatesFlowIds, setFetchUpdatesFlowIds] = useState<string[]>([]);
   const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, undefined, refetch);
   const [databases] = useDatabases();
-  const [dashboards] = useDashboards();
 
   const getDbDialect = useCallback(
     (dbName: string) => {
@@ -65,8 +65,9 @@ const StudyOverview: FC = () => {
   const [showDataQualityDialog, openDataQualityDialog, closeDataQualityDialog] = useDialogHelper(false);
   const [showDataCharacterizationDialog, openDataCharacterizationDialog, closeDataCharacterizationDialog] =
     useDialogHelper(false);
+  const [showCreateCacheDialog, openCreateCacheDialog, closeCreateCacheDialog] = useDialogHelper(false);
 
-  const [activeStudy, setActiveStudy] = useState<Study>();
+  const [activeDataset, setActiveDataset] = useState<Study>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -107,79 +108,87 @@ const StudyOverview: FC = () => {
   }, [fetchUpdatesFlowIds]);
 
   const handleUpdateStudy = useCallback(
-    (study: Study) => {
-      setActiveStudy(study);
+    (dataset: Study) => {
+      setActiveDataset(dataset);
       openUpdateStudyDialog();
     },
     [openUpdateStudyDialog]
   );
 
   const handleResources = useCallback(
-    (study: Study) => {
-      setActiveStudy(study);
+    (dataset: Study) => {
+      setActiveDataset(dataset);
       openResourcesDialog();
     },
     [openResourcesDialog]
   );
 
   const handleCopyStudy = useCallback(
-    (study: Study) => {
-      setActiveStudy(study);
+    (dataset: Study) => {
+      setActiveDataset(dataset);
       openCopyStudyDialog();
     },
     [openCopyStudyDialog]
   );
 
   const handleDeleteStudy = useCallback(
-    (study: Study) => {
-      setActiveStudy(study);
+    (dataset: Study) => {
+      setActiveDataset(dataset);
       openDeleteStudyDialog();
     },
     [openDeleteStudyDialog]
   );
 
   const handlePermissions = useCallback(
-    (study: Study) => {
-      setActiveStudy(study);
+    (dataset: Study) => {
+      setActiveDataset(dataset);
       openPermissionsDialog();
     },
     [openPermissionsDialog]
   );
 
   const handleRelease = useCallback(
-    (study: Study) => {
-      study.dialect = getDbDialect(study.databaseCode);
-      setActiveStudy(study);
+    (dataset: Study) => {
+      dataset.dialect = getDbDialect(dataset.databaseCode);
+      setActiveDataset(dataset);
       openReleaseDialog();
     },
     [getDbDialect, openReleaseDialog]
   );
 
   const handleUpdate = useCallback(
-    (study: Study) => {
-      study.dialect = getDbDialect(study.databaseCode);
-      setActiveStudy(study);
+    (dataset: Study) => {
+      dataset.dialect = getDbDialect(dataset.databaseCode);
+      setActiveDataset(dataset);
       openUpdateDialog();
     },
     [getDbDialect, openUpdateDialog]
   );
 
   const handleDataQuality = useCallback(
-    (study: Study) => {
-      study.dialect = getDbDialect(study.databaseCode);
-      setActiveStudy(study);
+    (dataset: Study) => {
+      dataset.dialect = getDbDialect(dataset.databaseCode);
+      setActiveDataset(dataset);
       openDataQualityDialog();
     },
     [getDbDialect, openDataQualityDialog]
   );
 
   const handleDataCharacterization = useCallback(
-    (study: Study) => {
-      study.dialect = getDbDialect(study.databaseCode);
-      setActiveStudy(study);
+    (dataset: Study) => {
+      dataset.dialect = getDbDialect(dataset.databaseCode);
+      setActiveDataset(dataset);
       openDataCharacterizationDialog();
     },
     [getDbDialect, openDataCharacterizationDialog]
+  );
+
+  const handleCreateCache = useCallback(
+    (dataset: Study) => {
+      setActiveDataset(dataset);
+      openCreateCacheDialog();
+    },
+    [openCreateCacheDialog]
   );
 
   const visibilityImgAlt = useCallback((value?: string) => {
@@ -298,14 +307,14 @@ const StudyOverview: FC = () => {
   }, [setFetchUpdatesLoading, setFetchUpdatesFlowIds, datasets]);
 
   const getAttributeValue = (
-    studyAttributes: StudyAttribute[] | undefined,
+    attributes: StudyAttribute[] | undefined,
     attributeConfigId: StudyAttributeConfigIds
   ): string => {
-    if (!studyAttributes) {
+    if (!attributes) {
       return MISSING_ATTRIBUTE_ERROR;
     }
-    const latestSchemaVersionAttribute = studyAttributes.find((studyAttribute: StudyAttribute) => {
-      return studyAttribute.attributeId === attributeConfigId;
+    const latestSchemaVersionAttribute = attributes.find((attribute: StudyAttribute) => {
+      return attribute.attributeId === attributeConfigId;
     });
     if (latestSchemaVersionAttribute) {
       return latestSchemaVersionAttribute.value;
@@ -314,10 +323,10 @@ const StudyOverview: FC = () => {
     }
   };
 
-  const checkIfStudyIsUpdatable = (study: Study): boolean => {
+  const checkIfStudyIsUpdatable = (dataset: Study): boolean => {
     // If schema version and
-    const currentSchemaVersion = getAttributeValue(study.attributes, StudyAttributeConfigIds.SCHEMA_VERSION);
-    const latestSchemaVersion = getAttributeValue(study.attributes, StudyAttributeConfigIds.LATEST_SCHEMA_VERSION);
+    const currentSchemaVersion = getAttributeValue(dataset.attributes, StudyAttributeConfigIds.SCHEMA_VERSION);
+    const latestSchemaVersion = getAttributeValue(dataset.attributes, StudyAttributeConfigIds.LATEST_SCHEMA_VERSION);
 
     // If current versions or latest verison attribute is missing, return false
     if (currentSchemaVersion === MISSING_ATTRIBUTE_ERROR || latestSchemaVersion === MISSING_ATTRIBUTE_ERROR) {
@@ -350,7 +359,6 @@ const StudyOverview: FC = () => {
             setLoading={setLoading}
             studies={datasets}
             databases={databases}
-            allDashboards={dashboards}
           />
         </div>
 
@@ -424,7 +432,7 @@ const StudyOverview: FC = () => {
 
                     <TableCell className="col-action">
                       <ActionSelector
-                        study={dataset}
+                        dataset={dataset}
                         isSchemaUpdatable={checkIfStudyIsUpdatable(dataset)}
                         handleDeleteStudy={handleDeleteStudy}
                         handleCopyStudy={handleCopyStudy}
@@ -435,6 +443,7 @@ const StudyOverview: FC = () => {
                         handleRelease={handleRelease}
                         handleDataQuality={handleDataQuality}
                         handleDataCharacterization={handleDataCharacterization}
+                        handleCreateCache={handleCreateCache}
                       />
                     </TableCell>
                   </TableRow>
@@ -443,20 +452,19 @@ const StudyOverview: FC = () => {
             </Table>
           </TableContainer>
 
-          {activeStudy && (
+          {activeDataset && (
             <UpdateStudyDialog
-              dataset={activeStudy}
-              allDashboards={dashboards}
+              dataset={activeDataset}
               open={showUpdateStudyDialog}
               onClose={handleCloseUpdateStudyDialog}
             />
           )}
           {showResourcesDialog && (
-            <DatasetResourcesDialog study={activeStudy} open={showResourcesDialog} onClose={closeResourcesDialog} />
+            <DatasetResourcesDialog study={activeDataset} open={showResourcesDialog} onClose={closeResourcesDialog} />
           )}
           {showCopyStudyDialog && (
             <CopyStudyDialog
-              study={activeStudy}
+              study={activeDataset}
               open={showCopyStudyDialog}
               onClose={handleCloseCopyStudyDialog}
               loading={loading}
@@ -465,22 +473,22 @@ const StudyOverview: FC = () => {
           )}
           {showDeleteStudyDialog && (
             <DeleteStudyDialog
-              study={activeStudy}
+              study={activeDataset}
               open={showDeleteStudyDialog}
               onClose={handleCloseDeleteStudyDialog}
             />
           )}
           {showPermissionsDialog && (
-            <PermissionsDialog study={activeStudy} open={showPermissionsDialog} onClose={closePermissionsDialog} />
+            <PermissionsDialog study={activeDataset} open={showPermissionsDialog} onClose={closePermissionsDialog} />
           )}
 
           {showUpdateDialog && (
-            <UpdateSchemaDialog study={activeStudy} open={showUpdateDialog} onClose={closeUpdateDialog} />
+            <UpdateSchemaDialog study={activeDataset} open={showUpdateDialog} onClose={closeUpdateDialog} />
           )}
 
           {showReleaseDialog && (
             <CreateReleaseDialog
-              study={activeStudy}
+              study={activeDataset}
               open={showReleaseDialog}
               onClose={closeReleaseDialog}
               loading={loading}
@@ -490,7 +498,7 @@ const StudyOverview: FC = () => {
 
           {showDataQualityDialog && (
             <AnalysisDialog
-              study={activeStudy}
+              study={activeDataset}
               runType={JobRunTypes.DQD}
               open={showDataQualityDialog}
               onClose={closeDataQualityDialog}
@@ -499,11 +507,15 @@ const StudyOverview: FC = () => {
 
           {showDataCharacterizationDialog && (
             <AnalysisDialog
-              study={activeStudy}
+              study={activeDataset}
               runType={JobRunTypes.DataCharacterization}
               open={showDataCharacterizationDialog}
               onClose={closeDataCharacterizationDialog}
             />
+          )}
+
+          {showCreateCacheDialog && (
+            <CreateCacheDialog dataset={activeDataset} open={showCreateCacheDialog} onClose={closeCreateCacheDialog} />
           )}
         </div>
       </div>

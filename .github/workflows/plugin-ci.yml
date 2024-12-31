@@ -7,7 +7,9 @@ on:
   push:
     branches:
       - develop
-      - trex
+
+env:
+  GIT_CI_BRANCH_NAME: ${{ github.ref_name }}
 
 jobs:
   build:
@@ -17,20 +19,20 @@ jobs:
       - uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: |
-              ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
-              ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
+            ${{ secrets.SSH_PRIVATE_KEY_NOTEBOOK_BASE }}
+            ${{ secrets.SSH_PRIVATE_KEY_STARBOARD_WRAP }}
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@alp-os'
+          node-version: "18.x"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@alp-os"
       - name: Setup yarn
         run: npm install -g yarn
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install Homebrew
         run: |
           sudo apt-get update
@@ -43,7 +45,7 @@ jobs:
       - name: Build
         run: yarn
         env:
-         CI: false
+          CI: false
       - name: Patch Package
         run: jq '.private=false' package.json > tmppkg; mv tmppkg package.json
       - name: Update version
@@ -52,29 +54,21 @@ jobs:
         run: |
           echo "Ensuring Homebrew environment is available..."
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          
+
           brew --version
 
-          yarn publish
+          if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then 
+              yarn publish
+          else 
+              npm publish --dry-run
+          fi
         env:
-          CI: false
+          CI: false # For portal build to ignore warnings and not treat them as errors
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/delete-package-versions@v5
-        with: 
-          package-name: 'd2e-ui'
-          package-type: 'npm'
+        with:
+          package-name: "d2e-ui"
+          package-type: "npm"
           min-versions-to-keep: 3
-          delete-only-pre-release-versions: 'true'
-      # - name: Pack
-      #   run: yarn pack --ignore-scripts
-      #   env:
-      #    CI: false
-      # - name: Push
-      #   uses: svenstaro/upload-release-action@v2
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: alp-os-d2e-ui-v1.0.0.tgz
-      #     tag: trex-latest
-      #     target_commit: trex
-      #     prerelease: true
-      #     overwrite: true
+          delete-only-pre-release-versions: "true"

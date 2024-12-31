@@ -28,7 +28,7 @@
 
 "@alp-os/alp-starboard-notebook@git+ssh://git@github.com/alp-os/alp-starboard-notebook-base.git#d4l-0.15.7-develop":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/alp-os/alp-starboard-notebook-base.git#1a452ac6777139e6f9c4c4e7e94bae55b8f2a936"
+  resolved "git+ssh://git@github.com/alp-os/alp-starboard-notebook-base.git#ea29012460ff4d04a55b767f65bdeefae49b9701"
 
 "@alp-os/alp-starboard-wrap@git+ssh://git@github.com/alp-os/alp-starboard-wrap.git#develop":
   version "1.0.0"

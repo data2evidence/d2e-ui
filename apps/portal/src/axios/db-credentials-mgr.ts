@@ -54,4 +54,12 @@ export class DbCredentialsMgr {
       method: "DELETE",
     });
   }
+
+  public getVocabSchemas(dialect: DbDialect): Promise<string[]> {
+    return request({
+      baseURL: DB_CRED_MGR_BASE_URL,
+      url: `vocab/${dialect}/schema/list`,
+      method: "GET",
+    });
+  }
 }
