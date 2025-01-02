@@ -12,12 +12,13 @@ import { i18nKeys } from "../../contexts/app-context/states";
 import env from "../../env";
 import "./Starboard.scss";
 import { getAuthToken } from "../../containers/auth/auth";
+import { useActiveDataset } from "../../contexts"
 
 
 const MRI_ROOT_URL = "analytics-svc";
 const uiFilesUrl = env.REACT_APP_DN_BASE_URL;
 const zipUrl = `${uiFilesUrl}starboard-notebook-base/alp-starboard-notebook-base.zip`;
-const awsLambdaUrl = "aws-lambda/api/me";
+const awsLambdaUrl = "code-suggestion";
 interface StarboardProps extends PageProps<ResearcherStudyMetadata> {};
 
 export const Starboard: FC<StarboardProps> = ({ metadata }) => {
@@ -43,7 +44,7 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
   const [activeNotebook, setActiveNotebook] = useState<StarboardNotebook | undefined>();
   const [isShared, setIsShared] = useState<boolean | undefined>();
 
-  // Get Bearer Token from d2e portal
+  // Get Bearer Token for code-suggestion
   const [accessToken, setToken] = useState("");
   const getBearerToken = useCallback(async () => { 
     const token = await getAuthToken(false); 
@@ -53,6 +54,9 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
     const bearerToken = await getBearerToken();
     setToken(bearerToken); };
     fetchToken(); }, []);
+  // Get datasetId for code-suggestion
+  const { activeDataset } = useActiveDataset()
+  const activeDatasetId = activeDataset.id
 
   const updateActiveNotebook = useCallback((notebook?: StarboardNotebook) => {
     setActiveNotebook(notebook);
@@ -103,7 +107,7 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
         notebookContent: notebookContent || "",
         src: `${uiFilesUrl}starboard-notebook-base/index.html`,
         preventNavigationWithUnsavedChanges: true,
-        suggestionUrl: `${uiFilesUrl}${awsLambdaUrl}`,
+        suggestionUrl: `${uiFilesUrl}${awsLambdaUrl}?datasetId=${activeDatasetId}`,
         bearerToken: accessToken,
         onUnsavedChangesStatusChange: () => setUnsaved(true),
       });
