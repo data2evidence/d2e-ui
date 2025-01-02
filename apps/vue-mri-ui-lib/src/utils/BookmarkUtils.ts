@@ -1,34 +1,36 @@
 import DateUtils from './DateUtils'
 
 export default function formatBookmarkDisplay(element) {
-  const bookmarkObj = getBookmarkObj(element.bookmark)
-  const filterCards = bookmarkObj.filter.cards
-  const boolContainers = filterCards.content
-  const bookmark = element.bookmark
-
   return {
-    bookmark:
-      bookmark && bookmarkObj
-        ? {
-            id: bookmark.bmkId,
-            username: bookmark.user_id,
-            name: bookmark.bookmarkname,
-            viewName: bookmark.viewname,
-            data: bookmark.bookmark,
-            version: bookmark.version,
-            dateModified: DateUtils.displayBookmarkDateFormat(bookmark.modified),
-            timeModified: DateUtils.displayBookmarkTimeFormat(bookmark.modified),
-            filterCardData: boolContainers,
-            chartType: bookmarkObj.chartType,
-            axisInfo:
-              bookmarkObj.chartType === 'list' ? bookmarkObj.filter.selected_attributes : bookmarkObj.axisSelection,
-            shared: bookmark.shared,
-          }
-        : null,
+    bookmark: getBookmark(element.bookmark),
+    cohortDefinition: element.cohortDefinition,
   }
 }
 
-function getBookmarkObj(bookmark: FormattedBookmark) {
+function getBookmark(bookmark: FormattedBookmark) {
+  if (!bookmark) {
+    return null
+  }
   const bookmarkObj = JSON.parse(bookmark.bookmark)
-  return bookmarkObj?.filter && bookmarkObj?.filter?.cards ? bookmarkObj : null
+  if (!bookmarkObj.filter && !bookmarkObj.filter.cards) {
+    return null
+  }
+
+  const filterCards = bookmarkObj.filter.cards
+  const boolContainers = filterCards.content
+
+  return {
+    id: bookmark.bmkId,
+    username: bookmark.user_id,
+    name: bookmark.bookmarkname,
+    viewName: bookmark.viewname,
+    data: bookmark.bookmark,
+    version: bookmark.version,
+    dateModified: DateUtils.displayBookmarkDateFormat(bookmark.modified),
+    timeModified: DateUtils.displayBookmarkTimeFormat(bookmark.modified),
+    filterCardData: boolContainers,
+    chartType: bookmarkObj.chartType,
+    axisInfo: bookmarkObj.chartType === 'list' ? bookmarkObj.filter.selected_attributes : bookmarkObj.axisSelection,
+    shared: bookmark.shared,
+  }
 }
