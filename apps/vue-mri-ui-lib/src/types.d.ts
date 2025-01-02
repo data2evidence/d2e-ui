@@ -174,3 +174,25 @@ interface ChartZipParameters {
   }
   datasetId: string
 }
+
+interface FormattedBookmark {
+  bmkId: string
+  bookmarkname: string
+  bookmark: string
+  viewname: string | null
+  modified: string
+  version: string | null
+  user_id: string
+  shared: boolean
+}
+interface FormattedcohortDefinition {
+  id: number
+  patientCount: number
+  cohortDefinitionName: string
+  createdOn: string
+}
+
+interface Bookmark {
+  bookmark: FormattedBookmark | null
+  cohortDefinition: FormattedcohortDefinition | null
+}
