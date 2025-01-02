@@ -88,3 +88,4 @@ jobs:
           target_commit: develop
           prerelease: true
           overwrite: true
+          asset_name: d2e-ui.tgz
