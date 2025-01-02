@@ -237,8 +237,7 @@ export const Terminology: FC<TerminologyProps> = ({
   const [errorMsg, setErrorMsg] = useState("");
   const { activeDataset } = useActiveDataset();
   const { idTokenClaims } = useToken();
-  const activeDatasetId = activeDataset.id;
-
+  const activeDatasetId = selectedDatasetId || activeDataset.id;
   const isConceptSet = mode === "CONCEPT_SET";
 
   const resetState = useCallback(() => {
