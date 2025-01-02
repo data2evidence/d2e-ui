@@ -109,9 +109,7 @@
                         :text="`${bookmark.name} ${bookmark.shared ? '(Shared)' : ''}`"
                         :labelClass="'font-color-red'"
                       ></appCheckbox>
-                    <div class="bookmark-item-header__status_icons">
-                      icons
-                    </div>
+                      <div class="bookmark-item-header__status_icons">icons</div>
                     </div>
                   </td>
                 </tr>
@@ -248,7 +246,6 @@
                   </td>
                 </tr>
 
-                
                 <tr>
                   <td>
                     <div class="bookmark-item-content">
@@ -294,20 +291,17 @@
                       </button>
                     </td>
                     <td v-if="enableAddToCohort">
-                        <button
-                          v-on:click.stop="addCohort(bookmark)"
-                          :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
-                          class="bookmark-button"
-                        >
-                          <!-- <span class="icon" style="font-family: app-icons"> </span> -->
-                          <AddPatientsIcon />
-                        </button>
-                      </td>
-                    <td>
                       <button
-                        :title="getText('MRI_PA_BUTTON_RUN_DQD')"
+                        v-on:click.stop="addCohort(bookmark)"
+                        :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
                         class="bookmark-button"
                       >
+                        <!-- <span class="icon" style="font-family: app-icons"> </span> -->
+                        <AddPatientsIcon />
+                      </button>
+                    </td>
+                    <td>
+                      <button :title="getText('MRI_PA_BUTTON_RUN_DQD')" class="bookmark-button">
                         <CohortIcon />
                       </button>
                     </td>
@@ -324,8 +318,7 @@
                   </tr>
                 </table>
               </div>
-            </div >
-
+            </div>
           </template>
         </div>
       </div>
@@ -459,32 +452,35 @@ export default {
       'getAddNewCohort',
     ]),
     bookmarksDisplay() {
-      const bookmarkData = this.getBookmarks
+      const bookmarkData: Bookmark[] = this.getBookmarks
       const returnValue = []
       const username = getPortalAPI().username
       if (this.showSharedBookmarks) this.aSelBookmarkList = []
-      bookmarkData.forEach(element => {
-        const bookmarkObj = JSON.parse(element.bookmark)
 
-        if (bookmarkObj.filter && bookmarkObj.filter.cards) {
-          if (this.showSharedBookmarks) {
-            if (username == element.user_id || element.shared) {
-              // user and shared
-              returnValue.push({
-                ...formatBookmarkDisplay(element, bookmarkObj),
-                disableUpdate: username != element.user_id,
-              })
-            }
-          } else if (!this.showSharedBookmarks && username == element.user_id) {
-            // only user
+      bookmarkData.forEach(element => {
+        if (!element.bookmark) {
+          return
+        }
+
+        const bookmarkObj = JSON.parse(element.bookmark?.bookmark)
+
+        if (!bookmarkObj.filter && !bookmarkObj.filter.cards) {
+          return
+        }
+
+        if (this.showSharedBookmarks) {
             returnValue.push({
-              ...formatBookmarkDisplay(element, bookmarkObj),
-              disableUpdate: username != element.user_id,
+              ...formatBookmarkDisplay(element.bookmark, bookmarkObj),
+              disableUpdate: username != element.bookmark.user_id,
             })
-          }
+        } else if (!this.showSharedBookmarks && username == element.bookmark.user_id) {
+          // only display bookmarks from the user
+          returnValue.push({
+            ...formatBookmarkDisplay(element.bookmark, bookmarkObj),
+            disableUpdate: username != element.bookmark.user_id,
+          })
         }
       }, this)
-
       return returnValue
     },
     hasChanges() {
@@ -749,15 +745,15 @@ export default {
           params,
           method: 'delete',
           bookmarkId: bookmark.id,
-        });
-        await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } });
-        this.closeDeleteBookmark();
+        })
+        await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
+        this.closeDeleteBookmark()
         if (activeBookmark && activeBookmark.bookmarkname === bookmark.name) {
-          this[types.SET_ACTIVE_BOOKMARK](null);
-          this.reset();
+          this[types.SET_ACTIVE_BOOKMARK](null)
+          this.reset()
         }
       } catch (error) {
-        console.error('Error deleting bookmark:', error);
+        console.error('Error deleting bookmark:', error)
       }
     },
     closeIncompatibleMessage() {
@@ -818,8 +814,6 @@ export default {
       return uniqueName
     },
     reset() {
-      console.log('reset');
-      
       this[types.CONFIG_SET_HAS_ASSIGNED](false)
       this.$nextTick(() => {
         this.resetChartProperties()
