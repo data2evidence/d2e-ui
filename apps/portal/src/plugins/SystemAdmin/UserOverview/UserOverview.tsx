@@ -227,7 +227,6 @@ export const UserOverview: FC<UserOverviewProps> = () => {
                 <TableRow>
                   <TableCell style={{ width: emailWidth }}>{getText(i18nKeys.USER_OVERVIEW__USERNAME)}</TableCell>
                   <TableCell style={{ width: roleWidth }}>{getText(i18nKeys.USER_OVERVIEW__ROLE)}</TableCell>
-                  <TableCell style={{ width: "14%" }}>{getText(i18nKeys.USER_OVERVIEW__TENANT)}</TableCell>
                   <TableCell width={buttonColWidth}></TableCell>
                 </TableRow>
               </TableHead>
@@ -248,7 +247,6 @@ export const UserOverview: FC<UserOverviewProps> = () => {
                         {!user.active && <Chip label="Inactive" size="small" />}
                       </div>
                     </TableCell>
-                    <TableCell>{user.tenantName ? user.tenantName : "-"}</TableCell>
                     <TableCell className="col-action">
                       <div className="table-button-container">
                         {ctxUser.isUserAdmin && (
