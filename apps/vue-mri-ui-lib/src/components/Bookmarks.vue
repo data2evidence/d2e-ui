@@ -103,13 +103,21 @@
                 <tr>
                   <td>
                     <div class="bookmark-item-header">
+                      <!-- todo: fix disabled -->
                       <appCheckbox
-                        disabled
+                        :disabled="bookmarkDisplay.cohortDefinition"
                         v-model="bookmarkDisplay.selected"
                         @checkEv="onSelectBookmark(bookmarkDisplay.bookmark)"
                         :text="`${bookmarkDisplay.displayName} ${bookmarkDisplay?.shared ? '(Shared)' : ''}`"
                         :labelClass="'font-color-red'"
                       ></appCheckbox>
+
+                      <div class="bookmark-item-header__status-icons">
+                        <RunAnalyticsActiveIcon v-if="bookmarkDisplay.bookmark" />
+                        <RunAnalyticsGreyIcon v-else />
+                        <PatientsActiveIcon v-if="bookmarkDisplay.cohortDefinition" />
+                        <PatientsGreyIcon v-else />
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -292,23 +300,30 @@
                       </button>
                     </td>
                     <td>
-                      <button
-                        :title="getText('MRI_PA_BUTTON_SHOW_COLLECTION')"
-                        class="bookmark-button"
-                        v-on:click.stop="this.openCohortListDialog(bookmarkDisplay.bookmark)"
-                      >
-                        <CohortIcon />
-                      </button>
-                    </td>
-                    <td>
+                      <!-- generate cohort based  -->
                       <button
                         v-on:click.stop="addCohort(bookmarkDisplay.bookmark)"
                         :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
                         class="bookmark-button"
+                        :disabled="!bookmarkDisplay.bookmark"
                       >
-                        <AddPatientsIcon />
+                        <GenerateCohortActiveIcon v-if="bookmarkDisplay.bookmark" />
+                        <GenerateCohortGreyIcon v-else />
                       </button>
                     </td>
+                    <td>
+                      <button
+                        :title="getText('MRI_PA_BUTTON_SHOW_COLLECTION')"
+                        class="bookmark-button"
+                        v-on:click.stop="this.openCohortListDialog(bookmarkDisplay.bookmark)"
+                        :disabled="!bookmarkDisplay.cohortDefinition"
+                      >
+                        <!-- todo:Run DQD or displays DQD results -->
+                        <RunAnalyticsGreyIcon v-if="!bookmarkDisplay.cohortDefinition" />
+                        <RunAnalyticsActiveIcon v-else />
+                      </button>
+                    </td>
+
                     <td v-if="!bookmarkDisplay.bookmark?.disableUpdate">
                       <button
                         v-on:click.stop="deleteBookmark(bookmarkDisplay.bookmark)"
@@ -401,6 +416,12 @@ import CohortIcon from './icons/CohortIcon.vue'
 import EditIcon from './icons/EditIcon.vue'
 import TrashCanIcon from './icons/TrashCanIcon.vue'
 import AddPatientsIcon from './icons/AddPatientsIcon.vue'
+import GenerateCohortActiveIcon from './icons/GenerateCohortActiveIcon.vue'
+import GenerateCohortGreyIcon from './icons/GenerateCohortGreyIcon.vue'
+import RunAnalyticsActiveIcon from './icons/RunAnalyticsActiveIcon.vue'
+import RunAnalyticsGreyIcon from './icons/RunAnalyticsGreyIcon.vue'
+import PatientsActiveIcon from './icons/PatientsActiveIcon.vue'
+import PatientsGreyIcon from './icons/PatientsGreyIcon.vue'
 
 export default {
   name: 'bookmark',
@@ -813,6 +834,12 @@ export default {
     AddPatientsIcon,
     EditIcon,
     TrashCanIcon,
+    GenerateCohortActiveIcon,
+    GenerateCohortGreyIcon,
+    RunAnalyticsActiveIcon,
+    RunAnalyticsGreyIcon,
+    PatientsActiveIcon,
+    PatientsGreyIcon,
   },
 }
 </script>
