@@ -30,7 +30,7 @@ export const DbWriterNode = (node: NodeProps<DbWriterNodeData>) => {
         onResultClick={data.result ? openResult : null}
         node={node}
         LeftHandle={
-          <TargetHandle ioType={HandleIOType.Table} nodeId={node.id} />
+          <TargetHandle ioType={HandleIOType.Dataframe} nodeId={node.id} />
         }
         RightHandle={null}
       >
