@@ -1,16 +1,10 @@
 import DateUtils from './DateUtils'
 
-export default function formatBookmarkDisplay(element) {
-  return {
-    bookmark: getBookmark(element.bookmark),
-    cohortDefinition: element.cohortDefinition,
-  }
-}
-
-function getBookmark(bookmark: FormattedBookmark) {
+export function formatBookmark(bookmark: FormattedBookmark) {
   if (!bookmark) {
     return null
   }
+
   const bookmarkObj = JSON.parse(bookmark.bookmark)
   if (!bookmarkObj.filter && !bookmarkObj.filter.cards) {
     return null
@@ -32,5 +26,14 @@ function getBookmark(bookmark: FormattedBookmark) {
     chartType: bookmarkObj.chartType,
     axisInfo: bookmarkObj.chartType === 'list' ? bookmarkObj.filter.selected_attributes : bookmarkObj.axisSelection,
     shared: bookmark.shared,
+  }
+}
+
+export function formatCohortDefinition(cohortDefinition: FormattedcohortDefinition) {
+  return {
+    id: cohortDefinition.id,
+    patientCount: cohortDefinition.patientCount,
+    cohortDefinitionName: cohortDefinition.cohortDefinitionName,
+    createdOn: DateUtils.displayBookmarkDateFormat(cohortDefinition.createdOn),
   }
 }

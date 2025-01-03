@@ -184,15 +184,12 @@ interface FormattedBookmark {
   version: string | null
   user_id: string
   shared: boolean
+  cohortDefinitionId?: number | undefined
 }
+
 interface FormattedcohortDefinition {
   id: number
   patientCount: number
   cohortDefinitionName: string
   createdOn: string
-}
-
-interface Bookmark {
-  bookmark: FormattedBookmark | null
-  cohortDefinition: FormattedcohortDefinition | null
 }

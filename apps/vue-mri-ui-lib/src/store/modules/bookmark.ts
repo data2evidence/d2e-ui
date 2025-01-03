@@ -5,7 +5,7 @@ import Constants from '../../utils/Constants'
 import * as types from '../mutation-types'
 import isEqual from 'lodash/isEqual'
 import { getPortalAPI } from '@/utils/PortalUtils'
-import cohortDefinition from './cohortDefinition'
+import { formatBookmark, formatCohortDefinition } from '@/utils/BookmarkUtils'
 
 const CancelToken = axios.CancelToken
 let cancel
@@ -129,6 +129,51 @@ const getters = {
       !isEqual(newBookmarksFilter, currentBookmarksFilter) ||
       !isEqual(newBookmarksAxisSelection, currentBookmarksAxisSelection)
     )
+  },
+  getDisplayBookmarks: modulestate => {
+    const bookmarks: FormattedBookmark[] = modulestate.bookmarks
+    const cohortDefinitions: FormattedcohortDefinition[] = modulestate.cohortDefinitions
+
+    let displayBookmarks = []
+
+    // cohort definitions without bookmark
+    // cohort definitions with bookmark
+    cohortDefinitions.forEach(cohortDefinition => {
+      // check bookmark exists, if yes, should use the bookmark name
+      const bookmark = bookmarks.find(bookmark => bookmark?.cohortDefinitionId === cohortDefinition.id)
+      if (!bookmark) {
+        return displayBookmarks.push({
+          displayName: cohortDefinition.cohortDefinitionName,
+          bookmark: null,
+          cohortDefinition: formatCohortDefinition(cohortDefinition),
+        })
+      }
+
+      return displayBookmarks.push({
+        displayName: bookmark.bookmarkname,
+        bookmark: formatBookmark(bookmark),
+        cohortDefinition: formatCohortDefinition(cohortDefinition),
+      })
+    })
+
+    // bookmarks without a cohort definition
+    bookmarks.forEach(bookmark => {
+      const cohortDefinition = cohortDefinitions.find(
+        cohortDefinition => (cohortDefinition.id = bookmark?.cohortDefinitionId)
+      )
+
+      if (cohortDefinition) {
+        return
+      }
+
+      return displayBookmarks.push({
+        displayName: bookmark.bookmarkname,
+        bookmark: formatBookmark(bookmark),
+        cohortDefinition: null,
+      })
+    })
+
+    return displayBookmarks
   },
 }
 
