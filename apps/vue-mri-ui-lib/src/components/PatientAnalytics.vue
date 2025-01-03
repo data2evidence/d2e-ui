@@ -201,6 +201,7 @@ export default {
       shouldRerenderChart: false,
       showChartAndListModal: false,
       paneSize: PANE_SIZE.FULL,
+      chartBusy: false,
       PANE_SIZE,
       PANEL
     }
