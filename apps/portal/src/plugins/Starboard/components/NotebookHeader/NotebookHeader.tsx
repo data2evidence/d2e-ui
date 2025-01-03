@@ -27,6 +27,7 @@ interface HeaderProps {
   zipUrl: string;
   isShared: boolean | undefined;
   setIsShared: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+  activeDatasetId: string;
 }
 
 export const Header: FC<HeaderProps> = ({
@@ -40,6 +41,7 @@ export const Header: FC<HeaderProps> = ({
   zipUrl,
   isShared,
   setIsShared,
+  activeDatasetId,
 }) => {
   const { getText, i18nKeys } = useTranslation();
   const { user } = useUser();
@@ -51,7 +53,7 @@ export const Header: FC<HeaderProps> = ({
   const deleteNotebook = useCallback(async () => {
     try {
       if (activeNotebook) {
-        await api.studyNotebook.deleteNotebook(activeNotebook.id);
+        await api.studyNotebook.deleteNotebook(activeNotebook.id, activeDatasetId);
         setFeedback({
           type: "success",
           message: getText(i18nKeys.HEADER__FILE_DELETED),
@@ -77,7 +79,8 @@ export const Header: FC<HeaderProps> = ({
           activeNotebook?.id,
           activeNotebook?.name,
           currNotebookSource,
-          !!isShared
+          !!isShared,
+          activeDatasetId
         );
         fetchNotebooks(true);
         updateActiveNotebook(newNotebook);
@@ -104,7 +107,8 @@ export const Header: FC<HeaderProps> = ({
             activeNotebook?.id,
             name,
             activeNotebook?.notebookContent,
-            !!isShared
+            !!isShared,
+            activeDatasetId
           );
           fetchNotebooks(true);
           updateActiveNotebook(newNotebook);
