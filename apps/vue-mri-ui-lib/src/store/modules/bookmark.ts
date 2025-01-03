@@ -5,12 +5,14 @@ import Constants from '../../utils/Constants'
 import * as types from '../mutation-types'
 import isEqual from 'lodash/isEqual'
 import { getPortalAPI } from '@/utils/PortalUtils'
+import cohortDefinition from './cohortDefinition'
 
 const CancelToken = axios.CancelToken
 let cancel
 // initial state
 const state = {
   bookmarks: [],
+  cohortDefinitions: [],
   filterSummaryVisible: false,
   schemaName: '',
   activeBookmark: null,
@@ -161,6 +163,7 @@ const actions = {
         let toastMessage = ''
         if (params.cmd === 'loadAll') {
           commit(types.SET_BOOKMARKS, data)
+          commit(types.SET_COHORT_DEFINITIONS, data)
           commit(types.SET_SCHEMANAME, {
             schemaName: data.schemaName,
           })
@@ -298,6 +301,9 @@ const actions = {
 const mutations = {
   [types.SET_BOOKMARKS](modulestate, { bookmarks }) {
     modulestate.bookmarks = bookmarks
+  },
+  [types.SET_COHORT_DEFINITIONS](modulestate, { cohortDefinitions }) {
+    modulestate.cohortDefinitions = cohortDefinitions
   },
   [types.SET_FILTERSUMMARY](modulestate, { filterSummaryVisibility }) {
     modulestate.filterSummaryVisible = filterSummaryVisibility
