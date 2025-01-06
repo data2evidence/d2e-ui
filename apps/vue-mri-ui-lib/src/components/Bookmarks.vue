@@ -105,9 +105,9 @@
                     <div class="bookmark-item-header">
                       <!-- todo: fix disabled -->
                       <appCheckbox
-                        :disabled="bookmarkDisplay.cohortDefinition"
+                        :disabled="this.isMScohort(bookmarkDisplay)"
                         v-model="bookmarkDisplay.selected"
-                        @checkEv="onSelectBookmark(bookmarkDisplay.bookmark)"
+                        @checkEv="onSelectBookmark(bookmarkDisplay)"
                         :text="`${bookmarkDisplay.displayName} ${bookmarkDisplay?.shared ? '(Shared)' : ''}`"
                         :labelClass="'font-color-red'"
                       ></appCheckbox>
@@ -517,11 +517,11 @@ export default {
       }
       return constraint
     },
-    onSelectBookmark(bookmark) {
-      if (bookmark.selected) {
-        this.aSelBookmarkList.push(bookmark)
+    onSelectBookmark(bookmarkDisplay) {
+      if (bookmarkDisplay.selected) {
+        this.aSelBookmarkList.push(bookmarkDisplay.bookmark)
       } else {
-        this.aSelBookmarkList.splice(this.aSelBookmarkList.indexOf(bookmark), 1)
+        this.aSelBookmarkList.splice(this.aSelBookmarkList.indexOf(bookmarkDisplay.bookmark), 1)
       }
     },
     unloadBookmark() {
@@ -833,9 +833,9 @@ export default {
         this[types.CONFIG_SET_HAS_ASSIGNED](true)
       })
     },
-    isMScohort(displayBookmark) {
+    isMScohort(bookmarkDisplay) {
       // MS cohort only contains a cohort definition
-      return displayBookmark.cohortDefinition && !displayBookmark.bookmark
+      return bookmarkDisplay.cohortDefinition && !bookmarkDisplay.bookmark
     },
   },
   components: {
