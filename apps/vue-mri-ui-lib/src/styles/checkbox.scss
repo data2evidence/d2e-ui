@@ -14,7 +14,7 @@ div.app-checkbox {
   white-space: normal;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-user-drag: none;
-  display:flex;
+  display: flex;
   align-items: center;
   gap: 8px;
   div.app-checkbox-container {
@@ -85,6 +85,13 @@ div.app-checkbox {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .app-checkbox-disabled {
+    pointer-events: none;
+    background-color: #e0e0e0;
+    border-color: #d3d3d3 !important;
+    color: #666666;
+    opacity: 0.6;
   }
   .app-label {
     display: inline-block;
