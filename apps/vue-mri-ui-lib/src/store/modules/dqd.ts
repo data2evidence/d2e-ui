@@ -1,22 +1,37 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 const CancelToken = axios.CancelToken
+import QueryString from '../../utils/QueryString'
 let cancel
 
-const dataflow_mgmt_url = '/dataflow-mgmt/'
+const job_plugins_url = '/jobplugins/'
 
 const actions = {
-  // TODO: check if this endpoint is deprecated
   async fetchDataQualityFlowRun({ commit, dispatch, rootGetters }, { cohortDefinitionId }) {
-    let url = `${dataflow_mgmt_url}dqd/data-quality/dataset/${rootGetters.getSelectedDataset.id}/cohort/${cohortDefinitionId}/flow-run/latest`
-    return dispatch('ajaxAuth', { url, method: 'GET' })
+    const datasetId = rootGetters.getSelectedDataset.id
+
+    let url = QueryString({
+      url: `${job_plugins_url}dqd/data-quality/cohort/${cohortDefinitionId}/flow-run/latest`,
+      queryString: {
+        datasetId,
+      },
+      compress: [],
+    })
+    console.log('dispatching')
+    return dispatch('ajaxAuth', {
+      url,
+      method: 'GET',
+    })
       .then(response => {
         return response.data
       })
-      .catch(error => {
-        throw 'Failed to fetch data:,'
+      .catch((error: AxiosError) => {
+        if (error.response.status == 404) {
+          return null
+        }
+        throw 'Failed to fetch data:'
       })
   },
-  async generateDataQualityFlowRun({ commit, dispatch, rootGetters }, { GenerateDataQualityFlowRunParams }) {
+  async generateDataQualityFlowRun({ commit, dispatch, rootGetters }, GenerateDataQualityFlowRunParams) {
     if (cancel) {
       cancel()
     }
@@ -24,7 +39,7 @@ const actions = {
       cancel = c
     })
 
-    let url = `${dataflow_mgmt_url}prefect/flow-run/metadata`
+    let url = `${job_plugins_url}dqd/data-quality/flow-run`
     return dispatch('ajaxAuth', { url, method: 'POST', params: GenerateDataQualityFlowRunParams, cancelToken })
       .then(response => {
         return response.data
