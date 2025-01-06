@@ -113,8 +113,8 @@
                       ></appCheckbox>
 
                       <div class="bookmark-item-header__status-icons">
-                        <RunAnalyticsActiveIcon v-if="bookmarkDisplay.bookmark" />
-                        <RunAnalyticsGreyIcon v-else />
+                        <CohortDefinitionActiveIcon v-if="bookmarkDisplay.bookmark" />
+                        <CohortDefinitionGreyIcon v-else />
                         <PatientsActiveIcon v-if="bookmarkDisplay.cohortDefinition" />
                         <PatientsGreyIcon v-else />
                       </div>
@@ -312,6 +312,7 @@
                       </button>
                     </td>
                     <td>
+                      <!-- display dqd results, else run dqd -->
                       <button
                         :title="getText('MRI_PA_BUTTON_SHOW_COLLECTION')"
                         class="bookmark-button"
@@ -422,6 +423,8 @@ import RunAnalyticsActiveIcon from './icons/RunAnalyticsActiveIcon.vue'
 import RunAnalyticsGreyIcon from './icons/RunAnalyticsGreyIcon.vue'
 import PatientsActiveIcon from './icons/PatientsActiveIcon.vue'
 import PatientsGreyIcon from './icons/PatientsGreyIcon.vue'
+import CohortDefinitionActiveIcon from './icons/CohortDefinitionActiveIcon.vue'
+import CohortDefinitionGreyIcon from './icons/CohortDefinitionGreyIcon.vue'
 
 export default {
   name: 'bookmark',
@@ -858,6 +861,8 @@ export default {
     RunAnalyticsGreyIcon,
     PatientsActiveIcon,
     PatientsGreyIcon,
+    CohortDefinitionActiveIcon,
+    CohortDefinitionGreyIcon
   },
 }
 </script>
