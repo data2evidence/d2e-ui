@@ -121,10 +121,12 @@ export default {
 
             if (response) {
               let noDataReason = this.getText('MRI_PA_CHART_NO_DATA_DEFAULT_MESSAGE')
+              console.log({response, noDataReason});
+              
 
               // For all handled errors from backend
               if (response.status === 500) {
-                noDataReason = response.data.errorMessage
+                noDataReason = response.data.errorMessage || response.data.msg
                 if (response.data.errorType === 'MRILoggedError') {
                   noDataReason = this.getText('MRI_DB_LOGGED_MESSAGE', response.data.logId)
                 }
