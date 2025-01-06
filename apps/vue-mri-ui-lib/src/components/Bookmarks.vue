@@ -292,7 +292,7 @@
                   <tr>
                     <td v-if="!bookmarkDisplay.bookmark?.disableUpdate">
                       <button
-                        v-on:click.stop="renameBookmark(bookmarkDisplay.bookmark)"
+                        v-on:click.stop="renameBookmark(bookmarkDisplay)"
                         :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
                         class="bookmark-button"
                       >
@@ -497,6 +497,7 @@ export default {
       'toggleCohortListDialog',
       'resetChartProperties',
       'setAddNewCohort',
+      'fireRenameCohortDefinitionQuery',
     ]),
     ...mapMutations([types.SET_ACTIVE_BOOKMARK, types.CONFIG_SET_HAS_ASSIGNED]),
     openCompareDialog() {
@@ -684,10 +685,10 @@ export default {
     closeRenameBookmark() {
       this.showRenameDialog = false
     },
-    renameBookmark(bookmark) {
-      if (bookmark) {
-        this.selectedBookmark = bookmark
-        this.renamedBookmark = bookmark.name
+    renameBookmark(displayBookmark) {
+      if (displayBookmark) {
+        this.selectedBookmark = displayBookmark
+        this.renamedBookmark = displayBookmark.displayName
         this.showRenameDialog = true
       }
     },
@@ -704,15 +705,28 @@ export default {
       this.showCopyExtensionDialog = false
     },
     confirmRenameBookmark() {
-      const bookmark = this.selectedBookmark
+      const displayBookmark = this.selectedBookmark
+
+      if (this.isMScohort(displayBookmark)) {
+        this.fireRenameCohortDefinitionQuery({
+          cohortDefinitionId: displayBookmark.cohortDefinition.id,
+          newName: this.renamedBookmark,
+        }).then(() => {
+          this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
+          this.closeRenameBookmark()
+          return
+        })
+      }
+      console.log("triggering here")
       const request = {
         cmd: 'rename',
         newName: this.renamedBookmark,
       }
+
       this.fireBookmarkQuery({
         method: 'put',
         params: request,
-        bookmarkId: bookmark.id,
+        bookmarkId: displayBookmark.bookmark.id,
       }).then(() => {
         this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
         this.closeRenameBookmark()
@@ -818,6 +832,10 @@ export default {
         this.resetChartProperties()
         this[types.CONFIG_SET_HAS_ASSIGNED](true)
       })
+    },
+    isMScohort(displayBookmark) {
+      // MS cohort only contains a cohort definition
+      return displayBookmark.cohortDefinition && !displayBookmark.bookmark
     },
   },
   components: {
