@@ -1,5 +1,11 @@
 <template>
   <div class="bookmark-container">
+    <appMessageStrip
+      :messageType="messageStrip.messageType"
+      :text="messageStrip.message"
+      v-if="messageStrip.show"
+      @closeEv="resetMessageStrip"
+    />
     <messageBox dim="true" dialogWidth="400px" v-if="showRenameDialog" @close="closeRenameBookmark">
       <template v-slot:header>{{ getText('MRI_PA_BOOKMARK_RENAME_DIALOG_TITLE') }}</template>
       <template v-slot:body>
@@ -316,7 +322,7 @@
                       <button
                         :title="getText('MRI_PA_BUTTON_SHOW_COLLECTION')"
                         class="bookmark-button"
-                        v-on:click.stop="this.openCohortListDialog(bookmarkDisplay.bookmark)"
+                        v-on:click.stop="this.openDataQualityDialog(bookmarkDisplay.cohortDefinition)"
                         :disabled="!bookmarkDisplay.cohortDefinition"
                       >
                         <!-- todo:Run DQD or displays DQD results -->
@@ -425,6 +431,7 @@ import PatientsActiveIcon from './icons/PatientsActiveIcon.vue'
 import PatientsGreyIcon from './icons/PatientsGreyIcon.vue'
 import CohortDefinitionActiveIcon from './icons/CohortDefinitionActiveIcon.vue'
 import CohortDefinitionGreyIcon from './icons/CohortDefinitionGreyIcon.vue'
+import appMessageStrip from '../lib/ui/app-message-strip.vue'
 
 export default {
   name: 'bookmark',
@@ -453,6 +460,11 @@ export default {
       isAddNewCohort: false,
       selectedBmkId: '',
       selectedChartType: '',
+      messageStrip: {
+        show: false,
+        message: '',
+        messageType: '',
+      },
     }
   },
   created() {
@@ -477,6 +489,7 @@ export default {
       'getCurrentBookmarkHasChanges',
       'getAddNewCohort',
       'getDisplayBookmarks',
+      'getSelectedDataset'
     ]),
     bookmarksDisplay() {
       return this.getDisplayBookmarks
@@ -501,6 +514,8 @@ export default {
       'resetChartProperties',
       'setAddNewCohort',
       'fireRenameCohortDefinitionQuery',
+      'fetchDataQualityFlowRun',
+      'generateDataQualityFlowRun'
     ]),
     ...mapMutations([types.SET_ACTIVE_BOOKMARK, types.CONFIG_SET_HAS_ASSIGNED]),
     openCompareDialog() {
@@ -720,7 +735,6 @@ export default {
           return
         })
       }
-      console.log("triggering here")
       const request = {
         cmd: 'rename',
         newName: this.renamedBookmark,
@@ -840,6 +854,70 @@ export default {
       // MS cohort only contains a cohort definition
       return bookmarkDisplay.cohortDefinition && !bookmarkDisplay.bookmark
     },
+    resetMessageStrip() {
+      this.messageStrip = {
+        show: false,
+        message: '',
+        messageType: '',
+      }
+    },
+    openDataQualityResultsDialog(flowRun) {
+      const job = {
+        flowRunId: flowRun.id,
+        schemaName: flowRun.parameters.options.schemaName,
+        dataCharacterizationSchema: '',
+        cohortDefinitionId: flowRun.parameters.options.cohortDefinitionId,
+        type: flowRun.tags[0],
+        createdAt: flowRun.created,
+        completedAt: flowRun.end_time,
+        status: flowRun?.state_name,
+        error: '',
+        datasetId: flowRun.parameters.options.datasetId,
+        comment: flowRun.parameters.options.comment,
+        databaseCode: flowRun.parameters.options.databaseCode,
+      }
+      const event = new CustomEvent('alp-results-dialog-open', {
+        detail: {
+          props: {
+            job: job,
+          },
+        },
+      })
+      window.dispatchEvent(event)
+    },
+    async openDataQualityDialog(cohortDefinition) {
+      if (cohortDefinition.id) {
+        const flowRun = await this.fetchDataQualityFlowRun({ cohortDefinitionId: cohortDefinition.id })
+        console.log(flowRun)
+        if (flowRun && flowRun?.state_name === 'Completed') {
+          this.openDataQualityResultsDialog(flowRun)
+        } else {
+          const GenerateDataQualityFlowRunParams = {
+            datasetId: this.getSelectedDataset.id,
+            comment: '',
+            cohortDefinitionId: String(cohortDefinition.id),
+            releaseId: '',
+            vocabSchemaName: '',
+          }
+          await this.generateDataQualityFlowRun(GenerateDataQualityFlowRunParams)
+            .then(data => {
+              this.messageStrip = {
+                show: true,
+                message: `Data Quality Check created`,
+                messageType: 'success',
+              }
+            })
+            .catch(err => {
+              this.messageStrip = {
+                show: true,
+                message: err,
+                messageType: 'error',
+              }
+              return err
+            })
+        }
+      }
+    },
   },
   components: {
     messageBox,
@@ -862,7 +940,8 @@ export default {
     PatientsActiveIcon,
     PatientsGreyIcon,
     CohortDefinitionActiveIcon,
-    CohortDefinitionGreyIcon
+    CohortDefinitionGreyIcon,
+    appMessageStrip
   },
 }
 </script>
