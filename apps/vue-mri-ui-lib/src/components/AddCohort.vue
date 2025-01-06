@@ -128,7 +128,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['onAddCohortOkButtonPress', 'loadOldCollections', 'fireQuery', 'getPLRequest']),
+    ...mapActions(['onAddCohortOkButtonPress', 'loadOldCollections', 'fireQuery', 'getPLRequest', 'fireBookmarkQuery']),
     ...mapMutations([types.SET_COHORT_TYPE, types.SET_COLLECTION_TYPE, types.COLLECTIONS_SET_HASEXISTINGCOLLECTION]),
     openAddCohortDialog() {
       this.showAddCohortDialog = true
@@ -161,6 +161,7 @@ export default {
             message: this.getText('MRI_PA_COLL_SUCCESS_ADD_PATIENT'),
             messageType: 'success',
           }
+          this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
         })
         .catch(err => {
           this.cohortBusy = false
