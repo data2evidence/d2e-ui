@@ -109,7 +109,6 @@
                 <tr>
                   <td>
                     <div class="bookmark-item-header">
-                      <!-- todo: fix disabled -->
                       <appCheckbox
                         :disabled="this.isMScohort(bookmarkDisplay)"
                         v-model="bookmarkDisplay.selected"
@@ -306,7 +305,6 @@
                       </button>
                     </td>
                     <td>
-                      <!-- generate cohort based  -->
                       <button
                         v-on:click.stop="addCohort(bookmarkDisplay.bookmark)"
                         :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
@@ -318,14 +316,12 @@
                       </button>
                     </td>
                     <td>
-                      <!-- display dqd results, else run dqd -->
                       <button
                         :title="getText('MRI_PA_BUTTON_SHOW_COLLECTION')"
                         class="bookmark-button"
                         v-on:click.stop="this.openDataQualityDialog(bookmarkDisplay.cohortDefinition)"
                         :disabled="!bookmarkDisplay.cohortDefinition"
                       >
-                        <!-- todo:Run DQD or displays DQD results -->
                         <RunAnalyticsGreyIcon v-if="!bookmarkDisplay.cohortDefinition" />
                         <RunAnalyticsActiveIcon v-else />
                       </button>
