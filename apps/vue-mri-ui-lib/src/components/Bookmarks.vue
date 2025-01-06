@@ -333,7 +333,7 @@
 
                     <td v-if="!bookmarkDisplay.bookmark?.disableUpdate">
                       <button
-                        v-on:click.stop="deleteBookmark(bookmarkDisplay.bookmark)"
+                        v-on:click.stop="deleteBookmark(bookmarkDisplay)"
                         :title="getText('MRI_PA_TOOLTIP_DELETE_BOOKMARK')"
                         class="bookmark-button"
                       >
@@ -489,7 +489,7 @@ export default {
       'getCurrentBookmarkHasChanges',
       'getAddNewCohort',
       'getDisplayBookmarks',
-      'getSelectedDataset'
+      'getSelectedDataset',
     ]),
     bookmarksDisplay() {
       return this.getDisplayBookmarks
@@ -514,8 +514,9 @@ export default {
       'resetChartProperties',
       'setAddNewCohort',
       'fireRenameCohortDefinitionQuery',
+      'fireDeleteCohortDefinitionQuery',
       'fetchDataQualityFlowRun',
-      'generateDataQualityFlowRun'
+      'generateDataQualityFlowRun',
     ]),
     ...mapMutations([types.SET_ACTIVE_BOOKMARK, types.CONFIG_SET_HAS_ASSIGNED]),
     openCompareDialog() {
@@ -703,10 +704,10 @@ export default {
     closeRenameBookmark() {
       this.showRenameDialog = false
     },
-    renameBookmark(displayBookmark) {
-      if (displayBookmark) {
-        this.selectedBookmark = displayBookmark
-        this.renamedBookmark = displayBookmark.displayName
+    renameBookmark(bookmarkDisplay) {
+      if (bookmarkDisplay) {
+        this.selectedBookmark = bookmarkDisplay
+        this.renamedBookmark = bookmarkDisplay.displayName
         this.showRenameDialog = true
       }
     },
@@ -723,11 +724,11 @@ export default {
       this.showCopyExtensionDialog = false
     },
     confirmRenameBookmark() {
-      const displayBookmark = this.selectedBookmark
+      const bookmarkDisplay = this.selectedBookmark
 
-      if (this.isMScohort(displayBookmark)) {
+      if (this.isMScohort(bookmarkDisplay)) {
         this.fireRenameCohortDefinitionQuery({
-          cohortDefinitionId: displayBookmark.cohortDefinition.id,
+          cohortDefinitionId: bookmarkDisplay.cohortDefinition.id,
           newName: this.renamedBookmark,
         }).then(() => {
           this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
@@ -743,7 +744,7 @@ export default {
       this.fireBookmarkQuery({
         method: 'put',
         params: request,
-        bookmarkId: displayBookmark.bookmark.id,
+        bookmarkId: bookmarkDisplay.bookmark.id,
       }).then(() => {
         this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
         this.closeRenameBookmark()
@@ -758,27 +759,35 @@ export default {
     closeDeleteBookmark() {
       this.showDeleteDialog = false
     },
-    deleteBookmark(bookmark) {
-      if (bookmark) {
-        this.selectedBookmark = bookmark
+    deleteBookmark(bookmarkDisplay) {
+      if (bookmarkDisplay) {
+        this.selectedBookmark = bookmarkDisplay
         this.showDeleteDialog = true
       }
     },
     async confirmDeleteBookmark() {
       const activeBookmark = this.getActiveBookmark
-      const bookmark = this.selectedBookmark
-      const params = {
-        cmd: 'delete',
-      }
+      const bookmarkDisplay = this.selectedBookmark
+      const isCohort = this.isMScohort(bookmarkDisplay)
+
       try {
-        await this.fireBookmarkQuery({
-          params,
-          method: 'delete',
-          bookmarkId: bookmark.id,
-        })
+        if (isCohort) {
+          await this.fireDeleteCohortDefinitionQuery(bookmarkDisplay.cohortDefinition.id)
+        } else {
+          const params = {
+            cmd: 'delete',
+          }
+
+          await this.fireBookmarkQuery({
+            params,
+            method: 'delete',
+            bookmarkId: bookmarkDisplay.bookmark.id,
+          })
+        }
+
         await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
         this.closeDeleteBookmark()
-        if (activeBookmark && activeBookmark.bookmarkname === bookmark.name) {
+        if (!isCohort && activeBookmark && activeBookmark.bookmarkname === bookmarkDisplay.bookmark.name) {
           this[types.SET_ACTIVE_BOOKMARK](null)
           this.reset()
         }
@@ -888,7 +897,6 @@ export default {
     async openDataQualityDialog(cohortDefinition) {
       if (cohortDefinition.id) {
         const flowRun = await this.fetchDataQualityFlowRun({ cohortDefinitionId: cohortDefinition.id })
-        console.log(flowRun)
         if (flowRun && flowRun?.state_name === 'Completed') {
           this.openDataQualityResultsDialog(flowRun)
         } else {
@@ -941,7 +949,7 @@ export default {
     PatientsGreyIcon,
     CohortDefinitionActiveIcon,
     CohortDefinitionGreyIcon,
-    appMessageStrip
+    appMessageStrip,
   },
 }
 </script>
