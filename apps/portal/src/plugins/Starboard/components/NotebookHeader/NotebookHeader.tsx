@@ -176,7 +176,7 @@ export const Header: FC<HeaderProps> = ({
       const starboardNotebook = convertJupyterToStarboard(jupyterFile, {});
 
       const jupyterSbSource = notebookContentToText(starboardNotebook);
-      const newNotebook = await api.studyNotebook.createNotebook(notebookName, jupyterSbSource);
+      const newNotebook = await api.studyNotebook.createNotebook(activeDatasetId, notebookName, jupyterSbSource);
       fetchNotebooks(true);
       updateActiveNotebook(newNotebook);
       setIsShared(newNotebook.isShared);
