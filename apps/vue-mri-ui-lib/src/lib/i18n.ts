@@ -409,6 +409,7 @@ export const i18n = {
     MRI_PA_BOOKMARK_DELETE_DIALOG_TEXT:
       'Deleting this saved filter will delete any access points that you generated for it.',
     MRI_PA_BOOKMARK_DELETE_DIALOG_QUESTION_TEXT: 'Are you sure you want to delete?',
+    MRI_PA_BOOKMARK_NO_COHORT_DEFINITION: 'No cohort definition available',
     MRI_PA_BOOKMARK_OVERWRITE_DIALOG_TITLE: 'Overwrite Saved Filter',
     MRI_PA_BOOKMARK_OVERWRITE_DIALOG_TEXT: 'A saved filter with this name already exists. Do you want to overwrite it?',
     MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TEXT: 'Display shared cohorts',

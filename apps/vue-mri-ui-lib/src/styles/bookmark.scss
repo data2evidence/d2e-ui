@@ -260,6 +260,13 @@
               padding-left: 9px;
               padding-right: 9px;
             }
+            .bookmark-item-no-content {
+              display: flex;
+              justify-content: center;
+              color: #ACABA8;
+              font-weight: bold;
+              margin-bottom: 5px;
+            }
             .bookmark-filtercard {
               display: inline-block;
               .bookmark-element {

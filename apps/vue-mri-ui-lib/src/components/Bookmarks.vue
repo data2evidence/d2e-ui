@@ -251,7 +251,7 @@
                   </tr>
                 </template>
                 <template v-else>
-                  <div>No cohort definition available</div>
+                  <div class="bookmark-item-no-content">{{ getText('MRI_PA_BOOKMARK_NO_COHORT_DEFINITION') }}</div>
                 </template>
 
                 <template v-if="bookmarkDisplay.cohortDefinition">
