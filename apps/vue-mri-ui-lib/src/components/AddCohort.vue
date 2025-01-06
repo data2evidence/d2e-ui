@@ -16,22 +16,6 @@
           <div class="row">
             <div class="col-sm-4 form-check col-form-label">
               <label class="form-check-label" for="cohort-radio-newcollection">{{
-                getText('MRI_PA_COLL_COHORT_NAME')
-              }}</label>
-            </div>
-            <div class="col-sm-8">
-              <input
-                class="form-control"
-                :placeholder="getText('MRI_PA_COLL_ENTER_NAME')"
-                v-model="cohortName"
-                tabindex="0"
-                v-focus
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-4 form-check col-form-label">
-              <label class="form-check-label" for="cohort-radio-newcollection">{{
                 getText('MRI_PA_COLL_COHORT_DESCRIPTION')
               }}</label>
             </div>
@@ -71,7 +55,6 @@ export default {
   data() {
     return {
       showAddCohortDialog: false,
-      cohortName: '',
       cohortDescription: '',
       cohortBusy: false,
       messageStrip: {
@@ -159,7 +142,7 @@ export default {
       const params = {
         datasetId: this.getSelectedDataset.id,
         mriquery: JSON.stringify(this.getPLRequest({ bmkId: this.bookmarkId })),
-        name: this.cohortName,
+        name: this.bookmarkName,
         description: this.cohortDescription,
         owner: portalAPI.username,
         syntax: syntax,
@@ -194,7 +177,6 @@ export default {
       this.cohortBusy = false
       this[types.SET_COHORT_TYPE]('subset')
       this[types.SET_COLLECTION_TYPE]('newCollection')
-      this.cohortName = ''
       this.cohortDescription = ''
       this.showAddCohortDialog = false
       this.$emit('closeEv')
@@ -213,7 +195,7 @@ export default {
       })
     },
     disableOKButton() {
-      if (this.selectedCohort === 'subset' && !this.cohortName) {
+      if (this.selectedCohort === 'subset') {
         return true
       }
       return false
