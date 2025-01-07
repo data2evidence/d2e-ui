@@ -37,7 +37,7 @@ export const Py2TableNode = (node: NodeProps<Py2TableNodeData>) => {
           <TargetHandle nodeId={node.id} ioType={HandleIOType.Object} />
         }
         RightHandle={
-          <SourceHandle nodeId={node.id} ioType={HandleIOType.Table} />
+          <SourceHandle nodeId={node.id} ioType={HandleIOType.Dataframe} />
         }
       >
         {data.description}

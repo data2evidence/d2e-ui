@@ -69,7 +69,7 @@ def test_exec(myinput):
   },
   py2table_node: {
     title: "Python To Table",
-    description: "Run python code and output as table.",
+    description: "Transform python object to table.",
     tag: NodeTag.Stable,
     defaultData: {},
   },
