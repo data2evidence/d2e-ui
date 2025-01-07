@@ -317,7 +317,7 @@
                     </td>
                     <td>
                       <button
-                        :title="getText('MRI_PA_BUTTON_SHOW_COLLECTION')"
+                        :title="getText('MRI_PA_BUTTON_DISPLAY_OR_GENERATE_DATA_QUALITY')"
                         class="bookmark-button"
                         v-on:click.stop="this.openDataQualityDialog(bookmarkDisplay.cohortDefinition)"
                         :disabled="!bookmarkDisplay.cohortDefinition"
