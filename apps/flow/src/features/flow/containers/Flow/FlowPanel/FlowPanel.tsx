@@ -47,6 +47,7 @@ import {
   NodeType,
   NODE_TYPES,
   SelectNodeTypesDialog,
+  HandleIOType,
 } from "../../Node/NodeTypes";
 import { CreateGroupNodeDialogDialog } from "../../Node/NodeTypes/GroupNode/CreateGroupNodeDialog";
 import { NodeChoiceMap, NodeTypeChoice } from "../../Node/NodeTypes";
@@ -62,6 +63,11 @@ const snapGrid: [number, number] = [10, 10];
 const flowStyles: CSSProperties = { backgroundColor: "#faf8f8" };
 const defaultPosition = { startX: 100, startY: 100, gapX: 100, gapY: 100 };
 const GROUP_NODE = "subflow";
+
+const getHandleType = (handleId: string) => {
+  const arr = handleId.split("_");
+  return arr[2];
+};
 
 export const FlowPanel: FC<FlowPanelProps> = () => {
   const dataflowId = useSelector((state: RootState) => state.flow.dataflowId);
@@ -409,13 +415,21 @@ export const FlowPanel: FC<FlowPanelProps> = () => {
         return acc;
       }, {});
 
+      const sourceType = getHandleType(connection.sourceHandle);
+      const targetType = getHandleType(connection.targetHandle);
+      const isValidType =
+        sourceType === HandleIOType.Any ||
+        targetType === HandleIOType.Any ||
+        sourceType === targetType;
+
       return (
         isDifferentNode &&
         !isCircular(routes, source, target) &&
-        !isNested(nodes, source, target)
+        !isNested(nodes, source, target) &&
+        isValidType
       );
     },
-    [edges]
+    [edges, nodes]
   );
   return (
     <div ref={reactFlowWrapper} className="flow-panel">

@@ -36,7 +36,6 @@ export interface UserWithRolesInfoExt {
   username: string;
   roles: string[];
   tenantId: string;
-  tenantName: string;
   system: string;
   active: boolean;
 }
