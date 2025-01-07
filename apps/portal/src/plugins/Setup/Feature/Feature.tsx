@@ -53,6 +53,9 @@ export const Feature: FC = () => {
       kaplanMeier: {
         name: "Kaplan-Meier",
       },
+      fhirServer: {
+        name: getText(i18nKeys.FEATURE__FHIR_SERVER),
+      },
     }),
     [getText]
   );
