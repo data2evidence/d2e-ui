@@ -21,7 +21,7 @@ export enum NodeTag {
 
 export enum HandleIOType {
   Any = "any",
-  Table = "table",
+  Dataframe = "dataframe",
   Object = "object",
 }
 
@@ -33,9 +33,9 @@ export const HandleIODict: {
     text: "Any",
     border: "2px solid #000000",
   },
-  [HandleIOType.Table]: {
+  [HandleIOType.Dataframe]: {
     color: "#000080",
-    text: "Table",
+    text: "Dataframe",
   },
   [HandleIOType.Object]: {
     color: "#ff5f5a",

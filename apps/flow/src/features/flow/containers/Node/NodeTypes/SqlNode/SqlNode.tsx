@@ -36,10 +36,10 @@ export const SqlNode = (node: NodeProps<SqlNodeData>) => {
         onResultClick={data.result ? openResult : null}
         node={node}
         LeftHandle={
-          <TargetHandle nodeId={node.id} ioType={HandleIOType.Table} />
+          <TargetHandle nodeId={node.id} ioType={HandleIOType.Dataframe} />
         }
         RightHandle={
-          <SourceHandle nodeId={node.id} ioType={HandleIOType.Table} />
+          <SourceHandle nodeId={node.id} ioType={HandleIOType.Dataframe} />
         }
       >
         {data.description}
