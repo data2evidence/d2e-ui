@@ -282,8 +282,8 @@ export const Terminology: FC<TerminologyProps> = ({
     setIsConceptSetLoading(true);
     try {
       const updatedConceptSetId = conceptSetId
-        ? await terminologyApi.updateConceptSet(conceptSetId, conceptSet)
-        : await terminologyApi.createConceptSet(conceptSet);
+        ? await terminologyApi.updateConceptSet(conceptSetId, conceptSet, activeDatasetId)
+        : await terminologyApi.createConceptSet(conceptSet, activeDatasetId);
       if (typeof updatedConceptSetId !== "string") {
         if (updatedConceptSetId?.statusCode === 500) {
           setErrorMsg(
@@ -301,7 +301,7 @@ export const Terminology: FC<TerminologyProps> = ({
     } finally {
       setIsConceptSetLoading(false);
     }
-  }, [selectedConcepts, conceptSetName, conceptSetId, conceptSetShared]);
+  }, [selectedConcepts, conceptSetName, conceptSetId, conceptSetShared, activeDatasetId]);
 
   const getConceptSet = useCallback(
     async (conceptSetId: string) => {
