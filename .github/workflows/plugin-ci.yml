@@ -60,7 +60,7 @@ jobs:
           if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then 
               yarn publish
           else 
-              npm publish --dry-run
+              yarn pack
           fi
         env:
           CI: false # For portal build to ignore warnings and not treat them as errors
