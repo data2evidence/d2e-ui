@@ -111,22 +111,34 @@ export default {
 
         this.fireQuery({
           url: '/analytics-svc/api/services/population/json/barchart',
-          params: { mriquery: JSON.stringify(this.getBookmarksData), datasetId: this.getBookmarksData.datasetId, },
+          params: { mriquery: JSON.stringify(this.getBookmarksData), datasetId: this.getBookmarksData.datasetId },
         })
           .then(callback)
-          .catch(({ message, response }) => {
+          .catch(error => {
+            const { message, response, code } = error
+
             if (message !== 'cancel') {
               this.$emit('busyEv', false)
             }
 
-            if (response) {
-              let noDataReason = this.getText('MRI_PA_CHART_NO_DATA_DEFAULT_MESSAGE')
-              console.log({response, noDataReason});
-              
+            let noDataReason = this.getText('MRI_PA_CHART_NO_DATA_DEFAULT_MESSAGE')
 
+            if (code === 'ECONNABORTED') {
+              // Handle timeout explicitly
+              callback({
+                data: [],
+                measures: [],
+                categories: [],
+                totalPatientCount: 0,
+                noDataReason,
+              });
+              return
+            }
+
+            if (response) {
               // For all handled errors from backend
               if (response.status === 500) {
-                noDataReason = response.data.errorMessage || response.data.msg
+                noDataReason = response.data.errorMessage || response.data.err
                 if (response.data.errorType === 'MRILoggedError') {
                   noDataReason = this.getText('MRI_DB_LOGGED_MESSAGE', response.data.logId)
                 }
