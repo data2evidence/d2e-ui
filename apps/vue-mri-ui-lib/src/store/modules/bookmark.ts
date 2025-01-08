@@ -191,15 +191,14 @@ const actions = {
 
     let url = ''
     if (params.cmd === 'loadAll') {
-      url = `${bookmarkURL}?paConfigId=${rootGetters.getMriFrontendConfig.getPaConfigId()}&r=${Math.random()}&username=${
-        getPortalAPI().username
-      }&datasetId=${rootGetters.getSelectedDataset.id}`
+      url = `${bookmarkURL}?paConfigId=${rootGetters.getMriFrontendConfig.getPaConfigId()}&r=${Math.random()}&datasetId=${
+        rootGetters.getSelectedDataset.id
+      }`
     } else {
       url = `${bookmarkURL}/${bookmarkId || ''}`
       params.paConfigId = rootGetters.getMriFrontendConfig.getPaConfigId()
       params.cdmConfigId = rootGetters.getMriFrontendConfig.getDatamodelConfigId()
       params.cdmConfigVersion = rootGetters.getMriFrontendConfig.getVersion()
-      params.username = getPortalAPI().username
       params.datasetId = rootGetters.getSelectedDataset.id
     }
 

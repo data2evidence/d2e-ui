@@ -4,7 +4,9 @@ import { useBooleanHelper } from "~/features/flow/hooks";
 import { NodeDataState } from "../../../../types";
 import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
+import { HandleIOType } from "../type";
 import { PythonDrawer } from "./PythonDrawer";
+import { SourceHandle } from "../../CustomHandle/CustomHandle";
 import "./PythonNode.scss";
 
 export interface PythonNodeData extends NodeDataState {
@@ -26,6 +28,9 @@ export const PythonNode = (node: NodeProps<PythonNodeData>) => {
         resultType={data.error ? "error" : "success"}
         onResultClick={data.result ? openResult : null}
         node={node}
+        RightHandle={
+          <SourceHandle ioType={HandleIOType.Object} nodeId={node.id} />
+        }
       >
         {data.description}
       </NodeLayout>

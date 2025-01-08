@@ -1,42 +1,51 @@
 import React from "react";
 import { NodeProps } from "reactflow";
 import { useBooleanHelper } from "~/features/flow/hooks";
+import { HandleIOType } from "../type";
 import { NodeDataState } from "../../../../types";
 import { NodeLayout } from "../../NodeLayout/NodeLayout";
 import { ResultsDrawer } from "../../../Flow/FlowRunResults/ResultsDrawer";
-import { SqlQueryDrawer } from "./SqlQueryDrawer";
-import "./SqlQueryNode.scss";
+import { SourceHandle, TargetHandle } from "../../CustomHandle/CustomHandle";
+import { Py2TableDrawer } from "./Py2TableDrawer";
+import "./Py2TableNode.scss";
 
-export interface SqlQueryNodeData extends NodeDataState {
-  database: string;
-  sqlquery: string;
-  params: { [key: string]: any };
-  is_select: boolean;
-  testsqlquery: string;
+export interface SourceToTableMap {
+  source: string;
+  path: string;
 }
 
-export const SqlQueryNode = (node: NodeProps<SqlQueryNodeData>) => {
+export interface Py2TableNodeData extends NodeDataState {
+  map: { [key: string]: string[] };
+  uiMap: SourceToTableMap;
+}
+
+export const Py2TableNode = (node: NodeProps<Py2TableNodeData>) => {
   const { data } = node;
   const [settingVisible, openSetting, closeSetting] = useBooleanHelper(false);
   const [resultVisible, openResult, closeResult] = useBooleanHelper(false);
 
   return (
     <>
-      <NodeLayout<SqlQueryNodeData>
-        className="sql-query-node"
+      <NodeLayout<Py2TableNodeData>
+        className="py2table-node"
         name={data.name}
         onSettingClick={openSetting}
         resultType={data.error ? "error" : "success"}
         onResultClick={data.result ? openResult : null}
         node={node}
-        LeftHandle={null}
+        LeftHandle={
+          <TargetHandle nodeId={node.id} ioType={HandleIOType.Object} />
+        }
+        RightHandle={
+          <SourceHandle nodeId={node.id} ioType={HandleIOType.Dataframe} />
+        }
       >
         {data.description}
       </NodeLayout>
-      <SqlQueryDrawer
+      <Py2TableDrawer
         node={node}
-        title="Configure SQL query"
-        className="sql-query-drawer"
+        title="Configure Python To Table Mapping"
+        className="sql-drawer"
         open={settingVisible}
         onClose={closeSetting}
       />

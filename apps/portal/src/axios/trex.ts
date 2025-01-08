@@ -13,25 +13,28 @@ export class Trex {
   }
 
   public installPlugin(name: string) {
+    const encodedName = encodeURIComponent(name);
     return request<TrexPlugin>({
       baseURL: TREX_URL,
-      url: `plugins/${name}`,
+      url: `plugins/${encodedName}`,
       method: "POST",
     });
   }
 
   public updatePlugin(name: string) {
+    const encodedName = encodeURIComponent(name);
     return request<TrexPlugin>({
       baseURL: TREX_URL,
-      url: `plugins/${name}`,
+      url: `plugins/${encodedName}`,
       method: "PUT",
     });
   }
 
   public uninstallPlugin(name: string) {
+    const encodedName = encodeURIComponent(name);
     return request<{ message: string }>({
       baseURL: TREX_URL,
-      url: `plugins/${name}`,
+      url: `plugins/${encodedName}`,
       method: "DELETE",
     });
   }
