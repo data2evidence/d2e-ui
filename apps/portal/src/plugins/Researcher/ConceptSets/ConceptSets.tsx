@@ -29,7 +29,7 @@ enum ConceptSetTab {
   ConceptSets = "ConceptSets",
 }
 
-interface ConceptSetsProps extends PageProps<ResearcherStudyMetadata> { }
+interface ConceptSetsProps extends PageProps<ResearcherStudyMetadata> {}
 
 export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
   const { getText, i18nKeys } = useTranslation();
@@ -63,7 +63,7 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
     try {
       setIsLoading(true);
 
-      const response = await api.terminology.getConceptSets();
+      const response = await api.terminology.getConceptSets(activeDatasetId);
       const sortFn = (a: ConceptSetWithConceptDetails, b: ConceptSetWithConceptDetails) => {
         if (a.name < b.name) {
           return -1;
@@ -92,7 +92,7 @@ export const ConceptSets: FC<ConceptSetsProps> = ({ metadata }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [getText, setFeedback, i18nKeys.CONCEPT_SETS__ERROR, i18nKeys.CONCEPT_SETS__ERROR_DESCRIPTION]);
+  }, [getText, setFeedback, i18nKeys.CONCEPT_SETS__ERROR, i18nKeys.CONCEPT_SETS__ERROR_DESCRIPTION, activeDatasetId]);
 
   useEffect(() => {
     fetchData();

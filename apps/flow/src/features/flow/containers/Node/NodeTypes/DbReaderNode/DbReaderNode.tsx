@@ -32,7 +32,7 @@ export const DbReaderNode = (node: NodeProps<DbReaderNodeData>) => {
         node={node}
         LeftHandle={null}
         RightHandle={
-          <SourceHandle ioType={HandleIOType.Table} nodeId={node.id} />
+          <SourceHandle ioType={HandleIOType.Dataframe} nodeId={node.id} />
         }
       >
         {data.description}
