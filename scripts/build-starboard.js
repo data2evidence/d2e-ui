@@ -25,7 +25,7 @@ async function buildStarboardNotebook() {
   console.log("Building Starboard Notebook...");
   const sourceDir = path.resolve(
     __dirname,
-    "../node_modules/@alp-os/alp-starboard-notebook/packages/starboard-notebook/dist"
+    "../node_modules/@data2evidence/d2e-starboard-notebook/packages/starboard-notebook/dist"
   );
   const destDir = path.join(resourcesDir, "starboard-notebook-base");
   createDir(destDir);
