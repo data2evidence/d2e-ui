@@ -4,6 +4,7 @@ import { NodeDataState } from "../../../types";
 import { CsvNode } from "./CsvNode/CsvNode";
 import { PythonNode } from "./PythonNode/PythonNode";
 import { PythonNotebookNode } from "./PythonNotebookNode/PythonNotebookNode";
+import { Py2TableNode } from "./Py2TableNode/Py2TableNode";
 import { RNode } from "./RNode/RNode";
 import { StrategusNode } from "./StrategusNode/StrategusNode";
 import { SqlQueryNode } from "./SqlQueryNode/SqlQueryNode";
@@ -19,6 +20,7 @@ export const NODE_TYPES: {
 } = {
   python_node: PythonNode,
   python_notebook_node: PythonNotebookNode,
+  py2table_node: Py2TableNode,
   r_node: RNode,
   strategus: StrategusNode,
   sql_query_node: SqlQueryNode,
@@ -35,6 +37,7 @@ export const NODE_COLORS: {
 } = {
   python_node: "#999fcb",
   python_notebook_node: "#999fcb",
+  py2table_node: "#999fcb",
   r_node: "#999fcb",
   strategus: "#999fcb",
   sql_query_node: "#999fcb",
@@ -64,6 +67,12 @@ def test_exec(myinput):
     tag: NodeTag.Experimental,
     defaultData: {},
   },
+  py2table_node: {
+    title: "Python To Table",
+    description: "Transform python object to table.",
+    tag: NodeTag.Stable,
+    defaultData: {},
+  },
   r_node: {
     title: "R",
     description: "Run R code.",
@@ -91,8 +100,8 @@ test_exec <- function(myinput) {
   },
   sql_node: {
     title: "SQL",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    tag: NodeTag.Experimental,
+    description: "Run SQL in a database",
+    tag: NodeTag.Stable,
     defaultData: {},
   },
   data_mapping_node: {
@@ -110,14 +119,14 @@ test_exec <- function(myinput) {
   },
   db_reader_node: {
     title: "Database reader",
-    description: "Run SQL query in a database.",
-    tag: NodeTag.Experimental,
+    description: "Output SQL query as table.",
+    tag: NodeTag.Stable,
     defaultData: {},
   },
   db_writer_node: {
     title: "Database writer",
     description: "Write dataframe to a database table.",
-    tag: NodeTag.Experimental,
+    tag: NodeTag.Stable,
     defaultData: {},
   },
 };

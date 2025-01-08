@@ -346,7 +346,7 @@ const StudyOverview: FC = () => {
           <h3 className="studyoverview__actions-title">{getText(i18nKeys.STUDY_OVERVIEW__DATASETS)}</h3>
           <div className="studyoverview__actions-btn-container">
             <Button
-              text={getText(i18nKeys.STUDY_OVERVIEW__CHECK_DATAMODEL_UPDATES)}
+              text={getText(i18nKeys.STUDY_OVERVIEW__UPDATE_DATASET_METADATA)}
               onClick={fetchDatamodelUpdates}
               loading={fetchUpdatesLoading}
             />

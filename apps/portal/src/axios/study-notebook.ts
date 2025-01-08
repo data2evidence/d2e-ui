@@ -4,20 +4,21 @@ import { request } from "./request";
 const STUDY_NOTEBOOK_BASE_URL = "system-portal/notebook";
 
 export class StudyNotebook {
-  public getNotebookList(): Promise<StarboardNotebook[]> {
+  public getNotebookList(datasetId?: string): Promise<StarboardNotebook[]> {
     const notebookList = request({
       baseURL: STUDY_NOTEBOOK_BASE_URL,
       url: ``,
       method: "GET",
+      params: { datasetId },
     });
     return notebookList;
   }
 
-  public createNotebook(name?: string, notebookContent?: string): Promise<StarboardNotebook> {
+  public createNotebook(datasetId: string, name?: string, notebookContent?: string): Promise<StarboardNotebook> {
     return request({
       baseURL: STUDY_NOTEBOOK_BASE_URL,
       url: ``,
-      data: { name, notebookContent },
+      data: { name, notebookContent, datasetId },
       method: "POST",
     });
   }
@@ -26,7 +27,8 @@ export class StudyNotebook {
     id: string,
     name: string,
     notebookContent: string,
-    isShared: boolean
+    isShared: boolean,
+    datasetId: string
   ): Promise<StarboardNotebook> {
     return request({
       baseURL: STUDY_NOTEBOOK_BASE_URL,
@@ -36,16 +38,18 @@ export class StudyNotebook {
         name,
         notebookContent,
         isShared,
+        datasetId,
       },
       method: "PUT",
     });
   }
 
-  public deleteNotebook(id: string): Promise<boolean> {
+  public deleteNotebook(id: string, datasetId: string): Promise<boolean> {
     return request({
       baseURL: STUDY_NOTEBOOK_BASE_URL,
       url: `/${id}`,
       method: "DELETE",
+      params: { datasetId },
     });
   }
 }
