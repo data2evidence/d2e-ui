@@ -1,10 +1,10 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
 import { StarboardNotebook } from "./utils/notebook";
-import { StarboardEmbed } from "@alp-os/alp-starboard-wrap";
+import { StarboardEmbed } from "@data2evidence/d2e-starboard-wrap";
 import { Card, Loader } from "@portal/components";
 import { api } from "../../axios/api";
-import { useFeedback, useTranslation } from "../../contexts";
+import { useActiveDataset, useFeedback, useTranslation } from "../../contexts";
 import { EmptyNotebook } from "./components/EmptyNotebook";
 import { Header } from "./components/NotebookHeader/NotebookHeader";
 import { convertJupyterToStarboard, notebookContentToText } from "./utils/jupystar";
@@ -25,6 +25,8 @@ export const Starboard: FC<StarboardProps> = ({ metadata }) => {
   const { getText } = useTranslation();
   const { setFeedback } = useFeedback();
   const [loading, setLoading] = useState(true);
+  const { activeDataset } = useActiveDataset();
+  const activeDatasetId = activeDataset.id;
 
   // JWT Token and Jupyter Kernel Extraction
   const [jwtToken, setJWTToken] = useState("");
@@ -67,7 +69,7 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
     async (runInBackground?: boolean) => {
       try {
         if (!runInBackground) setLoading(true);
-        const notebooks = await api.studyNotebook.getNotebookList();
+        const notebooks = await api.studyNotebook.getNotebookList(activeDatasetId);
         if (notebooks.length === 0) updateActiveNotebook(undefined);
         if (!runInBackground) updateActiveNotebook(notebooks[0]);
         setNotebooks(notebooks);
@@ -132,7 +134,7 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
 
   const createNotebook = useCallback(async () => {
     try {
-      const newNotebook: StarboardNotebook = await api.studyNotebook.createNotebook("Untitled", "");
+      const newNotebook: StarboardNotebook = await api.studyNotebook.createNotebook(activeDatasetId, "Untitled", "");
       fetchNotebooks(true);
       updateActiveNotebook(newNotebook);
     } catch (err) {
@@ -146,7 +148,7 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
 
   // Check Jupyter Notebook Name if it exist in the database
   const checkNotebookName = async (name: string) => {
-    const allNotebooks: any[] = await api.studyNotebook.getNotebookList();
+    const allNotebooks: any[] = await api.studyNotebook.getNotebookList(activeDatasetId);
     let isFound = true;
     let nameCount = 0;
     let notebookName = name;
@@ -179,7 +181,11 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
       const starboardNotebook = convertJupyterToStarboard(jupyterFile, {});
       // Converting NotebookContent to Starboard String
       const notebookContent = notebookContentToText(starboardNotebook);
-      const newNotebook: StarboardNotebook = await api.studyNotebook.createNotebook(notebookName, notebookContent);
+      const newNotebook: StarboardNotebook = await api.studyNotebook.createNotebook(
+        activeDatasetId,
+        notebookName,
+        notebookContent
+      );
       fetchNotebooks(true);
       updateActiveNotebook(newNotebook);
     } catch (err) {
@@ -212,6 +218,7 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
         zipUrl={zipUrl}
         isShared={isShared}
         setIsShared={setIsShared}
+        activeDatasetId={activeDatasetId}
       />
       <Card>
         <div id="starboard-root" />
