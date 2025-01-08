@@ -12,7 +12,6 @@ import { i18nKeys } from "../../contexts/app-context/states";
 import env from "../../env";
 import "./Starboard.scss";
 import { getAuthToken } from "../../containers/auth/auth";
-import { useActiveDataset } from "../../contexts"
 
 
 const MRI_ROOT_URL = "analytics-svc";
@@ -56,9 +55,6 @@ os.environ['PYQE_TLS_CLIENT_CA_CERT_PATH'] = ''`;
     const bearerToken = await getBearerToken();
     setToken(bearerToken); };
     fetchToken(); }, []);
-  // Get datasetId for code-suggestion
-  const { activeDataset } = useActiveDataset()
-  const activeDatasetId = activeDataset.id
 
   const updateActiveNotebook = useCallback((notebook?: StarboardNotebook) => {
     setActiveNotebook(notebook);
