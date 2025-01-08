@@ -113,7 +113,7 @@
                         :disabled="this.isMScohort(bookmarkDisplay)"
                         v-model="bookmarkDisplay.selected"
                         @checkEv="onSelectBookmark(bookmarkDisplay)"
-                        :text="`${bookmarkDisplay.displayName} ${bookmarkDisplay?.shared ? '(Shared)' : ''}`"
+                        :text="`${bookmarkDisplay.displayName} ${bookmarkDisplay?.bookmark?.shared ? '(Shared)' : ''}`"
                         :labelClass="'font-color-red'"
                       ></appCheckbox>
 
