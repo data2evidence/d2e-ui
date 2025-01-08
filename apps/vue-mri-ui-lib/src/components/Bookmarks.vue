@@ -895,6 +895,12 @@ export default {
         const flowRun = await this.fetchDataQualityFlowRun({ cohortDefinitionId: cohortDefinition.id })
         if (flowRun && flowRun?.state_name === 'Completed') {
           this.openDataQualityResultsDialog(flowRun)
+        } else if (flowRun?.state_name === 'Pending' || flowRun?.state_name === 'RUNNING') {
+          this.messageStrip = {
+            show: true,
+            message: `Data Quality Check is already running`,
+            messageType: 'information',
+          }
         } else {
           const GenerateDataQualityFlowRunParams = {
             datasetId: this.getSelectedDataset.id,

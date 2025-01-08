@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 const CancelToken = axios.CancelToken
-import QueryString from '../../utils/QueryString'
+import QueryString from '@/utils/QueryString'
 let cancel
 
 const job_plugins_url = '/jobplugins/'
@@ -16,7 +16,6 @@ const actions = {
       },
       compress: [],
     })
-    console.log('dispatching')
     return dispatch('ajaxAuth', {
       url,
       method: 'GET',
