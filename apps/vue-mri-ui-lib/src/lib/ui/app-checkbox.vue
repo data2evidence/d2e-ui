@@ -2,7 +2,7 @@
   <div class="app-checkbox">
     <div
       v-on:keyup="keymonitor"
-      v-bind:class="['app-checkbox-container', { 'app-checkbox-checked': checked }]"
+      v-bind:class="['app-checkbox-container', { 'app-checkbox-checked': checked, 'app-checkbox-disabled': disabled }]"
       @click="toggleCheckbox"
       tabindex="0"
     >
@@ -21,7 +21,7 @@ export default {
       checked: '',
     }
   },
-  props: ['tooltip', 'text', 'click', 'value', 'checkEv', 'labelClass'],
+  props: ['tooltip', 'text', 'click', 'value', 'checkEv', 'labelClass', 'disabled'],
   watch: {
     value(val) {
       if (val !== this.checked) {

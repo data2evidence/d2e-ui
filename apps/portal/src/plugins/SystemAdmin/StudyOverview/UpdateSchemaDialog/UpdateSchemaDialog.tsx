@@ -34,6 +34,7 @@ const UpdateSchemaDialog: FC<UpdateSchemaDialogProps> = ({ study, open, onClose 
       databaseCode: study.databaseCode,
       dialect: study.dialect ? study.dialect : "",
       vocabSchemaValue: study.vocabSchemaName ? study.vocabSchemaName : "",
+      plugin: study.plugin,
     };
 
     try {

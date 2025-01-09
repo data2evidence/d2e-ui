@@ -45,7 +45,7 @@ const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
     } catch (error) {
       console.error(error);
       setIsLoadingDashboardData(false);
-      setErrDashboard(getText(i18nKeys.TREE_MAP_CHART__PREVALENCE));
+      setErrDashboard(getText(i18nKeys.DASHBOARD__ERROR_MESSAGE));
     }
   }, [flowRunId, getText]);
 

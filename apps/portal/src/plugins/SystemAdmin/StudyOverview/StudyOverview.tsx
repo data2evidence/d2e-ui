@@ -274,6 +274,7 @@ const StudyOverview: FC = () => {
               token: "",
               database_code: "",
               data_model: "",
+              plugin: flow,
               datasets: datasetsByFlow[flow],
             },
           },
@@ -289,6 +290,7 @@ const StudyOverview: FC = () => {
             token: "",
             database_code: "",
             data_model: "",
+            plugin: "datamart_plugin",
             datasets: datasets.filter(
               (dataset) => dataset.attributes?.some((attribute) => attribute.attributeId === "source_dataset_id") // Filter out the datamart dataset
             ),
