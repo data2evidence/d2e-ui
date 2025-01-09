@@ -225,9 +225,9 @@
           .bookmark-item-table {
             color: $UiLightText;
             width: 100%;
-            margin-bottom: 1em;
             .bookmark-item-cards {
               width: 100%;
+              margin-bottom: 20px;
               td.bookmark-item-cards-icon {
                 vertical-align: top;
               }
@@ -239,21 +239,33 @@
               display: flex;
               column-gap: 32px;
               align-items: baseline;
-              margin-bottom: 8px;
+              margin-bottom: 20px;
             }
             .bookmark-item-header {
-              font-size: 16px;
-              font-weight: bold;
               position: relative;
               color: #ff5e59;
+              margin-bottom: 20px;
+              display: flex;
+              justify-content: space-between;
               span.selectable {
                 user-select: all;
                 font-weight: normal;
+              }
+              &__status-icons {
+                display: flex;
+                gap: 5px;
               }
             }
             .bookmark-item-content {
               padding-left: 9px;
               padding-right: 9px;
+            }
+            .bookmark-item-no-content {
+              display: flex;
+              justify-content: center;
+              color: #ACABA8;
+              font-weight: bold;
+              margin-bottom: 5px;
             }
             .bookmark-filtercard {
               display: inline-block;
@@ -285,7 +297,7 @@
             bottom: 5px;
             &__break {
               opacity: 0.5;
-              margin: 10px -10px;
+              margin: 5px -5px;
               border-bottom: solid 1px #acaba8;
             }
             .bookmark-item-buttons {

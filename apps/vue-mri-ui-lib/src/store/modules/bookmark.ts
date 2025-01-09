@@ -5,12 +5,14 @@ import Constants from '../../utils/Constants'
 import * as types from '../mutation-types'
 import isEqual from 'lodash/isEqual'
 import { getPortalAPI } from '@/utils/PortalUtils'
+import { formatBookmark, formatCohortDefinition } from '@/utils/BookmarkUtils'
 
 const CancelToken = axios.CancelToken
 let cancel
 // initial state
 const state = {
   bookmarks: [],
+  cohortDefinitions: [],
   filterSummaryVisible: false,
   schemaName: '',
   activeBookmark: null,
@@ -128,6 +130,51 @@ const getters = {
       !isEqual(newBookmarksAxisSelection, currentBookmarksAxisSelection)
     )
   },
+  getDisplayBookmarks: modulestate => {
+    const bookmarks: FormattedBookmark[] = modulestate.bookmarks
+    const cohortDefinitions: FormattedcohortDefinition[] = modulestate.cohortDefinitions
+
+    let displayBookmarks = []
+
+    // cohort definitions without bookmark
+    // cohort definitions with bookmark
+    cohortDefinitions.forEach(cohortDefinition => {
+      // check bookmark exists, if yes, should use the bookmark name
+      const bookmark = bookmarks.find(bookmark => bookmark?.cohortDefinitionId === cohortDefinition.id)
+      if (!bookmark) {
+        return displayBookmarks.push({
+          displayName: cohortDefinition.cohortDefinitionName,
+          bookmark: null,
+          cohortDefinition: formatCohortDefinition(cohortDefinition),
+        })
+      }
+
+      return displayBookmarks.push({
+        displayName: bookmark.bookmarkname,
+        bookmark: formatBookmark(bookmark),
+        cohortDefinition: formatCohortDefinition(cohortDefinition),
+      })
+    })
+
+    // bookmarks without a cohort definition
+    bookmarks.forEach(bookmark => {
+      const cohortDefinition = cohortDefinitions.find(
+        cohortDefinition => (cohortDefinition.id = bookmark?.cohortDefinitionId)
+      )
+
+      if (cohortDefinition) {
+        return
+      }
+
+      return displayBookmarks.push({
+        displayName: bookmark.bookmarkname,
+        bookmark: formatBookmark(bookmark),
+        cohortDefinition: null,
+      })
+    })
+
+    return displayBookmarks
+  },
 }
 
 const actions = {
@@ -160,6 +207,7 @@ const actions = {
         let toastMessage = ''
         if (params.cmd === 'loadAll') {
           commit(types.SET_BOOKMARKS, data)
+          commit(types.SET_COHORT_DEFINITIONS, data)
           commit(types.SET_SCHEMANAME, {
             schemaName: data.schemaName,
           })
@@ -291,24 +339,15 @@ const actions = {
         })
     })
   },
-  setActiveBookmark({ commit }, bookmark) {
-    commit(types.SET_ACTIVE_BOOKMARK, bookmark)
-  },
-  async saveNewBookmark({ dispatch }, params) {
-    return await dispatch('fireBookmarkQuery', { params, method: 'post' })
-  },
-  async updateBookmark({ dispatch, getters }, params) {
-    return await dispatch('fireBookmarkQuery', { params, method: 'put', bookmarkId: getters.getActiveBookmark.bmkId })
-  },
-  async loadAllBookmarks({ dispatch }) {
-    return await dispatch('fireBookmarkQuery', { params: { cmd: 'loadAll' }, method: 'get' })
-  },
 }
 
 // mutations
 const mutations = {
   [types.SET_BOOKMARKS](modulestate, { bookmarks }) {
     modulestate.bookmarks = bookmarks
+  },
+  [types.SET_COHORT_DEFINITIONS](modulestate, { cohortDefinitions }) {
+    modulestate.cohortDefinitions = cohortDefinitions
   },
   [types.SET_FILTERSUMMARY](modulestate, { filterSummaryVisibility }) {
     modulestate.filterSummaryVisible = filterSummaryVisibility
