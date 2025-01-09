@@ -241,6 +241,7 @@ export interface UpdateSchemaInput {
   databaseCode: string;
   dialect: string;
   vocabSchemaValue: string;
+  plugin: string;
 }
 
 interface FailedSchemas {
