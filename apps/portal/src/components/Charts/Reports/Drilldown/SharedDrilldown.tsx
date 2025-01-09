@@ -43,7 +43,7 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
     } catch (error) {
       console.error(error);
       setIsLoadingData(false);
-      setErr(getText(i18nKeys.TREE_MAP_CHART__PREVALENCE, [sourceKey]));
+      setErr(getText(i18nKeys.SHARED_DRILLDOWN__ERROR_MESSAGE, [sourceKey]));
     }
   }, [flowRunId, sourceKey, getText]);
 
@@ -62,7 +62,7 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
     } catch (error) {
       console.error(error);
       setIsLoadingDrilldownData(false);
-      setErrDrilldown(getText(i18nKeys.TREE_MAP_CHART__PREVALENCE, [sourceKey]));
+      setErrDrilldown(getText(i18nKeys.SHARED_DRILLDOWN__ERROR_MESSAGE, [sourceKey]));
     }
   }, [flowRunId, sourceKey, selectedConceptId, getText]);
 
