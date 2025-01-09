@@ -95,6 +95,7 @@ export default {
         url: '/analytics-svc/api/services/patient',
         params: {
           mriquery: JSON.stringify(this.getPLRequest({ useLimit: true })),
+          datasetId: this.getSelectedDataset.id,
         },
       })
         .then(callback)
@@ -151,6 +152,7 @@ export default {
       'getPLModel',
       'getColumnSelectionMenu',
       'getSelectedAttributes',
+      'getSelectedDataset',
       'translate',
     ]),
     currentPage() {
