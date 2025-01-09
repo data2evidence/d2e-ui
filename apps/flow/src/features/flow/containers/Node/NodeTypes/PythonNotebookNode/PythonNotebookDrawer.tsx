@@ -19,7 +19,7 @@ import { RootState, dispatch } from "~/store";
 import { NodeDrawer, NodeDrawerProps } from "../../NodeDrawer/NodeDrawer";
 import { NodeChoiceMap } from "..";
 import { PythonNotebookNodeData } from "./PythonNotebookNode";
-import { StarboardEmbed } from "@alp-os/alp-starboard-wrap";
+import { StarboardEmbed } from "@data2evidence/d2e-starboard-wrap";
 import { pluginMetadata } from "~/FlowApp";
 
 export interface PythonDrawerProps extends Omit<NodeDrawerProps, "children"> {
