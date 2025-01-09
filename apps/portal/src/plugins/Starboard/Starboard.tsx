@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { PageProps, ResearcherStudyMetadata } from "@portal/plugin";
 import { StarboardNotebook } from "./utils/notebook";
-import { StarboardEmbed } from "@alp-os/alp-starboard-wrap";
+import { StarboardEmbed } from "@data2evidence/d2e-starboard-wrap";
 import { Card, Loader } from "@portal/components";
 import { api } from "../../axios/api";
 import { useActiveDataset, useFeedback, useTranslation } from "../../contexts";

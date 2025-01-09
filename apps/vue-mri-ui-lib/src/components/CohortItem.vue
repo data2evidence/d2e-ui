@@ -55,17 +55,14 @@ export default {
     ...mapActions(['fetchDataQualityFlowRun', 'generateDataQualityFlowRun']),
     async generateCohort() {
       const GenerateDataQualityFlowRunParams = {
-        options: {
           datasetId: this.getSelectedDataset.id,
           comment: '',
           cohortDefinitionId: String(this.cohort.id),
           releaseId: '',
           vocabSchemaName: '',
-        },
-        type: "dqd"
       }
 
-      await this.generateDataQualityFlowRun({ GenerateDataQualityFlowRunParams })
+      await this.generateDataQualityFlowRun( GenerateDataQualityFlowRunParams )
         .then(data => {
           this.messageStrip = {
             show: true,

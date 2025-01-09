@@ -60,7 +60,7 @@ jobs:
           if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then 
               yarn publish
           else 
-              npm publish --dry-run
+              yarn pack
           fi
         env:
           CI: false # For portal build to ignore warnings and not treat them as errors
@@ -72,3 +72,21 @@ jobs:
           package-type: "npm"
           min-versions-to-keep: 3
           delete-only-pre-release-versions: "true"
+
+      - name: Pack
+        run: |
+          if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then
+            YARN_FILENAME=$(yarn pack --silent)
+            echo "YARN_FILENAME=$YARN_FILENAME" >> $GITHUB_ENV
+          fi
+      - name: Push
+        uses: svenstaro/upload-release-action@v2
+        if: ${{ env.GIT_CI_BRANCH_NAME == 'develop' }}
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.YARN_FILENAME }}
+          tag: latest
+          target_commit: develop
+          prerelease: true
+          overwrite: true
+          asset_name: d2e-ui.tgz
