@@ -57,5 +57,6 @@ export const FEATURE_DATAFLOW = "dataflow";
 export const FEATURE_DISABLE_JUPYTER_CELL = "disableJupyterCell";
 export const FEATURE_DATASET_FILTER = "datasetFilter";
 export const FEATURE_DATASET_SEARCH = "datasetSearch";
+export const FEATURE_FHIR_SERVER = "fhirServer";
 
 export * from "./FeatureGate";
