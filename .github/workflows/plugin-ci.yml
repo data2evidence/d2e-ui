@@ -78,7 +78,9 @@ jobs:
           echo "Ensuring Homebrew environment is available..."
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew --version
-          yarn pack --filename d2e-ui.tgz
+          if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then
+            yarn pack --filename d2e-ui.tgz
+          fi
         env:
           CI: false # For portal build to ignore warnings and not treat them as errors
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -88,7 +90,7 @@ jobs:
         if: ${{ env.GIT_CI_BRANCH_NAME == 'develop' }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ env.YARN_FILENAME }}
+          file: d2e-ui.tgz
           tag: latest
           target_commit: develop
           prerelease: true
