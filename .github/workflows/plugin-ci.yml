@@ -78,8 +78,7 @@ jobs:
           echo "Ensuring Homebrew environment is available..."
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew --version
-          yarn pack 
-          
+          yarn pack --filename d2e-ui.tgz
         env:
           CI: false # For portal build to ignore warnings and not treat them as errors
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
