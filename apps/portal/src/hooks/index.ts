@@ -13,6 +13,7 @@ export * from "./useFeatures";
 export * from "./useGroupCleanUp";
 export * from "./useMenuAnchor";
 export * from "./usePaConfigs";
+export * from "./usePollingEffect";
 export * from "./usePublicDatasets";
 export * from "./useScrollPosition";
 export * from "./useTenant";
