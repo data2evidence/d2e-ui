@@ -42,6 +42,7 @@ import MetadataForm from "../UpdateStudyDialog/MetadataForm/MetadataForm";
 import "./AddStudyDialog.scss";
 import { api } from "../../../../axios/api";
 import { useTranslation } from "../../../../contexts";
+import { FhirServerCheckbox } from "./components/FhirServerCheckbox";
 
 interface AddStudyDialogProps {
   open: boolean;
@@ -528,7 +529,6 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
       cdmSchemaValue,
       vocabSchemaValue,
       cleansedSchemaOption,
-      tenantName: tenant?.name || "",
       dataModel:
         dataModelDetails.dataModel === customDataModelOption.datamodel ? dataModelCustom : dataModelDetails.dataModel,
       plugin: dataModelDetails.plugin,
@@ -615,16 +615,12 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
             }}
           />
         </div>
-        <div>
-          <Checkbox
-            checked={formData.createFhirProject}
-            checkbox-id="create-fhir-server"
-            label={getText(i18nKeys.ADD_STUDY_DIALOG__CREATE_FHIR)}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              handleFormDataChange({ createFhirProject: event.target.checked });
-            }}
-          />
-        </div>
+        <FhirServerCheckbox
+          checked={formData.createFhirProject}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            handleFormDataChange({ createFhirProject: event.target.checked });
+          }}
+        />
         <div>{getText(i18nKeys.ADD_STUDY_DIALOG__DESCRIPTION)}</div>
         <SimpleMDE
           value={formData.description}

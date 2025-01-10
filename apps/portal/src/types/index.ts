@@ -13,6 +13,7 @@ export * from "./flow";
 export * from "./dbCredentials";
 export * from "./config";
 export * from "./trex";
+export * from "./demo";
 
 export interface NavLink {
   id: string;
