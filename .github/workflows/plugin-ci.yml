@@ -79,15 +79,18 @@ jobs:
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew --version
           if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then
-            YARN_FILENAME=$(yarn pack --silent)
-            echo "YARN_FILENAME=$YARN_FILENAME" >> $GITHUB_ENV
+            yarn pack --filename d2e-ui.tgz
           fi
+        env:
+          CI: false # For portal build to ignore warnings and not treat them as errors
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
       - name: Push
         uses: svenstaro/upload-release-action@v2
         if: ${{ env.GIT_CI_BRANCH_NAME == 'develop' }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ env.YARN_FILENAME }}
+          file: d2e-ui.tgz
           tag: latest
           target_commit: develop
           prerelease: true
