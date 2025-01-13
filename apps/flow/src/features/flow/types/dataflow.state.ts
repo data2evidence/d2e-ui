@@ -18,9 +18,14 @@ export interface DataflowItemDto {
 
 export interface LatestDataflowItemDto {
   id: string;
-  name: string;
+  canvas: LatestDataflowDtoCanvas;
   lastFlowRunId: string | undefined;
   flow: ReactFlowDto;
+}
+
+interface LatestDataflowDtoCanvas {
+  id: string;
+  name: string;
 }
 
 export interface DataflowRevisionDto {
