@@ -27,6 +27,7 @@ export interface Plugins {
   iconUrl?: string;
   iconSize?: number;
   name: string;
+  enabled?: boolean;
   route: string;
   pluginPath: string;
   type?: string;

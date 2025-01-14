@@ -5,6 +5,10 @@ export const sortPluginsByType = (plugins: Plugins[]): Plugins[] => {
   const typeSet = new Set<string>();
 
   plugins.forEach((item) => {
+    if ("enabled" in item && !item.enabled) {
+      return;
+    }
+
     if (item.type) {
       if (item.type === "hidden") {
         return;
@@ -25,7 +29,11 @@ export const sortPluginsByType = (plugins: Plugins[]): Plugins[] => {
         sortedPlugins[foundIndex].children?.push(item);
       }
     } else {
-      sortedPlugins.push(item);
+      if ("children" in item) {
+        sortedPlugins.push({ ...item, children: item.children?.filter((x) => x.enabled) });
+      } else {
+        sortedPlugins.push(item);
+      }
     }
   });
 
