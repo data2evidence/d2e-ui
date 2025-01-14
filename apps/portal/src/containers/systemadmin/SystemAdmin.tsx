@@ -56,19 +56,25 @@ const SystemAdmin: FC = () => {
 
   useEffect(() => {
     const updateSystemAdminPlugins = () => {
-      const displayedSystemAdminPlugins = plugins.systemadmin.reduce<Plugins[]>((acc, item) => {
-        const route = item.route;
-        const pluginEnv: { [key: string]: boolean } = {};
-        if (item.featureFlag) {
-          pluginEnv[route] = systemFeatures.includes(item.featureFlag);
-        }
-        // Allows plugins not specified in pluginEnv to be shown by default
-        // Allows plugins which are enabled based on pluginEnv
-        if (!(route in pluginEnv) || pluginEnv[route]) {
-          acc.push(item);
-        }
-        return acc;
-      }, []);
+      const displayedSystemAdminPlugins = plugins.systemadmin
+        .filter((plugin) => plugin.enabled)
+        .reduce<Plugins[]>((acc, item) => {
+          const route = item.route;
+          const pluginEnv: { [key: string]: boolean } = {};
+          if (item.featureFlag) {
+            pluginEnv[route] = systemFeatures.includes(item.featureFlag);
+          }
+          // Allows plugins not specified in pluginEnv to be shown by default
+          // Allows plugins which are enabled based on pluginEnv
+          if (!(route in pluginEnv) || pluginEnv[route]) {
+            if ("children" in item) {
+              acc.push({ ...item, children: item.children?.filter((x) => x.enabled) });
+            } else {
+              acc.push(item);
+            }
+          }
+          return acc;
+        }, []);
       setSystemAdminPlugins(displayedSystemAdminPlugins);
     };
     updateSystemAdminPlugins();

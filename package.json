@@ -188,7 +188,7 @@
                 "requiredRoles": [
                   "RESEARCHER"
                 ],
-                "enabled": true
+                "enabled": false
               },
               {
                 "name": "Strategus",
@@ -287,30 +287,36 @@
         "systemadmin": [
           {
             "name": "Users",
+            "enabled": true,
             "pluginPath": "plugins/SystemAdmin/UserOverview/module",
             "route": "user-overview"
           },
           {
             "name": "Datasets",
+            "enabled": true,
             "pluginPath": "plugins/SystemAdmin/StudyOverview/module",
             "route": "dataset-overview"
           },
           {
             "name": "Jobs",
+            "enabled": true,
             "pluginPath": "plugins/SystemAdmin/Jobs/module",
             "route": "jobs"
           },
           {
             "name": "ETL",
+            "enabled": true,
             "route": "etl",
             "children": [
               {
                 "name": "Concept mapping",
+                "enabled": true,
                 "pluginPath": "plugins/SystemAdmin/ConceptMapping/module",
                 "route": "concept-mapping"
               },
               {
                 "name": "Data mapping",
+                "enabled": false,
                 "pluginPath": "https://$$FQDN$$/mapping/module.js",
                 "route": "data-mapping"
               },
@@ -319,6 +325,7 @@
                   "dnBaseUrl": "https://$$FQDN$$/"
                 },
                 "name": "Data transformation",
+                "enabled": true,
                 "pluginPath": "https://$$FQDN$$/flow/module.js",
                 "route": "dataflow"
               }
@@ -326,6 +333,7 @@
           },
           {
             "name": "Setup",
+            "enabled": true,
             "pluginPath": "plugins/Setup/module",
             "route": "setup"
           }
