@@ -161,7 +161,7 @@
             "route": "cohorts"
           },
           {
-            "enabled": true,
+            "enabled": false,
             "featureFlag": "starboard",
             "name": "Notebooks",
             "pluginPath": "plugins/Starboard/module",
