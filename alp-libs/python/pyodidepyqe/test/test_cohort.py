@@ -78,23 +78,18 @@ ALL_COHORTS = {'data': [{'id': 1,
                          'patientIds': [1, 2, 3, 4, 5],
                          'name': '67 years old',
                          'description': 'cohort of people which are 50 years old',
-                         'creationTimestamp': '2022-09-12T06:30:10',
-                         'modificationTimestamp': 'NoValue',
-                         'owner': '0c46c73e-c3fb-476a-8c76-3e558a18f2f2'},
+                         'creationTimestamp': '2022-09-12'},
                         {'id': 2,
                          'patientIds': [6, 7, 8, 9, 10],
                          'name': '67 years old',
                          'description': 'cohort of people which are 67 years old',
-                         'creationTimestamp': '2022-09-12T06:30:10',
-                         'modificationTimestamp': 'NoValue',
-                         'owner': '0c46c73e-c3fb-476a-8c76-3e558a18f2f2'}],
+                         'creationTimestamp': '2022-09-12'}],
                'cohortDefinitionCount': 2}
 
 COHORT_DEFINITION = {'mriquery': 'eJxTSs7PyC8qCUotLE0tLlECAC2ABb0=',
                      'name': 'my test cohort',
                      'description': 'hello',
-                     'datasetId': 'datasetId',
-                     'owner': '1234567890'}
+                     'datasetId': 'datasetId'}
 
 
 def _get_all_cohorts(auth_api, path, params):
