@@ -18,7 +18,7 @@ export const useDbVocabSchemas = (dialect: string): [{ [key: string]: string[] }
   );
 
   useEffect(() => {
-    if (dialect.length > 0) {
+    if (dialect) {
       getDbVocabSchemas(dialect);
     }
   }, [dialect, getDbVocabSchemas]);
