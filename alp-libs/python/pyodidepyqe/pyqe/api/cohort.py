@@ -54,7 +54,6 @@ class Cohort(_EncodeQueryStringMixin, _AuthApi):
                 cohort_definition['mriquery']).decode('ascii'))
 
         cohort_definition['datasetId'] = self.study_id
-        cohort_definition['owner'] = self.get_id()
         cohort_definition['syntax'] = json.dumps(cohort_definition['syntax'])
 
         response = await self._post('/analytics-svc/api/services/cohort', json=cohort_definition)
