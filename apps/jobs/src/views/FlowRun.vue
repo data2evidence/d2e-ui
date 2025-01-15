@@ -6,7 +6,7 @@
 
     <FlowRunGraphs v-if="!isPending" :flow-run="flowRun" />
 
-    <p-button v-if="showResultButton" lg @click="displayResultsDialog"> View Results</p-button>
+    <p-button v-if="showResultButton" lg @click="displayResultsDialog">View Results</p-button>
 
     <p-tabs v-model:selected="tab" :tabs="tabs">
       <template #details>
