@@ -3,13 +3,15 @@ label.app-label {
   color: $UiLightText;
 }
 
-label.font-color-red{
-    color: #ff5e59 !important;
-    font-size: 16px;
-    font-weight: 500;
+label.bookmark {
+  color: #ff5e59 !important;
+  font-size: 16px;
+  font-weight: 500;
+  word-wrap: break-word;
+  max-width: 170px;
 }
 
-label.font-color-blue{
+label.bookmark_list {
   color: #000080 !important;
   font-size: 16px;
   font-weight: 500;

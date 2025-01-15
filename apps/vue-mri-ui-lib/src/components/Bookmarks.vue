@@ -99,7 +99,7 @@
             v-model="showSharedBookmarks"
             :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TEXT')"
             :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TITLE')"
-            :labelClass="'font-color-blue'"
+            :labelClass="'bookmark_list'"
           ></appCheckbox>
         </div>
         <div class="bookmark-list-content">
@@ -114,7 +114,7 @@
                         v-model="bookmarkDisplay.selected"
                         @checkEv="onSelectBookmark(bookmarkDisplay)"
                         :text="`${bookmarkDisplay.displayName} ${bookmarkDisplay?.bookmark?.shared ? '(Shared)' : ''}`"
-                        :labelClass="'font-color-red'"
+                        :labelClass="'bookmark'"
                       ></appCheckbox>
 
                       <div class="bookmark-item-header__status-icons">
@@ -488,7 +488,7 @@ export default {
       'getSelectedDataset',
     ]),
     bookmarksDisplay() {
-      return this.getDisplayBookmarks
+      return this.getDisplayBookmarks(this.showSharedBookmarks, getPortalAPI().username)
     },
     hasChanges() {
       return this.getActiveBookmark?.isNew || this.getCurrentBookmarkHasChanges
