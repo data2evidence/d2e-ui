@@ -2,6 +2,19 @@ name: build plugin
 
 on:
   workflow_dispatch:
+    inputs:
+        tag:
+          description: Enter tag for release
+          required: true
+          type: string
+        prerelease:
+          type: boolean
+          default: true
+          required: true
+        overwrite:
+          type: boolean
+          default: true
+          required: true
   pull_request:
     types: [opened, ready_for_review, reopened, synchronize]
   push:
@@ -49,22 +62,27 @@ jobs:
       - name: Patch Package
         run: jq '.private=false' package.json > tmppkg; mv tmppkg package.json
       - name: Update version
-        run: jq --arg v "-$(date +%s)-$GITHUB_SHA" '.version+=$v' package.json > tmppkg; mv tmppkg package.json
+        run: |
+          if [[ $GITHUB_EVENT_NAME == 'workflow_dispatch' ]]; then
+            RELEASE_VERSION=${{ github.event.inputs.tag }}
+            jq --arg v $RELEASE_VERSION '.version=$v' package.json > tmppkg; mv tmppkg package.json
+          else
+            jq --arg v "-$(date +%s)-$GITHUB_SHA" '.version+=$v' package.json > tmppkg; mv tmppkg package.json
+          fi
       - name: Publish
+        env:
+          CI: false # For portal build to ignore warnings and not treat them as errors
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHOULD_PUBLISH: ${{ github.ref_name == 'develop' || github.event_name == 'workflow_dispatch' }}
         run: |
           echo "Ensuring Homebrew environment is available..."
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
           brew --version
-
-          if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then 
+          if [[ $SHOULD_PUBLISH == true ]]; then
               yarn publish
           else 
               yarn pack
           fi
-        env:
-          CI: false # For portal build to ignore warnings and not treat them as errors
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/delete-package-versions@v5
         with:
@@ -74,25 +92,41 @@ jobs:
           delete-only-pre-release-versions: "true"
 
       - name: Pack
+        if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch'
         run: |
           echo "Ensuring Homebrew environment is available..."
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew --version
-          if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then
-            yarn pack --filename d2e-ui.tgz
-          fi
+          yarn pack --filename d2e-ui.tgz
         env:
           CI: false # For portal build to ignore warnings and not treat them as errors
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+      - name: Prepare
+        if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch'
+        run: |
+          if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then
+            echo "PRELEASE=true" | tee -a $GITHUB_ENV | tee -a $GITHUB_STEP_SUMMARY
+            echo "OVERWRITE=true" | tee -a $GITHUB_ENV | tee -a $GITHUB_STEP_SUMMARY
+            TAG=latest
+            echo "TAG=$TAG" | tee -a $GITHUB_ENV | tee -a $GITHUB_STEP_SUMMARY
+            ASSET_NAME=d2e-ui-${TAG}
+            echo "ASSET_NAME=$ASSET_NAME" | tee -a $GITHUB_ENV | tee -a $GITHUB_STEP_SUMMARY
+          else
+            echo "PRELEASE=${{ github.event.inputs.prerelease }}" | tee -a $GITHUB_ENV | tee -a $GITHUB_STEP_SUMMARY
+            echo "OVERWRITE=${{ github.event.inputs.overwrite }}" | tee -a $GITHUB_ENV | tee -a $GITHUB_STEP_SUMMARY
+            TAG=${{ github.event.inputs.tag }}
+            echo "TAG=$TAG" | tee -a $GITHUB_ENV | tee -a $GITHUB_STEP_SUMMARY
+            ASSET_NAME=d2e-ui-${TAG}
+            echo "ASSET_NAME=$ASSET_NAME" | tee -a $GITHUB_ENV | tee -a $GITHUB_STEP_SUMMARY
+          fi
       - name: Push
         uses: svenstaro/upload-release-action@v2
-        if: ${{ env.GIT_CI_BRANCH_NAME == 'develop' }}
+        if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch' 
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: d2e-ui.tgz
-          tag: latest
+          tag: ${{ env.TAG }}
           target_commit: develop
-          prerelease: true
-          overwrite: true
-          asset_name: d2e-ui.tgz
+          prerelease: ${{ env.PRELEASE }}
+          overwrite: ${{ env.OVERWRITE }}
+          asset_name: ${{ env.ASSET_NAME }}.tgz
