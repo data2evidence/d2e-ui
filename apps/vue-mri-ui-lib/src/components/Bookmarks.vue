@@ -488,7 +488,7 @@ export default {
       'getSelectedDataset',
     ]),
     bookmarksDisplay() {
-      return this.getDisplayBookmarks
+      return this.getDisplayBookmarks(this.showSharedBookmarks, getPortalAPI().username)
     },
     hasChanges() {
       return this.getActiveBookmark?.isNew || this.getCurrentBookmarkHasChanges
