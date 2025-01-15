@@ -1,6 +1,6 @@
 <template>
   <div class="side-bar">
-    <p-context-nav-item title="Job Runs" to="/flow-runs" />
+    <p-context-nav-item title="Job Runs" to="/runs" />
     <p-context-nav-item title="Jobs" to="/deployments" />
   </div>
 </template>
