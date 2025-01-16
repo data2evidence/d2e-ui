@@ -84,7 +84,9 @@ jobs:
               yarn pack
           fi
 
-      - uses: actions/delete-package-versions@v5
+      - name: Delete Untagged Images 
+        if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch'
+        uses: actions/delete-package-versions@v5
         with:
           package-name: "d2e-ui"
           package-type: "npm"
