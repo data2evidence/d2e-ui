@@ -18,9 +18,10 @@ import { useTranslation } from "../../../../contexts";
 interface SharedDrilldownProps {
   flowRunId: string;
   sourceKey: string;
+  datasetId: string;
 }
 
-const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => {
+const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey, datasetId }) => {
   const { getText, i18nKeys } = useTranslation();
   const [data, setData] = useState({
     treemap: [],
@@ -36,7 +37,7 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
   const getData = useCallback(async () => {
     setIsLoadingData(true);
     try {
-      const result = await api.dataflow.getDataCharacterizationResults(flowRunId, sourceKey);
+      const result = await api.dataflow.getDataCharacterizationResults(flowRunId, sourceKey, datasetId);
       setData(result);
       setIsLoadingData(false);
       setErr("");
@@ -45,7 +46,7 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
       setIsLoadingData(false);
       setErr(getText(i18nKeys.SHARED_DRILLDOWN__ERROR_MESSAGE, [sourceKey]));
     }
-  }, [flowRunId, sourceKey, getText]);
+  }, [flowRunId, sourceKey, getText, datasetId]);
 
   const getDrilldownData = useCallback(async () => {
     if (selectedConceptId === "") return;
@@ -54,7 +55,8 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
       const result = await api.dataflow.getDataCharacterizationResultsDrilldown(
         flowRunId,
         sourceKey,
-        selectedConceptId
+        selectedConceptId,
+        datasetId
       );
       setDrilldownData(result as DRILLDOWN_REPORT_BASE_TYPE);
       setIsLoadingDrilldownData(false);
@@ -64,7 +66,7 @@ const SharedDrilldown: FC<SharedDrilldownProps> = ({ flowRunId, sourceKey }) => 
       setIsLoadingDrilldownData(false);
       setErrDrilldown(getText(i18nKeys.SHARED_DRILLDOWN__ERROR_MESSAGE, [sourceKey]));
     }
-  }, [flowRunId, sourceKey, selectedConceptId, getText]);
+  }, [flowRunId, sourceKey, selectedConceptId, getText, datasetId]);
 
   useEffect(() => {
     // Fetch data for charts

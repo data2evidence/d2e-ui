@@ -16,9 +16,10 @@ import { useTranslation } from "../../../../contexts";
 
 interface DeathProps {
   flowRunId: string;
+  datasetId: string;
 }
 
-const Death: FC<DeathProps> = ({ flowRunId }) => {
+const Death: FC<DeathProps> = ({ flowRunId, datasetId }) => {
   const { getText, i18nKeys } = useTranslation();
   const [deathData, setDeathData] = useState<DEATH_REPORT_TYPE>({
     ageAtDeath: [],
@@ -32,7 +33,11 @@ const Death: FC<DeathProps> = ({ flowRunId }) => {
   const getDeathData = useCallback(async () => {
     setIsLoadingDeathData(true);
     try {
-      const result = await api.dataflow.getDataCharacterizationResults(flowRunId, WEBAPI_CDMRESULTS_SOURCE_KEYS.DEATH);
+      const result = await api.dataflow.getDataCharacterizationResults(
+        flowRunId,
+        WEBAPI_CDMRESULTS_SOURCE_KEYS.DEATH,
+        datasetId
+      );
       setDeathData(result as DEATH_REPORT_TYPE);
       setIsLoadingDeathData(false);
       setErrDeath("");
@@ -41,7 +46,7 @@ const Death: FC<DeathProps> = ({ flowRunId }) => {
       setIsLoadingDeathData(false);
       setErrDeath(getText(i18nKeys.DEATH__ERROR_MESSAGE));
     }
-  }, [flowRunId, getText]);
+  }, [flowRunId, getText, datasetId]);
 
   useEffect(() => {
     // Fetch data for charts

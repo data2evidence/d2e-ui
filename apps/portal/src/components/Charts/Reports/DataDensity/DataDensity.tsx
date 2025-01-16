@@ -14,9 +14,10 @@ import { useTranslation } from "../../../../contexts";
 
 interface DataDensityProps {
   flowRunId: string;
+  datasetId: string;
 }
 
-const DataDensity: FC<DataDensityProps> = ({ flowRunId }) => {
+const DataDensity: FC<DataDensityProps> = ({ flowRunId, datasetId }) => {
   const { getText, i18nKeys } = useTranslation();
   const [dataDensityData, setDataDensityData] = useState<DATA_DENSITY_REPORT_TYPE>({
     totalRecords: [],
@@ -31,7 +32,8 @@ const DataDensity: FC<DataDensityProps> = ({ flowRunId }) => {
     try {
       const result = await api.dataflow.getDataCharacterizationResults(
         flowRunId,
-        WEBAPI_CDMRESULTS_SOURCE_KEYS.DATA_DENSITY
+        WEBAPI_CDMRESULTS_SOURCE_KEYS.DATA_DENSITY,
+        datasetId
       );
       setDataDensityData(result as DATA_DENSITY_REPORT_TYPE);
       setIsLoadingDataDensityData(false);
@@ -41,7 +43,7 @@ const DataDensity: FC<DataDensityProps> = ({ flowRunId }) => {
       setIsLoadingDataDensityData(false);
       setErrDataDensity(getText(i18nKeys.DATA_DENSITY__ERROR_MESSAGE));
     }
-  }, [flowRunId, getText]);
+  }, [flowRunId, getText, datasetId]);
 
   useEffect(() => {
     // Fetch data for charts

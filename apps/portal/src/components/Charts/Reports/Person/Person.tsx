@@ -14,9 +14,10 @@ import { useTranslation } from "../../../../contexts";
 
 interface PersonProps {
   flowRunId: string;
+  datasetId: string;
 }
 
-const Person: FC<PersonProps> = ({ flowRunId }) => {
+const Person: FC<PersonProps> = ({ flowRunId, datasetId }) => {
   const { getText, i18nKeys } = useTranslation();
   const [personData, setPersonData] = useState<PERSON_REPORT_TYPE>({
     population: [],
@@ -32,7 +33,11 @@ const Person: FC<PersonProps> = ({ flowRunId }) => {
   const getPersonData = useCallback(async () => {
     setIsLoadingPersonData(true);
     try {
-      const result = await api.dataflow.getDataCharacterizationResults(flowRunId, WEBAPI_CDMRESULTS_SOURCE_KEYS.PERSON);
+      const result = await api.dataflow.getDataCharacterizationResults(
+        flowRunId,
+        WEBAPI_CDMRESULTS_SOURCE_KEYS.PERSON,
+        datasetId
+      );
       setPersonData(result as PERSON_REPORT_TYPE);
       setIsLoadingPersonData(false);
       setErrPerson("");
@@ -41,7 +46,7 @@ const Person: FC<PersonProps> = ({ flowRunId }) => {
       setIsLoadingPersonData(false);
       setErrPerson(getText(i18nKeys.PERSON__ERROR_MESSAGE));
     }
-  }, [flowRunId, getText]);
+  }, [flowRunId, getText, datasetId]);
 
   useEffect(() => {
     // Fetch data for charts

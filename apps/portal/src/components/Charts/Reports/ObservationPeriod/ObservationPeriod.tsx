@@ -17,9 +17,10 @@ import { useTranslation } from "../../../../contexts";
 
 interface ObservationPeriodProps {
   flowRunId: string;
+  datasetId: string;
 }
 
-const ObservationPeriod: FC<ObservationPeriodProps> = ({ flowRunId }) => {
+const ObservationPeriod: FC<ObservationPeriodProps> = ({ flowRunId, datasetId }) => {
   const { getText, i18nKeys } = useTranslation();
   const [observationPeriodData, setObservationPeriodData] = useState<OBSERVATION_PERIOD_REPORT_TYPE>({
     ageAtFirst: [],
@@ -42,7 +43,8 @@ const ObservationPeriod: FC<ObservationPeriodProps> = ({ flowRunId }) => {
     try {
       const result = await api.dataflow.getDataCharacterizationResults(
         flowRunId,
-        WEBAPI_CDMRESULTS_SOURCE_KEYS.OBSERVATION_PERIOD
+        WEBAPI_CDMRESULTS_SOURCE_KEYS.OBSERVATION_PERIOD,
+        datasetId
       );
       setObservationPeriodData(result as OBSERVATION_PERIOD_REPORT_TYPE);
       setIsLoadingObservationPeriodData(false);
@@ -52,7 +54,7 @@ const ObservationPeriod: FC<ObservationPeriodProps> = ({ flowRunId }) => {
       setIsLoadingObservationPeriodData(false);
       setErrObservationPeriod(getText(i18nKeys.OBSERVATION_PERIOD__ERROR_MESSAGE));
     }
-  }, [flowRunId, getText]);
+  }, [flowRunId, getText, datasetId]);
 
   useEffect(() => {
     // Fetch data for charts

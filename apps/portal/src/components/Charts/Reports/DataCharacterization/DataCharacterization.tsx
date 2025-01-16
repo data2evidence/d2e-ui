@@ -7,13 +7,14 @@ import "./DataCharacterization.scss";
 
 interface DataCharacterizationProps {
   flowRunId: string;
+  datasetId: string;
 }
 
-const DataCharacterization: FC<DataCharacterizationProps> = ({ flowRunId }) => {
+const DataCharacterization: FC<DataCharacterizationProps> = ({ flowRunId, datasetId }) => {
   return (
     <>
-      <Dashboard flowRunId={flowRunId} />
-      <DataDensity flowRunId={flowRunId} />
+      <Dashboard flowRunId={flowRunId} datasetId={datasetId} />
+      <DataDensity flowRunId={flowRunId} datasetId={datasetId} />
     </>
   );
 };
