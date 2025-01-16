@@ -16,7 +16,6 @@ const TreeMapTable: FC<TreeMapTableProps> = ({ data, setSelectedConceptId }) => 
       {
         accessorKey: "CONCEPT_ID",
         header: getText(i18nKeys.TREE_MAP_TABLE__HEADER_CONCEPT_ID),
-        maxSize: 75,
         Cell: ({ cell }) => (
           <div className="concept_id_text" onClick={() => setSelectedConceptId(cell.getValue<string>())}>
             {cell.getValue<string>()}
@@ -30,7 +29,6 @@ const TreeMapTable: FC<TreeMapTableProps> = ({ data, setSelectedConceptId }) => 
       {
         accessorKey: "NUM_PERSONS",
         header: getText(i18nKeys.TREE_MAP_TABLE__HEADER_NUM_PERSONS),
-        maxSize: 75,
         muiTableHeadCellProps: {
           align: "right",
         },
@@ -41,7 +39,6 @@ const TreeMapTable: FC<TreeMapTableProps> = ({ data, setSelectedConceptId }) => 
       {
         accessorKey: "PERCENT_PERSONS",
         header: getText(i18nKeys.TREE_MAP_TABLE__HEADER_PERCENT_PERSONS),
-        maxSize: 75,
         muiTableHeadCellProps: {
           align: "right",
         },
@@ -52,7 +49,6 @@ const TreeMapTable: FC<TreeMapTableProps> = ({ data, setSelectedConceptId }) => 
       {
         accessorKey: "RECORDS_PER_PERSON",
         header: getText(i18nKeys.TREE_MAP_TABLE__HEADER_RECORDS_PER_PERSON),
-        maxSize: 75,
         muiTableHeadCellProps: {
           align: "right",
         },
