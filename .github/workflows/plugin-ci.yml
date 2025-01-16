@@ -85,7 +85,7 @@ jobs:
           fi
 
       - name: Delete Untagged Images 
-        if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch'
+        if: github.ref_name == 'develop'
         uses: actions/delete-package-versions@v5
         with:
           package-name: "d2e-ui"
