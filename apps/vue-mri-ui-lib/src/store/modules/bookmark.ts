@@ -153,13 +153,13 @@ const getters = {
         return displayBookmarks.push({
           displayName: bookmark.bookmarkname,
           bookmark: { ...formatBookmark(bookmark), disableUpdate: username !== bookmark.user_id },
-          cohortDefinition: null,
+          cohortDefinition: formatCohortDefinition(cohortDefinition),
         })
       } else if (!showSharedBookmarks && username === bookmark.user_id) {
         return displayBookmarks.push({
           displayName: bookmark.bookmarkname,
           bookmark: { ...formatBookmark(bookmark), disableUpdate: username !== bookmark.user_id },
-          cohortDefinition: null,
+          cohortDefinition: formatCohortDefinition(cohortDefinition),
         })
       }
     })
