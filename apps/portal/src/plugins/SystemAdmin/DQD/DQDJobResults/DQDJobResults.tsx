@@ -80,11 +80,13 @@ export const DQDJobResults: FC<DQDJobResultsProps> = ({ datasetId, datasetName, 
 
     if (latestFlowRun.state.type === FlowRunJobStateTypes.COMPLETED) {
       if (tableType === DQD_TABLE_TYPES.DATA_QUALITY_OVERVIEW) {
-        return <RenderDataQualityOverviewTable flowRunId={latestFlowRun.id} />;
+        return <RenderDataQualityOverviewTable flowRunId={latestFlowRun.id} datasetId={datasetId} />;
       } else if (tableType === DQD_TABLE_TYPES.DATA_QUALITY_RESULTS) {
-        return <RenderDataQualityResultsTable flowRunId={latestFlowRun.id} datasetName={datasetName} />;
+        return (
+          <RenderDataQualityResultsTable flowRunId={latestFlowRun.id} datasetName={datasetName} datasetId={datasetId} />
+        );
       } else if (tableType === DQD_TABLE_TYPES.DATA_CHARACTERIZATION) {
-        return <DataCharacterizationReports flowRunId={latestFlowRun.id} />;
+        return <DataCharacterizationReports flowRunId={latestFlowRun.id} datasetId={datasetId} />;
       } else {
         return <>{getText(i18nKeys.DQD_JOB_RESULTS__INCORRECT_TABLETYPE)}</>;
       }
@@ -108,11 +110,12 @@ export const DQDJobResults: FC<DQDJobResultsProps> = ({ datasetId, datasetName, 
 
 interface RenderDataQualityOverviewTableProps {
   flowRunId: string;
+  datasetId: string;
 }
 
-const RenderDataQualityOverviewTable: FC<RenderDataQualityOverviewTableProps> = ({ flowRunId }) => {
+const RenderDataQualityOverviewTable: FC<RenderDataQualityOverviewTableProps> = ({ flowRunId, datasetId }) => {
   const { getText, i18nKeys } = useTranslation();
-  const [dqdOverview, loadingDqdOverview, errorDqdOverview] = useDataQualityOverviewFromId(flowRunId);
+  const [dqdOverview, loadingDqdOverview, errorDqdOverview] = useDataQualityOverviewFromId(flowRunId, datasetId);
 
   return (
     <>
@@ -130,12 +133,17 @@ const RenderDataQualityOverviewTable: FC<RenderDataQualityOverviewTableProps> = 
 interface RenderDataQualityResultsTableProps {
   flowRunId: string;
   datasetName: string;
+  datasetId: string;
 }
 
-const RenderDataQualityResultsTable: FC<RenderDataQualityResultsTableProps> = ({ flowRunId, datasetName }) => {
+const RenderDataQualityResultsTable: FC<RenderDataQualityResultsTableProps> = ({
+  flowRunId,
+  datasetName,
+  datasetId,
+}) => {
   const { getText, i18nKeys } = useTranslation();
-  const [dqdResults, loadingDqdResults, errorDqdResults] = useDataQualityResultsFromId(flowRunId);
-  const [dqdOverview] = useDataQualityOverviewFromId(flowRunId);
+  const [dqdResults, loadingDqdResults, errorDqdResults] = useDataQualityResultsFromId(flowRunId, datasetId);
+  const [dqdOverview] = useDataQualityOverviewFromId(flowRunId, datasetId);
 
   return (
     <>

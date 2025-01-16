@@ -4,7 +4,8 @@ import { OverviewResults } from "../../components/DQD/types";
 import { AppError } from "../../types";
 
 export const useDataQualityOverviewFromId = (
-  flowRunId: string
+  flowRunId: string,
+  datasetId: string
 ): [OverviewResults | undefined, boolean, AppError | undefined] => {
   const [results, setResults] = useState<OverviewResults>();
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,7 @@ export const useDataQualityOverviewFromId = (
   const fetchDataQualityDataflowResults = useCallback(async () => {
     try {
       setLoading(true);
-      const results = await api.dataflow.getDataQualityDataflowOverview(flowRunId);
+      const results = await api.dataflow.getDataQualityDataflowOverview(flowRunId, datasetId);
       setResults(results);
     } catch (error: any) {
       console.error(error);
@@ -21,7 +22,7 @@ export const useDataQualityOverviewFromId = (
     } finally {
       setLoading(false);
     }
-  }, [flowRunId]);
+  }, [flowRunId, datasetId]);
 
   useEffect(() => {
     fetchDataQualityDataflowResults();
