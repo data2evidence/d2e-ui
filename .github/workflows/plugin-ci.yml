@@ -10,7 +10,7 @@ on:
           options:
             - data2evidence/d2e-ui
         GIT_BRANCH_NAME:
-          default: main
+          default: develop
           description: Enter BranchName / ReleaseTagName
           required: true
           type: string
@@ -100,8 +100,9 @@ jobs:
           fi
 
       - name: Delete Untagged Images 
-        if: github.ref_name == 'develop'
         uses: actions/delete-package-versions@v5
+        if: github.ref_name == 'develop'
+        continue-on-error: true
         with:
           package-name: "d2e-ui"
           package-type: "npm"
