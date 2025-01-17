@@ -24,7 +24,7 @@ on:
           required: true
         overwrite:
           type: boolean
-          default: true
+          default: false
           required: true
   pull_request:
     types: [opened, ready_for_review, reopened, synchronize]
