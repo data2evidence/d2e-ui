@@ -3,6 +3,17 @@ name: build plugin
 on:
   workflow_dispatch:
     inputs:
+        GIT_REPO_FULL_NAME:
+          description: Select RepoName
+          required: false
+          type: choice
+          options:
+            - data2evidence/d2e-ui
+        GIT_BRANCH_NAME:
+          default: main
+          description: Enter BranchName / ReleaseTagName
+          required: true
+          type: string
         tag:
           description: Enter tag for release
           required: true
@@ -22,13 +33,17 @@ on:
       - develop
 
 env:
-  GIT_CI_BRANCH_NAME: ${{ github.ref_name }}
+  GIT_BRANCH_NAME: ${{ github.event.inputs.GIT_BRANCH_NAME || github.head_ref || github.ref_name }} # workflow_dispatch || pull_request || push
+  GIT_REPO_FULL_NAME: ${{ github.event.inputs.GIT_REPO_FULL_NAME || github.event.pull_request.head.repo.full_name || github.event.repository.full_name }} # workflow_dispatch || pull_request || push
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_BRANCH_NAME }}
+          repository: ${{ env.GIT_REPO_FULL_NAME }}
       - uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: |
@@ -106,7 +121,7 @@ jobs:
       - name: Prepare
         if: github.ref_name == 'develop' || github.event_name == 'workflow_dispatch'
         run: |
-          if [[ $GIT_CI_BRANCH_NAME == 'develop' ]]; then
+          if [[ $GIT_BRANCH_NAME == 'develop' ]]; then
             echo "PRELEASE=true" | tee -a $GITHUB_ENV | tee -a $GITHUB_STEP_SUMMARY
             echo "OVERWRITE=true" | tee -a $GITHUB_ENV | tee -a $GITHUB_STEP_SUMMARY
             TAG=latest
