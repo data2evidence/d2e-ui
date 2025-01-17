@@ -1,4 +1,6 @@
-# ALP UI
+# D2E UI
+
+[![NPM Build plugin](https://github.com/data2evidence/d2e-ui/actions/workflows/plugin-ci.yml/badge.svg)](https://github.com/data2evidence/d2e-ui/actions/workflows/plugin-ci.yml)
 
 ## Inital set up
 
@@ -9,9 +11,9 @@
 export GITHUB_TOKEN=<GITHUB_PERSONAL_ACCESS_TOKEN>
 ```
 - Run `source ~/.zshrc` to refresh `.zshrc` file. 
-- Run `yarn` in `alp-ui` to install node-modules
+- Run `yarn` at the root to install node-modules
 
-## Portal (alp-ui/apps/portal)
+## Portal (apps/portal)
 
 ### Local development setup
 
@@ -23,7 +25,7 @@ export GITHUB_TOKEN=<GITHUB_PERSONAL_ACCESS_TOKEN>
 - Run `nx build @portal/components` to build components used by portal
 - Run `nx start portal` to start portal, and visit `https://localhost:4000/portal`
 
-## Patient Analytics (alp-ui/apps/vue-mri-ui-lib)
+## Patient Analytics (apps/vue-mri-ui-lib)
 
 ### Local development setup
 
@@ -32,7 +34,7 @@ export GITHUB_TOKEN=<GITHUB_PERSONAL_ACCESS_TOKEN>
 Note:
 
 - When accessing via `https://localhost:41100/portal`, the PA UI files is served from CDN (DEV)
-- When accessing via `https://localhost:4000/portal`, the PA UI files is served from local built-files under `alp-ui/resources/mri`
+- When accessing via `https://localhost:4000/portal`, the PA UI files is served from local built-files under `resources/mri`
 
 - For developing log viewer, run `nx dev jobs`, and visit `https://localhost:5173/`
 
