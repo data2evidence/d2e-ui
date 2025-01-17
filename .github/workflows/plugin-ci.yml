@@ -151,7 +151,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: d2e-ui.tgz
           tag: ${{ env.GITHUB_RELEASE }}
-          target_commit: develop
+          target_commit: ${{ github.ref_name }}
           prerelease: ${{ env.PRELEASE }}
           overwrite: ${{ env.OVERWRITE }}
           asset_name: ${{ env.ASSET_NAME }}.tgz
