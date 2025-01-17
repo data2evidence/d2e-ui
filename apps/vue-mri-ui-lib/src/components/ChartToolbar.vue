@@ -114,6 +114,7 @@ export default {
     },
   },
   mounted() {
+    try {
     this.$nextTick(() => {
       window.addEventListener('click', this.closeSubMenu)
     })
@@ -127,6 +128,9 @@ export default {
       searchQuery: '',
       attributeType: 'conceptSet',
     })
+    } catch (e) {
+      console.error(e)
+    }
   },
   beforeDestroy() {
     window.removeEventListener('click', this.closeSubMenu)
