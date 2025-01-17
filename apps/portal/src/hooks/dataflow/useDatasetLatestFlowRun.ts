@@ -24,7 +24,9 @@ export const useDatasetLatestFlowRun = (
       setResults(results);
     } catch (error: any) {
       console.error(error);
-      setError({ message: "An error occured while getting Data Quality Results" });
+      setError({
+        message: `An error occured while getting ${_getReadableJobType(jobType)} Results`,
+      });
     } finally {
       setLoading(false);
     }
@@ -35,4 +37,8 @@ export const useDatasetLatestFlowRun = (
   }, [fetchDatasetLatestFlowRun]);
 
   return [results, loading, error];
+};
+
+const _getReadableJobType = (jobType: string) => {
+  return jobType === "data-quality" ? "Data Quality" : "Data Characterization";
 };

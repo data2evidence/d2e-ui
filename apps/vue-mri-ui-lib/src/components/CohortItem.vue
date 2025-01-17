@@ -11,9 +11,7 @@
     <div class="cohort-item-content"><b>Patient Count:</b> {{ cohort.count }}</div>
     <div class="cohort-item-content"><b>Description:</b> {{ cohort.description }}</div>
     <div class="cohort-item-content"><b>Dataset Id:</b> {{ cohort.datasetId }}</div>
-    <div class="cohort-item-content"><b>Created by:</b> {{ cohort.owner }}</div>
     <div class="cohort-item-content"><b>Created on:</b> {{ cohort.created }}</div>
-    <div class="cohort-item-content"><b>Last Modified:</b> {{ cohort.modified }}</div>
 
     <div class="cohort-item-footer">
       <d4l-button

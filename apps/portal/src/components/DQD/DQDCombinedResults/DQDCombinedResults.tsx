@@ -7,12 +7,13 @@ import { useTranslation } from "../../../contexts";
 
 interface DQDCombinedResultsProps {
   flowRunId: string;
+  datasetId: string;
 }
 
-const DQDCombinedResults: FC<DQDCombinedResultsProps> = ({ flowRunId }) => {
+const DQDCombinedResults: FC<DQDCombinedResultsProps> = ({ flowRunId, datasetId }) => {
   const { getText, i18nKeys } = useTranslation();
-  const [dqdOverview, loadingDqdOverview, errorDqdOverview] = useDataQualityOverviewFromId(flowRunId);
-  const [dqdResults, loadingDqdResults, errorDqdResults] = useDataQualityResultsFromId(flowRunId);
+  const [dqdOverview, loadingDqdOverview, errorDqdOverview] = useDataQualityOverviewFromId(flowRunId, datasetId);
+  const [dqdResults, loadingDqdResults, errorDqdResults] = useDataQualityResultsFromId(flowRunId, datasetId);
   return (
     <>
       {/* DQD Overview table */}

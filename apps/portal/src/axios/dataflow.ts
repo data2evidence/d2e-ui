@@ -97,19 +97,21 @@ export class Dataflow {
     });
   }
 
-  public getDataQualityDataflowResults(flowRunId: string) {
+  public getDataQualityDataflowResults(flowRunId: string, datasetId: string) {
     return request({
       baseURL: JOBPLUGIN_URL,
       url: `dqd/data-quality/flow-run/${flowRunId}/results`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
-  public getDataQualityDataflowOverview(flowRunId: string) {
+  public getDataQualityDataflowOverview(flowRunId: string, datasetId: string) {
     return request({
       baseURL: JOBPLUGIN_URL,
       url: `dqd/data-quality/flow-run/${flowRunId}/overview`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
@@ -140,23 +142,26 @@ export class Dataflow {
     });
   }
 
-  public getDataCharacterizationResults(flowRunId: string, sourceKey: string): Promise<any> {
+  public getDataCharacterizationResults(flowRunId: string, sourceKey: string, datasetId: string): Promise<any> {
     return request({
       baseURL: JOBPLUGIN_URL,
       url: `dqd/data-characterization/flow-run/${flowRunId}/results/${sourceKey}`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 
   public getDataCharacterizationResultsDrilldown(
     flowRunId: string,
     sourceKey: string,
-    conceptId: string
+    conceptId: string,
+    datasetId: string
   ): Promise<any> {
     return request({
       baseURL: JOBPLUGIN_URL,
       url: `dqd/data-characterization/flow-run/${flowRunId}/results/${sourceKey}/${conceptId}`,
       method: "GET",
+      params: { datasetId: datasetId },
     });
   }
 

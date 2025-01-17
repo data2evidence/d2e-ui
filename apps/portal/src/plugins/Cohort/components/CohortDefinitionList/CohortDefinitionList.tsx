@@ -92,8 +92,6 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgm
                 <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__DESCRIPTION)}</TableCell>
                 <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__PATIENT_COUNT)}</TableCell>
                 <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__CREATION_TIMESTAMP)}</TableCell>
-                <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__MODIFICATION_TIMESTAMP)}</TableCell>
-                <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__OWNER)}</TableCell>
                 <TableCell>{getText(i18nKeys.COHORT_DEFINITION_LIST__JOBS)}</TableCell>
                 <TableCell></TableCell>
               </TableRow>
@@ -115,14 +113,8 @@ const CohortDefinitionList: FC<CohortDefinitionListProps> = ({ userId, cohortMgm
                     <TableCell>{cohort.description}</TableCell>
                     <TableCell>{cohort.patientIds.length}</TableCell>
                     <TableCell>
-                      {cohort.creationTimestamp && dayjs(cohort.creationTimestamp).format("DD/MM/YYYY, h:mm A")}
+                      {cohort.creationTimestamp && dayjs(cohort.creationTimestamp).format("DD/MM/YYYY")}
                     </TableCell>
-                    <TableCell>
-                      {cohort.modificationTimestamp && cohort.modificationTimestamp !== "NoValue"
-                        ? dayjs(cohort.modificationTimestamp).format("DD/MM/YYYY, h:mm A")
-                        : "-"}
-                    </TableCell>
-                    <TableCell>{cohort.owner}</TableCell>
                     <TableCell className="col-action">
                       <Button
                         onClick={() => handleDataQualityButtonPress(cohort)}

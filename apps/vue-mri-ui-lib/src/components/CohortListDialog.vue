@@ -77,12 +77,7 @@ export default {
           name: cohort.name,
           datasetId: datasetId,
           description: cohort.description,
-          owner: cohort.owner,
           created: DateUtils.displayBookmarkDateFormat(cohort.creationTimestamp),
-          modified:
-            cohort.modificationTimestamp == 'NoValue'
-              ? '-'
-              : DateUtils.displayBookmarkDateFormat(cohort.modificationTimestamp),
           count: cohort.patientIds.length,
         })
       })

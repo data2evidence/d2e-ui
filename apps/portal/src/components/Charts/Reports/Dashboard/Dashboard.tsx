@@ -18,9 +18,10 @@ import { useTranslation } from "../../../../contexts";
 
 interface DashboardProps {
   flowRunId: string;
+  datasetId: string;
 }
 
-const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
+const Dashboard: FC<DashboardProps> = ({ flowRunId, datasetId }) => {
   const { getText, i18nKeys } = useTranslation();
   const [dashboardData, setDashboardData] = useState<DASHBOARD_REPORT_TYPE>({
     population: [],
@@ -37,7 +38,8 @@ const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
     try {
       const result = await api.dataflow.getDataCharacterizationResults(
         flowRunId,
-        WEBAPI_CDMRESULTS_SOURCE_KEYS.DASHBOARD
+        WEBAPI_CDMRESULTS_SOURCE_KEYS.DASHBOARD,
+        datasetId
       );
       setDashboardData(result as DASHBOARD_REPORT_TYPE);
       setIsLoadingDashboardData(false);
@@ -47,7 +49,7 @@ const Dashboard: FC<DashboardProps> = ({ flowRunId }) => {
       setIsLoadingDashboardData(false);
       setErrDashboard(getText(i18nKeys.DASHBOARD__ERROR_MESSAGE));
     }
-  }, [flowRunId, getText]);
+  }, [flowRunId, getText, datasetId]);
 
   useEffect(() => {
     // Fetch data for charts

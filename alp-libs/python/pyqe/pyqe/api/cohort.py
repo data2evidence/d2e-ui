@@ -49,7 +49,6 @@ class Cohort(_EncodeQueryStringMixin, _AuthApi):
         cohort_definition['datasetId'] = self.study_id
         cohort_definition['mriquery'] = str(
             self._encode_query_string(cohort_definition['mriquery']), 'utf-8')
-        cohort_definition['owner'] = self.get_id()
         cohort_definition['syntax'] = json.dumps(cohort_definition['syntax'])
 
         print('creating cohort..')

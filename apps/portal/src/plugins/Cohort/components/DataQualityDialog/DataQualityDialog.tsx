@@ -69,7 +69,7 @@ const DataQualityDialog: FC<DataQualityDialogProps> = ({ datasetId, cohort, open
     }
 
     if (FlowRunJobStateTypes.COMPLETED) {
-      return <DQDCombinedResults flowRunId={latestFlowRun.id} />;
+      return <DQDCombinedResults flowRunId={latestFlowRun.id} datasetId={datasetId} />;
     }
   };
 

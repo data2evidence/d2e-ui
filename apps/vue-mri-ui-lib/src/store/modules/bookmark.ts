@@ -130,7 +130,7 @@ const getters = {
       !isEqual(newBookmarksAxisSelection, currentBookmarksAxisSelection)
     )
   },
-  getDisplayBookmarks: modulestate => {
+  getDisplayBookmarks: modulestate => (showSharedBookmarks, username) => {
     const bookmarks: FormattedBookmark[] = modulestate.bookmarks
     const cohortDefinitions: FormattedcohortDefinition[] = modulestate.cohortDefinitions
 
@@ -149,11 +149,19 @@ const getters = {
         })
       }
 
-      return displayBookmarks.push({
-        displayName: bookmark.bookmarkname,
-        bookmark: formatBookmark(bookmark),
-        cohortDefinition: formatCohortDefinition(cohortDefinition),
-      })
+      if (showSharedBookmarks && (username === bookmark.user_id || bookmark.shared)) {
+        return displayBookmarks.push({
+          displayName: bookmark.bookmarkname,
+          bookmark: { ...formatBookmark(bookmark), disableUpdate: username !== bookmark.user_id },
+          cohortDefinition: formatCohortDefinition(cohortDefinition),
+        })
+      } else if (!showSharedBookmarks && username === bookmark.user_id) {
+        return displayBookmarks.push({
+          displayName: bookmark.bookmarkname,
+          bookmark: { ...formatBookmark(bookmark), disableUpdate: username !== bookmark.user_id },
+          cohortDefinition: formatCohortDefinition(cohortDefinition),
+        })
+      }
     })
 
     // bookmarks without a cohort definition
@@ -166,11 +174,19 @@ const getters = {
         return
       }
 
-      return displayBookmarks.push({
-        displayName: bookmark.bookmarkname,
-        bookmark: formatBookmark(bookmark),
-        cohortDefinition: null,
-      })
+      if (showSharedBookmarks && (username === bookmark.user_id || bookmark.shared)) {
+        return displayBookmarks.push({
+          displayName: bookmark.bookmarkname,
+          bookmark: { ...formatBookmark(bookmark), disableUpdate: username !== bookmark.user_id },
+          cohortDefinition: null,
+        })
+      } else if (!showSharedBookmarks && username === bookmark.user_id) {
+        return displayBookmarks.push({
+          displayName: bookmark.bookmarkname,
+          bookmark: { ...formatBookmark(bookmark), disableUpdate: username !== bookmark.user_id },
+          cohortDefinition: null,
+        })
+      }
     })
 
     return displayBookmarks

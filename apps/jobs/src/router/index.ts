@@ -19,7 +19,7 @@ const routeRecords: AppRouteRecord[] = [
   {
     name: 'root',
     path: '/',
-    redirect: routes.deployments(),
+    redirect: routes.runs(),
     components: { default: AppRouterView, sidebar: Sidebar },
     children: workspaceRoutes as AppRouteRecord[]
   }

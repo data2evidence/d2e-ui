@@ -32,9 +32,11 @@ const ResultsDialog: FC<ResultsDialogProps> = ({ job, open, onClose }) => {
       <Divider />
 
       <div className="results-dialog__content">
-        {job?.type.includes(DQD_RUN_TYPES.DATA_QUALITY) && <DQDCombinedResults flowRunId={job?.flowRunId} />}
-        {job?.type.includes(DQD_RUN_TYPES.DATA_CHARACTERIZATION) && (
-          <DataCharacterizationReports flowRunId={job?.flowRunId} />
+        {job?.type.includes(DQD_RUN_TYPES.DATA_QUALITY) && job.datasetId && (
+          <DQDCombinedResults flowRunId={job?.flowRunId} datasetId={job.datasetId} />
+        )}
+        {job?.type.includes(DQD_RUN_TYPES.DATA_CHARACTERIZATION) && job.datasetId && (
+          <DataCharacterizationReports flowRunId={job?.flowRunId} datasetId={job.datasetId} />
         )}
       </div>
     </Dialog>
