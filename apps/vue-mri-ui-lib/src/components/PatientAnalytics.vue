@@ -51,6 +51,7 @@
               @unhideEv="togglePanel(PANEL.LEFT)"
               @drilldown="onDrilldown"
               @open-filtersummary="toggleFilterCardSummary(...arguments)"
+              v-if="getMriFrontendConfig"
             ></chartToolbar>
             <!-- "ref" used in solution from similar issue: https://github.com/antoniandre/splitpanes/issues/157 -->
             <div class="d-flex pane-right-content" ref="pane-right-content">
@@ -203,7 +204,7 @@ export default {
       paneSize: PANE_SIZE.FULL,
       chartBusy: false,
       PANE_SIZE,
-      PANEL
+      PANEL,
     }
   },
   created() {
