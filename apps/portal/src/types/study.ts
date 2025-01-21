@@ -274,3 +274,12 @@ export interface DatasetAttributeConfig {
   dataType: string;
   isDisplayed: boolean;
 }
+
+export interface FhirClientApplication {
+  resourceType: string;
+  name: string;
+  description: string;
+  meta: Object;
+  secret: string;
+  id: string;
+}
