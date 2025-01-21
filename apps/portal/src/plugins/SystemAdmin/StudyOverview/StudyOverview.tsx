@@ -199,7 +199,7 @@ const StudyOverview: FC = () => {
       setActiveDataset(dataset);
       openFhirProjectCredentialsDialog();
     },
-    [openCreateCacheDialog]
+    [openFhirProjectCredentialsDialog]
   );
 
   const visibilityImgAlt = useCallback((value?: string) => {
