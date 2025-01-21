@@ -26,3 +26,4 @@ export * from "./dataflow/useDatasetLatestFlowRun";
 export * from "./useVocabSchemas";
 export * from "./useDatasetReleases";
 export * from "./useOverviewDescription";
+export * from "./useFhirProjectClientApplication";
