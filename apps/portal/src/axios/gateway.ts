@@ -72,7 +72,7 @@ export class Gateway {
     });
   }
 
-  public createFhirStaging(input: NewFhirProjectInput): Promise<any> {
+  public createFhirStaging(input: NewFhirProjectInput): Promise<string> {
     return request({
       baseURL: GATEWAY_BASE_URL,
       url: "/fhir/createProject",
