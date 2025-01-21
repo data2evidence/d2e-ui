@@ -17,6 +17,7 @@ export interface Study {
   studyDetail?: StudyDetail;
   attributes?: StudyAttribute[];
   tags?: StudyTag[];
+  fhirProjectId?: string;
 }
 
 export interface NewStudyInput {
