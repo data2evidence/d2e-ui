@@ -30,6 +30,7 @@ import { api } from "../../../axios/api";
 import { FlowRunJobStateTypes } from "../Jobs/types";
 import { JobRunTypes } from "../DQD/types";
 import CreateCacheDialog from "./CreateCacheDialog/CreateCacheDialog";
+import FhirProjectCredentialsDialog from "./FhirProjectCredentialsDialog/FhirProjectCredentialsDialog";
 import "./StudyOverview.scss";
 
 const enum StudyAttributeConfigIds {
@@ -66,6 +67,8 @@ const StudyOverview: FC = () => {
   const [showDataCharacterizationDialog, openDataCharacterizationDialog, closeDataCharacterizationDialog] =
     useDialogHelper(false);
   const [showCreateCacheDialog, openCreateCacheDialog, closeCreateCacheDialog] = useDialogHelper(false);
+  const [showFhirProjectCredentialsDialog, openFhirProjectCredentialsDialog, closeFhirProjectCredentialsDialog] =
+    useDialogHelper(false);
 
   const [activeDataset, setActiveDataset] = useState<Study>();
   const [loading, setLoading] = useState(false);
@@ -187,6 +190,14 @@ const StudyOverview: FC = () => {
     (dataset: Study) => {
       setActiveDataset(dataset);
       openCreateCacheDialog();
+    },
+    [openCreateCacheDialog]
+  );
+
+  const handleFhirProjectCredentials = useCallback(
+    (dataset: Study) => {
+      setActiveDataset(dataset);
+      openFhirProjectCredentialsDialog();
     },
     [openCreateCacheDialog]
   );
@@ -446,6 +457,7 @@ const StudyOverview: FC = () => {
                         handleDataQuality={handleDataQuality}
                         handleDataCharacterization={handleDataCharacterization}
                         handleCreateCache={handleCreateCache}
+                        handleFhirProjectCredentials={handleFhirProjectCredentials}
                       />
                     </TableCell>
                   </TableRow>
@@ -518,6 +530,14 @@ const StudyOverview: FC = () => {
 
           {showCreateCacheDialog && (
             <CreateCacheDialog dataset={activeDataset} open={showCreateCacheDialog} onClose={closeCreateCacheDialog} />
+          )}
+
+          {showFhirProjectCredentialsDialog && (
+            <FhirProjectCredentialsDialog
+              dataset={activeDataset}
+              open={showFhirProjectCredentialsDialog}
+              onClose={closeFhirProjectCredentialsDialog}
+            />
           )}
         </div>
       </div>

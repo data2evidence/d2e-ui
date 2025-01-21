@@ -20,6 +20,7 @@ interface ActionSelectorProps {
   handleDataQuality: (dataset: Study) => void;
   handleDataCharacterization: (dataset: Study) => void;
   handleCreateCache: (dataset: Study) => void;
+  handleFhirProjectCredentials: (dataset: Study) => void;
 }
 
 interface Action {
@@ -62,6 +63,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
   handleDataQuality,
   handleDataCharacterization,
   handleCreateCache,
+  handleFhirProjectCredentials,
 }) => {
   const { getText, i18nKeys } = useTranslation();
   const { user } = useUser();
@@ -78,6 +80,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
     { name: getText(i18nKeys.ACTION_SELECTOR__RUN_DATA_QUALITY), value: "data-quality" },
     { name: getText(i18nKeys.ACTION_SELECTOR__RUN_DATA_CHARACTERIZATION), value: "data-characterization" },
     { name: getText(i18nKeys.ACTION_SELECTOR__CREATE_CACHE), value: "create-cache" },
+    { name: getText(i18nKeys.ACTION_SELECTOR__FHIR_CREDENTIALS), value: "fhir-credentials" },
   ];
 
   const handleActionChange = useCallback(
@@ -113,6 +116,9 @@ const ActionSelector: FC<ActionSelectorProps> = ({
         case "create-cache":
           handleCreateCache(dataset);
           break;
+        case "fhir-credentials":
+          handleFhirProjectCredentials(dataset);
+          break;
         default:
           break;
       }
@@ -126,6 +132,8 @@ const ActionSelector: FC<ActionSelectorProps> = ({
       handleUpdate,
       handleRelease,
       handleDataQuality,
+      handleFhirProjectCredentials,
+      handleCreateCache,
       handleDataCharacterization,
       dataset,
     ]
@@ -144,6 +152,9 @@ const ActionSelector: FC<ActionSelectorProps> = ({
           return true;
         }
         if (actionVal === "version" && !dataset.schemaName) {
+          return true;
+        }
+        if (actionVal === "fhir-credentials" && !dataset.fhirProjectId) {
           return true;
         }
         return false;
