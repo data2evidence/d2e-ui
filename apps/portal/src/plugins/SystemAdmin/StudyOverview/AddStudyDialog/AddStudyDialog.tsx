@@ -503,8 +503,7 @@ const AddStudyDialog: FC<AddStudyDialogProps> = ({ open, onClose, loading, setLo
           name: name,
           description: description,
         };
-        const { id } = await api.gateway.createFhirStaging(fhirProjectInput);
-        fhirProjectId = id;
+        fhirProjectId = await api.gateway.createFhirStaging(fhirProjectInput);
       } catch (err: any) {
         setFeedback({
           type: "error",
