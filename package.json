@@ -172,7 +172,7 @@
             "subMenus": "true"
           },
           {
-            "enabled": false,
+            "enabled": true,
             "featureFlag": "analysisFlow",
             "name": "Analysis",
             "route": "analysis_parent",
@@ -188,7 +188,7 @@
                 "requiredRoles": [
                   "RESEARCHER"
                 ],
-                "enabled": false
+                "enabled": true
               },
               {
                 "name": "Strategus",
@@ -198,7 +198,7 @@
                 "requiredRoles": [
                   "RESEARCHER"
                 ],
-                "enabled": false
+                "enabled": true
               }
             ]
           }
@@ -316,7 +316,7 @@
               },
               {
                 "name": "Data mapping",
-                "enabled": false,
+                "enabled": true,
                 "pluginPath": "https://$$FQDN$$/mapping/module.js",
                 "route": "data-mapping"
               },
