@@ -136,8 +136,8 @@ export const KaplanMeier: FC<TerminologyProps> = () => {
 
     const fetchGraphData = async (flowRunId: string) => {
       try {
-        const result = await cohortMgmtClient.getKmAnalysisResults(flowRunId);
-        const parsedData = JSON.parse(result.data);
+        const { result } = await cohortMgmtClient.getKmAnalysisResults(flowRunId);
+        const parsedData = JSON.parse(result);
         if (parsedData.status === "SUCCESS") {
           const newGraphData = { timeX: parsedData.x, survivalY: parsedData.y };
           setGraphData(newGraphData);
