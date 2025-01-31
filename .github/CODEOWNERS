@@ -1,8 +1,5 @@
-*                                  @data2evidence/pmc
+*                                  @data2evidence/integrate
 alp-libs                           @data2evidence/analyze
-apps                               @data2evidence/integrate
-libs                               @data2evidence/integrate
-plugins                            @data2evidence/integrate
 apps/mri-pa-ui                     @data2evidence/analyze
 apps/vue-mri-ui-lib                @data2evidence/analyze
 apps/portal/src/plugins/Starboard  @data2evidence/analyze
