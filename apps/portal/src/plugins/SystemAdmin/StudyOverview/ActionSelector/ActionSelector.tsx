@@ -127,6 +127,7 @@ const ActionSelector: FC<ActionSelectorProps> = ({
       handleRelease,
       handleDataQuality,
       handleDataCharacterization,
+      handleCreateCache,
       dataset,
     ]
   );
