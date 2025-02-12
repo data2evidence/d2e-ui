@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 export default {
   compatConfig: {
     MODE: 3,
@@ -6,8 +6,9 @@ export default {
 }
 </script>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import appCheckbox from '../lib/ui/app-checkbox.vue'
 import CohortDefinitionActiveIcon from './icons/CohortDefinitionActiveIcon.vue'
 import CohortDefinitionGreyIcon from './icons/CohortDefinitionGreyIcon.vue'
@@ -19,23 +20,57 @@ import GenerateCohortGreyIcon from './icons/GenerateCohortGreyIcon.vue'
 import RunAnalyticsGreyIcon from './icons/RunAnalyticsGreyIcon.vue'
 import RunAnalyticsActiveIcon from './icons/RunAnalyticsActiveIcon.vue'
 import TrashCanIcon from './icons/TrashCanIcon.vue'
+import Constants from '../utils/Constants'
+import { BoolContainer, getCardsFormatted } from './helpers/getCardsFormatted'
+import { onErrorCaptured } from 'vue'
 
-// Props -  Declare and define props using defineProps
-const props = defineProps({
-  bookmarksDisplay: {
-    type: Array,
-    required: true,
-  },
-})
+const store = useStore()
+
+const {
+  getText,
+  getMriFrontendConfig,
+}: { getText: (key: string, param?: string | string[]) => string; getMriFrontendConfig: any } = store.getters
+
+type MaterialisedCohort = {
+  displayName: string
+  bookmark: any
+  cohortDefinition: {
+    id: number
+    patientCount: number
+    cohortDefinitionName: string
+    createdOn: string
+  }
+}
+type D2ECohortDefinition = {
+  displayName: string
+  bookmark: {
+    id: string
+    username: string
+    name: string
+    viewName: any
+    data: string
+    version: number
+    dateModified: string
+    timeModified: string
+    filterCardData: BoolContainer
+  }
+}
+const props = defineProps<{
+  bookmarksDisplay: ((MaterialisedCohort | D2ECohortDefinition) & { selected: boolean })[]
+}>()
+function isMaterialisedCohort(obj: MaterialisedCohort | D2ECohortDefinition): obj is MaterialisedCohort {
+  return !!('cohortDefinition' in obj && obj.cohortDefinition)
+}
 
 // Emits - Declare emitted events using defineEmits
 const emit = defineEmits([
-  'selectBookmark',
+  'onSelectBookmark',
   'renameBookmark',
   'deleteBookmark',
   'addCohort',
   'openDataQualityDialog',
-  'loadBookmark',
+  'loadBookmarkCheck',
+  'getCardsFormatted',
 ])
 
 // Reactive state
@@ -75,17 +110,15 @@ const isMScohort = bookmarkDisplay => {
 
 const getCardsFormatted = filterCardData => {
   // Replace this.getCardsFormatted with your actual logic
+  emit('getCardsFormatted', filterCardData)
   return filterCardData // Placeholder
 }
 
-const getChartInfo = (chartType, infoType) => {
-  // Replace this.getChartInfo with your actual logic
-  return chartType + infoType // Placeholder
-}
-
-const getText = text => {
-  // Replace this.getText with your actual logic.  Most likely a translation function
-  return text // Placeholder
+const getChartInfo = (chart: string, type: string) => {
+  if (Constants.chartInfo[chart]) {
+    return Constants.chartInfo[chart][type]
+  }
+  return ''
 }
 
 const getConstraint = constraint => {
@@ -102,12 +135,18 @@ const getAxisFormatted = (axisInfo, chartType) => {
 onMounted(() => {
   console.log('Component mounted!')
 })
+
+onErrorCaptured((err, instance, info) => {
+  console.error('Captured error:', err, instance, info)
+  // Stop propagation to prevent the error from reaching parent handlers
+  return false // Or true to propagate the error further
+})
 </script>
 
 <template>
   <div class="bookmark-list-content">
     <div v-for="bookmarkDisplay in props.bookmarksDisplay" :key="bookmarkDisplay.displayName">
-      <div class="bookmark-item-container" ref="bookmarkItemContainer">
+      <div class="bookmark-item-container">
         <table class="bookmark-item-table">
           <tr>
             <td>
@@ -123,7 +162,7 @@ onMounted(() => {
                 <div class="bookmark-item-header__status-icons">
                   <CohortDefinitionActiveIcon v-if="bookmarkDisplay.bookmark" />
                   <CohortDefinitionGreyIcon v-else />
-                  <PatientsActiveIcon v-if="bookmarkDisplay.cohortDefinition" />
+                  <PatientsActiveIcon v-if="isMaterialisedCohort(bookmarkDisplay)" />
                   <PatientsGreyIcon v-else />
                 </div>
               </div>
@@ -140,7 +179,7 @@ onMounted(() => {
                           <span class="bookmark-headelement bookmark-element">By:</span>
                           {{ bookmarkDisplay.bookmark.username }}
                         </div>
-                        <div style="display: block margin-right: 16px">
+                        <div style="display: block; margin-right: 16px">
                           <span class="bookmark-headelement bookmark-element">Version:</span>
                           {{ bookmarkDisplay.bookmark.version }}
                         </div>
@@ -148,7 +187,7 @@ onMounted(() => {
                           <span class="bookmark-headelement bookmark-element">Date:</span>
                           {{ bookmarkDisplay.bookmark.dateModified }}
                         </div>
-                        <div style="display: block margin-right: 16px">
+                        <div style="display: block; margin-right: 16px">
                           <span class="bookmark-headelement bookmark-element">Time:</span>
                           {{ bookmarkDisplay.bookmark.timeModified }}
                         </div>
@@ -259,7 +298,7 @@ onMounted(() => {
           <template v-else>
             <div class="bookmark-item-no-content">{{ getText('MRI_PA_BOOKMARK_NO_COHORT_DEFINITION') }}</div>
           </template>
-          <template v-if="bookmarkDisplay.cohortDefinition">
+          <template v-if="isMaterialisedCohort(bookmarkDisplay)">
             <tr>
               <td>
                 <div class="bookmark-item-content">
@@ -270,7 +309,7 @@ onMounted(() => {
                           <span class="bookmark-headelement bookmark-element">Cohort ID:</span>
                           {{ bookmarkDisplay.cohortDefinition.id }}
                         </div>
-                        <div style="display: block margin-right: 16px">
+                        <div style="display: block; margin-right: 16px">
                           <span class="bookmark-headelement bookmark-element">Cohort Name:</span>
                           {{ bookmarkDisplay.cohortDefinition.cohortDefinitionName }}
                         </div>
@@ -278,7 +317,7 @@ onMounted(() => {
                           <span class="bookmark-headelement bookmark-element">Patient Count:</span>
                           {{ bookmarkDisplay.cohortDefinition.patientCount }}
                         </div>
-                        <div style="display: block margin-right: 16px">
+                        <div style="display: block; margin-right: 16px">
                           <span class="bookmark-headelement bookmark-element">Created On:</span>
                           {{ bookmarkDisplay.cohortDefinition.createdOn }}
                         </div>
@@ -319,10 +358,10 @@ onMounted(() => {
                 <button
                   :title="getText('MRI_PA_BUTTON_DISPLAY_OR_GENERATE_DATA_QUALITY')"
                   class="bookmark-button"
-                  @click.stop="openDataQualityDialog(bookmarkDisplay.cohortDefinition)"
-                  :disabled="!bookmarkDisplay.cohortDefinition"
+                  @click.stop="openDataQualityDialog(isMaterialisedCohort(bookmarkDisplay))"
+                  :disabled="!isMaterialisedCohort(bookmarkDisplay)"
                 >
-                  <RunAnalyticsGreyIcon v-if="!bookmarkDisplay.cohortDefinition" />
+                  <RunAnalyticsGreyIcon v-if="!isMaterialisedCohort(bookmarkDisplay)" />
                   <RunAnalyticsActiveIcon v-else />
                 </button>
               </td>

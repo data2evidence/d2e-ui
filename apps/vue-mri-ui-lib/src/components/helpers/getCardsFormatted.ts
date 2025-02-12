@@ -51,11 +51,19 @@ export const getCardsFormatted = ({
   getAttributeType: (configPath: string) => string | undefined
   getDomainValues: (type: string) => { values: { value: string; text: string }[] | undefined } | undefined
 }) => {
-  const returnObj = []
+  const returnObj: {
+    content: {
+      visibleAttributes: any[]
+      name: string
+    }[]
+  }[] = []
   for (let i = 0; i < boolContainers.length; i += 1) {
     try {
       if (boolContainers[i].content.length > 0) {
-        const content = []
+        const content: {
+          visibleAttributes: any[]
+          name: string
+        }[] = []
         for (let ii = 0; ii < boolContainers[i].content.length; ii += 1) {
           const visibleAttributes = []
           let attributes = boolContainers[i].content[ii].attributes
@@ -72,7 +80,6 @@ export const getCardsFormatted = ({
             if (attributes.content[iii].constraints.content && attributes.content[iii].constraints.content.length > 0) {
               const name = getAttributeName(attributes.content[iii].configPath, 'list')
               const isConceptSet = getAttributeType(attributes.content[iii].configPath) === 'conceptSet'
-              console.log('jerome attrType,', getAttributeType(attributes.content[iii].configPath))
               const visibleConstraints = []
               const constraints = attributes.content[iii].constraints
               for (let iv = 0; iv < constraints.content.length; iv += 1) {

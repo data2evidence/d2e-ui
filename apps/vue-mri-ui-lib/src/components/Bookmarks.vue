@@ -102,7 +102,7 @@
             :labelClass="'bookmark_list'"
           ></appCheckbox>
         </div>
-        <BookmarkItem
+        <BookmarkItems
           :bookmarksDisplay="bookmarksDisplay"
           @onSelectBookmark="onSelectBookmark"
           @renameBookmark="renameBookmark"
@@ -197,7 +197,7 @@ import PatientsGreyIcon from './icons/PatientsGreyIcon.vue'
 import CohortDefinitionActiveIcon from './icons/CohortDefinitionActiveIcon.vue'
 import CohortDefinitionGreyIcon from './icons/CohortDefinitionGreyIcon.vue'
 import appMessageStrip from '../lib/ui/app-message-strip.vue'
-import BookmarkItem from './BookmarkItem.vue'
+import BookmarkItems from './BookmarkItems.vue'
 
 export default {
   compatConfig: {
@@ -725,7 +725,7 @@ export default {
     CohortDefinitionActiveIcon,
     CohortDefinitionGreyIcon,
     appMessageStrip,
-    BookmarkItem,
+    BookmarkItems,
   },
 }
 </script>
