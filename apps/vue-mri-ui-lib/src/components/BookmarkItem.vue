@@ -7,7 +7,7 @@ export default {
 </script>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import appCheckbox from '../lib/ui/app-checkbox.vue'
 import CohortDefinitionActiveIcon from './icons/CohortDefinitionActiveIcon.vue'
 import CohortDefinitionGreyIcon from './icons/CohortDefinitionGreyIcon.vue'
