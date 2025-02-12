@@ -174,9 +174,6 @@ declare var sap
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import appButton from '../lib/ui/app-button.vue'
 import appCheckbox from '../lib/ui/app-checkbox.vue'
-import icon from '../lib/ui/app-icon.vue'
-import appLabel from '../lib/ui/app-label.vue'
-import appLink from '../lib/ui/app-link.vue'
 import Constants from '../utils/Constants'
 import cohortComparisonDialog from './CohortComparisonDialog.vue'
 import messageBox from './MessageBox.vue'
@@ -184,18 +181,6 @@ import addCohort from './AddCohort.vue'
 import cohortListDialog from './CohortListDialog.vue'
 import { getPortalAPI } from '../utils/PortalUtils'
 import * as types from '../store/mutation-types'
-import CohortIcon from './icons/CohortIcon.vue'
-import EditIcon from './icons/EditIcon.vue'
-import TrashCanIcon from './icons/TrashCanIcon.vue'
-import AddPatientsIcon from './icons/AddPatientsIcon.vue'
-import GenerateCohortActiveIcon from './icons/GenerateCohortActiveIcon.vue'
-import GenerateCohortGreyIcon from './icons/GenerateCohortGreyIcon.vue'
-import RunAnalyticsActiveIcon from './icons/RunAnalyticsActiveIcon.vue'
-import RunAnalyticsGreyIcon from './icons/RunAnalyticsGreyIcon.vue'
-import PatientsActiveIcon from './icons/PatientsActiveIcon.vue'
-import PatientsGreyIcon from './icons/PatientsGreyIcon.vue'
-import CohortDefinitionActiveIcon from './icons/CohortDefinitionActiveIcon.vue'
-import CohortDefinitionGreyIcon from './icons/CohortDefinitionGreyIcon.vue'
 import appMessageStrip from '../lib/ui/app-message-strip.vue'
 import BookmarkItems from './BookmarkItems.vue'
 
@@ -250,13 +235,9 @@ export default {
     ...mapGetters([
       'getMriFrontendConfig',
       'getBookmarks',
-      'getSchemaName',
       'getText',
-      'getAxis',
-      'getDomainValues',
       'getActiveBookmark',
       'getCurrentBookmarkHasChanges',
-      'getAddNewCohort',
       'getDisplayBookmarks',
       'getSelectedDataset',
     ]),
@@ -276,12 +257,8 @@ export default {
   methods: {
     ...mapActions([
       'fireBookmarkQuery',
-      'setToastMessage',
       'loadbookmarkToState',
-      'toggleAddCohortDialog',
-      'toggleCohortListDialog',
       'resetChartProperties',
-      'setAddNewCohort',
       'fireRenameCohortDefinitionQuery',
       'fireDeleteCohortDefinitionQuery',
       'fetchDataQualityFlowRun',
@@ -291,160 +268,12 @@ export default {
     openCompareDialog() {
       this.showCohortCompareDialog = true
     },
-    openCohortListDialog(bookmark) {
-      if (bookmark) {
-        this.selectedBookmark = bookmark
-        this.showCohortListDialog = true
-      }
-    },
-    getConstraint(constraint) {
-      try {
-        constraint = typeof JSON.parse(constraint) === 'object' ? JSON.parse(constraint).text : constraint
-      } catch (e) {
-        // cannot parse the constraint
-      }
-      return constraint
-    },
     onSelectBookmark(bookmarkDisplay) {
       if (bookmarkDisplay.selected) {
         this.aSelBookmarkList.push(bookmarkDisplay.bookmark)
       } else {
         this.aSelBookmarkList.splice(this.aSelBookmarkList.indexOf(bookmarkDisplay.bookmark), 1)
       }
-    },
-    unloadBookmark() {
-      this.$emit('unloadBookmarkEv')
-    },
-    getChartInfo(chart, type) {
-      if (Constants.chartInfo[chart]) {
-        return Constants.chartInfo[chart][type]
-      }
-      return ''
-    },
-    getCardsFormatted(boolContainers) {
-      const returnObj = []
-      for (let i = 0; i < boolContainers.length; i += 1) {
-        try {
-          if (boolContainers[i].content.length > 0) {
-            const content = []
-            for (let ii = 0; ii < boolContainers[i].content.length; ii += 1) {
-              const visibleAttributes = []
-              let attributes = boolContainers[i].content[ii].attributes
-              let filterCardName =
-                !boolContainers[i].content[ii].name && boolContainers[i].content[ii].instanceID === 'patient'
-                  ? this.getText('MRI_PA_FILTERCARD_TITLE_BASIC_DATA')
-                  : boolContainers[i].content[ii].name
-              if (boolContainers[i].content[ii].op && boolContainers[i].content[ii].op === 'NOT') {
-                // Excluded filtercard
-                attributes = boolContainers[i].content[ii].content[0].attributes
-                filterCardName = `${boolContainers[i].content[ii].content[0].name} (${this.getText(
-                  'MRI_PA_LABEL_EXCLUDED'
-                )})`
-              }
-              for (let iii = 0; iii < attributes.content.length; iii += 1) {
-                if (
-                  attributes.content[iii].constraints.content &&
-                  attributes.content[iii].constraints.content.length > 0
-                ) {
-                  const name = this.getAttributeName(attributes.content[iii].configPath, 'list')
-                  const isConceptSet = this.getAttributeType(attributes.content[iii].configPath) === 'conceptSet'
-                  const visibleConstraints = []
-                  const constraints = attributes.content[iii].constraints
-                  for (let iv = 0; iv < constraints.content.length; iv += 1) {
-                    if (constraints.content[iv].content) {
-                      for (let v = 0; v < constraints.content[iv].content.length; v += 1) {
-                        visibleConstraints.push(
-                          `${constraints.content[iv].content[v].operator}${constraints.content[iv].content[v].value}`
-                        )
-                      }
-                    } else if (constraints.content[iv].operator === '=') {
-                      if (isConceptSet) {
-                        const conceptSets = this.getDomainValues('conceptSets')
-                        const conceptSetName = conceptSets?.values?.find(
-                          set => set.value === constraints.content[iv].value
-                        )?.text
-                        visibleConstraints.push(conceptSetName || constraints.content[iv].value)
-                      } else {
-                        visibleConstraints.push(constraints.content[iv].value)
-                      }
-                    } else {
-                      visibleConstraints.push(`${constraints.content[iv].operator}${constraints.content[iv].value}`)
-                    }
-                  }
-                  const attributeObj = {
-                    name,
-                    visibleConstraints,
-                  }
-                  visibleAttributes.push(attributeObj)
-                }
-              }
-              const filterCardObj = {
-                visibleAttributes,
-                name: `${filterCardName}`,
-              }
-              content.push(filterCardObj)
-            }
-            const boolContainerObj = {
-              content,
-            }
-            returnObj.push(boolContainerObj)
-          }
-        } finally {
-          // Handle Incorrect Bookmark Formatting
-        }
-      }
-      return returnObj
-    },
-    getAxisFormatted(axis, type) {
-      const returnObj = []
-      if (type === 'list') {
-        const tempObject = {}
-        let count = 0
-        Object.keys(axis).forEach(key => {
-          tempObject[axis[key]] = key
-          count += 1
-        })
-        for (let i = 0; i < count; i += 1) {
-          returnObj.push({
-            name: this.getAttributeName(tempObject[i], type),
-          })
-        }
-      } else {
-        for (let i = 0; i < axis.length; i += 1) {
-          if (axis[i].attributeId !== 'n/a') {
-            const axisModel = this.getAxis(i)
-            returnObj.push({
-              name: `= ${this.getAttributeName(axis[i].attributeId, type)}`,
-              icon: axisModel.props.icon,
-              iconGroup: axisModel.props.iconFamily,
-            })
-          }
-        }
-      }
-      return returnObj
-    },
-    getAttributeName(attributeId, type) {
-      /* Note: This is the current Implementation of Bookmark Rendering. */
-      if (attributeId) {
-        const attributePath = attributeId.split('.')
-        if (attributePath.length > 3 && type !== 'list') {
-          const attributePathEnd1 = attributePath.pop()
-          const attributePathEnd2 = attributePath.pop()
-          attributePath.pop()
-          attributePath.push(attributePathEnd2)
-          attributePath.push(attributePathEnd1)
-        }
-        const attributeConfigPath = attributePath.join('.')
-        const mriFrontEndConfig = this.getMriFrontendConfig
-        const attribute = mriFrontEndConfig.getAttributeByPath(attributeConfigPath)
-        if (attribute && attribute.oInternalConfigAttribute && attribute.oInternalConfigAttribute.name) {
-          return attribute.oInternalConfigAttribute.name
-        }
-      }
-      return attributeId
-    },
-    getAttributeType(attributeId: string) {
-      return this.getMriFrontendConfig.getAttributeByPath(attributeId)?.oInternalConfigAttribute?.type
     },
     loadBookmarkCheck(bmkId, chartType) {
       if (this.getActiveBookmark && bmkId === this.getActiveBookmark.bmkId) {
@@ -479,18 +308,6 @@ export default {
         this.renamedBookmark = bookmarkDisplay.displayName
         this.showRenameDialog = true
       }
-    },
-    exportExtension(bookmark) {
-      if (bookmark) {
-        this.selectedBookmark = bookmark
-        this.renamedBookmark = bookmark.name
-        this.schemaName = this.getSchemaName
-        this.viewName = bookmark.viewName
-        this.showCopyExtensionDialog = true
-      }
-    },
-    closeCopyExtensionDialog() {
-      this.showCopyExtensionDialog = false
     },
     confirmRenameBookmark() {
       const bookmarkDisplay = this.selectedBookmark
@@ -566,12 +383,6 @@ export default {
     },
     closeIncompatibleMessage() {
       this.showIncompatibleMessage = false
-    },
-    async refreshBookmarks() {
-      await this.fireBookmarkQuery({
-        method: 'get',
-        params: { cmd: 'loadAll' },
-      })
     },
     openSaveOrDiscardDialog(isAddNewCohort = false) {
       this.showSaveOrDiscardDialog = true
@@ -706,24 +517,9 @@ export default {
     messageBox,
     appButton,
     appCheckbox,
-    appLabel,
-    icon,
-    appLink,
     cohortComparisonDialog,
     addCohort,
     cohortListDialog,
-    CohortIcon,
-    AddPatientsIcon,
-    EditIcon,
-    TrashCanIcon,
-    GenerateCohortActiveIcon,
-    GenerateCohortGreyIcon,
-    RunAnalyticsActiveIcon,
-    RunAnalyticsGreyIcon,
-    PatientsActiveIcon,
-    PatientsGreyIcon,
-    CohortDefinitionActiveIcon,
-    CohortDefinitionGreyIcon,
     appMessageStrip,
     BookmarkItems,
   },
