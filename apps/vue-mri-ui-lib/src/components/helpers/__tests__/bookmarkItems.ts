@@ -1,9 +1,73 @@
+import MriFrontendConfig from '../../../lib/MriFrontEndConfig'
 import { getCardsFormatted, BoolContainer } from '../bookmarkItems'
 
 const mockGetText = (returnValue: any) => jest.fn((key: string) => returnValue)
-const mockGetAttributeName = (returnValue: any) => jest.fn((configPath: string, type: string) => returnValue)
 const mockGetAttributeType = (returnValue: any) => jest.fn((configPath: string) => returnValue)
 const mockGetDomainValues = (returnValue: any) => jest.fn((type: string) => returnValue)
+
+MriFrontendConfig.createFrontendConfig({
+  meta: {
+    config: {
+      filterCards: [
+        {
+          source: 'patient.interactions.conditionoccurrence.attributes.conditionconceptset',
+          ordered: false,
+          cached: true,
+          useRefText: false,
+          useRefValue: false,
+          category: true,
+          measure: false,
+          filtercard: {
+            initial: true,
+            visible: true,
+            order: 11,
+          },
+          patientlist: {
+            initial: false,
+            visible: true,
+            linkColumn: false,
+          },
+        },
+      ],
+    },
+  },
+  config: {
+    patient: {
+      interactions: {
+        conditionoccurrence: {
+          attributes: {
+            conditionconceptset: {
+              name: 'Condition concept set',
+              type: 'conceptSet',
+              domainFilter: '',
+              standardConceptCodeFilter: '',
+              cohortDefinitionKey: 'CodesetId',
+              conceptIdentifierType: '',
+              category: true,
+              measure: false,
+              aggregated: false,
+              ordered: false,
+              cached: true,
+              useRefValue: false,
+              useRefText: false,
+              filtercard: {
+                initial: true,
+                visible: true,
+                order: 11,
+              },
+              patientlist: {
+                initial: false,
+                visible: true,
+                linkColumn: false,
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  selected: true,
+})
 
 describe('getCardsFormatted', () => {
   it('should work when no cohort definition cards', () => {
@@ -11,9 +75,9 @@ describe('getCardsFormatted', () => {
       getCardsFormatted({
         boolContainers: [],
         getText: mockGetText(null),
-        getAttributeName: mockGetAttributeName(null),
         getAttributeType: mockGetAttributeType(null),
         getDomainValues: mockGetDomainValues(null),
+        mriFrontEndConfig: MriFrontendConfig.getFrontendConfig(),
       })
     ).toStrictEqual([])
   })
@@ -129,7 +193,6 @@ describe('getCardsFormatted', () => {
       getCardsFormatted({
         boolContainers: input,
         getText: mockGetText(null),
-        getAttributeName: mockGetAttributeName('Condition concept set'),
         getAttributeType: mockGetAttributeType('conceptSet'),
         getDomainValues: mockGetDomainValues({
           values: [
@@ -143,6 +206,7 @@ describe('getCardsFormatted', () => {
           isLoaded: true,
           loadedStatus: 'HAS_RESULTS',
         }),
+        mriFrontEndConfig: MriFrontendConfig.getFrontendConfig(),
       })
     ).toStrictEqual(expected)
   })
@@ -243,11 +307,11 @@ describe('getCardsFormatted', () => {
         ],
       },
     ]
+
     expect(
       getCardsFormatted({
         boolContainers: input,
         getText: mockGetText(null),
-        getAttributeName: mockGetAttributeName('Condition concept set'),
         getAttributeType: mockGetAttributeType('conceptSet'),
         getDomainValues: mockGetDomainValues({
           values: [
@@ -261,6 +325,7 @@ describe('getCardsFormatted', () => {
           isLoaded: true,
           loadedStatus: 'HAS_RESULTS',
         }),
+        mriFrontEndConfig: MriFrontendConfig.getFrontendConfig(),
       })
     ).toStrictEqual(expected)
   })
@@ -387,7 +452,6 @@ describe('getCardsFormatted', () => {
       getCardsFormatted({
         boolContainers: input,
         getText: mockGetText(null),
-        getAttributeName: mockGetAttributeName('Condition concept set'),
         getAttributeType: mockGetAttributeType('conceptSet'),
         getDomainValues: mockGetDomainValues({
           values: [
@@ -401,6 +465,7 @@ describe('getCardsFormatted', () => {
           isLoaded: true,
           loadedStatus: 'HAS_RESULTS',
         }),
+        mriFrontEndConfig: MriFrontendConfig.getFrontendConfig(),
       })
     ).toStrictEqual(expected)
   })

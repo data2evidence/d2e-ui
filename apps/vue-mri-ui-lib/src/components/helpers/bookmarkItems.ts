@@ -1,3 +1,6 @@
+import AxisModel from '../../lib/models/AxisModel'
+import MriFrontendConfig from '../../lib/MriFrontEndConfig'
+
 export type BoolContainer = {
   content: {
     configPath: string
@@ -38,16 +41,86 @@ export type BoolContainer = {
   op: string
 }
 
+export const getAttributeName = ({
+  attributeId,
+  type,
+  mriFrontEndConfig,
+}: {
+  attributeId?: string
+  type: string
+  mriFrontEndConfig: MriFrontendConfig
+}) => {
+  try {
+    /* Note: This is the current Implementation of Bookmark Rendering. */
+    if (attributeId) {
+      const attributePath = attributeId.split('.')
+      if (attributePath.length > 3 && type !== 'list') {
+        const attributePathEnd1 = attributePath.pop()
+        const attributePathEnd2 = attributePath.pop()
+        attributePath.pop()
+        attributePath.push(attributePathEnd2)
+        attributePath.push(attributePathEnd1)
+      }
+      const attributeConfigPath = attributePath.join('.')
+      const attribute = mriFrontEndConfig.getAttributeByPath(attributeConfigPath)
+      if (attribute && attribute.oInternalConfigAttribute && attribute.oInternalConfigAttribute.name) {
+        return attribute.oInternalConfigAttribute.name
+      }
+    }
+    return attributeId
+  } catch (e) {
+    console.error(e)
+    throw e
+  }
+}
+
+export const getAxisFormatted = (
+  axis,
+  type,
+  mriFrontEndConfig: MriFrontendConfig,
+  getAxis: (id: number) => AxisModel
+) => {
+  const returnObj = []
+  if (!mriFrontEndConfig) {
+    return returnObj
+  }
+  if (type === 'list') {
+    const tempObject = {}
+    let count = 0
+    Object.keys(axis).forEach(key => {
+      tempObject[axis[key]] = key
+      count += 1
+    })
+    for (let i = 0; i < count; i += 1) {
+      returnObj.push({
+        name: getAttributeName({ mriFrontEndConfig, attributeId: tempObject[i], type }),
+      })
+    }
+  } else {
+    for (let i = 0; i < axis.length; i += 1) {
+      if (axis[i].attributeId !== 'n/a') {
+        const axisModel = getAxis(i)
+        returnObj.push({
+          name: `= ${getAttributeName({ attributeId: axis[i].attributeId, type, mriFrontEndConfig })}`,
+          icon: axisModel.props.icon,
+          iconGroup: axisModel.props.iconFamily,
+        })
+      }
+    }
+  }
+  return returnObj
+}
+
 export const getCardsFormatted = ({
+  mriFrontEndConfig,
   boolContainers,
   getText,
-  getAttributeName,
   getAttributeType,
   getDomainValues,
 }: {
+  mriFrontEndConfig: MriFrontendConfig
   boolContainers: BoolContainer[]
   getText: (key: string) => string | undefined
-  getAttributeName: (configPath: string, type: string) => string | undefined
   getAttributeType: (configPath: string) => string | undefined
   getDomainValues: (type: string) => { values: { value: string; text: string }[] | undefined } | undefined
 }) => {
@@ -57,6 +130,9 @@ export const getCardsFormatted = ({
       name: string
     }[]
   }[] = []
+  if (!mriFrontEndConfig) {
+    return returnObj
+  }
   for (let i = 0; i < boolContainers.length; i += 1) {
     try {
       if (boolContainers[i].content.length > 0) {
@@ -78,7 +154,11 @@ export const getCardsFormatted = ({
           }
           for (let iii = 0; iii < attributes.content.length; iii += 1) {
             if (attributes.content[iii].constraints.content && attributes.content[iii].constraints.content.length > 0) {
-              const name = getAttributeName(attributes.content[iii].configPath, 'list')
+              const name = getAttributeName({
+                mriFrontEndConfig,
+                attributeId: attributes.content[iii].configPath,
+                type: 'list',
+              })
               const isConceptSet = getAttributeType(attributes.content[iii].configPath) === 'conceptSet'
               const visibleConstraints = []
               const constraints = attributes.content[iii].constraints

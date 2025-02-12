@@ -21,15 +21,28 @@ import RunAnalyticsGreyIcon from './icons/RunAnalyticsGreyIcon.vue'
 import RunAnalyticsActiveIcon from './icons/RunAnalyticsActiveIcon.vue'
 import TrashCanIcon from './icons/TrashCanIcon.vue'
 import Constants from '../utils/Constants'
-import { BoolContainer, getCardsFormatted } from './helpers/bookmarkItems'
+import { BoolContainer, getCardsFormatted, getAxisFormatted } from './helpers/bookmarkItems'
 import { onErrorCaptured } from 'vue'
+import MriFrontendConfig from '../lib/MriFrontEndConfig'
+import AxisModel from '../lib/models/AxisModel'
 
 const store = useStore()
 
 const {
   getText,
-  getMriFrontendConfig,
-}: { getText: (key: string, param?: string | string[]) => string; getMriFrontendConfig: any } = store.getters
+  getMriFrontendConfig: mriFrontEndConfig,
+  getAxis,
+  getDomainValues,
+}: {
+  getText: (key: string, param?: string | string[]) => string
+  getMriFrontendConfig: MriFrontendConfig
+  getAxis: (id: number) => AxisModel
+  getDomainValues: () => {
+    isLoading: false
+    isLoaded: false
+    values: []
+  }
+} = store.getters
 
 type MaterialisedCohort = {
   displayName: string
@@ -100,12 +113,9 @@ const loadBookmarkCheck = (bookmarkId, chartType) => {
   emit('loadBookmarkCheck', bookmarkId, chartType)
 }
 
-// Computed properties - replace `this` with `props` or local variables
 const isMScohort = bookmarkDisplay => {
   return bookmarkDisplay.cohortDefinition && !bookmarkDisplay.bookmark
 }
-
-// TODO: use the correct logic for the computed below
 
 const getChartInfo = (chart: string, type: string) => {
   if (Constants.chartInfo[chart]) {
@@ -114,14 +124,13 @@ const getChartInfo = (chart: string, type: string) => {
   return ''
 }
 
-const getConstraint = constraint => {
-  // Replace this.getConstraint with your actual logic
-  return constraint // Placeholder
-}
-
-const getAxisFormatted = (axisInfo, chartType) => {
-  // Replace this.getAxisFormatted with your actual logic
-  return axisInfo // Placeholder
+const getConstraint = (constraint: any) => {
+  try {
+    constraint = typeof JSON.parse(constraint) === 'object' ? JSON.parse(constraint).text : constraint
+  } catch (e) {
+    // cannot parse the constraint
+  }
+  return constraint
 }
 
 // Lifecycle hooks
@@ -203,10 +212,11 @@ onErrorCaptured((err, instance, info) => {
                     </thead>
                     <template
                       v-for="container in getCardsFormatted({
+                        mriFrontEndConfig,
                         boolContainers: bookmarkDisplay.bookmark.filterCardData,
                         getText,
-                        getAttributeName,
-                        getAttributeType,
+                        getAttributeType:
+                          (attributeId:string) => mriFrontEndConfig.getAttributeByPath(attributeId)?.oInternalConfigAttribute?.type,
                         getDomainValues,
                       })"
                       :key="container.content"
@@ -259,7 +269,9 @@ onErrorCaptured((err, instance, info) => {
                           <template
                             v-for="axis in getAxisFormatted(
                               bookmarkDisplay.bookmark.axisInfo,
-                              bookmarkDisplay.bookmark.chartType
+                              bookmarkDisplay.bookmark.chartType,
+                              mriFrontEndConfig,
+                              getAxis
                             )"
                             :key="axis.name"
                           >

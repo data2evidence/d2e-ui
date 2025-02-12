@@ -204,7 +204,6 @@ const actions = {
     const cancelToken = new CancelToken(c => {
       cancel = c
     })
-
     let url = ''
     if (params.cmd === 'loadAll') {
       url = `${bookmarkURL}?paConfigId=${rootGetters.getMriFrontendConfig.getPaConfigId()}&r=${Math.random()}&datasetId=${
