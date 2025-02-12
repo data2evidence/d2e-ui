@@ -93,24 +93,24 @@
         {{ getText('MRI_PA_NO_BOOKMARKS_TEXT') }}
       </div>
 
-      <div class="bookmark-list">
-        <div class="bookmark-list-header">
+      <div class="bookmark-list-todo">
+        <div class="bookmark-list-header-todo">
           <appCheckbox
             v-model="showSharedBookmarks"
             :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TEXT')"
             :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TITLE')"
             :labelClass="'bookmark_list'"
           ></appCheckbox>
+          <BookmarkItems
+            :bookmarksDisplay="bookmarksDisplay"
+            @onSelectBookmark="onSelectBookmark"
+            @renameBookmark="renameBookmark"
+            @deleteBookmark="deleteBookmark"
+            @addCohort="addCohort"
+            @openDataQualityDialog="openDataQualityDialog"
+            @loadBookmarkCheck="loadBookmarkCheck"
+          />
         </div>
-        <BookmarkItems
-          :bookmarksDisplay="bookmarksDisplay"
-          @onSelectBookmark="onSelectBookmark"
-          @renameBookmark="renameBookmark"
-          @deleteBookmark="deleteBookmark"
-          @addCohort="addCohort"
-          @openDataQualityDialog="openDataQualityDialog"
-          @loadBookmarkCheck="loadBookmarkCheck"
-        />
       </div>
     </div>
     <!-- Bookmark Footer -->

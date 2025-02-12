@@ -65,7 +65,7 @@ type D2ECohortDefinition = {
     version: number
     dateModified: string
     timeModified: string
-    filterCardData: BoolContainer
+    filterCardData: BoolContainer[]
   }
 }
 const props = defineProps<{
@@ -146,6 +146,134 @@ onErrorCaptured((err, instance, info) => {
 </script>
 
 <template>
+  <div
+    style="
+      width: 100%;
+      display: grid;
+      grid-template-rows: 0fr;
+      grid-auto-rows: 0fr;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    "
+  >
+    <div
+      v-for="bookmarkDisplay in props.bookmarksDisplay"
+      :key="bookmarkDisplay.displayName"
+      style="
+        min-width: 300px;
+        display: flex;
+        flex-direction: column;
+        margin: 10px;
+        border-radius: 10px;
+        background-color: white;
+      "
+    >
+      <div style="display: flex; justify-content: space-between; padding: 20px 20px 0px 20px">
+        <div>
+          {{
+            isMaterialisedCohort(bookmarkDisplay)
+              ? bookmarkDisplay.cohortDefinition.cohortDefinitionName
+              : bookmarkDisplay.displayName
+          }}
+        </div>
+        <div><GenerateCohortActiveIcon /></div>
+      </div>
+      <div style="display: flex; flex-direction: column; padding: 20px">
+        <div v-if="!isMaterialisedCohort(bookmarkDisplay)">
+          <div></div>
+          <div style="display: flex">
+            <div><GenerateCohortActiveIcon /></div>
+            <div>D2E Cohort Definition</div>
+          </div>
+          <div style="display: flex">
+            <div>By:</div>
+            <div>{{ bookmarkDisplay.bookmark.username }}</div>
+          </div>
+          <div style="display: flex">
+            <div>Version:</div>
+            <div>{{ bookmarkDisplay.bookmark.version }}</div>
+          </div>
+          <div style="display: flex">
+            <div>Date:</div>
+            <div>{{ bookmarkDisplay.bookmark.dateModified }}</div>
+          </div>
+          <div style="display: flex">
+            <template
+              v-for="container in getCardsFormatted({
+                        mriFrontEndConfig,
+                        boolContainers: bookmarkDisplay.bookmark.filterCardData,
+                        getText,
+                        getAttributeType:
+                          (attributeId:string) => mriFrontEndConfig.getAttributeByPath(attributeId)?.oInternalConfigAttribute?.type,
+                        getDomainValues,
+                      })"
+              :key="container.content"
+            >
+              <tr>
+                <td class="bookmark-item-cards-items" colspan="2">
+                  <div>
+                    <template v-for="filterCard in container.content" :key="filterCard.name">
+                      <div class="bookmark-filtercard">
+                        <span class="bookmark-headelement bookmark-element">{{ filterCard.name }}</span>
+                        <template v-for="attribute in filterCard.visibleAttributes" :key="attribute.name">
+                          <span class="bookmark-element">{{ attribute.name }}</span>
+                          <span
+                            class="bookmark-element bookmark-constraint"
+                            :key="constraint"
+                            v-for="constraint in attribute.visibleConstraints"
+                            >{{ getConstraint(constraint) }}</span
+                          >
+                          <span class="bookmark-element">;</span>
+                        </template>
+                      </div>
+                    </template>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </div>
+        </div>
+        <div v-if="isMaterialisedCohort(bookmarkDisplay)">
+          <div>Materialised Cohort</div>
+          <div style="display: flex">
+            <div>icon</div>
+            <div>Materialized Cohort</div>
+          </div>
+          <div style="display: flex">
+            <div>Cohort ID:</div>
+            <div>{{ bookmarkDisplay.cohortDefinition.id }}</div>
+          </div>
+          <div style="display: flex">
+            <div>Cohort Name:</div>
+            <div>{{ bookmarkDisplay.cohortDefinition.cohortDefinitionName }}</div>
+          </div>
+          <div style="display: flex">
+            <div>Patient Count:</div>
+            <div>{{ bookmarkDisplay.cohortDefinition.patientCount }}</div>
+          </div>
+          <div style="display: flex">
+            <div>Created On:</div>
+            <div>{{ bookmarkDisplay.cohortDefinition.createdOn }}</div>
+          </div>
+        </div>
+      </div>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+          border-top: solid 1px black;
+          height: 50px;
+        "
+      >
+        <div><GenerateCohortActiveIcon /></div>
+        <div><GenerateCohortActiveIcon /></div>
+        <div><GenerateCohortActiveIcon /></div>
+        <div><GenerateCohortActiveIcon /></div>
+        <div><GenerateCohortActiveIcon /></div>
+      </div>
+    </div>
+  </div>
+  >
   <div class="bookmark-list-content">
     <div v-for="bookmarkDisplay in props.bookmarksDisplay" :key="bookmarkDisplay.displayName">
       <div class="bookmark-item-container">
