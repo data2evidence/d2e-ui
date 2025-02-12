@@ -1,4 +1,4 @@
-import { getCardsFormatted, BoolContainer } from '../getCardsFormatted'
+import { getCardsFormatted, BoolContainer } from '../bookmarkItems'
 
 const mockGetText = (returnValue: any) => jest.fn((key: string) => returnValue)
 const mockGetAttributeName = (returnValue: any) => jest.fn((configPath: string, type: string) => returnValue)

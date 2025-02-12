@@ -21,7 +21,7 @@ import RunAnalyticsGreyIcon from './icons/RunAnalyticsGreyIcon.vue'
 import RunAnalyticsActiveIcon from './icons/RunAnalyticsActiveIcon.vue'
 import TrashCanIcon from './icons/TrashCanIcon.vue'
 import Constants from '../utils/Constants'
-import { BoolContainer, getCardsFormatted } from './helpers/getCardsFormatted'
+import { BoolContainer, getCardsFormatted } from './helpers/bookmarkItems'
 import { onErrorCaptured } from 'vue'
 
 const store = useStore()
@@ -70,7 +70,6 @@ const emit = defineEmits([
   'addCohort',
   'openDataQualityDialog',
   'loadBookmarkCheck',
-  'getCardsFormatted',
 ])
 
 // Reactive state
@@ -107,12 +106,6 @@ const isMScohort = bookmarkDisplay => {
 }
 
 // TODO: use the correct logic for the computed below
-
-const getCardsFormatted = filterCardData => {
-  // Replace this.getCardsFormatted with your actual logic
-  emit('getCardsFormatted', filterCardData)
-  return filterCardData // Placeholder
-}
 
 const getChartInfo = (chart: string, type: string) => {
   if (Constants.chartInfo[chart]) {
@@ -209,7 +202,13 @@ onErrorCaptured((err, instance, info) => {
                       <th></th>
                     </thead>
                     <template
-                      v-for="container in getCardsFormatted(bookmarkDisplay.bookmark.filterCardData)"
+                      v-for="container in getCardsFormatted({
+                        boolContainers: bookmarkDisplay.bookmark.filterCardData,
+                        getText,
+                        getAttributeName,
+                        getAttributeType,
+                        getDomainValues,
+                      })"
                       :key="container.content"
                     >
                       <tr>
