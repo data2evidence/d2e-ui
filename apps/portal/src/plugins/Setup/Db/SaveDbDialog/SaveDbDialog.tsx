@@ -27,6 +27,7 @@ import {
   DB_DIALECTS,
   CREDENTIAL_USER_SCOPES,
   CREDENTIAL_SERVICE_SCOPES,
+  AUTHENTICATION_MODES,
 } from "../../../../types";
 import { api } from "../../../../axios/api";
 import { validateCredentials } from "../CredentialValidator";
@@ -106,6 +107,7 @@ const EMPTY_FORM_DATA: FormData = {
   name: "",
   dialect: "postgres",
   extra: EMPTY_EXTRAS,
+  authenticationMode: AUTHENTICATION_MODES.PASSWORD,
   credentials: EMPTY_CREDENTIALS,
   vocabSchemas: [],
 };
@@ -144,10 +146,25 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
     [handleFormDataChange]
   );
 
+  const handleAuthenticationModeChange = useCallback(
+    (authenticationMode: string) => {
+      handleFormDataChange({
+        authenticationMode,
+        credentials: authenticationMode === AUTHENTICATION_MODES.PASSWORD ? EMPTY_CREDENTIALS : [],
+      });
+    },
+    [handleFormDataChange]
+  );
+
   const handleSave = useCallback(async () => {
     try {
       setSaving(true);
-      validateCredentials(formData.credentials, setFeedback);
+
+      if (formData.authenticationMode === AUTHENTICATION_MODES.PASSWORD) {
+        if (!validateCredentials(formData.credentials, setFeedback)) {
+          return;
+        }
+      }
 
       const encryptedCredentials = formData.credentials
         .filter((cred) => Boolean(cred.username))
@@ -353,7 +370,26 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
             </Box>
           ))}
         </Box>
-        <Box mb={4}>
+        <Box mb={4} sx={{ width: "250px" }}>
+          <FormControl fullWidth variant="standard">
+            <InputLabel id="authentication-mode-select-label">
+              {getText(i18nKeys.SAVE_DB_DIALOG__AUTHENTICATION_MODE)}
+            </InputLabel>
+            <Select
+              labelId="authentication-mode-select-label"
+              id="authentication-mode-select"
+              value={formData.authenticationMode}
+              onChange={(event) => handleAuthenticationModeChange(event.target?.value)}
+            >
+              {Object.values(AUTHENTICATION_MODES).map((authenticationMode) => (
+                <MenuItem value={authenticationMode} key={authenticationMode}>
+                  {authenticationMode}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box mb={4} hidden={formData.authenticationMode !== AUTHENTICATION_MODES.PASSWORD}>
           <Box mb={2}>
             <b>{getText(i18nKeys.SAVE_DB_DIALOG__CREDENTIALS)}</b>
           </Box>
