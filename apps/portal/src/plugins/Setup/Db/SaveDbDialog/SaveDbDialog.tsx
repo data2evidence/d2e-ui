@@ -141,7 +141,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
 
   const handleDialectChange = useCallback(
     (dialect: string) => {
-      handleFormDataChange({ dialect, vocabSchemas: [] });
+      handleFormDataChange({ dialect, vocabSchemas: [], authenticationMode: AUTHENTICATION_MODES.PASSWORD });
     },
     [handleFormDataChange]
   );
@@ -370,7 +370,7 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
             </Box>
           ))}
         </Box>
-        <Box mb={4} sx={{ width: "250px" }}>
+        <Box mb={4} sx={{ width: "250px" }} hidden={formData.dialect !== "hana"}>
           <FormControl fullWidth variant="standard">
             <InputLabel id="authentication-mode-select-label">
               {getText(i18nKeys.SAVE_DB_DIALOG__AUTHENTICATION_MODE)}

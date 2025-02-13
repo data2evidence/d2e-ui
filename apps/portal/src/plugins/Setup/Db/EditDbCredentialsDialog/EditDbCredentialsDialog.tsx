@@ -159,7 +159,7 @@ export const EditDbCredentialsDialog: FC<EditDbCredentialDialogProps> = ({ open,
           <label className="database-code__label">{getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__DATABASE_CODE)}</label>
           <label className="database-code-value__label">{db.code}</label>
         </Box>
-        <Box mb={4} sx={{ width: "250px" }}>
+        <Box mb={4} sx={{ width: "250px" }} hidden={db.dialect !== "hana"}>
           <FormControl fullWidth variant="standard">
             <InputLabel id="authentication-mode-select-label">
               {getText(i18nKeys.SAVE_DB_DIALOG__AUTHENTICATION_MODE)}
