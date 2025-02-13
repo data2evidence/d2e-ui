@@ -170,7 +170,7 @@ onErrorCaptured((err, instance, info) => {
       "
     >
       <div style="display: flex; justify-content: space-between; padding: 20px 20px 0px 20px">
-        <div>
+        <div style="color: #ff5e59">
           {{
             isMaterialisedCohort(bookmarkDisplay)
               ? bookmarkDisplay.cohortDefinition.cohortDefinitionName
@@ -179,23 +179,23 @@ onErrorCaptured((err, instance, info) => {
         </div>
         <div><ShareIcon /></div>
       </div>
-      <div style="display: flex; flex-direction: column; padding: 20px">
+      <div style="display: flex; flex-direction: column; padding: 10 20 20 20">
         <div v-if="!isMaterialisedCohort(bookmarkDisplay)">
           <div></div>
-          <div style="display: flex">
-            <div><GenerateCohortActiveIcon /></div>
-            <div>D2E Cohort Definition</div>
+          <div style="display: flex; align-items: center; margin-bottom: 10px">
+            <div style="margin-right: 5px"><CohortDefinitionActiveIcon /></div>
+            <div class="ui-darkest-text" style="font-weight: bold">D2E Cohort Definition</div>
           </div>
           <div style="display: flex">
-            <div>By:</div>
+            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">By:</div>
             <div>{{ bookmarkDisplay.bookmark.username }}</div>
           </div>
           <div style="display: flex">
-            <div>Version:</div>
+            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Version:</div>
             <div>{{ bookmarkDisplay.bookmark.version }}</div>
           </div>
           <div style="display: flex">
-            <div>Date:</div>
+            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Date:</div>
             <div>{{ bookmarkDisplay.bookmark.dateModified }}</div>
           </div>
           <div style="display: flex">
@@ -235,26 +235,25 @@ onErrorCaptured((err, instance, info) => {
           </div>
         </div>
         <div v-if="isMaterialisedCohort(bookmarkDisplay)">
-          <div>Materialised Cohort</div>
-          <div style="display: flex">
-            <div>icon</div>
-            <div>Materialized Cohort</div>
+          <div style="display: flex; align-items: center; margin-bottom: 10px">
+            <div style="margin-right: 5px"><PatientsActiveIcon /></div>
+            <div class="ui-darkest-text" style="font-weight: bold">Materialized Cohort</div>
           </div>
           <div style="display: flex">
-            <div>Cohort ID:</div>
-            <div>{{ bookmarkDisplay.cohortDefinition.id }}</div>
+            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Cohort ID:</div>
+            <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.id }}</div>
           </div>
           <div style="display: flex">
-            <div>Cohort Name:</div>
-            <div>{{ bookmarkDisplay.cohortDefinition.cohortDefinitionName }}</div>
+            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Cohort Name:</div>
+            <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.cohortDefinitionName }}</div>
           </div>
           <div style="display: flex">
-            <div>Patient Count:</div>
-            <div>{{ bookmarkDisplay.cohortDefinition.patientCount }}</div>
+            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Patient Count:</div>
+            <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.patientCount }}</div>
           </div>
           <div style="display: flex">
-            <div>Created On:</div>
-            <div>{{ bookmarkDisplay.cohortDefinition.createdOn }}</div>
+            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Created On:</div>
+            <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.createdOn }}</div>
           </div>
         </div>
       </div>
