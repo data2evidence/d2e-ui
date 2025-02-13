@@ -8,6 +8,10 @@
 .ui-darkest-text {
   color: $UiDarkestText;
 }
+.icon-button:hover {
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
 
 // TODO: remove filtercard-summary below, as the style guide is under progress
 .bookmark-container,

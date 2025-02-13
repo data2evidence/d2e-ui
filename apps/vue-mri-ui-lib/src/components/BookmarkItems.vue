@@ -267,15 +267,44 @@ onErrorCaptured((err, instance, info) => {
           padding: 0 20 0 20;
         "
       >
-        <div><PlusInBoxIcon type="dark" :size="24" /></div>
-        <div><EditIcon /></div>
-        <div><GenerateCohortActiveIcon /></div>
-        <div><RunAnalyticsActiveIcon /></div>
-        <div><TrashCanIcon /></div>
+        <div
+          class="icon-button"
+          style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
+        >
+          <PlusInBoxIcon type="dark" :size="24" />
+        </div>
+        <div
+          class="icon-button"
+          style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
+          @click.stop="renameBookmark(bookmarkDisplay)"
+          :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
+        >
+          <EditIcon />
+        </div>
+
+        <div
+          class="icon-button"
+          style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
+        >
+          <GenerateCohortActiveIcon />
+        </div>
+
+        <div
+          class="icon-button"
+          style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
+        >
+          <RunAnalyticsActiveIcon />
+        </div>
+
+        <div
+          class="icon-button"
+          style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
+        >
+          <TrashCanIcon />
+        </div>
       </div>
     </div>
   </div>
-  >
   <div class="bookmark-list-content">
     <div v-for="bookmarkDisplay in props.bookmarksDisplay" :key="bookmarkDisplay.displayName">
       <div class="bookmark-item-container">
