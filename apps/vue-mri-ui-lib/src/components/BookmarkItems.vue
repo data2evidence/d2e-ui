@@ -16,6 +16,8 @@ import PatientsActiveIcon from './icons/PatientsActiveIcon.vue'
 import PatientsGreyIcon from './icons/PatientsGreyIcon.vue'
 import EditIcon from './icons/EditIcon.vue'
 import GenerateCohortActiveIcon from './icons/GenerateCohortActiveIcon.vue'
+import ShareIcon from './icons/ShareIcon.vue'
+import PlusInBoxIcon from './icons/PlusInBoxIcon.vue'
 import GenerateCohortGreyIcon from './icons/GenerateCohortGreyIcon.vue'
 import RunAnalyticsGreyIcon from './icons/RunAnalyticsGreyIcon.vue'
 import RunAnalyticsActiveIcon from './icons/RunAnalyticsActiveIcon.vue'
@@ -175,7 +177,7 @@ onErrorCaptured((err, instance, info) => {
               : bookmarkDisplay.displayName
           }}
         </div>
-        <div><GenerateCohortActiveIcon /></div>
+        <div><ShareIcon /></div>
       </div>
       <div style="display: flex; flex-direction: column; padding: 20px">
         <div v-if="!isMaterialisedCohort(bookmarkDisplay)">
@@ -260,16 +262,17 @@ onErrorCaptured((err, instance, info) => {
         style="
           display: flex;
           align-items: center;
-          justify-content: space-evenly;
+          justify-content: space-between;
           border-top: solid 1px black;
           height: 50px;
+          padding: 0 20 0 20;
         "
       >
+        <div><PlusInBoxIcon type="dark" :size="24" /></div>
+        <div><EditIcon /></div>
         <div><GenerateCohortActiveIcon /></div>
-        <div><GenerateCohortActiveIcon /></div>
-        <div><GenerateCohortActiveIcon /></div>
-        <div><GenerateCohortActiveIcon /></div>
-        <div><GenerateCohortActiveIcon /></div>
+        <div><RunAnalyticsActiveIcon /></div>
+        <div><TrashCanIcon /></div>
       </div>
     </div>
   </div>
