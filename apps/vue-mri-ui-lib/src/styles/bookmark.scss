@@ -12,6 +12,13 @@
   cursor: pointer;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
+.item-card {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.item-card:hover {
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
 
 // TODO: remove filtercard-summary below, as the style guide is under progress
 .bookmark-container,
