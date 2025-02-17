@@ -168,6 +168,7 @@ onErrorCaptured((err, instance, info) => {
     <div
       v-for="bookmarkDisplay in props.bookmarksDisplay"
       :key="bookmarkDisplay.displayName"
+      class="item-card"
       style="
         min-width: 300px;
         display: flex;
@@ -176,6 +177,7 @@ onErrorCaptured((err, instance, info) => {
         border-radius: 10px;
         background-color: white;
       "
+      @click="loadBookmarkCheck(bookmarkDisplay.bookmark.id, bookmarkDisplay.bookmark.chartType)"
     >
       <div style="display: flex; justify-content: space-between; padding: 20px 20px 0px 20px">
         <div style="color: #ff5e59">
@@ -380,10 +382,7 @@ onErrorCaptured((err, instance, info) => {
             </tr>
             <tr>
               <td>
-                <div
-                  class="bookmark-item-content"
-                  @click="loadBookmarkCheck(bookmarkDisplay.bookmark.id, bookmarkDisplay.bookmark.chartType)"
-                >
+                <div class="bookmark-item-content">
                   <table class="bookmark-item-cards">
                     <thead>
                       <th style="width: 25px"></th>
