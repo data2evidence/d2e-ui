@@ -475,7 +475,7 @@ export default {
       window.dispatchEvent(event)
     },
     async openDataQualityDialog(cohortDefinition) {
-      if (cohortDefinition.id) {
+      if (cohortDefinition?.id) {
         const flowRun = await this.fetchDataQualityFlowRun({ cohortDefinitionId: cohortDefinition.id })
         if (flowRun && flowRun?.state_name === 'Completed') {
           this.openDataQualityResultsDialog(flowRun)

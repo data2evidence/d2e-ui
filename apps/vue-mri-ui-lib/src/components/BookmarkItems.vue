@@ -12,6 +12,7 @@ import { useStore } from 'vuex'
 import appCheckbox from '../lib/ui/app-checkbox.vue'
 import CohortDefinitionActiveIcon from './icons/CohortDefinitionActiveIcon.vue'
 import CohortDefinitionGreyIcon from './icons/CohortDefinitionGreyIcon.vue'
+import CohortDefinitionIcon from './icons/CohortDefinitionIcon.vue'
 import PatientsActiveIcon from './icons/PatientsActiveIcon.vue'
 import PatientsGreyIcon from './icons/PatientsGreyIcon.vue'
 import EditIcon from './icons/EditIcon.vue'
@@ -46,19 +47,7 @@ const {
   }
 } = store.getters
 
-type MaterialisedCohort = {
-  displayName: string
-  bookmark: any
-  cohortDefinition: {
-    id: number
-    patientCount: number
-    cohortDefinitionName: string
-    createdOn: string
-  }
-}
-type D2ECohortDefinition = {
-  displayName: string
-  bookmark: {
+type Bookmark = {
     id: string
     username: string
     name: string
@@ -68,13 +57,32 @@ type D2ECohortDefinition = {
     dateModified: string
     timeModified: string
     filterCardData: BoolContainer[]
-  }
+    chartType: string
+  shared: boolean
+  axisInfo: string[]
+  disableUpdate: boolean
+}
+type CohortDefinition = {
+  id: number
+  patientCount: number
+  cohortDefinitionName: string
+  createdOn: string
+}
+type MaterialisedCohort = {
+  displayName: string
+  bookmark: null | Bookmark
+  cohortDefinition: CohortDefinition
+}
+type D2ECohortDefinition = {
+  displayName: string
+  bookmark: Bookmark
+  cohortDefinition: null | CohortDefinition
 }
 const props = defineProps<{
   bookmarksDisplay: ((MaterialisedCohort | D2ECohortDefinition) & { selected: boolean })[]
 }>()
-function isMaterialisedCohort(obj: MaterialisedCohort | D2ECohortDefinition): obj is MaterialisedCohort {
-  return !!('cohortDefinition' in obj && obj.cohortDefinition)
+function isMaterialisedCohort(obj: MaterialisedCohort | D2ECohortDefinition) {
+  return obj.bookmark === null && !!obj.cohortDefinition
 }
 
 // Emits - Declare emitted events using defineEmits
@@ -183,7 +191,7 @@ onErrorCaptured((err, instance, info) => {
         <div v-if="!isMaterialisedCohort(bookmarkDisplay)">
           <div></div>
           <div style="display: flex; align-items: center; margin-bottom: 10px">
-            <div style="margin-right: 5px"><CohortDefinitionActiveIcon /></div>
+            <div style="margin-right: 5px"><CohortDefinitionIcon /></div>
             <div class="ui-darkest-text" style="font-weight: bold">D2E Cohort Definition</div>
           </div>
           <div style="display: flex">
@@ -268,7 +276,7 @@ onErrorCaptured((err, instance, info) => {
         "
       >
         <div
-          class="icon-button"
+          :class="`icon-button ${isMaterialisedCohort(bookmarkDisplay) ? 'icon-button-disabled' : ''}`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
         >
           <PlusInBoxIcon type="dark" :size="24" />
@@ -283,15 +291,25 @@ onErrorCaptured((err, instance, info) => {
         </div>
 
         <div
-          class="icon-button"
+          :class="`icon-button ${isMaterialisedCohort(bookmarkDisplay) ? 'icon-button-disabled' : ''}`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
+          @click.stop="addCohort(bookmarkDisplay.bookmark)"
+          :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
+          :disabled="!bookmarkDisplay.bookmark"
         >
           <GenerateCohortActiveIcon />
         </div>
 
         <div
-          class="icon-button"
+          :class="`icon-button ${
+            bookmarkDisplay.bookmark && !bookmarkDisplay.cohortDefinition ? 'icon-button-disabled' : ''
+          }`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
+          :title="getText('MRI_PA_BUTTON_DISPLAY_OR_GENERATE_DATA_QUALITY')"
+          @click.stop="
+            openDataQualityDialog(!isMaterialisedCohort(bookmarkDisplay) && bookmarkDisplay.cohortDefinition)
+          "
+          :disabled="!isMaterialisedCohort(bookmarkDisplay)"
         >
           <RunAnalyticsActiveIcon />
         </div>
@@ -299,6 +317,8 @@ onErrorCaptured((err, instance, info) => {
         <div
           class="icon-button"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
+          @click.stop="deleteBookmark(bookmarkDisplay)"
+          :title="getText('MRI_PA_TOOLTIP_DELETE_BOOKMARK')"
         >
           <TrashCanIcon />
         </div>
@@ -514,34 +534,20 @@ onErrorCaptured((err, instance, info) => {
                 </button>
               </td>
               <td>
-                <button
-                  @click.stop="addCohort(bookmarkDisplay.bookmark)"
-                  :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
-                  class="bookmark-button"
-                  :disabled="!bookmarkDisplay.bookmark"
-                >
+                <button class="bookmark-button">
                   <GenerateCohortActiveIcon v-if="bookmarkDisplay.bookmark" />
                   <GenerateCohortGreyIcon v-else />
                 </button>
               </td>
               <td>
-                <button
-                  :title="getText('MRI_PA_BUTTON_DISPLAY_OR_GENERATE_DATA_QUALITY')"
-                  class="bookmark-button"
-                  @click.stop="openDataQualityDialog(isMaterialisedCohort(bookmarkDisplay))"
-                  :disabled="!isMaterialisedCohort(bookmarkDisplay)"
-                >
+                <button class="bookmark-button">
                   <RunAnalyticsGreyIcon v-if="!isMaterialisedCohort(bookmarkDisplay)" />
                   <RunAnalyticsActiveIcon v-else />
                 </button>
               </td>
 
               <td v-if="!bookmarkDisplay.bookmark?.disableUpdate">
-                <button
-                  @click.stop="deleteBookmark(bookmarkDisplay)"
-                  :title="getText('MRI_PA_TOOLTIP_DELETE_BOOKMARK')"
-                  class="bookmark-button"
-                >
+                <button class="bookmark-button">
                   <TrashCanIcon />
                 </button>
               </td>
