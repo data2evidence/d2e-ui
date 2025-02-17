@@ -9,7 +9,6 @@ export default {
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import appCheckbox from '../lib/ui/app-checkbox.vue'
 import CohortDefinitionActiveIcon from './icons/CohortDefinitionActiveIcon.vue'
 import CohortDefinitionGreyIcon from './icons/CohortDefinitionGreyIcon.vue'
 import CohortDefinitionIcon from './icons/CohortDefinitionIcon.vue'
@@ -19,8 +18,6 @@ import EditIcon from './icons/EditIcon.vue'
 import GenerateCohortActiveIcon from './icons/GenerateCohortActiveIcon.vue'
 import ShareIcon from './icons/ShareIcon.vue'
 import PlusInBoxIcon from './icons/PlusInBoxIcon.vue'
-import GenerateCohortGreyIcon from './icons/GenerateCohortGreyIcon.vue'
-import RunAnalyticsGreyIcon from './icons/RunAnalyticsGreyIcon.vue'
 import RunAnalyticsActiveIcon from './icons/RunAnalyticsActiveIcon.vue'
 import TrashCanIcon from './icons/TrashCanIcon.vue'
 import Constants from '../utils/Constants'
@@ -28,24 +25,6 @@ import { BoolContainer, getCardsFormatted, getAxisFormatted } from './helpers/bo
 import { onErrorCaptured } from 'vue'
 import MriFrontendConfig from '../lib/MriFrontEndConfig'
 import AxisModel from '../lib/models/AxisModel'
-
-const store = useStore()
-
-const {
-  getText,
-  getMriFrontendConfig: mriFrontEndConfig,
-  getAxis,
-  getDomainValues,
-}: {
-  getText: (key: string, param?: string | string[]) => string
-  getMriFrontendConfig: MriFrontendConfig
-  getAxis: (id: number) => AxisModel
-  getDomainValues: () => {
-    isLoading: false
-    isLoaded: false
-    values: []
-  }
-} = store.getters
 
 type Bookmark = {
     id: string
@@ -79,6 +58,25 @@ type D2ECohortDefinition = {
   cohortDefinition: null | CohortDefinition
 }
 type BookmarkDisplay = MaterializedCohort | D2ECohortDefinition
+
+const store = useStore()
+
+const {
+  getText,
+  getMriFrontendConfig: mriFrontEndConfig,
+  getAxis,
+  getDomainValues,
+}: {
+  getText: (key: string, param?: string | string[]) => string
+  getMriFrontendConfig: MriFrontendConfig
+  getAxis: (id: number) => AxisModel
+  getDomainValues: () => {
+    isLoading: false
+    isLoaded: false
+    values: []
+  }
+} = store.getters
+
 const props = defineProps<{
   bookmarksDisplay: BookmarkDisplay[]
   compareCohortsSelectionList: Bookmark[]
@@ -136,13 +134,17 @@ const getChartInfo = (chart: string, type: string) => {
   return ''
 }
 
-const getConstraint = (constraint: any) => {
+const getConstraint = (constraint: any): string => {
   try {
     constraint = typeof JSON.parse(constraint) === 'object' ? JSON.parse(constraint).text : constraint
   } catch (e) {
     // cannot parse the constraint
   }
   return constraint
+}
+
+const getConcatenatedConstraints = visibleConstraints => {
+  return visibleConstraints.map(constraint => getConstraint(constraint)).join('; ')
 }
 
 // Lifecycle hooks
@@ -164,7 +166,7 @@ onErrorCaptured((err, instance, info) => {
       display: grid;
       grid-template-rows: 0fr;
       grid-auto-rows: 0fr;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     "
   >
     <div
@@ -178,9 +180,11 @@ onErrorCaptured((err, instance, info) => {
         margin: 10px;
         border-radius: 10px;
         background-color: white;
+        font-size: 12px;
       "
     >
       <div
+        style="flex: 1"
         :class="`item-card-body ${isMaterializedCohort(bookmarkDisplay) ? 'item-card-body-disabled' : ''}`"
       @click="loadBookmarkCheck(bookmarkDisplay.bookmark.id, bookmarkDisplay.bookmark.chartType)"
     >
@@ -196,8 +200,17 @@ onErrorCaptured((err, instance, info) => {
             <ShareIcon />
           </div>
       </div>
-      <div style="display: flex; flex-direction: column; padding: 10 20 20 20; height: 200px">
-        <div v-if="!isMaterializedCohort(bookmarkDisplay)">
+        <div style="display: flex; flex-direction: column; padding: 10 20 20 20; max-height: 450px">
+          <div
+            v-if="bookmarkDisplay.bookmark"
+            style="
+              flex: 1;
+              overflow: auto;
+              margin-bottom: 10px;
+              scrollbar-width: thin;
+              scrollbar-color: #ff5e5977 white;
+            "
+          >
           <div></div>
           <div style="display: flex; align-items: center; margin-bottom: 10px">
             <div style="margin-right: 5px"><CohortDefinitionIcon /></div>
@@ -216,6 +229,9 @@ onErrorCaptured((err, instance, info) => {
             <div>{{ bookmarkDisplay.bookmark.dateModified }}</div>
           </div>
           <div style="display: flex">
+              <tr>
+                <td>
+                  <div class="bookmark-item-content">
             <template
               v-for="container in getCardsFormatted({
                         mriFrontEndConfig,
@@ -227,31 +243,90 @@ onErrorCaptured((err, instance, info) => {
                       })"
               :key="container.content"
             >
-              <tr>
-                <td class="bookmark-item-cards-items" colspan="2">
                   <div>
                     <template v-for="filterCard in container.content" :key="filterCard.name">
                       <div class="bookmark-filtercard">
-                        <span class="bookmark-headelement bookmark-element">{{ filterCard.name }}</span>
-                        <template v-for="attribute in filterCard.visibleAttributes" :key="attribute.name">
-                          <span class="bookmark-element">{{ attribute.name }}</span>
-                          <span
-                            class="bookmark-element bookmark-constraint"
-                            :key="constraint"
-                            v-for="constraint in attribute.visibleConstraints"
-                            >{{ getConstraint(constraint) }}</span
+                            <span class="ui-dark-text" style="font-weight: bold; margin-right: 5px">
+                              {{ filterCard.name }}
+                            </span>
+                            <template v-for="(attribute, index) in filterCard.visibleAttributes" :key="attribute.name">
+                              <span class="ui-light-text">{{ attribute.name }}: </span>
+                              <span class="ui-light-text">
+                                  {{ getConcatenatedConstraints(attribute.visibleConstraints)
+                                  }}{{ index < filterCard.visibleAttributes.length - 1 ? ' | ' : '' }}</span
                           >
-                          <span class="bookmark-element">;</span>
+                              </template>
+                          </div>
                         </template>
                       </div>
                     </template>
+                    <tr>
+                      <td colspan="2">
+                        <div class="bookmark-row-separator"></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span
+                          class="icon"
+                          :style="'font-family:' + getChartInfo(bookmarkDisplay.bookmark.chartType, 'iconGroup')"
+                          >{{ getChartInfo(bookmarkDisplay.bookmark.chartType, 'icon') }}</span
+                        >
+                      </td>
+                      <td>
+                        <div>{{ getText(getChartInfo(bookmarkDisplay.bookmark.chartType, 'tooltip')) }}</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="vertical-align: top">
+                        <span class="icon" style="font-family: app-icons"></span>
+                      </td>
+                      <td>
+                        <div class="bookmark-item-axes">
+                          <template
+                            v-for="axis in getAxisFormatted(
+                              bookmarkDisplay.bookmark.axisInfo,
+                              bookmarkDisplay.bookmark.chartType,
+                              mriFrontEndConfig,
+                              getAxis
+                            )"
+                            :key="axis.name"
+                          >
+                            <div>
+                              <label style="display: flex; align-items: top">
+                                <span
+                                  v-if="bookmarkDisplay.bookmark.chartType !== 'list'"
+                                  class="icon"
+                                  :style="`font-family: ${axis.iconGroup}; margin-top: 0`"
+                                  >{{ axis.icon }}</span
+                                >
+                                <span>{{ axis.name }}</span>
+                              </label>
+                            </div>
+                          </template>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <icon icon="puzzle"></icon>
+                      </td>
+                      <td>
+                        <div class="bookmark-extension-container">
+                          <div>{{ getText('MRI_PA_EXTENSION_EXPORT_HEADER') }}</div>
+                          <div></div>
+                        </div>
+                      </td>
+                    </tr>
                   </div>
                 </td>
               </tr>
-            </template>
+            </div>
           </div>
-        </div>
-        <div v-if="isMaterializedCohort(bookmarkDisplay)">
+          <div
+            v-if="bookmarkDisplay.cohortDefinition"
+            style="min-height: 120px; overflow: auto; scrollbar-width: thin; scrollbar-color: #ff5e5977 white"
+          >
           <div style="display: flex; align-items: center; margin-bottom: 10px">
             <div style="margin-right: 5px"><PatientsActiveIcon /></div>
             <div class="ui-darkest-text" style="font-weight: bold">Materialized Cohort</div>

@@ -37,7 +37,7 @@
             <bookmarks
               @unloadBookmarkEv="toggleCohorts(false)"
               :init-bookmark-id="this.querystring.bmkId"
-              v-if="displayCohorts"
+              v-if="getMriFrontendConfig && displayCohorts"
             ></bookmarks>
 
             <filters v-bind:class="{ hidden: displayCohorts || displaySharedBookmarks }"></filters>
