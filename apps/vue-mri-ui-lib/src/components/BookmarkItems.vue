@@ -81,7 +81,7 @@ type D2ECohortDefinition = {
 const props = defineProps<{
   bookmarksDisplay: ((MaterialisedCohort | D2ECohortDefinition) & { selected: boolean })[]
 }>()
-function isMaterialisedCohort(obj: MaterialisedCohort | D2ECohortDefinition) {
+function isMaterializedCohort(obj: MaterialisedCohort | D2ECohortDefinition) {
   return obj.bookmark === null && !!obj.cohortDefinition
 }
 
@@ -177,20 +177,23 @@ onErrorCaptured((err, instance, info) => {
         border-radius: 10px;
         background-color: white;
       "
+    >
+      <div
+        :class="`item-card-body ${isMaterializedCohort(bookmarkDisplay) ? 'item-card-body-disabled' : ''}`"
       @click="loadBookmarkCheck(bookmarkDisplay.bookmark.id, bookmarkDisplay.bookmark.chartType)"
     >
       <div style="display: flex; justify-content: space-between; padding: 20px 20px 0px 20px">
         <div style="color: #ff5e59">
           {{
-            isMaterialisedCohort(bookmarkDisplay)
+            isMaterializedCohort(bookmarkDisplay)
               ? bookmarkDisplay.cohortDefinition.cohortDefinitionName
               : bookmarkDisplay.displayName
           }}
         </div>
         <div><ShareIcon /></div>
       </div>
-      <div style="display: flex; flex-direction: column; padding: 10 20 20 20">
-        <div v-if="!isMaterialisedCohort(bookmarkDisplay)">
+      <div style="display: flex; flex-direction: column; padding: 10 20 20 20; height: 200px">
+        <div v-if="!isMaterializedCohort(bookmarkDisplay)">
           <div></div>
           <div style="display: flex; align-items: center; margin-bottom: 10px">
             <div style="margin-right: 5px"><CohortDefinitionIcon /></div>
@@ -244,7 +247,7 @@ onErrorCaptured((err, instance, info) => {
             </template>
           </div>
         </div>
-        <div v-if="isMaterialisedCohort(bookmarkDisplay)">
+        <div v-if="isMaterializedCohort(bookmarkDisplay)">
           <div style="display: flex; align-items: center; margin-bottom: 10px">
             <div style="margin-right: 5px"><PatientsActiveIcon /></div>
             <div class="ui-darkest-text" style="font-weight: bold">Materialized Cohort</div>
@@ -264,21 +267,23 @@ onErrorCaptured((err, instance, info) => {
           <div style="display: flex">
             <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Created On:</div>
             <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.createdOn }}</div>
+            </div>
           </div>
         </div>
       </div>
       <div
+        class="footer"
         style="
           display: flex;
           align-items: center;
           justify-content: space-between;
-          border-top: solid 1px black;
+          border-top: solid 1px #acaba8;
           height: 50px;
           padding: 0 20 0 20;
         "
       >
         <div
-          :class="`icon-button ${isMaterialisedCohort(bookmarkDisplay) ? 'icon-button-disabled' : ''}`"
+          :class="`icon-button ${isMaterializedCohort(bookmarkDisplay) ? 'icon-button-disabled' : ''}`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
         >
           <PlusInBoxIcon type="dark" :size="24" />
@@ -293,11 +298,10 @@ onErrorCaptured((err, instance, info) => {
         </div>
 
         <div
-          :class="`icon-button ${isMaterialisedCohort(bookmarkDisplay) ? 'icon-button-disabled' : ''}`"
+          :class="`icon-button ${isMaterializedCohort(bookmarkDisplay) ? 'icon-button-disabled' : ''}`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
           @click.stop="addCohort(bookmarkDisplay.bookmark)"
           :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
-          :disabled="!bookmarkDisplay.bookmark"
         >
           <GenerateCohortActiveIcon />
         </div>
@@ -309,9 +313,8 @@ onErrorCaptured((err, instance, info) => {
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
           :title="getText('MRI_PA_BUTTON_DISPLAY_OR_GENERATE_DATA_QUALITY')"
           @click.stop="
-            openDataQualityDialog(!isMaterialisedCohort(bookmarkDisplay) && bookmarkDisplay.cohortDefinition)
+            openDataQualityDialog(!isMaterializedCohort(bookmarkDisplay) && bookmarkDisplay.cohortDefinition)
           "
-          :disabled="!isMaterialisedCohort(bookmarkDisplay)"
         >
           <RunAnalyticsActiveIcon />
         </div>
@@ -345,7 +348,7 @@ onErrorCaptured((err, instance, info) => {
                 <div class="bookmark-item-header__status-icons">
                   <CohortDefinitionActiveIcon v-if="bookmarkDisplay.bookmark" />
                   <CohortDefinitionGreyIcon v-else />
-                  <PatientsActiveIcon v-if="isMaterialisedCohort(bookmarkDisplay)" />
+                  <PatientsActiveIcon v-if="isMaterializedCohort(bookmarkDisplay)" />
                   <PatientsGreyIcon v-else />
                 </div>
               </div>
@@ -487,72 +490,7 @@ onErrorCaptured((err, instance, info) => {
           <template v-else>
             <div class="bookmark-item-no-content">{{ getText('MRI_PA_BOOKMARK_NO_COHORT_DEFINITION') }}</div>
           </template>
-          <template v-if="isMaterialisedCohort(bookmarkDisplay)">
-            <tr>
-              <td>
-                <div class="bookmark-item-content">
-                  <table>
-                    <tr class="bookmark-item-info">
-                      <td class="bookmark-filtercard">
-                        <div style="display: block">
-                          <span class="bookmark-headelement bookmark-element">Cohort ID:</span>
-                          {{ bookmarkDisplay.cohortDefinition.id }}
-                        </div>
-                        <div style="display: block; margin-right: 16px">
-                          <span class="bookmark-headelement bookmark-element">Cohort Name:</span>
-                          {{ bookmarkDisplay.cohortDefinition.cohortDefinitionName }}
-                        </div>
-                        <div style="display: block">
-                          <span class="bookmark-headelement bookmark-element">Patient Count:</span>
-                          {{ bookmarkDisplay.cohortDefinition.patientCount }}
-                        </div>
-                        <div style="display: block; margin-right: 16px">
-                          <span class="bookmark-headelement bookmark-element">Created On:</span>
-                          {{ bookmarkDisplay.cohortDefinition.createdOn }}
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </td>
-            </tr>
-          </template>
         </table>
-
-        <div class="bookmark-item-footer">
-          <div class="bookmark-item-footer__break" />
-          <table class="bookmark-item-buttons">
-            <tr>
-              <td v-if="!bookmarkDisplay.bookmark?.disableUpdate">
-                <button
-                  @click.stop="renameBookmark(bookmarkDisplay)"
-                  :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
-                  class="bookmark-button"
-                >
-                  <EditIcon />
-                </button>
-              </td>
-              <td>
-                <button class="bookmark-button">
-                  <GenerateCohortActiveIcon v-if="bookmarkDisplay.bookmark" />
-                  <GenerateCohortGreyIcon v-else />
-                </button>
-              </td>
-              <td>
-                <button class="bookmark-button">
-                  <RunAnalyticsGreyIcon v-if="!isMaterialisedCohort(bookmarkDisplay)" />
-                  <RunAnalyticsActiveIcon v-else />
-                </button>
-              </td>
-
-              <td v-if="!bookmarkDisplay.bookmark?.disableUpdate">
-                <button class="bookmark-button">
-                  <TrashCanIcon />
-                </button>
-              </td>
-            </tr>
-          </table>
-        </div>
       </div>
     </div>
   </div>
