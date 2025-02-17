@@ -68,7 +68,7 @@ type CohortDefinition = {
   cohortDefinitionName: string
   createdOn: string
 }
-type MaterialisedCohort = {
+type MaterializedCohort = {
   displayName: string
   bookmark: null | Bookmark
   cohortDefinition: CohortDefinition
@@ -78,10 +78,12 @@ type D2ECohortDefinition = {
   bookmark: Bookmark
   cohortDefinition: null | CohortDefinition
 }
+type BookmarkDisplay = MaterializedCohort | D2ECohortDefinition
 const props = defineProps<{
-  bookmarksDisplay: ((MaterialisedCohort | D2ECohortDefinition) & { selected: boolean })[]
+  bookmarksDisplay: BookmarkDisplay[]
+  compareCohortsSelectionList: Bookmark[]
 }>()
-function isMaterializedCohort(obj: MaterialisedCohort | D2ECohortDefinition) {
+function isMaterializedCohort(obj: MaterializedCohort | D2ECohortDefinition) {
   return obj.bookmark === null && !!obj.cohortDefinition
 }
 
@@ -287,8 +289,14 @@ onErrorCaptured((err, instance, info) => {
         <div
           :class="`icon-button ${isMaterializedCohort(bookmarkDisplay) ? 'icon-button-disabled' : ''}`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
+          @click="onSelectBookmark(bookmarkDisplay)"
         >
-          <PlusInBoxIcon type="dark" :size="24" />
+          <PlusInBoxIcon
+            :type="
+              !!compareCohortsSelectionList.find(item => item.id === bookmarkDisplay.bookmark?.id) ? 'dark' : 'light'
+            "
+            :size="24"
+          />
         </div>
         <div
           class="icon-button"
@@ -339,14 +347,6 @@ onErrorCaptured((err, instance, info) => {
           <tr>
             <td>
               <div class="bookmark-item-header">
-                <appCheckbox
-                  :disabled="isMScohort(bookmarkDisplay)"
-                  v-model="bookmarkDisplay.selected"
-                  @checkEv="onSelectBookmark(bookmarkDisplay)"
-                  :text="`${bookmarkDisplay.displayName} ${bookmarkDisplay?.bookmark?.shared ? '(Shared)' : ''}`"
-                  :labelClass="'bookmark'"
-                ></appCheckbox>
-
                 <div class="bookmark-item-header__status-icons">
                   <CohortDefinitionActiveIcon v-if="bookmarkDisplay.bookmark" />
                   <CohortDefinitionGreyIcon v-else />

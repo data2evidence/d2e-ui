@@ -103,6 +103,7 @@
           ></appCheckbox>
           <BookmarkItems
             :bookmarksDisplay="bookmarksDisplay"
+            :compareCohortsSelectionList="aSelBookmarkList"
             @onSelectBookmark="onSelectBookmark"
             @renameBookmark="renameBookmark"
             @deleteBookmark="deleteBookmark"
@@ -269,10 +270,11 @@ export default {
       this.showCohortCompareDialog = true
     },
     onSelectBookmark(bookmarkDisplay) {
-      if (bookmarkDisplay.selected) {
-        this.aSelBookmarkList.push(bookmarkDisplay.bookmark)
-      } else {
+      const isSelected = !!this.aSelBookmarkList.find(item => item.id === bookmarkDisplay.bookmark.id)
+      if (isSelected) {
         this.aSelBookmarkList.splice(this.aSelBookmarkList.indexOf(bookmarkDisplay.bookmark), 1)
+      } else {
+        this.aSelBookmarkList.push(bookmarkDisplay.bookmark)
       }
     },
     loadBookmarkCheck(bmkId, chartType) {
