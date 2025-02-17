@@ -27,16 +27,16 @@ import MriFrontendConfig from '../lib/MriFrontEndConfig'
 import AxisModel from '../lib/models/AxisModel'
 
 type Bookmark = {
-    id: string
-    username: string
-    name: string
-    viewName: any
-    data: string
-    version: number
-    dateModified: string
-    timeModified: string
-    filterCardData: BoolContainer[]
-    chartType: string
+  id: string
+  username: string
+  name: string
+  viewName: any
+  data: string
+  version: number
+  dateModified: string
+  timeModified: string
+  filterCardData: BoolContainer[]
+  chartType: string
   shared: boolean
   axisInfo: string[]
   disableUpdate: boolean
@@ -127,6 +127,10 @@ const isMScohort = bookmarkDisplay => {
   return bookmarkDisplay.cohortDefinition && !bookmarkDisplay.bookmark
 }
 
+const log = value => {
+  console.log(value)
+}
+
 const getChartInfo = (chart: string, type: string) => {
   if (Constants.chartInfo[chart]) {
     return Constants.chartInfo[chart][type]
@@ -186,20 +190,20 @@ onErrorCaptured((err, instance, info) => {
       <div
         style="flex: 1"
         :class="`item-card-body ${isMaterializedCohort(bookmarkDisplay) ? 'item-card-body-disabled' : ''}`"
-      @click="loadBookmarkCheck(bookmarkDisplay.bookmark.id, bookmarkDisplay.bookmark.chartType)"
-    >
-      <div style="display: flex; justify-content: space-between; padding: 20px 20px 0px 20px">
-        <div style="color: #ff5e59">
-          {{
-            isMaterializedCohort(bookmarkDisplay)
-              ? bookmarkDisplay.cohortDefinition.cohortDefinitionName
-              : bookmarkDisplay.displayName
-          }}
-        </div>
+        @click="loadBookmarkCheck(bookmarkDisplay.bookmark.id, bookmarkDisplay.bookmark.chartType)"
+      >
+        <div style="display: flex; justify-content: space-between; padding: 20px 20px 0px 20px">
+          <div style="color: #ff5e59">
+            {{
+              isMaterializedCohort(bookmarkDisplay)
+                ? bookmarkDisplay.cohortDefinition.cohortDefinitionName
+                : bookmarkDisplay.displayName
+            }}
+          </div>
           <div v-if="bookmarkDisplay?.bookmark?.shared">
             <ShareIcon />
           </div>
-      </div>
+        </div>
         <div style="display: flex; flex-direction: column; padding: 10 20 20 20; max-height: 450px">
           <div
             v-if="bookmarkDisplay.bookmark"
@@ -211,29 +215,27 @@ onErrorCaptured((err, instance, info) => {
               scrollbar-color: #ff5e5977 white;
             "
           >
-          <div></div>
-          <div style="display: flex; align-items: center; margin-bottom: 10px">
-            <div style="margin-right: 5px"><CohortDefinitionIcon /></div>
-            <div class="ui-darkest-text" style="font-weight: bold">D2E Cohort Definition</div>
-          </div>
-          <div style="display: flex">
-            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">By:</div>
-            <div>{{ bookmarkDisplay.bookmark.username }}</div>
-          </div>
-          <div style="display: flex">
-            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Version:</div>
-            <div>{{ bookmarkDisplay.bookmark.version }}</div>
-          </div>
-          <div style="display: flex">
-            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Date:</div>
-            <div>{{ bookmarkDisplay.bookmark.dateModified }}</div>
-          </div>
-          <div style="display: flex">
-              <tr>
-                <td>
-                  <div class="bookmark-item-content">
-            <template
-              v-for="container in getCardsFormatted({
+            <div></div>
+            <div style="display: flex; align-items: center; margin-bottom: 10px">
+              <div style="margin-right: 5px"><CohortDefinitionIcon /></div>
+              <div class="ui-darkest-text" style="font-weight: bold">D2E Cohort Definition</div>
+            </div>
+            <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">By:</div>
+              <div>{{ bookmarkDisplay.bookmark.username }}</div>
+            </div>
+            <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Version:</div>
+              <div>{{ bookmarkDisplay.bookmark.version }}</div>
+            </div>
+            <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Date:</div>
+              <div>{{ bookmarkDisplay.bookmark.dateModified }}</div>
+            </div>
+            <div style="display: flex">
+              <div class="bookmark-item-content">
+                <template
+                  v-for="container in getCardsFormatted({
                         mriFrontEndConfig,
                         boolContainers: bookmarkDisplay.bookmark.filterCardData,
                         getText,
@@ -241,111 +243,96 @@ onErrorCaptured((err, instance, info) => {
                           (attributeId:string) => mriFrontEndConfig.getAttributeByPath(attributeId)?.oInternalConfigAttribute?.type,
                         getDomainValues,
                       })"
-              :key="container.content"
-            >
+                  :key="container.content"
+                >
                   <div>
                     <template v-for="filterCard in container.content" :key="filterCard.name">
                       <div class="bookmark-filtercard">
-                            <span class="ui-dark-text" style="font-weight: bold; margin-right: 5px">
-                              {{ filterCard.name }}
-                            </span>
-                            <template v-for="(attribute, index) in filterCard.visibleAttributes" :key="attribute.name">
-                              <span class="ui-light-text">{{ attribute.name }}: </span>
-                              <span class="ui-light-text">
-                                  {{ getConcatenatedConstraints(attribute.visibleConstraints)
-                                  }}{{ index < filterCard.visibleAttributes.length - 1 ? ' | ' : '' }}</span
+                        <span class="ui-dark-text" style="font-weight: bold; margin-right: 5px">
+                          {{ filterCard.name }}
+                        </span>
+                        <template v-for="(attribute, index) in filterCard.visibleAttributes" :key="attribute.name">
+                          <span class="ui-light-text">{{ attribute.name }}: </span>
+                          <span class="ui-light-text">
+                            {{ getConcatenatedConstraints(attribute.visibleConstraints)
+                            }}{{ index < filterCard.visibleAttributes.length - 1 ? ' | ' : '' }}</span
                           >
-                              </template>
-                          </div>
                         </template>
                       </div>
                     </template>
-                    <tr>
-                      <td colspan="2">
-                        <div class="bookmark-row-separator"></div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span
-                          class="icon"
-                          :style="'font-family:' + getChartInfo(bookmarkDisplay.bookmark.chartType, 'iconGroup')"
-                          >{{ getChartInfo(bookmarkDisplay.bookmark.chartType, 'icon') }}</span
-                        >
-                      </td>
-                      <td>
-                        <div>{{ getText(getChartInfo(bookmarkDisplay.bookmark.chartType, 'tooltip')) }}</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: top">
-                        <span class="icon" style="font-family: app-icons"></span>
-                      </td>
-                      <td>
-                        <div class="bookmark-item-axes">
-                          <template
-                            v-for="axis in getAxisFormatted(
-                              bookmarkDisplay.bookmark.axisInfo,
-                              bookmarkDisplay.bookmark.chartType,
-                              mriFrontEndConfig,
-                              getAxis
-                            )"
-                            :key="axis.name"
-                          >
-                            <div>
-                              <label style="display: flex; align-items: top">
-                                <span
-                                  v-if="bookmarkDisplay.bookmark.chartType !== 'list'"
-                                  class="icon"
-                                  :style="`font-family: ${axis.iconGroup}; margin-top: 0`"
-                                  >{{ axis.icon }}</span
-                                >
-                                <span>{{ axis.name }}</span>
-                              </label>
-                            </div>
-                          </template>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <icon icon="puzzle"></icon>
-                      </td>
-                      <td>
-                        <div class="bookmark-extension-container">
-                          <div>{{ getText('MRI_PA_EXTENSION_EXPORT_HEADER') }}</div>
-                          <div></div>
-                        </div>
-                      </td>
-                    </tr>
                   </div>
-                </td>
-              </tr>
+                </template>
+                <div style="display: flex">
+                  <span
+                    class="icon"
+                    :style="'font-family:' + getChartInfo(bookmarkDisplay.bookmark.chartType, 'iconGroup')"
+                    >{{ getChartInfo(bookmarkDisplay.bookmark.chartType, 'icon') }}</span
+                  >
+                  <div>{{ getText(getChartInfo(bookmarkDisplay.bookmark.chartType, 'tooltip')) }}</div>
+                </div>
+                <div style="display: flex">
+                  <div>
+                    <span class="icon" style="font-family: app-icons"></span>
+                  </div>
+                  <div class="bookmark-item-axes">
+                    <template
+                      v-for="axis in getAxisFormatted(
+                        bookmarkDisplay.bookmark.axisInfo,
+                        bookmarkDisplay.bookmark.chartType,
+                        mriFrontEndConfig,
+                        getAxis
+                      )"
+                      :key="axis.name"
+                    >
+                      <div>
+                        <label style="display: flex; align-items: top">
+                          <span
+                            v-if="bookmarkDisplay.bookmark.chartType !== 'list'"
+                            class="icon"
+                            :style="`font-family: ${axis.iconGroup}; margin-top: 0`"
+                            >{{ axis.icon }}</span
+                          >
+                          <span>{{ axis.name }}</span>
+                        </label>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+                <div style="display: flex">
+                  <div>
+                    <span class="app-icon icon"></span>
+                  </div>
+                  <div class="bookmark-extension-container">
+                    <div>{{ getText('MRI_PA_EXTENSION_EXPORT_HEADER') }}</div>
+                    <div></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div
             v-if="bookmarkDisplay.cohortDefinition"
             style="min-height: 120px; overflow: auto; scrollbar-width: thin; scrollbar-color: #ff5e5977 white"
           >
-          <div style="display: flex; align-items: center; margin-bottom: 10px">
-            <div style="margin-right: 5px"><PatientsActiveIcon /></div>
-            <div class="ui-darkest-text" style="font-weight: bold">Materialized Cohort</div>
-          </div>
-          <div style="display: flex">
-            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Cohort ID:</div>
-            <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.id }}</div>
-          </div>
-          <div style="display: flex">
-            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Cohort Name:</div>
-            <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.cohortDefinitionName }}</div>
-          </div>
-          <div style="display: flex">
-            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Patient Count:</div>
-            <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.patientCount }}</div>
-          </div>
-          <div style="display: flex">
-            <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Created On:</div>
-            <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.createdOn }}</div>
+            <div style="display: flex; align-items: center; margin-bottom: 10px">
+              <div style="margin-right: 5px"><PatientsActiveIcon /></div>
+              <div class="ui-darkest-text" style="font-weight: bold">Materialized Cohort</div>
+            </div>
+            <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Cohort ID:</div>
+              <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.id }}</div>
+            </div>
+            <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Cohort Name:</div>
+              <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.cohortDefinitionName }}</div>
+            </div>
+            <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Patient Count:</div>
+              <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.patientCount }}</div>
+            </div>
+            <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Created On:</div>
+              <div class="ui-light-text">{{ bookmarkDisplay.cohortDefinition.createdOn }}</div>
             </div>
           </div>
         </div>
@@ -412,162 +399,6 @@ onErrorCaptured((err, instance, info) => {
         >
           <TrashCanIcon />
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="bookmark-list-content">
-    <div v-for="bookmarkDisplay in props.bookmarksDisplay" :key="bookmarkDisplay.displayName">
-      <div class="bookmark-item-container">
-        <table class="bookmark-item-table">
-          <tr>
-            <td>
-              <div class="bookmark-item-header">
-                <div class="bookmark-item-header__status-icons">
-                  <CohortDefinitionActiveIcon v-if="bookmarkDisplay.bookmark" />
-                  <CohortDefinitionGreyIcon v-else />
-                  <PatientsActiveIcon v-if="isMaterializedCohort(bookmarkDisplay)" />
-                  <PatientsGreyIcon v-else />
-                </div>
-              </div>
-            </td>
-          </tr>
-          <template v-if="bookmarkDisplay.bookmark">
-            <tr>
-              <td>
-                <div class="bookmark-item-content">
-                  <table>
-                    <tr class="bookmark-item-info">
-                      <td class="bookmark-filtercard">
-                        <div style="display: block">
-                          <span class="bookmark-headelement bookmark-element">By:</span>
-                          {{ bookmarkDisplay.bookmark.username }}
-                        </div>
-                        <div style="display: block; margin-right: 16px">
-                          <span class="bookmark-headelement bookmark-element">Version:</span>
-                          {{ bookmarkDisplay.bookmark.version }}
-                        </div>
-                        <div style="display: block">
-                          <span class="bookmark-headelement bookmark-element">Date:</span>
-                          {{ bookmarkDisplay.bookmark.dateModified }}
-                        </div>
-                        <div style="display: block; margin-right: 16px">
-                          <span class="bookmark-headelement bookmark-element">Time:</span>
-                          {{ bookmarkDisplay.bookmark.timeModified }}
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="bookmark-item-content">
-                  <table class="bookmark-item-cards">
-                    <thead>
-                      <th style="width: 25px"></th>
-                      <th></th>
-                    </thead>
-                    <template
-                      v-for="container in getCardsFormatted({
-                        mriFrontEndConfig,
-                        boolContainers: bookmarkDisplay.bookmark.filterCardData,
-                        getText,
-                        getAttributeType:
-                          (attributeId:string) => mriFrontEndConfig.getAttributeByPath(attributeId)?.oInternalConfigAttribute?.type,
-                        getDomainValues,
-                      })"
-                      :key="container.content"
-                    >
-                      <tr>
-                        <td class="bookmark-item-cards-items" colspan="2">
-                          <div>
-                            <template v-for="filterCard in container.content" :key="filterCard.name">
-                              <div class="bookmark-filtercard">
-                                <span class="bookmark-headelement bookmark-element">{{ filterCard.name }}</span>
-                                <template v-for="attribute in filterCard.visibleAttributes" :key="attribute.name">
-                                  <span class="bookmark-element">{{ attribute.name }}</span>
-                                  <span
-                                    class="bookmark-element bookmark-constraint"
-                                    :key="constraint"
-                                    v-for="constraint in attribute.visibleConstraints"
-                                    >{{ getConstraint(constraint) }}</span
-                                  >
-                                  <span class="bookmark-element">;</span>
-                                </template>
-                              </div>
-                            </template>
-                          </div>
-                        </td>
-                      </tr>
-                    </template>
-                    <tr>
-                      <td colspan="2">
-                        <div class="bookmark-row-separator"></div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span
-                          class="icon"
-                          :style="'font-family:' + getChartInfo(bookmarkDisplay.bookmark.chartType, 'iconGroup')"
-                          >{{ getChartInfo(bookmarkDisplay.bookmark.chartType, 'icon') }}</span
-                        >
-                      </td>
-                      <td>
-                        <div>{{ getText(getChartInfo(bookmarkDisplay.bookmark.chartType, 'tooltip')) }}</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: top">
-                        <span class="icon" style="font-family: app-icons"></span>
-                      </td>
-                      <td>
-                        <div class="bookmark-item-axes">
-                          <template
-                            v-for="axis in getAxisFormatted(
-                              bookmarkDisplay.bookmark.axisInfo,
-                              bookmarkDisplay.bookmark.chartType,
-                              mriFrontEndConfig,
-                              getAxis
-                            )"
-                            :key="axis.name"
-                          >
-                            <div>
-                              <label style="display: flex; align-items: top">
-                                <span
-                                  v-if="bookmarkDisplay.bookmark.chartType !== 'list'"
-                                  class="icon"
-                                  :style="`font-family: ${axis.iconGroup}; margin-top: 0`"
-                                  >{{ axis.icon }}</span
-                                >
-                                <span>{{ axis.name }}</span>
-                              </label>
-                            </div>
-                          </template>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <icon icon="puzzle"></icon>
-                      </td>
-                      <td>
-                        <div class="bookmark-extension-container">
-                          <div>{{ getText('MRI_PA_EXTENSION_EXPORT_HEADER') }}</div>
-                          <div></div>
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </td>
-            </tr>
-          </template>
-          <template v-else>
-            <div class="bookmark-item-no-content">{{ getText('MRI_PA_BOOKMARK_NO_COHORT_DEFINITION') }}</div>
-          </template>
-        </table>
       </div>
     </div>
   </div>
