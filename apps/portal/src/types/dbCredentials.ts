@@ -1,6 +1,12 @@
 export const DB_DIALECTS = ["postgres", "hana"];
 export type DbDialect = typeof DB_DIALECTS[number];
 
+export enum AUTHENTICATION_MODES {
+  PASSWORD = "Password",
+  JWT = "JWT",
+}
+export type AuthenticationMode = `${AUTHENTICATION_MODES}`;
+
 export interface IDatabase {
   id: string;
   code: string;
@@ -9,6 +15,7 @@ export interface IDatabase {
   name: string;
   dialect: DbDialect;
   extra: IDbExtra[];
+  authenticationMode: AuthenticationMode;
   credentials: IDbCredential[];
   vocabSchemas: string[];
 }
@@ -60,10 +67,12 @@ export interface INewDatabase extends Omit<IDatabase, "id" | "extra" | "credenti
 export interface IDatabaseCredentialsUpdate
   extends Omit<IDatabase, "code" | "host" | "port" | "name" | "dialect" | "extra" | "vocabSchemas"> {
   id: string;
+  authenticationMode: AuthenticationMode;
   credentials: IDbCredentialAdd[];
 }
 
-export interface IDatabaseDetailsUpdate extends Omit<IDatabase, "code" | "dialect" | "extra" | "credentials"> {
+export interface IDatabaseDetailsUpdate
+  extends Omit<IDatabase, "code" | "dialect" | "extra" | "authenticationMode" | "credentials"> {
   id: string;
   vocabSchemas: string[];
   extra: { [key: string]: string | number | boolean };

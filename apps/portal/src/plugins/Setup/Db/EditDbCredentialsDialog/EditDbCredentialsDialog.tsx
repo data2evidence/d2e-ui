@@ -3,6 +3,8 @@ import FormControl from "@mui/material/FormControl";
 import Divider from "@mui/material/Divider";
 import { Box, Button, Dialog, InputLabel, MenuItem, Select, TextField } from "@portal/components";
 import {
+  AUTHENTICATION_MODES,
+  AuthenticationMode,
   CREDENTIAL_SERVICE_SCOPES,
   CREDENTIAL_USER_SCOPES,
   CloseDialogType,
@@ -50,10 +52,12 @@ const EMPTY_CREDENTIALS: IDbCredentialAdd[] = [
 ];
 
 interface FormData {
+  authenticationMode: AuthenticationMode;
   credentials: IDbCredentialAdd[];
 }
 
 const EMPTY_FORM_DATA: FormData = {
+  authenticationMode: AUTHENTICATION_MODES.PASSWORD,
   credentials: EMPTY_CREDENTIALS,
 };
 
@@ -66,15 +70,26 @@ export const EditDbCredentialsDialog: FC<EditDbCredentialDialogProps> = ({ open,
 
   useEffect(() => {
     if (open) {
-      setFormData(EMPTY_FORM_DATA);
+      const { authenticationMode } = db;
+      setFormData({ ...EMPTY_FORM_DATA, authenticationMode });
       setFeedback({});
       setLoading(false);
     }
-  }, [open]);
+  }, [open, db]);
 
   const handleFormDataChange = useCallback((updates: { [field: string]: any }) => {
     setFormData((formData) => ({ ...formData, ...updates }));
   }, []);
+
+  const handleAuthenticationModeChange = useCallback(
+    (authenticationMode: string) => {
+      handleFormDataChange({
+        authenticationMode,
+        credentials: authenticationMode === AUTHENTICATION_MODES.PASSWORD ? EMPTY_CREDENTIALS : [],
+      });
+    },
+    [handleFormDataChange]
+  );
 
   const handleClose = useCallback(
     (type: CloseDialogType) => {
@@ -87,14 +102,23 @@ export const EditDbCredentialsDialog: FC<EditDbCredentialDialogProps> = ({ open,
   const handleUpdate = useCallback(async () => {
     try {
       setLoading(true);
-      validateCredentials(formData.credentials, setFeedback);
+
+      if (formData.authenticationMode === AUTHENTICATION_MODES.PASSWORD) {
+        if (!validateCredentials(formData.credentials, setFeedback)) {
+          return;
+        }
+      }
 
       const encryptedCredentials = formData.credentials
         .filter((cred) => Boolean(cred.username))
         .map(async (cred: IDbCredential) => dbCredentialProcessor.encryptDbCredential(cred));
       const credentials = await Promise.all(encryptedCredentials);
 
-      await api.dbCredentialsMgr.updateDbCredentials({ id: db.id, credentials });
+      await api.dbCredentialsMgr.updateDbCredentials({
+        id: db.id,
+        authenticationMode: formData.authenticationMode,
+        credentials,
+      });
       setFeedback({
         type: "success",
         message: getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__SUCCESS, [db.code]),
@@ -116,13 +140,15 @@ export const EditDbCredentialsDialog: FC<EditDbCredentialDialogProps> = ({ open,
     } finally {
       setLoading(false);
     }
-  }, [formData.credentials, db, getText]);
+  }, [formData.credentials, formData.authenticationMode, db, getText]);
 
   return (
     <Dialog
       className="edit-db-dialog"
       title={getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__EDIT_DATABASE_CREDENTIALS)}
       closable
+      fullWidth
+      maxWidth={formData.authenticationMode === AUTHENTICATION_MODES.JWT ? "sm" : "md"}
       open={open}
       onClose={() => handleClose("cancelled")}
       feedback={feedback}
@@ -133,7 +159,26 @@ export const EditDbCredentialsDialog: FC<EditDbCredentialDialogProps> = ({ open,
           <label className="database-code__label">{getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__DATABASE_CODE)}</label>
           <label className="database-code-value__label">{db.code}</label>
         </Box>
-        <Box mb={4}>
+        <Box mb={4} sx={{ width: "250px" }} hidden={db.dialect !== "hana"}>
+          <FormControl fullWidth variant="standard">
+            <InputLabel id="authentication-mode-select-label">
+              {getText(i18nKeys.SAVE_DB_DIALOG__AUTHENTICATION_MODE)}
+            </InputLabel>
+            <Select
+              labelId="authentication-mode-select-label"
+              id="authentication-mode-select"
+              value={formData.authenticationMode}
+              onChange={(event) => handleAuthenticationModeChange(event.target?.value)}
+            >
+              {Object.values(AUTHENTICATION_MODES).map((authenticationMode) => (
+                <MenuItem value={authenticationMode} key={authenticationMode}>
+                  {authenticationMode}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box mb={4} hidden={formData.authenticationMode !== AUTHENTICATION_MODES.PASSWORD}>
           <Box mb={2}>
             <b>{getText(i18nKeys.EDIT_DB_CREDENTIAL_DIALOG__CREDENTIALS)}</b>
           </Box>
