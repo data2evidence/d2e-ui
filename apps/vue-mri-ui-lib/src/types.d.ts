@@ -186,8 +186,16 @@ interface FormattedBookmark {
   shared: boolean
   cohortDefinitionId?: number | undefined
 }
+interface FormattedAtlasCohortDefinition {
+  id: number
+  userId: string
+  username: string
+  createdOn: string
+  updatedOn: string
+  cohortDefinitionId?: number | undefined
+}
 
-interface FormattedcohortDefinition {
+interface FormattedMaterializedCohort {
   id: number
   patientCount: number
   cohortDefinitionName: string

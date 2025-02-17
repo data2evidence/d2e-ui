@@ -26,11 +26,26 @@ export function formatBookmark(bookmark: FormattedBookmark) {
     chartType: bookmarkObj.chartType,
     axisInfo: bookmarkObj.chartType === 'list' ? bookmarkObj.filter.selected_attributes : bookmarkObj.axisSelection,
     shared: bookmark.shared,
+    __type: 'D2E_COHORT_DEFINITION',
   }
 }
 
-export function formatCohortDefinition(cohortDefinition: FormattedcohortDefinition) {
+export function formatAtlasCohortDefinition(atlasCD: FormattedAtlasCohortDefinition) {
+  if (!atlasCD) {
+    return null
+  }
+
   return {
+    ...atlasCD,
+    createdOn: DateUtils.displayBookmarkDateFormat(atlasCD.createdOn),
+    updatedOn: DateUtils.displayBookmarkDateFormat(atlasCD.updatedOn),
+    __type: 'ATLAS_COHORT_DEFINITION',
+  }
+}
+
+export function formatCohortDefinition(cohortDefinition: FormattedMaterializedCohort) {
+  return {
+    __type: 'MATERIALIZED_COHORT',
     id: cohortDefinition.id,
     patientCount: cohortDefinition.patientCount,
     cohortDefinitionName: cohortDefinition.cohortDefinitionName,

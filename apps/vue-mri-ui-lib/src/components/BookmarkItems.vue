@@ -24,6 +24,7 @@ import MriFrontendConfig from '../lib/MriFrontEndConfig'
 import AxisModel from '../lib/models/AxisModel'
 
 type Bookmark = {
+  __type: 'D2E_COHORT_DEFINITION'
   id: string
   username: string
   name: string
@@ -39,22 +40,21 @@ type Bookmark = {
   disableUpdate: boolean
 }
 type CohortDefinition = {
+  __type: 'MATERIALIZED_COHORT'
   id: number
   patientCount: number
   cohortDefinitionName: string
   createdOn: string
 }
-type MaterializedCohort = {
+
+type AtlasCohortDefinition = FormattedAtlasCohortDefinition & { __type: 'ATLAS_COHORT_DEFINITION' }
+
+type BookmarkDisplay = {
   displayName: string
-  bookmark: null | Bookmark
-  cohortDefinition: CohortDefinition
+  bookmark?: null | Bookmark
+  cohortDefinition?: null | CohortDefinition
+  atlasCohortDefinition?: null | AtlasCohortDefinition
 }
-type D2ECohortDefinition = {
-  displayName: string
-  bookmark: Bookmark
-  cohortDefinition: null | CohortDefinition
-}
-type BookmarkDisplay = MaterializedCohort | D2ECohortDefinition
 
 const store = useStore()
 
@@ -78,8 +78,8 @@ const props = defineProps<{
   bookmarksDisplay: BookmarkDisplay[]
   compareCohortsSelectionList: Bookmark[]
 }>()
-function isMaterializedCohort(obj: MaterializedCohort | D2ECohortDefinition) {
-  return obj.bookmark === null && !!obj.cohortDefinition
+function isMaterializedCohort(obj: BookmarkDisplay) {
+  return !obj.atlasCohortDefinition && !obj.bookmark && !!obj.cohortDefinition
 }
 
 // Emits - Declare emitted events using defineEmits
@@ -202,6 +202,7 @@ onErrorCaptured((err, instance, info) => {
           </div>
         </div>
         <div style="display: flex; flex-direction: column; padding: 10 10 10 10; max-height: 500px">
+          <!-- D2E Cohort Definition -->
           <div
             v-if="bookmarkDisplay.bookmark"
             style="
@@ -213,7 +214,6 @@ onErrorCaptured((err, instance, info) => {
               padding: 0 10 0 10;
             "
           >
-            <div></div>
             <div style="display: flex; align-items: center; margin-bottom: 10px">
               <div style="margin-right: 5px"><CohortDefinitionIcon /></div>
               <div class="ui-darkest-text" style="font-weight: bold">D2E Cohort Definition</div>
@@ -302,12 +302,37 @@ onErrorCaptured((err, instance, info) => {
                   </div>
                   <div class="bookmark-extension-container">
                     <div>{{ getText('MRI_PA_EXTENSION_EXPORT_HEADER') }}</div>
-                    <div></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <!-- Atlas Cohort Definition -->
+          <div
+            v-if="bookmarkDisplay.atlasCohortDefinition"
+            style="
+              flex: 1;
+              overflow: auto;
+              margin-bottom: 10px;
+              scrollbar-width: thin;
+              scrollbar-color: #ff5e5977 white;
+              padding: 0 10 0 10;
+            "
+          >
+            <div style="display: flex; align-items: center; margin-bottom: 10px">
+              <div style="margin-right: 5px"><CohortDefinitionIcon /></div>
+              <div class="ui-darkest-text" style="font-weight: bold">Atlas Cohort Definition</div>
+            </div>
+            <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">By:</div>
+              <div>{{ bookmarkDisplay.atlasCohortDefinition.userId }}</div>
+            </div>
+            <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Created On:</div>
+              <div>{{ bookmarkDisplay.atlasCohortDefinition.createdOn }}</div>
+            </div>
+          </div>
+          <!-- MATERIALIZED COHORTS -->
           <div
             v-if="bookmarkDisplay.cohortDefinition"
             style="
