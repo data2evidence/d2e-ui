@@ -9,11 +9,8 @@ export default {
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import CohortDefinitionActiveIcon from './icons/CohortDefinitionActiveIcon.vue'
-import CohortDefinitionGreyIcon from './icons/CohortDefinitionGreyIcon.vue'
 import CohortDefinitionIcon from './icons/CohortDefinitionIcon.vue'
 import PatientsActiveIcon from './icons/PatientsActiveIcon.vue'
-import PatientsGreyIcon from './icons/PatientsGreyIcon.vue'
 import EditIcon from './icons/EditIcon.vue'
 import GenerateCohortActiveIcon from './icons/GenerateCohortActiveIcon.vue'
 import ShareIcon from './icons/ShareIcon.vue'
@@ -204,7 +201,7 @@ onErrorCaptured((err, instance, info) => {
             <ShareIcon />
           </div>
         </div>
-        <div style="display: flex; flex-direction: column; padding: 10 20 20 20; max-height: 450px">
+        <div style="display: flex; flex-direction: column; padding: 10 10 10 10; max-height: 500px">
           <div
             v-if="bookmarkDisplay.bookmark"
             style="
@@ -213,6 +210,7 @@ onErrorCaptured((err, instance, info) => {
               margin-bottom: 10px;
               scrollbar-width: thin;
               scrollbar-color: #ff5e5977 white;
+              padding: 0 10 0 10;
             "
           >
             <div></div>
@@ -312,7 +310,13 @@ onErrorCaptured((err, instance, info) => {
           </div>
           <div
             v-if="bookmarkDisplay.cohortDefinition"
-            style="min-height: 120px; overflow: auto; scrollbar-width: thin; scrollbar-color: #ff5e5977 white"
+            style="
+              min-height: 120px;
+              overflow: auto;
+              scrollbar-width: thin;
+              scrollbar-color: #ff5e5977 white;
+              padding: 0 10 0 10;
+            "
           >
             <div style="display: flex; align-items: center; margin-bottom: 10px">
               <div style="margin-right: 5px"><PatientsActiveIcon /></div>
