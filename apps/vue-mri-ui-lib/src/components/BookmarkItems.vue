@@ -190,7 +190,9 @@ onErrorCaptured((err, instance, info) => {
               : bookmarkDisplay.displayName
           }}
         </div>
-        <div><ShareIcon /></div>
+          <div v-if="bookmarkDisplay?.bookmark?.shared">
+            <ShareIcon />
+          </div>
       </div>
       <div style="display: flex; flex-direction: column; padding: 10 20 20 20; height: 200px">
         <div v-if="!isMaterializedCohort(bookmarkDisplay)">
