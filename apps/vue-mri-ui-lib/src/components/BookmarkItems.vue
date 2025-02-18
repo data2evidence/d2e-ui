@@ -78,9 +78,29 @@ const props = defineProps<{
   bookmarksDisplay: BookmarkDisplay[]
   compareCohortsSelectionList: Bookmark[]
 }>()
-function isMaterializedCohort(obj: BookmarkDisplay) {
-  return !obj.atlasCohortDefinition && !obj.bookmark && !!obj.cohortDefinition
+function getBookmarkType(obj: BookmarkDisplay): 'A' | 'D' | 'M' | 'A+M' | 'D+M' {
+  if (obj.cohortDefinition) {
+    if (obj.atlasCohortDefinition) {
+      return 'A+M'
+    }
+    if (obj.bookmark) {
+      return 'D+M'
+    }
+    return 'M'
+  }
+  if (obj.atlasCohortDefinition) {
+    return 'A'
+  }
+  if (obj.bookmark) {
+    return 'D'
+  }
 }
+
+const bookmarksDisplaySorted = props.bookmarksDisplay.sort((a, b) => {
+  const dateToUseA = a.bookmark?.dateModified || a.atlasCohortDefinition?.updatedOn || a.cohortDefinition.createdOn
+  const dateToUseB = b.bookmark?.dateModified || b.atlasCohortDefinition?.updatedOn || b.cohortDefinition.createdOn
+  return new Date(dateToUseA) < new Date(dateToUseB) ? 1 : -1
+})
 
 // Emits - Declare emitted events using defineEmits
 const emit = defineEmits([
@@ -92,10 +112,6 @@ const emit = defineEmits([
   'loadBookmarkCheck',
 ])
 
-// Reactive state
-const bookmarkItemContainer = ref(null) // Ref for the container
-
-//bookmark logic
 const onSelectBookmark = bookmarkDisplay => {
   emit('onSelectBookmark', bookmarkDisplay)
 }
@@ -148,6 +164,10 @@ const getConcatenatedConstraints = visibleConstraints => {
   return visibleConstraints.map(constraint => getConstraint(constraint)).join('; ')
 }
 
+const openAtlasLink = (id: number) => {
+  window.open(`https://www.example.com/${id}`, '_blank')
+}
+
 // Lifecycle hooks
 onMounted(() => {
   console.log('Component mounted!')
@@ -171,7 +191,7 @@ onErrorCaptured((err, instance, info) => {
     "
   >
     <div
-      v-for="bookmarkDisplay in props.bookmarksDisplay"
+      v-for="bookmarkDisplay in bookmarksDisplaySorted"
       :key="bookmarkDisplay.displayName"
       class="item-card"
       style="
@@ -186,13 +206,17 @@ onErrorCaptured((err, instance, info) => {
     >
       <div
         style="flex: 1"
-        :class="`item-card-body ${isMaterializedCohort(bookmarkDisplay) ? 'item-card-body-disabled' : ''}`"
-        @click="loadBookmarkCheck(bookmarkDisplay.bookmark.id, bookmarkDisplay.bookmark.chartType)"
+        :class="`item-card-body ${getBookmarkType(bookmarkDisplay) === 'M' ? 'item-card-body-disabled' : ''}`"
+        @click="
+          ;['D', 'D+M'].includes(getBookmarkType(bookmarkDisplay))
+            ? loadBookmarkCheck(bookmarkDisplay.bookmark.id, bookmarkDisplay.bookmark.chartType)
+            : openAtlasLink(5)
+        "
       >
         <div style="display: flex; justify-content: space-between; padding: 20px 20px 0px 20px">
           <div style="color: #ff5e59">
             {{
-              isMaterializedCohort(bookmarkDisplay)
+              getBookmarkType(bookmarkDisplay) === 'M'
                 ? bookmarkDisplay.cohortDefinition.cohortDefinitionName
                 : bookmarkDisplay.displayName
             }}
@@ -219,6 +243,10 @@ onErrorCaptured((err, instance, info) => {
               <div class="ui-darkest-text" style="font-weight: bold">D2E Cohort Definition</div>
             </div>
             <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">ID:</div>
+              <div>{{ bookmarkDisplay.bookmark.id }}</div>
+            </div>
+            <div style="display: flex">
               <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">By:</div>
               <div>{{ bookmarkDisplay.bookmark.username }}</div>
             </div>
@@ -227,10 +255,10 @@ onErrorCaptured((err, instance, info) => {
               <div>{{ bookmarkDisplay.bookmark.version }}</div>
             </div>
             <div style="display: flex">
-              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Date:</div>
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Updated On:</div>
               <div>{{ bookmarkDisplay.bookmark.dateModified }}</div>
             </div>
-            <div style="display: flex">
+            <div style="display: flex; padding-top: 5px">
               <div class="bookmark-item-content">
                 <template
                   v-for="container in getCardsFormatted({
@@ -298,11 +326,9 @@ onErrorCaptured((err, instance, info) => {
                 </div>
                 <div style="display: flex">
                   <div>
-                    <span class="app-icon icon"></span>
+                    <span class="icon"></span>
                   </div>
-                  <div class="bookmark-extension-container">
-                    <div>{{ getText('MRI_PA_EXTENSION_EXPORT_HEADER') }}</div>
-                  </div>
+                  <div>{{ getText('MRI_PA_EXTENSION_EXPORT_HEADER') }}</div>
                 </div>
               </div>
             </div>
@@ -324,12 +350,16 @@ onErrorCaptured((err, instance, info) => {
               <div class="ui-darkest-text" style="font-weight: bold">Atlas Cohort Definition</div>
             </div>
             <div style="display: flex">
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">ID:</div>
+              <div>{{ bookmarkDisplay.atlasCohortDefinition.id }}</div>
+            </div>
+            <div style="display: flex">
               <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">By:</div>
               <div>{{ bookmarkDisplay.atlasCohortDefinition.userId }}</div>
             </div>
             <div style="display: flex">
-              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Created On:</div>
-              <div>{{ bookmarkDisplay.atlasCohortDefinition.createdOn }}</div>
+              <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Updated On:</div>
+              <div>{{ bookmarkDisplay.atlasCohortDefinition.updatedOn }}</div>
             </div>
           </div>
           <!-- MATERIALIZED COHORTS -->
@@ -378,7 +408,9 @@ onErrorCaptured((err, instance, info) => {
         "
       >
         <div
-          :class="`icon-button ${isMaterializedCohort(bookmarkDisplay) ? 'icon-button-disabled' : ''}`"
+          :class="`icon-button ${
+            ['D', 'D+M'].includes(getBookmarkType(bookmarkDisplay)) ? '' : 'icon-button-disabled'
+          }`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
           @click="onSelectBookmark(bookmarkDisplay)"
         >
@@ -390,7 +422,9 @@ onErrorCaptured((err, instance, info) => {
           />
         </div>
         <div
-          class="icon-button"
+          :class="`icon-button ${
+            ['D', 'M', 'D+M'].includes(getBookmarkType(bookmarkDisplay)) ? '' : 'icon-button-disabled'
+          }`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
           @click.stop="renameBookmark(bookmarkDisplay)"
           :title="getText('MRI_PA_TOOLTIP_RENAME_BOOKMARK')"
@@ -399,7 +433,9 @@ onErrorCaptured((err, instance, info) => {
         </div>
 
         <div
-          :class="`icon-button ${isMaterializedCohort(bookmarkDisplay) ? 'icon-button-disabled' : ''}`"
+          :class="`icon-button ${
+            ['D', 'D+M'].includes(getBookmarkType(bookmarkDisplay)) ? '' : 'icon-button-disabled'
+          }`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
           @click.stop="addCohort(bookmarkDisplay.bookmark)"
           :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
@@ -409,13 +445,11 @@ onErrorCaptured((err, instance, info) => {
 
         <div
           :class="`icon-button ${
-            bookmarkDisplay.bookmark && !bookmarkDisplay.cohortDefinition ? 'icon-button-disabled' : ''
+            ['M', 'A+M', 'D+M'].includes(getBookmarkType(bookmarkDisplay)) ? '' : 'icon-button-disabled'
           }`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
           :title="getText('MRI_PA_BUTTON_DISPLAY_OR_GENERATE_DATA_QUALITY')"
-          @click.stop="
-            openDataQualityDialog(!isMaterializedCohort(bookmarkDisplay) && bookmarkDisplay.cohortDefinition)
-          "
+          @click.stop="openDataQualityDialog(bookmarkDisplay.cohortDefinition)"
         >
           <RunAnalyticsActiveIcon />
         </div>
