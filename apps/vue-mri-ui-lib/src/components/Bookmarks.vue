@@ -79,51 +79,60 @@
     </messageBox>
 
     <div class="bookmark-content">
-      <div class="m-3">
-        <d4l-button
-          :text="getText('MRI_PA_COHORT_ADD_TEXT')"
-          :title="getText('MRI_PA_COHORT_ADD_TEXT')"
-          classes="button--block button-radius"
-          @click="openAddNewCohort"
-        />
-      </div>
-      <div class="bookmark-content__break" />
-
-      <div v-if="!bookmarksDisplay || bookmarksDisplay.length === 0" class="bookmark-noContent">
-        {{ getText('MRI_PA_NO_BOOKMARKS_TEXT') }}
-      </div>
-
-      <div class="bookmark-list-todo">
-        <div class="bookmark-list-header-todo">
+      <div
+        style="display: flex; justify-content: space-evenly; margin-left: 1rem; margin-right: 1rem; margin-top: 10px"
+      >
+        <div style="flex: 3">
+          <d4l-button
+            :text="getText('MRI_PA_CREATE_D2E_COHORT_TEXT')"
+            :title="getText('MRI_PA_CREATE_D2E_COHORT_TEXT')"
+            classes="button--block button-radius"
+            @click="openAddNewCohort"
+          />
+        </div>
+        <div style="flex: 3; margin-left: 20px">
+          <d4l-button
+            :text="getText('MRI_PA_CREATE_ATLAS_COHORT_TEXT')"
+            :title="getText('MRI_PA_CREATE_ATLAS_COHORT_TEXT')"
+            classes="button--block button-radius"
+            @click="openAtlasLink"
+          />
+        </div>
+        <div style="flex: 3; margin-left: 20px">
+          <d4l-button
+            :text="getText('MRI_PA_COMPARE_D2E_COHORT_TEXT')"
+            :title="getText('MRI_PA_COMPARE_D2E_COHORT_TEXT')"
+            classes="button--block button-radius"
+            @click="openCompareDialog"
+            :disabled="!showCohortCompareBtn"
+          />
+        </div>
+        <div style="margin-left: 20px">
           <appCheckbox
             v-model="showSharedBookmarks"
             :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TEXT')"
             :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TITLE')"
             :labelClass="'bookmark_list'"
           ></appCheckbox>
-          <BookmarkItems
-            :bookmarksDisplay="bookmarksDisplay"
-            :compareCohortsSelectionList="aSelBookmarkList"
-            @onSelectBookmark="onSelectBookmark"
-            @renameBookmark="renameBookmark"
-            @deleteBookmark="deleteBookmark"
-            @addCohort="addCohort"
-            @openDataQualityDialog="openDataQualityDialog"
-            @loadBookmarkCheck="loadBookmarkCheck"
-          />
         </div>
       </div>
-    </div>
-    <!-- Bookmark Footer -->
-    <div class="bookmark-footer">
-      <!-- Footer Button  -->
-      <d4l-button
-        :text="getText('MRI_COMP_COHORT_BUTTON')"
-        :title="getText('MRI_COMP_COHORT_TOOLTIP_BTN')"
-        classes="button--block button-radius"
-        @click="openCompareDialog"
-        :disabled="!showCohortCompareBtn"
-      />
+      <div class="bookmark-content__break" />
+
+      <div v-if="!bookmarksDisplay || bookmarksDisplay.length === 0" class="bookmark-noContent">
+        {{ getText('MRI_PA_NO_BOOKMARKS_TEXT') }}
+      </div>
+      <div style="height: calc(100% - 70px)">
+        <BookmarkItems
+          :bookmarksDisplay="bookmarksDisplay"
+          :compareCohortsSelectionList="aSelBookmarkList"
+          @onSelectBookmark="onSelectBookmark"
+          @renameBookmark="renameBookmark"
+          @deleteBookmark="deleteBookmark"
+          @addCohort="addCohort"
+          @openDataQualityDialog="openDataQualityDialog"
+          @loadBookmarkCheck="loadBookmarkCheck"
+        />
+      </div>
     </div>
 
     <cohortComparisonDialog
@@ -513,6 +522,9 @@ export default {
             })
         }
       }
+    },
+    openAtlasLink() {
+      window.open(`https://www.example.com`, '_blank')
     },
   },
   components: {

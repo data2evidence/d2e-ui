@@ -183,11 +183,20 @@ onErrorCaptured((err, instance, info) => {
 <template>
   <div
     style="
-      width: 100%;
+      /* This calc is to align the padding since we are using css grid */
+      margin-left: 1rem;
+      margin-right: 1rem;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: calc(100% - 20px);
       display: grid;
       grid-template-rows: 0fr;
       grid-auto-rows: 0fr;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      height: 100%;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      gap: 10px;
     "
   >
     <div
@@ -198,7 +207,6 @@ onErrorCaptured((err, instance, info) => {
         min-width: 300px;
         display: flex;
         flex-direction: column;
-        margin: 10px;
         border-radius: 10px;
         background-color: white;
         font-size: 12px;
