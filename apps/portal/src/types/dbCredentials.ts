@@ -18,6 +18,7 @@ export interface IDatabase {
   authenticationMode: AuthenticationMode;
   credentials: IDbCredential[];
   vocabSchemas: string[];
+  publications: IDbPublication[];
 }
 
 export interface IDbExtra {
@@ -33,6 +34,11 @@ export interface IDbCredential {
   salt: string;
   userScope: UserScopeType;
   serviceScope: ServiceScopeType;
+}
+
+export interface IDbPublication {
+  publication: string;
+  slot: string;
 }
 
 export enum USER_SCOPE_TYPES {
@@ -65,7 +71,7 @@ export interface INewDatabase extends Omit<IDatabase, "id" | "extra" | "credenti
 }
 
 export interface IDatabaseCredentialsUpdate
-  extends Omit<IDatabase, "code" | "host" | "port" | "name" | "dialect" | "extra" | "vocabSchemas"> {
+  extends Omit<IDatabase, "code" | "host" | "port" | "name" | "dialect" | "extra" | "vocabSchemas" | "publications"> {
   id: string;
   authenticationMode: AuthenticationMode;
   credentials: IDbCredentialAdd[];

@@ -2,9 +2,11 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import Divider from "@mui/material/Divider";
 import { SxProps } from "@mui/material";
 import { Autocomplete, Box, Button, Chip, Dialog, TextArea, TextField } from "@portal/components";
-import { CloseDialogType, Feedback, IDatabase } from "../../../../types";
+import { CloseDialogType, Feedback, IDatabase, IDbPublication } from "../../../../types";
 import { api } from "../../../../axios/api";
 import { isEqual } from "lodash";
+import { i18nKeys } from "../../../../contexts/app-context/states";
+import { useTranslation } from "../../../../contexts";
 import "./EditDbDetailsDialog.scss";
 
 interface EditDbDialogProps {
@@ -19,6 +21,8 @@ interface FormData {
   port: number;
   vocabSchemas: string[];
   extra: string;
+  publication: string;
+  slot: string;
 }
 
 const EMPTY_FORM_DATA: FormData = {
@@ -27,6 +31,8 @@ const EMPTY_FORM_DATA: FormData = {
   port: 5432,
   vocabSchemas: [],
   extra: "",
+  publication: "",
+  slot: "",
 };
 
 const styles: SxProps = {
@@ -57,18 +63,24 @@ const mapExtraToHashmap = (extraArr: any[]): { [key: string]: any } => {
 };
 
 export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }) => {
+  const { getText } = useTranslation();
   const [formData, setFormData] = useState<FormData>(EMPTY_FORM_DATA);
   const [originalExtra, setOriginalExtra] = useState("");
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>({});
   const [vocabSchemaOptions, setVocabSchemaOptions] = useState<string[]>([]);
+  const publication = db.publications?.length > 0 ? db.publications[0].publication : "";
+  const slot = db.publications?.length > 0 ? db.publications[0].slot : "";
+
   const hasChanges = useMemo(
     () =>
       !isEqual(db.name, formData.name) ||
       !isEqual(db.host, formData.host) ||
       !isEqual(db.port, formData.port) ||
       (!isEqual(db.vocabSchemas, formData.vocabSchemas) && formData.vocabSchemas.length > 0) ||
-      originalExtra !== formData.extra,
+      originalExtra !== formData.extra ||
+      !isEqual(publication, formData.publication) ||
+      !isEqual(slot, formData.slot),
     [db, formData, originalExtra]
   );
 
@@ -80,7 +92,15 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
         setVocabSchemaOptions(["cdmvocab"]);
       }
       const extraStr = JSON.stringify(mapExtraToHashmap(db.extra), null, 4);
-      setFormData({ name: db.name, host: db.host, port: db.port, vocabSchemas: db.vocabSchemas, extra: extraStr });
+      setFormData({
+        name: db.name,
+        host: db.host,
+        port: db.port,
+        vocabSchemas: db.vocabSchemas,
+        extra: extraStr,
+        publication: publication,
+        slot: slot,
+      });
       setOriginalExtra(extraStr);
       setFeedback({});
       setLoading(false);
@@ -102,6 +122,12 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
   const handleUpdate = useCallback(async () => {
     try {
       setLoading(true);
+
+      const publications: IDbPublication[] = [];
+      if (formData.publication) {
+        publications.push({ publication: formData.publication, slot: formData.slot });
+      }
+
       await api.dbCredentialsMgr.updateDbDetails({
         id: db.id,
         name: formData.name,
@@ -109,6 +135,7 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
         port: formData.port,
         vocabSchemas: formData.vocabSchemas,
         extra: formData.extra ? JSON.parse(formData.extra) : {},
+        publications,
       });
       setFeedback({
         type: "success",
@@ -151,7 +178,7 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
         </Box>
         <Box mb={4}>
           <Box mb={2}>
-            <b>Database Name</b>
+            <b>{getText(i18nKeys.EDIT_DB_DETAILS_DIALOG__DATABASE_NAME)}</b>
           </Box>
           <Box mb={4}>
             <TextField
@@ -165,7 +192,7 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
           <Box mb={2} display="flex" gap={4}>
             <Box sx={{ width: "100%" }}>
               <Box mb={2}>
-                <b>Host</b>
+                <b>{getText(i18nKeys.EDIT_DB_DETAILS_DIALOG__HOST)}</b>
               </Box>
               <Box mb={4}>
                 <TextField
@@ -178,7 +205,7 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
             </Box>
             <Box>
               <Box mb={2}>
-                <b>Port</b>
+                <b>{getText(i18nKeys.EDIT_DB_DETAILS_DIALOG__PORT)}</b>
               </Box>
               <Box mb={4}>
                 <TextField
@@ -193,7 +220,7 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
           </Box>
 
           <Box mb={2}>
-            <b>Vocab schema</b>
+            <b>{getText(i18nKeys.EDIT_DB_DETAILS_DIALOG__VOCAB_SCHEMA)}</b>
           </Box>
           <Box mb={4}>
             <Autocomplete
@@ -215,7 +242,7 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
         </Box>
         <Box mb={4}>
           <Box mb={2}>
-            <b>Extra</b>
+            <b>{getText(i18nKeys.EDIT_DB_DETAILS_DIALOG__EXTRA)}</b>
           </Box>
           <Box>
             <TextArea
@@ -225,13 +252,44 @@ export const EditDbDetailsDialog: FC<EditDbDialogProps> = ({ open, onClose, db }
             />
           </Box>
         </Box>
+        <Box mb={4}>
+          <Box mb={2}>
+            <b>{getText(i18nKeys.EDIT_DB_DETAILS_DIALOG__CACHE_REPLICATION)}</b>
+          </Box>
+          <Box mb={1} display="flex" gap={4}>
+            <TextField
+              label={getText(i18nKeys.EDIT_DB_DETAILS_DIALOG__PUBLICATION)}
+              variant="standard"
+              sx={{ minWidth: "300px" }}
+              value={formData.publication}
+              onChange={(event) => handleFormDataChange({ publication: event.target?.value })}
+            />
+            <TextField
+              label={getText(i18nKeys.EDIT_DB_DETAILS_DIALOG__SLOT)}
+              variant="standard"
+              sx={{ minWidth: "300px" }}
+              value={formData.slot}
+              onChange={(event) => handleFormDataChange({ slot: event.target?.value })}
+            />
+          </Box>
+        </Box>
       </div>
       <Divider />
 
       <div className="edit-db-dialog__footer">
         <Box display="flex" gap={1} className="edit-db-dialog__footer-actions">
-          <Button text="Cancel" variant="outlined" onClick={() => handleClose("cancelled")} disabled={loading} />
-          <Button text="Update" onClick={handleUpdate} loading={loading} disabled={!hasChanges} />
+          <Button
+            text={getText(i18nKeys.EDIT_DB_DETAILS_DIALOG__CANCEL)}
+            variant="outlined"
+            onClick={() => handleClose("cancelled")}
+            disabled={loading}
+          />
+          <Button
+            text={getText(i18nKeys.EDIT_DB_DETAILS_DIALOG__UPDATE)}
+            onClick={handleUpdate}
+            loading={loading}
+            disabled={!hasChanges}
+          />
         </Box>
       </div>
     </Dialog>

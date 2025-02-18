@@ -2,6 +2,7 @@ import { request } from "./request";
 import { DbDialect, IDatabase, IDatabaseCredentialsUpdate, INewDatabase, IDatabaseDetailsUpdate } from "../types";
 
 const DB_CRED_MGR_BASE_URL = "db-credentials/";
+const TREX_BASE_URL = "trex/";
 
 export class DbCredentialsMgr {
   public getDbList(): Promise<IDatabase[]> {
@@ -21,6 +22,13 @@ export class DbCredentialsMgr {
   }
 
   public addDb(db: INewDatabase) {
+    request({
+      baseURL: TREX_BASE_URL,
+      url: "db/",
+      method: "POST",
+      data: db,
+    });
+
     return request({
       baseURL: DB_CRED_MGR_BASE_URL,
       url: "db",
@@ -48,6 +56,12 @@ export class DbCredentialsMgr {
   }
 
   public deleteDb(id: string) {
+    request({
+      baseURL: TREX_BASE_URL,
+      url: `db/${id}`,
+      method: "DELETE",
+    });
+
     return request({
       baseURL: DB_CRED_MGR_BASE_URL,
       url: `db/${id}`,
