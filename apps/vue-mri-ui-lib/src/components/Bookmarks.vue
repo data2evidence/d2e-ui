@@ -107,13 +107,11 @@
             :disabled="!showCohortCompareBtn"
           />
         </div>
-        <div style="margin-left: 20px">
-          <appCheckbox
-            v-model="showSharedBookmarks"
-            :text="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TEXT')"
-            :title="getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TITLE')"
-            :labelClass="'bookmark_list'"
-          ></appCheckbox>
+        <div style="margin-left: 20px; display: flex; align-items: center">
+          <SlideToggle v-model="showSharedBookmarks" />
+          <div style="font-size: 15px; color: navy; margin-left: 5px">
+            {{ getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TEXT') }}
+          </div>
         </div>
       </div>
       <div class="bookmark-content__break" />
@@ -193,6 +191,7 @@ import { getPortalAPI } from '../utils/PortalUtils'
 import * as types from '../store/mutation-types'
 import appMessageStrip from '../lib/ui/app-message-strip.vue'
 import BookmarkItems from './BookmarkItems.vue'
+import SlideToggle from './SlideToggle.vue'
 
 export default {
   compatConfig: {
@@ -392,6 +391,9 @@ export default {
         console.error('Error deleting bookmark:', error)
       }
     },
+    onChangeShared({ target }: { target: HTMLInputElement }) {
+      console.log(target.checked)
+    },
     closeIncompatibleMessage() {
       this.showIncompatibleMessage = false
     },
@@ -536,6 +538,7 @@ export default {
     cohortListDialog,
     appMessageStrip,
     BookmarkItems,
+    SlideToggle,
   },
 }
 </script>
