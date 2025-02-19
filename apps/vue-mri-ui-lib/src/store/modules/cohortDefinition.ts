@@ -22,7 +22,7 @@ const actions = {
       cancel('cancel')
     }
   },
-  fireCohortDefinitionQuery({ commit, dispatch, getters, rootGetters }) {
+  fireD2EToAtlasCohortDefinitionQuery({ commit, dispatch, getters, rootGetters }) {
     if (cancel) {
       cancel('cancel')
     }
