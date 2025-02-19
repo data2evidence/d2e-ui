@@ -55,7 +55,7 @@ const actions = {
         throw error
       })
   },
-  fireRenameCohortDefinitionQuery({ commit, dispatch, getters, rootGetters }, { cohortDefinitionId, newName }) {
+  fireRenameMaterializedCohortQuery({ commit, dispatch, getters, rootGetters }, { cohortDefinitionId, newName }) {
     if (cancel) {
       cancel('cancel')
     }
@@ -102,6 +102,42 @@ const actions = {
       queryString: {
         datasetId,
         cohortId: cohortDefinitionId,
+      },
+      compress: [],
+    })
+
+    return dispatch('ajaxAuth', {
+      url,
+      method: 'DELETE',
+      cancelToken,
+    })
+      .then(({ data }) => {
+        dispatch('setToastMessage', {
+          text: rootGetters.getText('MRI_PA_DELETE_BMK_SUCCESS'),
+        })
+      })
+      .catch(error => {
+        dispatch('setAlertMessage', {
+          message: rootGetters.getText('MRI_PA_DELETE_BMK_ERROR'),
+        })
+      })
+  },
+  fireDeleteAtlasCohortDefinitionQuery({ commit, dispatch, getters, rootGetters }, atlasCohortDefinitionId) {
+    if (cancel) {
+      cancel('cancel')
+    }
+    const cancelToken = new axios.CancelToken(c => {
+      cancel = c
+    })
+
+    const datasetId = rootGetters.getSelectedDataset.id
+
+    let url = QueryString({
+      // TODO: May need to update when confirmed the endpoint
+      url: '/analytics-svc/api/services/atlas-cohort-definition',
+      queryString: {
+        datasetId,
+        atlasCohortDefinitionId,
       },
       compress: [],
     })

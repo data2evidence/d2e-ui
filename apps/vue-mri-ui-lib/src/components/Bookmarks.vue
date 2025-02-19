@@ -269,8 +269,9 @@ export default {
       'fireBookmarkQuery',
       'loadbookmarkToState',
       'resetChartProperties',
-      'fireRenameCohortDefinitionQuery',
+      'fireRenameMaterializedCohortQuery',
       'fireDeleteMaterializedCohortQuery',
+      'fireDeleteAtlasCohortDefinitionQuery',
       'fetchDataQualityFlowRun',
       'generateDataQualityFlowRun',
     ]),
@@ -324,7 +325,7 @@ export default {
       const bookmarkDisplay = this.selectedBookmark
 
       if (this.isMScohort(bookmarkDisplay)) {
-        this.fireRenameCohortDefinitionQuery({
+        this.fireRenameMaterializedCohortQuery({
           cohortDefinitionId: bookmarkDisplay.cohortDefinition.id,
           newName: this.renamedBookmark,
         }).then(() => {
@@ -375,7 +376,7 @@ export default {
         if (isMaterializedCohort) {
           await this.fireDeleteMaterializedCohortQuery(bookmarkDisplay.cohortDefinition.id)
         } else if (isAtlasCohortDefinition) {
-          // TODO: JER fireDeleteAtlasCohortDefinition
+          await this.fireDeleteAtlasCohortDefinitionQuery(bookmarkDisplay.atlasCohortDefinition.id)
         } else if (isD2ECohortDefinition) {
           const params = {
             cmd: 'delete',
