@@ -270,7 +270,7 @@ export default {
       'loadbookmarkToState',
       'resetChartProperties',
       'fireRenameCohortDefinitionQuery',
-      'fireDeleteCohortDefinitionQuery',
+      'fireDeleteMaterializedCohortQuery',
       'fetchDataQualityFlowRun',
       'generateDataQualityFlowRun',
     ]),
@@ -373,7 +373,7 @@ export default {
 
       try {
         if (isMaterializedCohort) {
-          await this.fireDeleteCohortDefinitionQuery(bookmarkDisplay.cohortDefinition.id)
+          await this.fireDeleteMaterializedCohortQuery(bookmarkDisplay.cohortDefinition.id)
         } else if (isAtlasCohortDefinition) {
           // TODO: JER fireDeleteAtlasCohortDefinition
         } else if (isD2ECohortDefinition) {

@@ -87,7 +87,7 @@ const actions = {
         })
       })
   },
-  fireDeleteCohortDefinitionQuery({ commit, dispatch, getters, rootGetters }, cohortDefinitionId) {
+  fireDeleteMaterializedCohortQuery({ commit, dispatch, getters, rootGetters }, cohortDefinitionId) {
     if (cancel) {
       cancel('cancel')
     }
