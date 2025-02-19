@@ -134,6 +134,7 @@ export default {
       this.showAddCohortDialog = true
     },
     onOkButtonPress() {
+      // TODO: JER add support for atlas CD generate MC
       const portalAPI = getPortalAPI()
       const syntax = JSON.stringify({
         datasetId: this.getSelectedDataset.id,

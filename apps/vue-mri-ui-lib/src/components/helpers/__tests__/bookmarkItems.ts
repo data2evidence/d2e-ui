@@ -1,5 +1,5 @@
 import MriFrontendConfig from '../../../lib/MriFrontEndConfig'
-import { getCardsFormatted, BoolContainer } from '../bookmarkItems'
+import { getCardsFormatted } from '../bookmarkItems'
 
 const mockGetText = (returnValue: any) => jest.fn((key: string) => returnValue)
 const mockGetAttributeType = (returnValue: any) => jest.fn((configPath: string) => returnValue)
@@ -82,7 +82,7 @@ describe('getCardsFormatted', () => {
     ).toStrictEqual([])
   })
   it('should work in case 1', () => {
-    const input: BoolContainer[] = [
+    const input: FilterCardContent[] = [
       {
         content: [
           {
@@ -211,7 +211,7 @@ describe('getCardsFormatted', () => {
     ).toStrictEqual(expected)
   })
   it('should work in case 2', () => {
-    const input: BoolContainer[] = [
+    const input: FilterCardContent[] = [
       {
         content: [
           {
@@ -330,7 +330,7 @@ describe('getCardsFormatted', () => {
     ).toStrictEqual(expected)
   })
   it('should work in case 3', () => {
-    const input: BoolContainer[] = [
+    const input: FilterCardContent[] = [
       {
         content: [
           {

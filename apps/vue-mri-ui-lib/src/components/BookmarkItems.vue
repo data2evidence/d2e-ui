@@ -19,43 +19,11 @@ import RunAnalyticsActiveIcon from './icons/RunAnalyticsActiveIcon.vue'
 import TrashCanIcon from './icons/TrashCanIcon.vue'
 import GlobeIcon from './icons/GlobeIcon.vue'
 import Constants from '../utils/Constants'
-import { BoolContainer, getCardsFormatted, getAxisFormatted } from './helpers/bookmarkItems'
+import { getCardsFormatted, getAxisFormatted } from './helpers/bookmarkItems'
 import { onErrorCaptured } from 'vue'
 import MriFrontendConfig from '../lib/MriFrontEndConfig'
 import AxisModel from '../lib/models/AxisModel'
-
-type Bookmark = {
-  __type: 'D2E_COHORT_DEFINITION'
-  id: string
-  username: string
-  name: string
-  viewName: any
-  data: string
-  version: number
-  dateModified: string
-  timeModified: string
-  filterCardData: BoolContainer[]
-  chartType: string
-  shared: boolean
-  axisInfo: string[]
-  disableUpdate: boolean
-}
-type CohortDefinition = {
-  __type: 'MATERIALIZED_COHORT'
-  id: number
-  patientCount: number
-  cohortDefinitionName: string
-  createdOn: string
-}
-
-type AtlasCohortDefinition = FormattedAtlasCohortDefinition & { __type: 'ATLAS_COHORT_DEFINITION' }
-
-type BookmarkDisplay = {
-  displayName: string
-  bookmark?: null | Bookmark
-  cohortDefinition?: null | CohortDefinition
-  atlasCohortDefinition?: null | AtlasCohortDefinition
-}
+import { getBookmarkType } from '../utils/BookmarkUtils'
 
 const store = useStore()
 
@@ -79,23 +47,6 @@ const props = defineProps<{
   bookmarksDisplay: BookmarkDisplay[]
   compareCohortsSelectionList: Bookmark[]
 }>()
-function getBookmarkType(obj: BookmarkDisplay): 'A' | 'D' | 'M' | 'A+M' | 'D+M' {
-  if (obj.cohortDefinition) {
-    if (obj.atlasCohortDefinition) {
-      return 'A+M'
-    }
-    if (obj.bookmark) {
-      return 'D+M'
-    }
-    return 'M'
-  }
-  if (obj.atlasCohortDefinition) {
-    return 'A'
-  }
-  if (obj.bookmark) {
-    return 'D'
-  }
-}
 
 const bookmarksDisplaySorted = props.bookmarksDisplay.sort((a, b) => {
   const dateToUseA = a.bookmark?.dateModified || a.atlasCohortDefinition?.updatedOn || a.cohortDefinition.createdOn
@@ -125,8 +76,8 @@ const deleteBookmark = bookmarkDisplay => {
   emit('deleteBookmark', bookmarkDisplay)
 }
 
-const addCohort = bookmark => {
-  emit('addCohort', bookmark)
+const addCohort = bookmarkDisplay => {
+  emit('addCohort', bookmarkDisplay)
 }
 
 const openDataQualityDialog = cohortDefinition => {
@@ -443,10 +394,10 @@ onErrorCaptured((err, instance, info) => {
 
         <div
           :class="`icon-button ${
-            ['D', 'D+M'].includes(getBookmarkType(bookmarkDisplay)) ? '' : 'icon-button-disabled'
+            ['D', 'D+M', 'A', 'A+M'].includes(getBookmarkType(bookmarkDisplay)) ? '' : 'icon-button-disabled'
           }`"
           style="width: 32px; height: 32px; display: flex; justify-content: center; align-items: center"
-          @click.stop="addCohort(bookmarkDisplay.bookmark)"
+          @click.stop="addCohort(bookmarkDisplay)"
           :title="getText('MRI_PA_BUTTON_ADD_TO_COLLECTION')"
         >
           <GenerateCohortActiveIcon />

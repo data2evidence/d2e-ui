@@ -192,6 +192,7 @@ import * as types from '../store/mutation-types'
 import appMessageStrip from '../lib/ui/app-message-strip.vue'
 import BookmarkItems from './BookmarkItems.vue'
 import SlideToggle from './SlideToggle.vue'
+import { getBookmarkType } from '../utils/BookmarkUtils'
 
 export default {
   compatConfig: {
@@ -346,10 +347,12 @@ export default {
         this.closeRenameBookmark()
       })
     },
-    addCohort(bookmark) {
-      if (bookmark) {
-        this.selectedBookmark = bookmark
+    addCohort(bookmarkDisplay) {
+      if (bookmarkDisplay?.bookmark) {
+        this.selectedBookmark = bookmarkDisplay.bookmark
         this.showAddCohortDialog = true
+      } else if (bookmarkDisplay.atlasCohortDefinition) {
+        // TODO: JER add support for Atlas
       }
     },
     closeDeleteBookmark() {
@@ -364,12 +367,16 @@ export default {
     async confirmDeleteBookmark() {
       const activeBookmark = this.getActiveBookmark
       const bookmarkDisplay = this.selectedBookmark
-      const isCohort = this.isMScohort(bookmarkDisplay)
+      const isMaterializedCohort = getBookmarkType(bookmarkDisplay) === 'M'
+      const isD2ECohortDefinition = ['D', 'D+M'].includes(getBookmarkType(bookmarkDisplay))
+      const isAtlasCohortDefinition = ['A', 'A+M'].includes(getBookmarkType(bookmarkDisplay))
 
       try {
-        if (isCohort) {
+        if (isMaterializedCohort) {
           await this.fireDeleteCohortDefinitionQuery(bookmarkDisplay.cohortDefinition.id)
-        } else {
+        } else if (isAtlasCohortDefinition) {
+          // TODO: JER fireDeleteAtlasCohortDefinition
+        } else if (isD2ECohortDefinition) {
           const params = {
             cmd: 'delete',
           }
@@ -383,7 +390,7 @@ export default {
 
         await this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
         this.closeDeleteBookmark()
-        if (!isCohort && activeBookmark && activeBookmark.bookmarkname === bookmarkDisplay.bookmark.name) {
+        if (!isMaterializedCohort && activeBookmark && activeBookmark.bookmarkname === bookmarkDisplay.bookmark.name) {
           this[types.SET_ACTIVE_BOOKMARK](null)
           this.reset()
         }

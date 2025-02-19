@@ -1,46 +1,6 @@
 import AxisModel from '../../lib/models/AxisModel'
 import MriFrontendConfig from '../../lib/MriFrontEndConfig'
 
-export type BoolContainer = {
-  content: {
-    configPath: string
-    instanceNumber: number
-    instanceID: string
-    name: string
-    inactive: boolean
-    isEntry: boolean
-    isExit: boolean
-    type: string
-    attributes: {
-      type: string
-      op: string
-      content: {
-        configPath: string
-        instanceID: string
-        type: string
-        constraints: {
-          type: string
-          op: string
-          content: {
-            content?: {
-              operator: string
-              value: string
-            }[]
-            type: string
-            operator: string
-            value: string
-          }[]
-        }
-      }[]
-    }
-    content?: { attributes: { content: {}[] } }
-    op?: string
-    advanceTimeFilter: any
-  }[]
-  type: string
-  op: string
-}
-
 export const getAttributeName = ({
   attributeId,
   type,
@@ -119,7 +79,7 @@ export const getCardsFormatted = ({
   getDomainValues,
 }: {
   mriFrontEndConfig: MriFrontendConfig
-  boolContainers: BoolContainer[]
+  boolContainers: FilterCardContent[]
   getText: (key: string) => string | undefined
   getAttributeType: (configPath: string) => string | undefined
   getDomainValues: (type: string) => { values: { value: string; text: string }[] | undefined } | undefined
