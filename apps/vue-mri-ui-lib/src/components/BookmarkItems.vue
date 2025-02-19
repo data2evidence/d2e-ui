@@ -17,6 +17,7 @@ import ShareIcon from './icons/ShareIcon.vue'
 import PlusInBoxIcon from './icons/PlusInBoxIcon.vue'
 import RunAnalyticsActiveIcon from './icons/RunAnalyticsActiveIcon.vue'
 import TrashCanIcon from './icons/TrashCanIcon.vue'
+import GlobeIcon from './icons/GlobeIcon.vue'
 import Constants from '../utils/Constants'
 import { BoolContainer, getCardsFormatted, getAxisFormatted } from './helpers/bookmarkItems'
 import { onErrorCaptured } from 'vue'
@@ -354,7 +355,7 @@ onErrorCaptured((err, instance, info) => {
             "
           >
             <div style="display: flex; align-items: center; margin-bottom: 10px">
-              <div style="margin-right: 5px"><CohortDefinitionIcon /></div>
+              <div style="margin-right: 5px"><GlobeIcon /></div>
               <div class="ui-darkest-text" style="font-weight: bold">Atlas Cohort Definition</div>
             </div>
             <div style="display: flex">
