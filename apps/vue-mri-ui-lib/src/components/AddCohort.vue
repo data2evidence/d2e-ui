@@ -51,7 +51,7 @@ import messageBox from './MessageBox.vue'
 
 export default {
   name: 'addCohort',
-  props: ['bookmarkId', 'bookmarkName', 'openAddDialog'],
+  props: ['bookmarkId', 'bookmarkName', 'openAddDialog', 'cohortDefinitionType', 'atlasCohortDefinitionId'],
   data() {
     return {
       showAddCohortDialog: false,
@@ -128,32 +128,30 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['onAddCohortOkButtonPress', 'loadOldCollections', 'fireQuery', 'getPLRequest', 'fireBookmarkQuery']),
+    ...mapActions([
+      'onAddCohortOkButtonPress',
+      'fireCreateAtlasMaterializedCohortQuery',
+      'loadOldCollections',
+      'fireQuery',
+      'getPLRequest',
+      'fireBookmarkQuery',
+    ]),
     ...mapMutations([types.SET_COHORT_TYPE, types.SET_COLLECTION_TYPE, types.COLLECTIONS_SET_HASEXISTINGCOLLECTION]),
     openAddCohortDialog() {
       this.showAddCohortDialog = true
     },
     onOkButtonPress() {
-      // TODO: JER add support for atlas CD generate MC
-      const portalAPI = getPortalAPI()
-      const syntax = JSON.stringify({
-        datasetId: this.getSelectedDataset.id,
-        bookmarkId: this.bookmarkId,
-      })
-      const params = {
-        datasetId: this.getSelectedDataset.id,
-        mriquery: JSON.stringify(this.getPLRequest({ bmkId: this.bookmarkId })),
-        name: this.bookmarkName,
-        description: this.cohortDescription,
-        syntax: syntax,
-      }
-      this.resetMessageStrip()
-      this.cohortBusy = true
-      this.onAddCohortOkButtonPress({
-        params,
-        url: '/analytics-svc/api/services/cohort',
-      })
-        .then(() => {
+      try {
+        this.cohortDefinitionType === 'D2E'
+        // TODO: JER add support for atlas CD generate MC
+        const syntax = JSON.stringify({
+          datasetId: this.getSelectedDataset.id,
+          bookmarkId: this.bookmarkId,
+        })
+        this.resetMessageStrip()
+        this.cohortBusy = true
+
+        const callbackSuccess = () => {
           setTimeout(() => this.closeWindow(), 1500)
           this.cohortBusy = false
           this.messageStrip = {
@@ -162,8 +160,8 @@ export default {
             messageType: 'success',
           }
           this.fireBookmarkQuery({ method: 'get', params: { cmd: 'loadAll' } })
-        })
-        .catch(err => {
+        }
+        const failureCallback = err => {
           this.cohortBusy = false
           this.messageStrip = {
             show: true,
@@ -171,7 +169,35 @@ export default {
             messageType: 'error',
           }
           return err
-        })
+        }
+        if (this.cohortDefinitionType === 'D2E') {
+          this.onAddCohortOkButtonPress({
+            params: {
+              datasetId: this.getSelectedDataset.id,
+              mriquery: JSON.stringify(this.getPLRequest({ bmkId: this.bookmarkId })),
+              name: this.bookmarkName,
+              description: this.cohortDescription,
+              syntax: syntax,
+            },
+            url: '/analytics-svc/api/services/cohort',
+          })
+            .then(callbackSuccess)
+            .catch(failureCallback)
+        } else {
+          this.fireCreateAtlasMaterializedCohortQuery({
+            params: {
+              datasetId: this.getSelectedDataset.id,
+              description: this.cohortDescription,
+              atlasCohortDefinitionId: this.atlasCohortDefinitionId,
+            },
+            url: '/analytics-svc/api/services/atlas-cohort-definition',
+          })
+            .then(callbackSuccess)
+            .catch(failureCallback)
+        }
+      } catch (e) {
+        console.error(e)
+      }
     },
     closeWindow() {
       this.resetMessageStrip()

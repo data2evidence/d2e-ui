@@ -153,6 +153,8 @@
       :bookmarkId="this.selectedBookmark.id"
       :bookmarkName="this.selectedBookmark.name"
       @closeEv="showAddCohortDialog = false"
+      :cohortDefinitionType="cohortDefinitionType"
+      :atlasCohortDefinitionId="atlasCohortDefinitionId"
     >
     </addCohort>
 
@@ -229,6 +231,8 @@ export default {
         message: '',
         messageType: '',
       },
+      cohortDefinitionType: '',
+      atlasCohortDefinitionId: null,
     }
   },
   created() {
@@ -351,10 +355,12 @@ export default {
     addCohort(bookmarkDisplay) {
       if (bookmarkDisplay?.bookmark) {
         this.selectedBookmark = bookmarkDisplay.bookmark
-        this.showAddCohortDialog = true
+        this.cohortDefinitionType = 'D2E'
       } else if (bookmarkDisplay.atlasCohortDefinition) {
-        // TODO: JER add support for Atlas
+        this.cohortDefinitionType = 'Atlas'
+        this.atlasCohortDefinitionId = bookmarkDisplay.atlasCohortDefinition.id
       }
+      this.showAddCohortDialog = true
     },
     closeDeleteBookmark() {
       this.showDeleteDialog = false

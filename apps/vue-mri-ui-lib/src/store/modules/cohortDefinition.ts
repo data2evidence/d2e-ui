@@ -158,6 +158,27 @@ const actions = {
         })
       })
   },
+  fireCreateAtlasMaterializedCohortQuery({ state, commit, dispatch, rootGetters }, { params, url }) {
+    if (cancel) {
+      cancel('cancel')
+    }
+    const cancelToken = new axios.CancelToken(c => {
+      cancel = c
+    })
+    return dispatch('ajaxAuth', {
+      url,
+      params: { ...params, datasetId: rootGetters.getSelectedDataset.id },
+      cancelToken,
+    })
+      .then(response => {
+        dispatch('setToastMessage', {
+          text: rootGetters.getText('MRI_PA_COLL_SUCCESS_ADD_PATIENT'),
+        })
+      })
+      .catch(error => {
+        throw rootGetters.getText('MRI_PA_COLL_FAILURE_ADD_PATIENT')
+      })
+  },
 }
 
 const mutations = {
