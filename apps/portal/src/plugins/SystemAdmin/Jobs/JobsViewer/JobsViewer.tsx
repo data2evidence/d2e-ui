@@ -26,7 +26,10 @@ const JobsViewer: FC<{
         callbacks = [...scriptCallbacks, ...styleSheetCallbacks];
       });
     // Remove scripts and links upon component unmounting
-    return () => callbacks.forEach((callback) => callback());
+    return () => {
+      window.dispatchEvent(new CustomEvent("unmount-jobs"));
+      callbacks.forEach((callback) => callback());
+    };
   }, [isLocalDev, setJobsViewerScriptsLoaded]);
   const browserBaseUrl = `${window.location.protocol}//${window.location.hostname}${
     window.location.port ? ":" + window.location.port : ""

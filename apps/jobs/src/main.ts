@@ -14,7 +14,7 @@ import { initColorMode } from './utils/colorMode'
 
 initColorMode()
 
-const mountJobs = () => {
+const mountJobs = (addEventListener: boolean = true) => {
   try {
     const app = createApp(App)
     app.use(createPinia())
@@ -22,6 +22,12 @@ const mountJobs = () => {
     app.use(PrefectDesign)
     app.use(PrefectUILibrary)
     app.mount('#jobs-main')
+
+    if (addEventListener) {
+      window.addEventListener('unmount-jobs', () => {
+        app.unmount()
+      })
+    }
   } catch (err) {
     console.log(err)
   }
@@ -36,7 +42,7 @@ window.mountJobs = mountJobs
 
 if (process.env.NODE_ENV === 'development') {
   console.log('Jobs is running in development mode')
-  mountJobs()
+  mountJobs(false)
 } else {
   console.log('Jobs is running in production mode')
 }
