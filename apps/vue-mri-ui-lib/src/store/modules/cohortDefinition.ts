@@ -14,7 +14,7 @@ const getters = {
 }
 
 const actions = {
-  clearResponse({ commit }) {
+  clearCohortDefinitionResponse({ commit }) {
     commit(types.COHORT_DEFINITION_RESPONSE_SET, { response: {} })
   },
   cancelCohortDefinitionQuery({ commit, dispatch, getters, rootGetters }) {
