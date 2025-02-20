@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState, useEffect } from "react";
+import React, { FC, useCallback, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
@@ -27,7 +27,6 @@ import UpdateSchemaDialog from "./UpdateSchemaDialog/UpdateSchemaDialog";
 import CreateReleaseDialog from "./CreateReleaseDialog/CreateReleaseDialog";
 import AnalysisDialog from "./AnalysisDialog/AnalysisDialog";
 import { api } from "../../../axios/api";
-import { FlowRunJobStateTypes } from "../Jobs/types";
 import { JobRunTypes } from "../DQD/types";
 import CreateCacheDialog from "./CreateCacheDialog/CreateCacheDialog";
 import "./StudyOverview.scss";
@@ -42,7 +41,6 @@ const StudyOverview: FC = () => {
   const { getText, i18nKeys } = useTranslation();
   const [refetch, setRefetch] = useState(0);
   const [fetchUpdatesLoading, setFetchUpdatesLoading] = useState(false);
-  const [fetchUpdatesFlowIds, setFetchUpdatesFlowIds] = useState<string[]>([]);
   const [datasets, loadingDatasets, error] = useDatasets("systemAdmin", undefined, undefined, refetch);
   const [databases] = useDatabases();
 
@@ -69,43 +67,6 @@ const StudyOverview: FC = () => {
 
   const [activeDataset, setActiveDataset] = useState<Study>();
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchFlowRunState = async () => {
-      const completedJobStatuses = [
-        FlowRunJobStateTypes.COMPLETED as string,
-        FlowRunJobStateTypes.CANCELLED as string,
-        FlowRunJobStateTypes.FAILED as string,
-        FlowRunJobStateTypes.CRASHED as string,
-      ];
-
-      if (fetchUpdatesFlowIds && fetchUpdatesFlowIds.length > 0) {
-        try {
-          const flowRunStatePromises = fetchUpdatesFlowIds.map((flowId) => api.dataflow.getFlowRunState(flowId));
-          const flowRunStates = await Promise.all(flowRunStatePromises);
-          flowRunStates.forEach((flowRunState) => {
-            if (completedJobStatuses.includes(flowRunState.state_name)) {
-              setFetchUpdatesFlowIds((prevFlowIds) => prevFlowIds.filter((id) => id !== flowRunState.id));
-            }
-          });
-        } catch (error) {
-          console.error("Error fetching flow run states:", error);
-        }
-      }
-    };
-
-    const interval = setInterval(() => {
-      fetchFlowRunState();
-    }, 30000);
-
-    if (fetchUpdatesFlowIds.length === 0) {
-      clearInterval(interval);
-      setFetchUpdatesLoading(false);
-      setRefetch((refetch) => refetch + 1);
-    }
-
-    return () => clearInterval(interval);
-  }, [fetchUpdatesFlowIds]);
 
   const handleUpdateStudy = useCallback(
     (dataset: Study) => {
@@ -252,6 +213,7 @@ const StudyOverview: FC = () => {
   );
 
   const fetchDatamodelUpdates = useCallback(async () => {
+    setFetchUpdatesLoading(true);
     const datasetsByFlow: Record<string, Study[]> = {};
     const apiRequests = [];
     datasets.forEach((item: Study) => {
@@ -300,13 +262,13 @@ const StudyOverview: FC = () => {
     );
 
     try {
-      const res: string[] = await Promise.all(apiRequests);
-      setFetchUpdatesLoading(true);
-      setFetchUpdatesFlowIds(res);
+      await Promise.all(apiRequests);
     } catch (error) {
       console.error(error);
+    } finally {
+      setFetchUpdatesLoading(false);
     }
-  }, [setFetchUpdatesLoading, setFetchUpdatesFlowIds, datasets]);
+  }, [setFetchUpdatesLoading, datasets]);
 
   const getAttributeValue = (
     attributes: StudyAttribute[] | undefined,
