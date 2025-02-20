@@ -85,15 +85,12 @@ const openDataQualityDialog = cohortDefinition => {
 }
 
 const loadBookmarkCheck = (bookmarkId, chartType) => {
+  const selection = window.getSelection()
+  // Allows highlighting without clicking
+  if (selection.toString().length > 0) {
+    return
+  }
   emit('loadBookmarkCheck', bookmarkId, chartType)
-}
-
-const isMScohort = bookmarkDisplay => {
-  return bookmarkDisplay.cohortDefinition && !bookmarkDisplay.bookmark
-}
-
-const log = value => {
-  console.log(value)
 }
 
 const getChartInfo = (chart: string, type: string) => {
@@ -117,6 +114,11 @@ const getConcatenatedConstraints = visibleConstraints => {
 }
 
 const openAtlasLink = (id: number) => {
+  const selection = window.getSelection()
+  // Allows highlighting without clicking
+  if (selection.toString().length > 0) {
+    return
+  }
   window.open(`/atlas/cohortdefinition/${id}`, '_blank')
 }
 
@@ -135,7 +137,6 @@ onErrorCaptured((err, instance, info) => {
 <template>
   <div
     style="
-      /* This calc is to align the padding since we are using css grid */
       margin-left: 1rem;
       margin-right: 1rem;
       margin-top: 10px;
