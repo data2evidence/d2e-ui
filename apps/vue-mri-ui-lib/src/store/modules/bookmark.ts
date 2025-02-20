@@ -4,15 +4,15 @@ import BMv2Parser from '../../lib/bookmarks/BMv2Parser'
 import Constants from '../../utils/Constants'
 import * as types from '../mutation-types'
 import isEqual from 'lodash/isEqual'
-import { getPortalAPI } from '@/utils/PortalUtils'
-import { formatBookmark, formatCohortDefinition } from '@/utils/BookmarkUtils'
+import { formatBookmark, formatCohortDefinition, formatAtlasCohortDefinition } from '@/utils/BookmarkUtils'
 
 const CancelToken = axios.CancelToken
 let cancel
 // initial state
 const state = {
   bookmarks: [],
-  cohortDefinitions: [],
+  materializedCohorts: [],
+  atlasCohortDefinitions: [],
   filterSummaryVisible: false,
   schemaName: '',
   activeBookmark: null,
@@ -132,16 +132,18 @@ const getters = {
   },
   getDisplayBookmarks: modulestate => (showSharedBookmarks, username) => {
     const bookmarks: FormattedBookmark[] = modulestate.bookmarks
-    const cohortDefinitions: FormattedcohortDefinition[] = modulestate.cohortDefinitions
+    const materializedCohorts: FormattedMaterializedCohort[] = modulestate.materializedCohorts
+    const atlasCohortDefinitions: FormattedAtlasCohortDefinition[] = modulestate.atlasCohortDefinitions
 
     let displayBookmarks = []
 
     // cohort definitions without bookmark
     // cohort definitions with bookmark
-    cohortDefinitions.forEach(cohortDefinition => {
+    materializedCohorts.forEach(cohortDefinition => {
       // check bookmark exists, if yes, should use the bookmark name
       const bookmark = bookmarks.find(bookmark => bookmark?.cohortDefinitionId === cohortDefinition.id)
-      if (!bookmark) {
+      const atlasCohortDefinition = atlasCohortDefinitions.find(cd => cd.cohortDefinitionId === cohortDefinition.id)
+      if (!bookmark && !atlasCohortDefinition) {
         return displayBookmarks.push({
           displayName: cohortDefinition.cohortDefinitionName,
           bookmark: null,
@@ -149,24 +151,44 @@ const getters = {
         })
       }
 
-      if (showSharedBookmarks && (username === bookmark.user_id || bookmark.shared)) {
-        return displayBookmarks.push({
-          displayName: bookmark.bookmarkname,
-          bookmark: { ...formatBookmark(bookmark), disableUpdate: username !== bookmark.user_id },
+      if (bookmark) {
+        if (showSharedBookmarks && (username === bookmark.user_id || bookmark.shared)) {
+          return displayBookmarks.push({
+            displayName: bookmark.bookmarkname,
+            bookmark: { ...formatBookmark(bookmark), disableUpdate: username !== bookmark.user_id },
+            cohortDefinition: formatCohortDefinition(cohortDefinition),
+          })
+        } else if (!showSharedBookmarks && username === bookmark.user_id) {
+          return displayBookmarks.push({
+            displayName: bookmark.bookmarkname,
+            bookmark: { ...formatBookmark(bookmark), disableUpdate: username !== bookmark.user_id },
+            cohortDefinition: formatCohortDefinition(cohortDefinition),
+          })
+        }
+      }
+      if (atlasCohortDefinition) {
+        displayBookmarks.push({
+          displayName: atlasCohortDefinition.cohortDefinitionId,
           cohortDefinition: formatCohortDefinition(cohortDefinition),
-        })
-      } else if (!showSharedBookmarks && username === bookmark.user_id) {
-        return displayBookmarks.push({
-          displayName: bookmark.bookmarkname,
-          bookmark: { ...formatBookmark(bookmark), disableUpdate: username !== bookmark.user_id },
-          cohortDefinition: formatCohortDefinition(cohortDefinition),
+          atlasCohortDefinition: formatAtlasCohortDefinition(atlasCohortDefinition),
         })
       }
     })
 
-    // bookmarks without a cohort definition
+    // Atlas Cohort Definitions without a materialized cohort
+    atlasCohortDefinitions
+      .filter(cd => !cd.cohortDefinitionId)
+      .forEach(cd => {
+        displayBookmarks.push({
+          displayName: cd.id,
+          cohortDefinition: null,
+          atlasCohortDefinition: formatAtlasCohortDefinition(cd),
+        })
+      })
+
+    // bookmarks without a materialized cohort
     bookmarks.forEach(bookmark => {
-      const cohortDefinition = cohortDefinitions.find(
+      const cohortDefinition = materializedCohorts.find(
         cohortDefinition => (cohortDefinition.id = bookmark?.cohortDefinitionId)
       )
 
@@ -204,7 +226,6 @@ const actions = {
     const cancelToken = new CancelToken(c => {
       cancel = c
     })
-
     let url = ''
     if (params.cmd === 'loadAll') {
       url = `${bookmarkURL}?paConfigId=${rootGetters.getMriFrontendConfig.getPaConfigId()}&r=${Math.random()}&datasetId=${
@@ -224,6 +245,7 @@ const actions = {
         if (params.cmd === 'loadAll') {
           commit(types.SET_BOOKMARKS, data)
           commit(types.SET_COHORT_DEFINITIONS, data)
+          commit(types.SET_ATLAS_COHORT_DEFINITIONS, data)
           commit(types.SET_SCHEMANAME, {
             schemaName: data.schemaName,
           })
@@ -362,8 +384,11 @@ const mutations = {
   [types.SET_BOOKMARKS](modulestate, { bookmarks }) {
     modulestate.bookmarks = bookmarks
   },
-  [types.SET_COHORT_DEFINITIONS](modulestate, { cohortDefinitions }) {
-    modulestate.cohortDefinitions = cohortDefinitions
+  [types.SET_COHORT_DEFINITIONS](modulestate, { materializedCohorts }) {
+    modulestate.materializedCohorts = materializedCohorts
+  },
+  [types.SET_ATLAS_COHORT_DEFINITIONS](modulestate, { atlasCohortDefinitions }) {
+    modulestate.atlasCohortDefinitions = atlasCohortDefinitions
   },
   [types.SET_FILTERSUMMARY](modulestate, { filterSummaryVisibility }) {
     modulestate.filterSummaryVisible = filterSummaryVisibility
