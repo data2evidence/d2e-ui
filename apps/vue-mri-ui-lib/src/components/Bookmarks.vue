@@ -83,31 +83,31 @@
         style="display: flex; justify-content: space-evenly; margin-left: 1rem; margin-right: 1rem; margin-top: 10px"
       >
         <div style="flex: 3">
-          <d4l-button
-            :text="getText('MRI_PA_CREATE_D2E_COHORT_TEXT')"
-            :title="getText('MRI_PA_CREATE_D2E_COHORT_TEXT')"
-            classes="button--block button-radius"
-            @click="openAddNewCohort"
-          />
+          <Button :text="getText('MRI_PA_CREATE_D2E_COHORT_TEXT')" :onClick="openAddNewCohort">
+            <template #icon-left>
+              <PatientsActiveIcon style="margin-right: 10px" fill="white" />
+            </template>
+          </Button>
         </div>
         <div style="flex: 3; margin-left: 20px">
-          <d4l-button
-            :text="getText('MRI_PA_CREATE_ATLAS_COHORT_TEXT')"
-            :title="getText('MRI_PA_CREATE_ATLAS_COHORT_TEXT')"
-            classes="button--block button-radius"
-            @click="openAtlasLink"
-          />
+          <Button :text="getText('MRI_PA_CREATE_ATLAS_COHORT_TEXT')" :onClick="openAtlasLink">
+            <template #icon-left>
+              <GlobeIcon style="margin-right: 10px" fill="white" />
+            </template>
+          </Button>
         </div>
         <div style="flex: 3; margin-left: 20px">
-          <d4l-button
+          <Button
             :text="getText('MRI_PA_COMPARE_D2E_COHORT_TEXT')"
-            :title="getText('MRI_PA_COMPARE_D2E_COHORT_TEXT')"
-            classes="button--block button-radius"
-            @click="openCompareDialog"
+            :onClick="openCompareDialog"
             :disabled="!showCohortCompareBtn"
-          />
+          >
+            <template #icon-left>
+              <LeftRightArrowIcon style="margin-right: 10px" fill="white" />
+            </template>
+          </Button>
         </div>
-        <div style="margin-left: 20px; display: flex; align-items: center">
+        <div style="margin-left: 20px; display: flex; align-items: center; justify-content: center">
           <SlideToggle v-model="showSharedBookmarks" />
           <div style="font-size: 15px; color: navy; margin-left: 5px">
             {{ getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TEXT') }}
@@ -184,7 +184,6 @@ declare var sap
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import appButton from '../lib/ui/app-button.vue'
 import appCheckbox from '../lib/ui/app-checkbox.vue'
-import Constants from '../utils/Constants'
 import cohortComparisonDialog from './CohortComparisonDialog.vue'
 import messageBox from './MessageBox.vue'
 import addCohort from './AddCohort.vue'
@@ -195,6 +194,10 @@ import appMessageStrip from '../lib/ui/app-message-strip.vue'
 import BookmarkItems from './BookmarkItems.vue'
 import SlideToggle from './SlideToggle.vue'
 import { getBookmarkType } from '../utils/BookmarkUtils'
+import PatientsActiveIcon from './icons/PatientsActiveIcon.vue'
+import Button from './Button.vue'
+import GlobeIcon from './icons/GlobeIcon.vue'
+import LeftRightArrowIcon from './icons/LeftRightArrowIcon.vue'
 
 export default {
   compatConfig: {
@@ -553,6 +556,10 @@ export default {
     appMessageStrip,
     BookmarkItems,
     SlideToggle,
+    PatientsActiveIcon,
+    Button,
+    GlobeIcon,
+    LeftRightArrowIcon,
   },
 }
 </script>
