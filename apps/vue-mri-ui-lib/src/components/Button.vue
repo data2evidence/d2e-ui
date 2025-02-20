@@ -20,7 +20,7 @@ const props = defineProps<{ text: string; disabled?: boolean; onClick: () => voi
 <style lang="css" scoped>
 .button {
   border-radius: 6px;
-  padding: var(--space-xs) var(--space-s);
+  padding: var(--space-xs) 0;
   border: var(--border-width-m) solid;
   border-color: var(--color-border-button-primary-default);
   background-color: var(--color-background-button-primary-default);

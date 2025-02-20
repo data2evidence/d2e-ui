@@ -79,9 +79,13 @@
     </messageBox>
 
     <div class="bookmark-content">
-      <div
-        style="display: flex; justify-content: space-evenly; margin-left: 1rem; margin-right: 1rem; margin-top: 10px"
-      >
+      <div style="display: flex; justify-content: space-evenly; margin-left: 1rem; margin-right: 1rem; margin-top: 5px">
+        <div style="flex: 1; border-bottom: 0px lightgrey solid; display: flex; justify-content: start; color: navy">
+          Create Cohort:
+        </div>
+        <div style="flex: 1; margin-left: 10px"></div>
+      </div>
+      <div style="display: flex; justify-content: space-evenly; margin-left: 1rem; margin-right: 1rem; margin-top: 5px">
         <div style="flex: 3">
           <Button :text="getText('MRI_PA_CREATE_D2E_COHORT_TEXT')" :onClick="openAddNewCohort">
             <template #icon-left>
@@ -89,14 +93,14 @@
             </template>
           </Button>
         </div>
-        <div style="flex: 3; margin-left: 20px">
+        <div style="flex: 3; margin-left: 10px">
           <Button :text="getText('MRI_PA_CREATE_ATLAS_COHORT_TEXT')" :onClick="openAtlasLink">
             <template #icon-left>
               <GlobeIcon style="margin-right: 10px" fill="white" />
             </template>
           </Button>
         </div>
-        <div style="flex: 3; margin-left: 20px">
+        <div style="flex: 3; margin-left: 10px">
           <Button
             :text="getText('MRI_PA_COMPARE_D2E_COHORT_TEXT')"
             :onClick="openCompareDialog"
@@ -107,11 +111,11 @@
             </template>
           </Button>
         </div>
-        <div style="margin-left: 20px; display: flex; align-items: center; justify-content: center">
-          <SlideToggle v-model="showSharedBookmarks" />
-          <div style="font-size: 15px; color: navy; margin-left: 5px">
+        <div style="flex: 1; margin-left: 10px; display: flex; align-items: center; justify-content: center">
+          <div style="font-size: 15px; color: navy; margin-right: 5px">
             {{ getText('MRI_PA_BOOKMARK_SHOW_SHARED_COHORTS_TEXT') }}
           </div>
+          <SlideToggle v-model="showSharedBookmarks" />
         </div>
       </div>
       <div class="bookmark-content__break" />
@@ -119,7 +123,7 @@
       <div v-if="!bookmarksDisplay || bookmarksDisplay.length === 0" class="bookmark-noContent">
         {{ getText('MRI_PA_NO_BOOKMARKS_TEXT') }}
       </div>
-      <div style="height: calc(100% - 70px)">
+      <div style="height: calc(100% - 100px)">
         <BookmarkItems
           :bookmarksDisplay="bookmarksDisplay"
           :compareCohortsSelectionList="aSelBookmarkList"
