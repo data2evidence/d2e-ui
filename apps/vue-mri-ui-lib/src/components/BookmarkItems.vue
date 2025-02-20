@@ -428,3 +428,34 @@ onErrorCaptured((err, instance, info) => {
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.icon-button:hover {
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+.icon-button-disabled {
+  pointer-events: none;
+  cursor: none;
+  opacity: 0.1;
+}
+.item-card {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.item-card:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+.item-card-body:hover {
+  cursor: pointer;
+}
+.item-card-body-disabled {
+  pointer-events: none;
+  cursor: none;
+}
+.item-card-body-disabled:hover {
+  cursor: default;
+}
+.footer:hover {
+  cursor: default;
+}
+</style>

@@ -143,7 +143,6 @@ export default {
     onOkButtonPress() {
       try {
         this.cohortDefinitionType === 'D2E'
-        // TODO: JER add support for atlas CD generate MC
         const syntax = JSON.stringify({
           datasetId: this.getSelectedDataset.id,
           bookmarkId: this.bookmarkId,
