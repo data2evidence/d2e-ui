@@ -140,7 +140,7 @@ onErrorCaptured((err, instance, info) => {
       margin-right: 1rem;
       margin-top: 10px;
       margin-bottom: 10px;
-      width: calc(100% - 20px);
+      width: calc(100% - 30px);
       display: grid;
       grid-template-rows: 0fr;
       grid-auto-rows: 0fr;
@@ -149,6 +149,7 @@ onErrorCaptured((err, instance, info) => {
       overflow-y: auto;
       scrollbar-width: thin;
       gap: 10px;
+      padding: 10px;
     "
   >
     <div
@@ -192,7 +193,7 @@ onErrorCaptured((err, instance, info) => {
             style="
               flex: 1;
               overflow: auto;
-              margin-bottom: 10px;
+              margin-bottom: 15px;
               scrollbar-width: thin;
               scrollbar-color: #ff5e5977 white;
               padding: 0 10 5 10;
@@ -218,7 +219,7 @@ onErrorCaptured((err, instance, info) => {
               <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Updated On:</div>
               <div>{{ bookmarkDisplay.bookmark.dateModified }}</div>
             </div>
-            <div style="display: flex; padding-top: 15px">
+            <div style="display: flex; margin-top: 15px">
               <div class="bookmark-item-content">
                 <template
                   v-for="container in getCardsFormatted({
@@ -248,7 +249,7 @@ onErrorCaptured((err, instance, info) => {
                     </template>
                   </div>
                 </template>
-                <div style="display: flex">
+                <div style="display: flex; margin-top: 15px">
                   <span
                     class="icon"
                     :style="'font-family:' + getChartInfo(bookmarkDisplay.bookmark.chartType, 'iconGroup')"
