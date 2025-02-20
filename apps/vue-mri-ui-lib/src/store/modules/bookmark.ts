@@ -11,7 +11,8 @@ let cancel
 // initial state
 const state = {
   bookmarks: [],
-  cohortDefinitions: [],
+  materializedCohorts: [],
+  atlasCohortDefinitions: [],
   filterSummaryVisible: false,
   schemaName: '',
   activeBookmark: null,
@@ -131,14 +132,14 @@ const getters = {
   },
   getDisplayBookmarks: modulestate => (showSharedBookmarks, username) => {
     const bookmarks: FormattedBookmark[] = modulestate.bookmarks
-    const cohortDefinitions: FormattedMaterializedCohort[] = modulestate.cohortDefinitions
+    const materializedCohorts: FormattedMaterializedCohort[] = modulestate.materializedCohorts
     const atlasCohortDefinitions: FormattedAtlasCohortDefinition[] = modulestate.atlasCohortDefinitions
 
     let displayBookmarks = []
 
     // cohort definitions without bookmark
     // cohort definitions with bookmark
-    cohortDefinitions.forEach(cohortDefinition => {
+    materializedCohorts.forEach(cohortDefinition => {
       // check bookmark exists, if yes, should use the bookmark name
       const bookmark = bookmarks.find(bookmark => bookmark?.cohortDefinitionId === cohortDefinition.id)
       const atlasCohortDefinition = atlasCohortDefinitions.find(cd => cd.cohortDefinitionId === cohortDefinition.id)
@@ -187,7 +188,7 @@ const getters = {
 
     // bookmarks without a materialized cohort
     bookmarks.forEach(bookmark => {
-      const cohortDefinition = cohortDefinitions.find(
+      const cohortDefinition = materializedCohorts.find(
         cohortDefinition => (cohortDefinition.id = bookmark?.cohortDefinitionId)
       )
 
@@ -383,8 +384,8 @@ const mutations = {
   [types.SET_BOOKMARKS](modulestate, { bookmarks }) {
     modulestate.bookmarks = bookmarks
   },
-  [types.SET_COHORT_DEFINITIONS](modulestate, { cohortDefinitions }) {
-    modulestate.cohortDefinitions = cohortDefinitions
+  [types.SET_COHORT_DEFINITIONS](modulestate, { materializedCohorts }) {
+    modulestate.materializedCohorts = materializedCohorts
   },
   [types.SET_ATLAS_COHORT_DEFINITIONS](modulestate, { atlasCohortDefinitions }) {
     modulestate.atlasCohortDefinitions = atlasCohortDefinitions
