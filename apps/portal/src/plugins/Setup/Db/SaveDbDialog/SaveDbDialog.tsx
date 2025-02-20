@@ -27,6 +27,8 @@ import {
   DB_DIALECTS,
   CREDENTIAL_USER_SCOPES,
   CREDENTIAL_SERVICE_SCOPES,
+  AUTHENTICATION_MODES,
+  IDbPublication,
 } from "../../../../types";
 import { api } from "../../../../axios/api";
 import { validateCredentials } from "../CredentialValidator";
@@ -34,6 +36,7 @@ import { DbCredentialProcessor } from "../CredentialProcessor";
 import { isValidJson } from "../../../../utils";
 import { useTranslation } from "../../../../contexts";
 import { useVocabSchemas } from "../../../../hooks";
+import omit from "lodash/omit";
 import "./SaveDbDialog.scss";
 
 interface SaveDbDialogProps {
@@ -60,7 +63,10 @@ const styles: SxProps = {
   },
 };
 
-interface FormData extends Omit<IDatabase, "id" | "credentials.id"> {}
+interface FormData extends Omit<IDatabase, "id" | "credentials.id" | "publications"> {
+  publication: string;
+  slot: string;
+}
 
 const dbCredentialProcessor = new DbCredentialProcessor();
 
@@ -106,8 +112,11 @@ const EMPTY_FORM_DATA: FormData = {
   name: "",
   dialect: "postgres",
   extra: EMPTY_EXTRAS,
+  authenticationMode: AUTHENTICATION_MODES.PASSWORD,
   credentials: EMPTY_CREDENTIALS,
   vocabSchemas: [],
+  publication: "",
+  slot: "",
 };
 
 export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
@@ -139,7 +148,17 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
 
   const handleDialectChange = useCallback(
     (dialect: string) => {
-      handleFormDataChange({ dialect, vocabSchemas: [] });
+      handleFormDataChange({ dialect, vocabSchemas: [], authenticationMode: AUTHENTICATION_MODES.PASSWORD });
+    },
+    [handleFormDataChange]
+  );
+
+  const handleAuthenticationModeChange = useCallback(
+    (authenticationMode: string) => {
+      handleFormDataChange({
+        authenticationMode,
+        credentials: authenticationMode === AUTHENTICATION_MODES.PASSWORD ? EMPTY_CREDENTIALS : [],
+      });
     },
     [handleFormDataChange]
   );
@@ -147,7 +166,12 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
   const handleSave = useCallback(async () => {
     try {
       setSaving(true);
-      validateCredentials(formData.credentials, setFeedback);
+
+      if (formData.authenticationMode === AUTHENTICATION_MODES.PASSWORD) {
+        if (!validateCredentials(formData.credentials, setFeedback)) {
+          return;
+        }
+      }
 
       const encryptedCredentials = formData.credentials
         .filter((cred) => Boolean(cred.username))
@@ -188,7 +212,13 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
         }
       }
 
-      const encrypted: INewDatabase = { ...formData, extra: newExtra, credentials };
+      const publications: IDbPublication[] = [];
+      if (formData.publication) {
+        publications.push({ publication: formData.publication, slot: formData.slot });
+      }
+
+      const params = omit(formData, "publication", "slot");
+      const encrypted: INewDatabase = { ...params, extra: newExtra, credentials, publications };
       await api.dbCredentialsMgr.addDb(encrypted);
 
       setFeedback({
@@ -353,7 +383,26 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
             </Box>
           ))}
         </Box>
-        <Box mb={4}>
+        <Box mb={4} sx={{ width: "250px" }} hidden={formData.dialect !== "hana"}>
+          <FormControl fullWidth variant="standard">
+            <InputLabel id="authentication-mode-select-label">
+              {getText(i18nKeys.SAVE_DB_DIALOG__AUTHENTICATION_MODE)}
+            </InputLabel>
+            <Select
+              labelId="authentication-mode-select-label"
+              id="authentication-mode-select"
+              value={formData.authenticationMode}
+              onChange={(event) => handleAuthenticationModeChange(event.target?.value)}
+            >
+              {Object.values(AUTHENTICATION_MODES).map((authenticationMode) => (
+                <MenuItem value={authenticationMode} key={authenticationMode}>
+                  {authenticationMode}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box mb={4} hidden={formData.authenticationMode !== AUTHENTICATION_MODES.PASSWORD}>
           <Box mb={2}>
             <b>{getText(i18nKeys.SAVE_DB_DIALOG__CREDENTIALS)}</b>
           </Box>
@@ -482,6 +531,27 @@ export const SaveDbDialog: FC<SaveDbDialogProps> = ({ open, onClose }) => {
               </Box>
             </Box>
           ))}
+        </Box>
+        <Box mb={4}>
+          <Box mb={2}>
+            <b>{getText(i18nKeys.SAVE_DB_DIALOG__CACHE_REPLICATION)}</b>
+          </Box>
+          <Box mb={1} display="flex" gap={4}>
+            <TextField
+              label={getText(i18nKeys.SAVE_DB_DIALOG__PUBLICATION)}
+              variant="standard"
+              sx={{ minWidth: "300px" }}
+              value={formData.publication}
+              onChange={(event) => handleFormDataChange({ publication: event.target?.value })}
+            />
+            <TextField
+              label={getText(i18nKeys.SAVE_DB_DIALOG__SLOT)}
+              variant="standard"
+              sx={{ minWidth: "300px" }}
+              value={formData.slot}
+              onChange={(event) => handleFormDataChange({ slot: event.target?.value })}
+            />
+          </Box>
         </Box>
       </div>
       <div className="save-db-dialog__footer">
