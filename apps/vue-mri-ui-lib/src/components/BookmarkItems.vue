@@ -187,7 +187,7 @@ onErrorCaptured((err, instance, info) => {
             <ShareIcon />
           </div>
         </div>
-        <div style="display: flex; flex-direction: column; padding: 10 10 10 10; max-height: 500px">
+        <div style="display: flex; flex-direction: column; padding: 10px 10px 10px 10px; max-height: 500px">
           <!-- D2E Cohort Definition -->
           <div
             v-if="bookmarkDisplay.bookmark"
@@ -197,7 +197,7 @@ onErrorCaptured((err, instance, info) => {
               margin-bottom: 15px;
               scrollbar-width: thin;
               scrollbar-color: #ff5e5977 white;
-              padding: 0 10 5 10;
+              padding: 0px 10px 5px 10px;
             "
           >
             <div style="display: flex; align-items: center; margin-bottom: 10px">
@@ -277,7 +277,7 @@ onErrorCaptured((err, instance, info) => {
                           <span
                             v-if="bookmarkDisplay.bookmark.chartType !== 'list'"
                             class="icon"
-                            :style="`font-family: ${axis.iconGroup}; margin-top: 0`"
+                            :style="`font-family: ${axis.iconGroup}; margin-top: 0px`"
                             >{{ axis.icon }}</span
                           >
                           <span>{{ axis.name }}</span>
@@ -304,7 +304,7 @@ onErrorCaptured((err, instance, info) => {
               margin-bottom: 10px;
               scrollbar-width: thin;
               scrollbar-color: #ff5e5977 white;
-              padding: 0 10 5 10;
+              padding: 0px 10px 5px 10px;
             "
           >
             <div style="display: flex; align-items: center; margin-bottom: 10px">
@@ -332,7 +332,7 @@ onErrorCaptured((err, instance, info) => {
               overflow: auto;
               scrollbar-width: thin;
               scrollbar-color: #ff5e5977 white;
-              padding: 0 10 0 10;
+              padding: 0px 10px 0px 10px;
             "
           >
             <div style="display: flex; align-items: center; margin-bottom: 10px">
@@ -366,7 +366,7 @@ onErrorCaptured((err, instance, info) => {
           justify-content: space-between;
           border-top: solid 1px #acaba8;
           height: 50px;
-          padding: 0 20 0 20;
+          padding: 0px 20px 0px 20px;
         "
       >
         <div
