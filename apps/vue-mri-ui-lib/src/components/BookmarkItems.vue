@@ -195,7 +195,7 @@ onErrorCaptured((err, instance, info) => {
               margin-bottom: 10px;
               scrollbar-width: thin;
               scrollbar-color: #ff5e5977 white;
-              padding: 0 10 0 10;
+              padding: 0 10 5 10;
             "
           >
             <div style="display: flex; align-items: center; margin-bottom: 10px">
@@ -218,7 +218,7 @@ onErrorCaptured((err, instance, info) => {
               <div class="ui-darkest-text" style="font-weight: bold; margin-right: 10px">Updated On:</div>
               <div>{{ bookmarkDisplay.bookmark.dateModified }}</div>
             </div>
-            <div style="display: flex; padding-top: 5px">
+            <div style="display: flex; padding-top: 15px">
               <div class="bookmark-item-content">
                 <template
                   v-for="container in getCardsFormatted({
@@ -302,7 +302,7 @@ onErrorCaptured((err, instance, info) => {
               margin-bottom: 10px;
               scrollbar-width: thin;
               scrollbar-color: #ff5e5977 white;
-              padding: 0 10 0 10;
+              padding: 0 10 5 10;
             "
           >
             <div style="display: flex; align-items: center; margin-bottom: 10px">
