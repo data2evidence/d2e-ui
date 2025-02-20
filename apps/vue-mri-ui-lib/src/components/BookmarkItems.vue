@@ -117,7 +117,7 @@ const getConcatenatedConstraints = visibleConstraints => {
 }
 
 const openAtlasLink = (id: number) => {
-  window.open(`https://www.example.com/${id}`, '_blank')
+  window.open(`/atlas/cohortdefinition/${id}`, '_blank')
 }
 
 // Lifecycle hooks
@@ -170,7 +170,7 @@ onErrorCaptured((err, instance, info) => {
         @click="
           ;['D', 'D+M'].includes(getBookmarkType(bookmarkDisplay))
             ? loadBookmarkCheck(bookmarkDisplay.bookmark.id, bookmarkDisplay.bookmark.chartType)
-            : openAtlasLink(5)
+            : openAtlasLink(bookmarkDisplay.atlasCohortDefinition.id)
         "
       >
         <div style="display: flex; justify-content: space-between; padding: 20px 20px 0px 20px">

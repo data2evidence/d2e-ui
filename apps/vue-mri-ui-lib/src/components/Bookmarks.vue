@@ -540,7 +540,7 @@ export default {
       }
     },
     openAtlasLink() {
-      window.open(`https://www.example.com`, '_blank')
+      window.open(`/atlas/#/cohortdefinitions`, '_blank')
     },
   },
   components: {
