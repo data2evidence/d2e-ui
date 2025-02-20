@@ -17,6 +17,7 @@ export interface Study {
   studyDetail?: StudyDetail;
   attributes?: StudyAttribute[];
   tags?: StudyTag[];
+  fhirProjectId?: string;
 }
 
 export interface NewStudyInput {
@@ -272,4 +273,13 @@ export interface DatasetAttributeConfig {
   category: string;
   dataType: string;
   isDisplayed: boolean;
+}
+
+export interface FhirClientApplication {
+  resourceType: string;
+  name: string;
+  description: string;
+  meta: Object;
+  secret: string;
+  id: string;
 }

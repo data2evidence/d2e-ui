@@ -6,6 +6,7 @@ import {
   UpdateSchemaInput,
   SchemasVersionInfoResponse,
   NewFhirProjectInput,
+  FhirClientApplication,
 } from "../types";
 import { request } from "./request";
 
@@ -72,12 +73,20 @@ export class Gateway {
     });
   }
 
-  public createFhirStaging(input: NewFhirProjectInput): Promise<any> {
+  public createFhirStaging(input: NewFhirProjectInput): Promise<string> {
     return request({
       baseURL: GATEWAY_BASE_URL,
       url: "/fhir/createProject",
       method: "POST",
       data: input,
+    });
+  }
+
+  public getFhirClientApplication(input: string): Promise<FhirClientApplication> {
+    return request({
+      baseURL: GATEWAY_BASE_URL,
+      url: `/fhir/clientApplication/${input}`,
+      method: "GET",
     });
   }
 }
