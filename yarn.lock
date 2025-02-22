@@ -26,9 +26,9 @@
   resolved "https://registry.npmjs.org/@alloc/quick-lru/-/quick-lru-5.2.0.tgz"
   integrity sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==
 
-"@alp-os/alp-starboard-notebook@git+ssh://git@github.com/alp-os/alp-starboard-notebook-base.git#d4l-0.15.7-develop":
+"@alp-os/alp-starboard-notebook@https://github.com/alp-os/alp-starboard-notebook-base.git#d4l-0.15.7-develop":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/alp-os/alp-starboard-notebook-base.git#ea29012460ff4d04a55b767f65bdeefae49b9701"
+  resolved "https://github.com/alp-os/alp-starboard-notebook-base.git#ea29012460ff4d04a55b767f65bdeefae49b9701"
 
 "@ampproject/remapping@^2.1.0", "@ampproject/remapping@^2.2.0":
   version "2.2.0"
@@ -3574,7 +3574,7 @@
   version "1.0.0"
   resolved "https://github.com/data2evidence/d2e-starboard-wrap.git#98952e2eeab60620f3f923053d3ce431aff30a01"
   dependencies:
-    "@alp-os/alp-starboard-notebook" "git+ssh://git@github.com/alp-os/alp-starboard-notebook-base.git#d4l-0.15.7-develop"
+    "@alp-os/alp-starboard-notebook" "https://github.com/alp-os/alp-starboard-notebook-base.git#d4l-0.15.7-develop"
     "@ungap/custom-elements" "^0.1.15"
 
 "@design-systems/utils@2.12.0":
