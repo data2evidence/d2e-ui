@@ -17,8 +17,8 @@
     "prettier": "prettier --write \"**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "@data2evidence/d2e-starboard-notebook": "git+ssh://git@github.com/data2evidence/d2e-starboard-notebook-base.git#d4l-0.15.7-develop",
-    "@data2evidence/d2e-starboard-wrap": "git+ssh://git@github.com/data2evidence/d2e-starboard-wrap.git#develop",
+    "@data2evidence/d2e-starboard-notebook": "https://github.com/data2evidence/d2e-starboard-notebook-base.git#d4l-0.15.7-develop",
+    "@data2evidence/d2e-starboard-wrap": "https://github.com/data2evidence/d2e-starboard-wrap.git#develop",
     "@axa-fr/react-oidc": "6.10.9",
     "@d4l/web-components-library": "^3.20.2",
     "@emotion/react": "^11.9.0",
